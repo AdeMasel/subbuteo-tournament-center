@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subbuteo Tournament Center — il gestionale per i tornei di Calcio da Tavolo</title>
+<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 10 formule, sorteggio spettacolare, app per arbitri e capitani, classifiche, foto e libro dei ricordi, manuale da 92 pagine. Demo gratuita per macOS, Windows e Linux; licenza completa 20 €.">
+<meta name="author" content="Antonio de Masellis">
+<meta property="og:title" content="Subbuteo Tournament Center">
+<meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
+<meta property="og:image" content="assets/hero.webp">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230b1522'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23f5c451'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#060b12; --bg2:#0a1420; --panel:#0f1c2b; --panel2:#132234;
+  --line:rgba(140,175,210,.16); --line2:rgba(140,175,210,.28);
+  --txt:#e9f0f8; --mut:#93a7bd; --mut2:#6f8399;
+  --gold:#f5c451; --gold2:#e0a92e; --grn:#3ad98d; --grn2:#1f8f5c; --red:#e2564f;
+  --maxw:1200px;
+  --fh:'Oswald','Arial Narrow',sans-serif;
+  --fb:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fn:'Chakra Petch',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--txt);font-family:var(--fb);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--fh);font-weight:600;letter-spacing:.012em;line-height:1.12;margin:0}
+p{margin:0 0 1em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.eyebrow{
+  font-family:var(--fn);font-size:12.5px;font-weight:600;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:16px;
+}
+.eyebrow.g{color:var(--grn)}
+
+/* ---------------------------------------------------------------- nav */
+header.nav{
+  position:fixed;inset:0 0 auto 0;z-index:100;
+  padding:16px 0;transition:background .3s,padding .3s,box-shadow .3s;
+  backdrop-filter:blur(0px);
+}
+header.nav.solid{
+  background:rgba(6,11,18,.88);backdrop-filter:blur(14px) saturate(1.3);
+  padding:10px 0;box-shadow:0 1px 0 var(--line),0 18px 40px -30px #000;
+}
+.navin{display:flex;align-items:center;gap:26px;max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--fh);font-size:19px;
+  text-transform:uppercase;letter-spacing:.06em;text-decoration:none;white-space:nowrap}
+.brand .dot{width:26px;height:26px;border-radius:50%;flex:0 0 auto;
+  background:radial-gradient(circle at 34% 30%,#fff 0 12%,var(--gold) 13% 62%,var(--gold2) 63% 100%);
+  box-shadow:0 0 0 2px rgba(245,196,81,.18),0 3px 12px rgba(245,196,81,.3)}
+.brand b{font-weight:600}
+.brand span{color:var(--mut2);font-size:12px;letter-spacing:.2em;font-family:var(--fn)}
+nav.links{margin-left:auto;display:flex;gap:26px;align-items:center}
+nav.links a{font-size:14px;color:var(--mut);text-decoration:none;transition:color .2s;white-space:nowrap}
+nav.links a:hover{color:var(--txt)}
+.navcta{
+  font-family:var(--fh);text-transform:uppercase;letter-spacing:.07em;font-size:14px;
+  padding:9px 18px;border-radius:999px;background:var(--gold);color:#111a0c!important;
+  text-decoration:none;font-weight:600;transition:transform .2s,box-shadow .2s;
+}
+.navcta:hover{transform:translateY(-1px);box-shadow:0 10px 24px -10px var(--gold)}
+.burger{display:none;margin-left:auto;background:none;border:0;color:var(--txt);font-size:24px;cursor:pointer;padding:4px 8px}
+
+/* ---------------------------------------------------------------- hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+.hero-img{position:absolute;inset:0;z-index:0}
+.hero-img img{width:100%;height:100%;object-fit:cover;object-position:58% 64%;
+  transform:scale(1.06);animation:heroZoom 26s ease-out forwards}
+@keyframes heroZoom{to{transform:scale(1.0)}}
+.hero-img::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(100deg,rgba(6,11,18,.96) 0%,rgba(6,11,18,.86) 34%,rgba(6,11,18,.36) 62%,rgba(6,11,18,.62) 100%),
+    linear-gradient(0deg,var(--bg) 2%,transparent 34%);
+}
+.hero-in{position:relative;z-index:2;padding:130px 0 90px;width:100%}
+.hero h1{font-size:clamp(44px,7.4vw,92px);text-transform:uppercase;letter-spacing:.005em;max-width:15ch}
+.hero h1 em{font-style:normal;display:block;
+  background:linear-gradient(96deg,var(--gold) 12%,#fff3cf 46%,var(--gold2) 82%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{font-size:clamp(17px,2.1vw,21.5px);color:#cddcec;max-width:56ch;margin:26px 0 8px;line-height:1.55}
+.hero .sub b{color:#fff;font-weight:600}
+.badges{display:flex;flex-wrap:wrap;gap:9px;margin:30px 0 34px}
+.badge{
+  font-family:var(--fn);font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+  padding:6px 13px;border:1px solid var(--line2);border-radius:999px;color:var(--mut);
+  background:rgba(15,28,43,.6);backdrop-filter:blur(6px)
+}
+.badge.on{border-color:rgba(58,217,141,.45);color:var(--grn);background:rgba(31,143,92,.14)}
+.cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:11px;text-decoration:none;cursor:pointer;
+  font-family:var(--fh);text-transform:uppercase;letter-spacing:.075em;font-size:16px;font-weight:600;
+  padding:16px 30px;border-radius:12px;border:1px solid transparent;transition:transform .2s,box-shadow .2s,background .2s;
+}
+.btn.pri{background:linear-gradient(180deg,#ffd873,var(--gold2));color:#161200;
+  box-shadow:0 16px 40px -18px rgba(245,196,81,.9),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn.pri:hover{transform:translateY(-2px);box-shadow:0 22px 48px -18px rgba(245,196,81,1)}
+.btn.sec{background:rgba(19,34,52,.72);border-color:var(--line2);color:var(--txt);backdrop-filter:blur(8px)}
+.btn.sec:hover{transform:translateY(-2px);background:rgba(25,44,66,.9);border-color:var(--gold)}
+.btn svg{width:19px;height:19px;flex:0 0 auto}
+.hero-note{margin-top:22px;font-size:13.5px;color:var(--mut2);display:flex;align-items:center;gap:9px}
+.hero-note svg{width:15px;height:15px;color:var(--grn)}
+.scrollhint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;
+  color:var(--mut2);font-size:11px;font-family:var(--fn);letter-spacing:.22em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:8px;animation:bob 2.6s ease-in-out infinite}
+.scrollhint i{display:block;width:1px;height:34px;background:linear-gradient(var(--mut2),transparent)}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
+
+/* ---------------------------------------------------------------- numeri */
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(180deg,#080f18,#0a1420)}
+.statgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.stat{padding:34px 18px;text-align:center;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-family:var(--fn);font-size:clamp(26px,3.4vw,38px);font-weight:700;
+  color:var(--gold);line-height:1;letter-spacing:-.01em}
+.stat span{display:block;margin-top:9px;font-size:12px;color:var(--mut2);text-transform:uppercase;letter-spacing:.14em}
+
+/* ---------------------------------------------------------------- sezioni */
+section{position:relative}
+.sec{padding:104px 0}
+.sec.tight{padding:74px 0}
+.sec h2{font-size:clamp(30px,4.4vw,50px);text-transform:uppercase;max-width:20ch}
+.sec .lead{font-size:19px;color:var(--mut);max-width:62ch;margin-top:20px}
+.sec .lead b{color:var(--txt);font-weight:600}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line2),transparent);margin:0}
+
+/* blocchi funzione alternati */
+.feat{display:grid;grid-template-columns:1fr 1.12fr;gap:64px;align-items:center;padding:74px 0;border-bottom:1px solid var(--line)}
+.feat:last-of-type{border-bottom:0}
+.feat.rev .ftxt{order:2}
+.feat h3{font-size:clamp(23px,2.8vw,31px);text-transform:uppercase;margin-bottom:16px}
+.feat p{color:var(--mut);font-size:16.5px}
+.feat p b{color:var(--txt);font-weight:600}
+.flist{list-style:none;padding:0;margin:20px 0 0}
+.flist li{position:relative;padding-left:26px;margin-bottom:11px;color:var(--mut);font-size:15.5px}
+.flist li::before{content:'';position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:2px;
+  background:var(--gold);transform:rotate(45deg);opacity:.85}
+.flist li b{color:var(--txt);font-weight:600}
+.shot{
+  border-radius:14px;overflow:hidden;border:1px solid var(--line2);
+  background:var(--panel);box-shadow:0 40px 80px -50px #000,0 0 0 1px rgba(255,255,255,.03) inset;
+  transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s;cursor:zoom-in;
+}
+.shot:hover{transform:translateY(-6px) scale(1.008);box-shadow:0 54px 96px -48px #000}
+.shot.phones{display:grid;grid-template-columns:1fr 1fr;gap:14px;background:none;border:0;box-shadow:none;cursor:default}
+.shot.phones img{border-radius:14px;border:1px solid var(--line2);cursor:zoom-in;
+  box-shadow:0 30px 60px -40px #000;transition:transform .4s}
+.shot.phones img:hover{transform:translateY(-6px)}
+.tagrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.tag{font-family:var(--fn);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  padding:5px 11px;border-radius:6px;background:rgba(245,196,81,.09);
+  border:1px solid rgba(245,196,81,.24);color:var(--gold)}
+.tag.n{background:rgba(58,217,141,.1);border-color:rgba(58,217,141,.3);color:var(--grn)}
+
+/* griglia funzioni minori */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:46px}
+.card{
+  background:linear-gradient(180deg,var(--panel),#0c1826);border:1px solid var(--line);
+  border-radius:14px;padding:28px 26px;transition:transform .3s,border-color .3s,background .3s;
+}
+.card:hover{transform:translateY(-5px);border-color:var(--line2);background:linear-gradient(180deg,var(--panel2),#0d1a29)}
+.card .ic{font-size:25px;line-height:1;margin-bottom:15px;display:block}
+.card h4{font-size:18px;text-transform:uppercase;margin-bottom:9px}
+.card p{color:var(--mut);font-size:15px;margin:0}
+
+/* galleria */
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.gal figure{margin:0;border-radius:11px;overflow:hidden;border:1px solid var(--line);
+  background:var(--panel);cursor:zoom-in;position:relative;aspect-ratio:16/10}
+.gal figure img{width:100%;height:100%;object-fit:cover;object-position:top center;
+  transition:transform .5s,filter .5s;filter:saturate(.92)}
+.gal figure:hover img{transform:scale(1.05);filter:saturate(1.05)}
+.gal figcaption{position:absolute;inset:auto 0 0 0;padding:22px 13px 10px;font-size:12.5px;
+  background:linear-gradient(transparent,rgba(4,8,13,.94));color:#dae6f2;
+  font-family:var(--fn);letter-spacing:.06em;text-transform:uppercase}
+
+/* download */
+#download{background:
+  radial-gradient(900px 460px at 50% -8%,rgba(245,196,81,.09),transparent 62%),
+  linear-gradient(180deg,#080f18,#060b12)}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:44px}
+.dl{
+  display:flex;flex-direction:column;gap:6px;text-decoration:none;
+  background:linear-gradient(180deg,var(--panel),#0b1725);border:1px solid var(--line);
+  border-radius:15px;padding:28px 24px 24px;transition:transform .3s,border-color .3s,box-shadow .3s;
+}
+.dl:hover{transform:translateY(-6px);border-color:var(--gold);box-shadow:0 30px 60px -34px rgba(245,196,81,.5)}
+.dl .os{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.dl .os svg{width:27px;height:27px;color:var(--txt);flex:0 0 auto}
+.dl .os b{font-family:var(--fh);font-size:19px;text-transform:uppercase;letter-spacing:.04em}
+.dl small{color:var(--mut2);font-size:13px;line-height:1.45}
+.dl .go{margin-top:16px;font-family:var(--fh);text-transform:uppercase;font-size:13.5px;
+  letter-spacing:.09em;color:var(--gold);display:flex;align-items:center;gap:8px}
+.dl .go svg{width:15px;height:15px}
+.dl .sz{font-family:var(--fn);font-size:11.5px;color:var(--mut2);letter-spacing:.08em}
+.webalt{margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;
+  padding:22px 26px;border:1px dashed var(--line2);border-radius:14px;background:rgba(15,28,43,.45)}
+.webalt p{margin:0;color:var(--mut);font-size:15px;flex:1 1 320px}
+.webalt b{color:var(--txt)}
+
+/* tabella demo/completa */
+.cmp{width:100%;border-collapse:collapse;margin-top:40px;font-size:15.5px;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cmp th,.cmp td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line)}
+.cmp thead th{background:var(--panel2);font-family:var(--fh);text-transform:uppercase;
+  font-size:13.5px;letter-spacing:.1em;color:var(--mut)}
+.cmp thead th:nth-child(3){color:var(--gold)}
+.cmp td:nth-child(2),.cmp td:nth-child(3),.cmp th:nth-child(2),.cmp th:nth-child(3){text-align:center;width:150px}
+.cmp tbody tr:nth-child(odd){background:rgba(15,28,43,.42)}
+.cmp tbody tr:last-child td{border-bottom:0}
+.yes{color:var(--grn);font-weight:700}
+.no{color:var(--red);opacity:.8;font-weight:700}
+.cmp .lim{color:var(--mut2);font-size:13.5px}
+
+/* licenza */
+#licenza{background:linear-gradient(180deg,#060b12,#0a1420 45%,#060b12)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px;counter-reset:s}
+.step{position:relative;padding:30px 24px 26px;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(180deg,var(--panel),#0b1725)}
+.step::before{
+  counter-increment:s;content:counter(s);position:absolute;top:-17px;left:22px;
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--fn);font-weight:700;font-size:16px;color:#161200;
+  background:linear-gradient(180deg,#ffd873,var(--gold2));box-shadow:0 8px 20px -8px rgba(245,196,81,.8)
+}
+.step h4{font-size:17px;text-transform:uppercase;margin:8px 0 10px}
+.step p{color:var(--mut);font-size:15px;margin:0}
+.keybox{
+  font-family:var(--fn);font-size:13.5px;letter-spacing:.02em;color:var(--gold);white-space:nowrap;
+  background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.45);
+  padding:7px 11px;border-radius:8px;display:inline-block;margin-top:12px
+}
+.pricewrap{display:grid;grid-template-columns:1.25fr .95fr;gap:28px;margin-top:54px;align-items:stretch}
+.price{
+  border:1px solid rgba(245,196,81,.4);border-radius:18px;padding:38px 36px;
+  background:
+    radial-gradient(560px 260px at 82% -12%,rgba(245,196,81,.16),transparent 66%),
+    linear-gradient(180deg,var(--panel2),#0b1725);
+  box-shadow:0 40px 90px -55px rgba(245,196,81,.55)
+}
+.price .amt{display:flex;align-items:baseline;gap:12px;margin:6px 0 12px}
+.price .amt b{font-family:var(--fn);font-size:68px;font-weight:700;line-height:1;letter-spacing:-.01em;
+  background:linear-gradient(180deg,#fff0c4,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.price .amt span{color:var(--mut);font-size:15px}
+.price .minimo{color:var(--gold);font-size:15px;margin:-2px 0 14px;font-family:var(--fb)}
+.price .minimo b{font-weight:700}
+.price ul{list-style:none;padding:0;margin:20px 0 0}
+.price li{padding-left:28px;position:relative;margin-bottom:10px;color:var(--mut);font-size:15.5px}
+.price li::before{content:'✓';position:absolute;left:0;top:-1px;color:var(--grn);font-weight:700}
+.price li b{color:var(--txt);font-weight:600}
+.mailcard{
+  border:1px solid var(--line2);border-radius:18px;padding:34px 32px;
+  background:linear-gradient(180deg,var(--panel),#0b1725);display:flex;flex-direction:column
+}
+.mailcard h4{font-size:19px;text-transform:uppercase;margin-bottom:8px}
+.mailcard p{color:var(--mut);font-size:15px}
+.mailbox{
+  display:flex;align-items:center;gap:12px;margin:6px 0 18px;padding:14px 16px;border-radius:11px;
+  background:rgba(6,11,18,.72);border:1px solid var(--line2);
+}
+.mailbox code{font-family:var(--fn);font-size:15.5px;color:var(--gold);letter-spacing:.02em;
+  overflow-wrap:anywhere;flex:1}
+.copy{background:none;border:1px solid var(--line2);color:var(--mut);border-radius:8px;
+  padding:6px 11px;font-size:12px;cursor:pointer;font-family:var(--fn);letter-spacing:.09em;
+  text-transform:uppercase;transition:.2s;white-space:nowrap}
+.copy:hover{color:var(--gold);border-color:var(--gold)}
+.copy.ok{color:var(--grn);border-color:var(--grn)}
+.paypal{display:flex;align-items:center;gap:11px;margin-top:auto;padding-top:18px;
+  border-top:1px solid var(--line);color:var(--mut2);font-size:13.5px}
+.paypal svg{width:24px;height:24px;flex:0 0 auto;color:#2b8cd0}
+.paypal img{width:118px;height:118px;flex:0 0 auto;border-radius:9px;background:#fff;padding:6px;
+  box-shadow:0 10px 26px -14px rgba(0,0,0,.9)}
+.paypal.noqr img,.paypal.noqr a{display:none}
+.paypal a{flex:0 0 auto;line-height:0;border-radius:9px;transition:transform .2s,box-shadow .2s}
+.paypal a:hover{transform:translateY(-2px);box-shadow:0 14px 30px -14px rgba(43,140,208,.8)}
+.paypal{align-items:flex-start;gap:15px}
+
+/* minisondaggio sul prezzo */
+.pollwrap{max-width:640px;margin:34px auto 0;background:linear-gradient(180deg,var(--panel),#0b1725);
+  border:1px solid var(--line2);border-radius:18px;padding:30px 30px 26px}
+.pollwrap h3{font-size:clamp(19px,2.4vw,25px);text-transform:uppercase;text-align:center;margin-bottom:6px}
+.pollwrap .sub{color:var(--mut);font-size:14.5px;text-align:center;margin:0 auto 22px;max-width:44ch}
+.polls{display:flex;flex-direction:column;gap:10px}
+.pollbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;
+  background:rgba(6,11,18,.5);border:1px solid var(--line2);border-radius:12px;padding:14px 18px;
+  color:var(--txt);font-family:var(--fb);font-size:15.5px;transition:transform .15s,border-color .2s,background .2s}
+.pollbtn:hover{transform:translateY(-2px);border-color:var(--gold);background:rgba(15,28,43,.8)}
+.pollbtn .em{font-size:20px;flex:0 0 auto}
+.pollbtn b{margin-left:auto;font-family:var(--fn);color:var(--gold);font-size:14px}
+/* stato dopo il voto: barre dei risultati */
+.pollres{display:flex;flex-direction:column;gap:11px}
+.pollrow{position:relative}
+.pollrow .lab{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:var(--mut)}
+.pollrow .lab b{color:var(--txt);font-weight:600}
+.pollrow .lab .pc{font-family:var(--fn);color:var(--gold)}
+.pollrow .bar{height:12px;border-radius:99px;background:rgba(140,175,210,.12);overflow:hidden}
+.pollrow .bar i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold2),var(--gold));width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.pollrow.mine .lab b::after{content:' ✓';color:var(--grn)}
+.pollrow.mine .bar i{background:linear-gradient(90deg,var(--grn2),var(--grn))}
+.polltot{text-align:center;color:var(--mut2);font-size:13px;margin-top:16px}
+.polltot a{color:var(--mut);cursor:pointer;text-decoration:underline}
+
+/* contatore visite */
+.hits{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--mut2)}
+.hits svg{width:15px;height:15px;color:var(--gold);opacity:.85}
+.hits b{font-family:var(--fn);color:var(--gold);font-size:15px;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums}
+
+/* faq */
+.faq{margin-top:40px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{
+  list-style:none;cursor:pointer;padding:22px 44px 22px 0;position:relative;
+  font-family:var(--fh);font-size:19px;text-transform:uppercase;letter-spacing:.02em;transition:color .2s
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';position:absolute;right:8px;top:19px;font-size:26px;color:var(--gold);
+  font-family:var(--fb);transition:transform .3s;line-height:1}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq summary:hover{color:var(--gold)}
+.faq .ans{padding:0 40px 24px 0;color:var(--mut);font-size:16px}
+.faq .ans b{color:var(--txt);font-weight:600}
+.faq .ans code{font-family:var(--fn);color:var(--gold);font-size:14.5px}
+
+/* footer */
+footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;font-size:14.5px;color:var(--mut2)}
+.fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px}
+.fgrid h5{font-family:var(--fh);text-transform:uppercase;font-size:14px;letter-spacing:.12em;
+  color:var(--mut);margin:0 0 14px}
+.fgrid a{color:var(--mut2);text-decoration:none;display:block;margin-bottom:9px;transition:color .2s}
+.fgrid a:hover{color:var(--gold)}
+.fbot{margin-top:42px;padding-top:24px;border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13px}
+.fbot b{color:var(--mut);font-weight:600}
+
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:200;background:rgba(4,8,13,.95);backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;padding:36px;cursor:zoom-out}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;border-radius:12px;border:1px solid var(--line2);
+  box-shadow:0 50px 120px -40px #000;animation:pop .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+#lb .x{position:absolute;top:20px;right:26px;font-size:34px;color:var(--mut);line-height:1;
+  background:none;border:0;cursor:pointer}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:1080px){
+  .statgrid{grid-template-columns:repeat(3,1fr)}
+  .stat:nth-child(3){border-right:0}
+  .stat{border-bottom:1px solid var(--line)}
+  .gal{grid-template-columns:repeat(3,1fr)}
+  .dgrid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr);gap:28px 18px}
+  .pricewrap{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  body{font-size:16px}
+  nav.links{display:none}
+  nav.links.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;
+    align-items:stretch;gap:0;background:rgba(8,14,22,.98);backdrop-filter:blur(14px);
+    padding:10px 26px 20px;border-bottom:1px solid var(--line)}
+  nav.links.open a{padding:13px 0;border-bottom:1px solid var(--line);font-size:16px}
+  nav.links.open .navcta{margin-top:14px;text-align:center;border-bottom:0}
+  .burger{display:block}
+  .feat{grid-template-columns:1fr;gap:32px;padding:56px 0}
+  .feat.rev .ftxt{order:0}
+  .grid3{grid-template-columns:1fr}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .sec{padding:74px 0}
+  .cmp{font-size:14px}
+  .cmp th,.cmp td{padding:11px 9px}
+  .cmp td:nth-child(2),.cmp td:nth-child(3),.cmp th:nth-child(2),.cmp th:nth-child(3){width:62px}
+  .cmp thead th{font-size:11.5px;letter-spacing:.06em}
+  .cmp .lim{font-size:12px}
+  .fgrid{grid-template-columns:1fr}
+  .hero-in{padding:118px 0 80px}
+  .price{padding:30px 24px}
+}
+@media (max-width:560px){
+  .statgrid{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(3){border-right:1px solid var(--line)}
+  .stat:nth-child(2n){border-right:0}
+  .dgrid,.steps,.gal{grid-template-columns:1fr}
+  .btn{width:100%;justify-content:center}
+  .wrap{padding:0 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="navin">
+    <a class="brand" href="#top"><i class="dot"></i><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
+    <button class="burger" id="burger" aria-label="Menu">☰</button>
+    <nav class="links" id="links">
+      <a href="#funzioni">Funzioni</a>
+      <a href="#galleria">Galleria</a>
+      <a href="#download">Scarica</a>
+      <a href="#confronto">Demo o completa</a>
+      <a href="#licenza">Licenza</a>
+      <a href="#faq">FAQ</a>
+      <a class="navcta" href="#download">Prova gratis</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================================================================ HERO -->
+<section class="hero" id="top">
+  <div class="hero-img"><img src="assets/hero.webp" alt="Il pallone sul panno verde del campo da gioco" fetchpriority="high"></div>
+  <div class="hero-in">
+    <div class="wrap">
+      <div class="eyebrow">Versione 4.0 · Broadcast Edition</div>
+      <h1>Il torneo<br>diventa<em>una diretta</em></h1>
+      <p class="sub">Dalla prima iscrizione all'ultima premiazione: <b>Subbuteo Tournament Center</b>
+      gestisce gironi, tabelloni, cronometri, arbitri e classifiche — e li racconta al pubblico
+      con la regia di una trasmissione televisiva.</p>
+      <div class="badges">
+        <span class="badge">10 formule di gioco</span>
+        <span class="badge">Regole FISCT / FISTF</span>
+        <span class="badge">App per arbitri e capitani</span>
+        <span class="badge">Funziona senza Internet</span>
+        <span class="badge on">Demo gratuita</span>
+      </div>
+      <div class="cta">
+        <a class="btn pri" href="#download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+          Scarica la demo
+        </a>
+        <a class="btn sec" href="#licenza">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3m-3 3l2 2m-4 0l2 2"/></svg>
+          Versione completa · 20 €
+        </a>
+      </div>
+      <div class="hero-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        macOS · Windows · Linux — nessuna registrazione, nessuna pubblicità, nessun abbonamento
+      </div>
+    </div>
+  </div>
+  <div class="scrollhint">Scorri<i></i></div>
+</section>
+
+<!-- ================================================================ NUMERI -->
+<section class="stats">
+  <div class="statgrid">
+    <div class="stat"><b>10</b><span>Formule di gioco</span></div>
+    <div class="stat"><b>18</b><span>Tornei reali ufficiali</span></div>
+    <div class="stat"><b>5.037</b><span>Stemmi di club</span></div>
+    <div class="stat"><b>45</b><span>Brani originali</span></div>
+    <div class="stat"><b>700</b><span>Articoli di regolamento</span></div>
+    <div class="stat"><b>83</b><span>Pagine di manuale</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ INTRO -->
+<section class="sec" id="cosa">
+  <div class="wrap">
+    <div class="eyebrow rv">Che cos'è</div>
+    <h2 class="rv">Non un foglio di calcolo.<br>Una sala di regia.</h2>
+    <p class="lead rv">Un programma solo, che sta in un file, che <b>non chiede Internet</b> e non chiede
+    un account. Da una parte fa i conti — calendari, punti, spareggi, tabelloni, arbitri, campi.
+    Dall'altra li <b>mette in scena</b>: tabelloni luminosi, orologi che corrono, un ticker che scorre,
+    la voce che chiama i giocatori ai campi, la musica che sfuma quando parte il countdown.
+    In sala torneo si vede la differenza.</p>
+    <div class="shot rv" style="margin-top:48px" data-full="assets/shots/01_live.webp">
+      <img src="assets/shots/01_live.webp" alt="Il Match Center dal vivo" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ================================================================ FUNZIONI -->
+<section class="sec tight" id="funzioni">
+  <div class="wrap">
+    <div class="eyebrow rv">Tutte le capacità</div>
+    <h2 class="rv">Dal sorteggio alla premiazione</h2>
+
+    <!-- 1 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>Dieci formule, e chi ti dice quale scegliere</h3>
+        <p>Gironi con eliminazione diretta e ripescaggi, gironi a fasce, campionato (anche
+        andata e ritorno), eliminazione diretta con consolazione, sistema svizzero, playoff con
+        formula Page e playout, fase campionato in stile Champions, doppia eliminazione,
+        «Re del Tavolo», torneo a squadre.</p>
+        <p>Non sai quale usare? Il <b>Consigliere delle formule</b> guarda quanti siete e propone
+        <b>tutte</b> le soluzioni possibili — anche a più fasi — con partite totali e durata,
+        e le applica al Setup con un clic.</p>
+        <ul class="flist">
+          <li><b>Torneo Reale</b>: 18 competizioni ufficiali (Serie A, Premier, LaLiga, Champions,
+          Mondiale 2026, Libertadores…) con la loro formula esatta e il logo autentico</li>
+          <li>Criteri di spareggio riordinabili, punti configurabili, teste di serie e fasce</li>
+          <li>Rose, giocatori, capitani e <b>5.037 stemmi</b> di club e nazionali già pronti</li>
+        </ul>
+        <div class="tagrow"><span class="tag">Setup</span><span class="tag">Consigliere</span><span class="tag">Torneo Reale</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/03_advisor.webp"><img src="assets/shots/03_advisor.webp" alt="Il Consigliere delle formule" loading="lazy"></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="feat rev">
+      <div class="ftxt rv">
+        <h3>Il sorteggio come cerimonia</h3>
+        <p>L'urna di cristallo, le sfere che si scuotono, la carta che si gira in aria e rivela
+        lo stemma, il girone che si illumina. Alla fine i <b>biglietti dorati</b> volano per la sala
+        con riflessi metallici veri.</p>
+        <p>Rispetta le <b>fasce</b> (teste di serie, seconda fascia…) e distribuisce come da
+        regolamento; si può estrarre a mano, una squadra alla volta, o lasciare andare tutto da solo.
+        Poi un pulsante e il sorteggio diventa la composizione ufficiale dei gironi.</p>
+        <div class="tagrow"><span class="tag">Cerimonia</span><span class="tag">Fasce</span><span class="tag">Effetti</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/04_ceremony.webp"><img src="assets/shots/04_ceremony.webp" alt="La Cerimonia di Sorteggio" loading="lazy"></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>A che ora finiamo? Te lo dice prima di cominciare</h3>
+        <p>Scegli la formula, i tempi di gara e l'ora d'inizio: il programma conta le partite,
+        calcola quante <b>ondate</b> servono con i campi che hai davvero, e ti restituisce
+        <b>l'orario di fine previsto</b>.</p>
+        <ul class="flist">
+          <li>Pausa fra un turno e l'altro regolabile da <b>4 a 10 minuti</b></li>
+          <li>Intervallo pranzo fino a <b>80 minuti</b></li>
+          <li>Quindici minuti per le premiazioni</li>
+          <li>Il dettaglio voce per voce: partite, ondate, tempo di gioco, pause</li>
+        </ul>
+        <p style="margin-top:16px">Raddoppia i campi e guardi l'ora di fine arretrare di tre ore.
+        È il modo più rapido per capire se la formula che hai in mente sta dentro la giornata.</p>
+        <div class="tagrow"><span class="tag n">Novità 3.0</span><span class="tag">Pianificazione</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/24_stima.webp"><img src="assets/shots/24_stima.webp" alt="La stima della durata del torneo" loading="lazy"></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="feat rev">
+      <div class="ftxt rv">
+        <h3>Il torneo dal vivo, campo per campo</h3>
+        <p>Il <b>Match Center</b> è un tabellone per ogni campo: cronometro indipendente (1–60 minuti
+        a tempo, più i supplementari), orologio simulato che corre da 0′ a 90′, marcatori al minuto,
+        cartellini, tiri piazzati. START comune con countdown, e a fine gara il fischio.</p>
+        <ul class="flist">
+          <li><b>Assegnazione automatica dei campi</b>: un pulsante riempie tutti i campi liberi
+          in ordine di giornata, senza mai creare un doppio impegno, e se un campo resta vuoto
+          anticipa una gara del turno successivo</li>
+          <li><b>Gestione arbitrale</b> equa e incrementale: gli arbitri escono dai giocatori iscritti
+          o da un elenco dedicato, il nome compare sul tabellone, nel calendario e nell'annuncio
+          vocale, con il tabellone di chi ha già diretto e quanto</li>
+          <li><b>S.O.S. dal campo</b>: l'arbitro chiede la sospensione dal telefono, la Regia concede
+          o nega, il gioco riparte solo quando lo decide chi è al tavolo</li>
+          <li>Partita libera, variazioni a torneo in corso, fino a <b>4 tornei simultanei</b></li>
+        </ul>
+        <div class="tagrow"><span class="tag">Match Center</span><span class="tag">Arbitri</span><span class="tag">Campi</span><span class="tag">S.O.S.</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/01_live.webp"><img src="assets/shots/01_live.webp" alt="Tabelloni live per campo" loading="lazy"></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>Lo spettacolo per chi guarda</h3>
+        <p>Collega un monitor o un proiettore e la sala cambia faccia. La <b>Presentazione</b> mostra
+        risultati, classifiche, calendario e cronache a schermo pieno, con gli stemmi, i nomi in oro
+        e il ticker che scorre in basso.</p>
+        <ul class="flist">
+          <li><b>AUTO LIVE</b>: la regia va da sola, girone per girone, con dissolvenze incrociate,
+          e ogni schermata sta in una schermata sola. Un minuto prima della fine delle partite
+          entra il calendario del turno successivo</li>
+          <li><b>TV di campo</b> a schermo intero con il tabellino dei marcatori</li>
+          <li><b>Annunci vocali</b>: «Si preparino i giocatori… sul campo 3, Rossi contro Bianchi.
+          Arbitro: Verdi»</li>
+          <li>14 temi grafici, interfaccia in <b>italiano e inglese</b>, logo del torneo ovunque</li>
+        </ul>
+        <div class="tagrow"><span class="tag">Presentazione</span><span class="tag">AUTO LIVE</span><span class="tag">TV</span><span class="tag">Voce</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/12_present.webp"><img src="assets/shots/12_present.webp" alt="La Presentazione per il pubblico" loading="lazy"></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="feat rev">
+      <div class="ftxt rv">
+        <h3>I telefoni a bordo campo</h3>
+        <p>Gli arbitri non vengono più al tavolo della Regia. Inquadrano un <b>codice QR</b> e hanno
+        in mano l'<b>App Campo</b>: nessuna installazione, nessun negozio applicazioni.</p>
+        <ul class="flist">
+          <li>Orologio sincronizzato con la Regia, punteggio con i tasti grandi, cartellini,
+          fine partita, tiri piazzati</li>
+          <li>Il QR può valere <b>per un singolo campo</b>: quel telefono vede e tocca solo le sue gare
+          — e la Regia lo fa rispettare</li>
+          <li>L'<b>App Capitano</b> per il Calcio da Tavolo a squadre: formazione segreta,
+          mosse dell'abbinamento, sostituzioni all'intervallo, punteggi dei propri quattro tavoli</li>
+          <li>Se la sala non ha una rete comune, un <b>tunnel Internet</b> gratuito collega comunque
+          tutti i telefoni</li>
+        </ul>
+        <div class="tagrow"><span class="tag">App Campo</span><span class="tag">App Capitano</span><span class="tag">QR</span></div>
+      </div>
+      <div class="shot phones rv">
+        <img src="assets/shots/16_campo.webp" alt="App Campo sul telefono dell'arbitro" loading="lazy" data-full="assets/shots/16_campo.webp">
+        <img src="assets/shots/20_capitano.webp" alt="App Capitano" loading="lazy" data-full="assets/shots/20_capitano.webp">
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>Il Calcio da Tavolo a squadre, come dice il regolamento</h3>
+        <p>Un incontro sono <b>quattro gare in simultanea</b> su quattro tavoli, e l'accoppiamento
+        segue la <b>procedura ufficiale FISCT</b>, riprodotta passo per passo: consegna della distinta,
+        sorteggio della moneta (o fattore campo nelle gare di ritorno), poi lo <b>schieramento
+        alternato in cinque mosse</b> 1-2-2-2-1.</p>
+        <p>Il programma fa da arbitro della procedura: dice di chi è la mossa, evidenzia in rosso
+        il tavolo dove l'avversario è scoperto, <b>impone la copertura</b> quando è dovuta, accetta
+        solo i tavoli ammessi e sa tornare indietro. All'intervallo apre da sola la finestra delle
+        <b>due sostituzioni</b>, rispettando la priorità del sorteggio.</p>
+        <div class="tagrow"><span class="tag">CdT</span><span class="tag">FISCT</span><span class="tag">4 tavoli</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/22_abbinamento.webp"><img src="assets/shots/22_abbinamento.webp" alt="La cerimonia di abbinamento FISCT" loading="lazy"></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="feat rev">
+      <div class="ftxt rv">
+        <h3>Classifiche che si spiegano da sole</h3>
+        <p>Le posizioni che contano sono <b>colorate</b>, e il colore dice che cosa succede:
+        verde metallizzato per chi avanza, celeste per playoff e spareggi, arancio per i playout,
+        rosso per chi retrocede, oro per chi resta dov'è. Con la legenda sotto, perché nessuno
+        debba chiedere.</p>
+        <ul class="flist">
+          <li>Criteri di spareggio completi, scontri diretti a cluster, differenza reti, gol fatti</li>
+          <li><b>Cronache</b> del torneo con marcatori, cartellini e referti</li>
+          <li><b>PDF in A4</b> giustificati e pronti da stampare: programma con i fogli segnapunti,
+          report completo con risultati e classifiche, elenchi e ricevute</li>
+        </ul>
+        <div class="tagrow"><span class="tag">Classifiche</span><span class="tag">Cronache</span><span class="tag">PDF A4</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/07_classifiche.webp"><img src="assets/shots/07_classifiche.webp" alt="Classifiche con le zone colorate" loading="lazy"></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>La memoria del club, e del circuito</h3>
+        <p>Un torneo finisce, e con lui di solito finisce tutto. L'<b>Archivio storico</b> è la parte che
+        resta: archivi il torneo con un tocco e da lì nascono l'<b>albo d'oro</b> — ogni edizione con il suo
+        campione e il podio — e la <b>classifica perpetua</b>.</p>
+        <ul class="flist">
+          <li>Due modi di contare, perché i due mondi sono diversi: <b>punti per piazzamento</b> nei
+          circuiti aperti, <b>somma dei punti di gara</b> nel club che si ritrova ogni mese</li>
+          <li><b>Presenze minime</b> e <b>scarti</b> dei risultati peggiori: chi passa una volta sola non
+          scavalca chi c'è sempre, e saltare una tappa non rovina la stagione</li>
+          <li>La <b>scheda di ogni giocatore</b>: tornei, vittorie, podi, reti, media gol, arbitraggi</li>
+          <li>Il <b>testa a testa</b> fra due nomi, con tutti i precedenti — quello che serve al microfono
+          prima di una finale</li>
+          <li>Le <b>teste di serie</b> del torneo nuovo compilate dal ranking storico</li>
+        </ul>
+        <div class="tagrow"><span class="tag n">Novità 3.3</span><span class="tag">Albo d'oro</span><span class="tag">Ranking</span><span class="tag">Testa a testa</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/28_perpetua.webp"><img src="assets/shots/28_perpetua.webp" alt="La classifica perpetua" loading="lazy"></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="feat rev">
+      <div class="ftxt rv">
+        <h3>Le facce, non solo i numeri</h3>
+        <p>Gli arbitri <b>fotografano i due sfidanti dal telefono</b> — uno scatto prima del fischio
+        d'inizio, uno alla stretta di mano — e le immagini arrivano alla Regia abbinate da sole alla loro
+        partita. A fine giornata ne esce un <b>libro dei ricordi</b> in PDF: copertina, le partite con le
+        loro facce e il risultato, le classifiche, il campione.</p>
+        <ul class="flist">
+          <li>Nessuna installazione sul telefono: si apre la fotocamera, si conferma, la foto parte</li>
+          <li>Le immagini si <b>rimpiccioliscono sul telefono</b>: la rete della palestra non se ne accorge</li>
+          <li>Consenso dichiarato nel Pre-Torneo, e ogni foto si può cancellare</li>
+          <li>Restano <b>sul tuo computer</b>: nessun servizio esterno, nessun caricamento</li>
+          <li>Finiscono anche nell'<b>archivio storico</b>: la faccia del campione nell'albo d'oro e le
+          foto di ogni giocatore nella sua scheda, anche a distanza di anni</li>
+        </ul>
+        <div class="tagrow"><span class="tag n">Novità 4.0</span><span class="tag">Foto</span><span class="tag">Libro dei ricordi</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/29_foto.webp"><img src="assets/shots/29_foto.webp" alt="Le foto del torneo" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ ALTRE -->
+<section class="sec tight" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow rv">E poi</div>
+    <h2 class="rv">Quattro sezioni che non ti aspetti</h2>
+    <div class="grid3 rv">
+      <div class="card">
+        <span class="ic">🎙</span>
+        <h4>Regia Audio</h4>
+        <p>Il computer diventa un impianto voce: collega un microfono e parla al pubblico dalle casse,
+        con il pulsante rosso quando è spento e verde quando sei in onda. La musica si abbassa da sola
+        mentre parli. <b>Quarantacinque brani originali</b>, composti dall'autore e compresi nella
+        licenza, playlist personali, <b>dissolvenza incrociata</b> fra i pezzi e pausa sfumata al countdown.</p>
+      </div>
+      <div class="card">
+        <span class="ic">📒</span>
+        <h4>Pre-Torneo</h4>
+        <p>Il quaderno dell'organizzatore, su pagina bianca a righe con la grafia a mano: quote
+        d'iscrizione, servizi aggiuntivi (cena, gadget, trasferta) da spuntare riga per riga,
+        registro dei pagamenti con data e metodo, totali sempre aggiornati, <b>elenco stampabile
+        e ricevute numerate</b>.</p>
+      </div>
+      <div class="card">
+        <span class="ic">⚖️</span>
+        <h4>La Legge</h4>
+        <p>Tre regolamenti ufficiali — Subbuteo Tradizionale FISCT, CdT FISTF, OldSubbuteo — per
+        <b>700 articoli consultabili offline</b>. Si fa una domanda in italiano corrente
+        («quanto dura un tempo?», «quando è fallo di mano?») e risponde con la regola giusta,
+        la fonte e il capitolo. Anche a voce, anche dal telefono dell'arbitro.</p>
+      </div>
+      <div class="card">
+        <span class="ic">🏆</span>
+        <h4>Torneo Reale</h4>
+        <p>Diciotto competizioni ufficiali con la loro formula autentica e il logo vero: Serie A e B,
+        Coppa Italia, Premier League, FA Cup, LaLiga, Bundesliga, Ligue 1, Eredivisie, Primeira,
+        Brasileirão, Champions ed Europa League nel nuovo formato a 36, Mondiale 2026 a 48 squadre,
+        Europei, Copa América, Libertadores, Mondiale per Club.</p>
+      </div>
+      <div class="card">
+        <span class="ic">🏆</span>
+        <h4>La pagina del vincitore</h4>
+        <p>Quando l'ultimo risultato decide il torneo, lo schermo si accende: stemma nella cornice d'oro,
+        <b>nome della squadra e del giocatore in oro metallizzato</b>, il podio con le medaglie e i
+        <b>fuochi d'artificio</b> che salgono, esplodono e ricadono scintillando — con l'inno del campione
+        che parte da solo. Si può rivedere dalle Classifiche al momento della premiazione.</p>
+      </div>
+      <div class="card">
+        <span class="ic">📺</span>
+        <h4>Grafica per la diretta</h4>
+        <p>Trasmetti il torneo su YouTube o Twitch? Il programma serve una pagina a <b>sfondo trasparente</b>
+        da mettere in OBS come fonte browser: sopra la ripresa del tavolo compaiono stemmi, punteggio e
+        cronometro aggiornati dalla Regia. Fascia in basso, riquadro d'angolo o schermo pieno per gli
+        intervalli.</p>
+      </div>
+      <div class="card">
+        <span class="ic">🚪</span>
+        <h4>Quando qualcosa va storto</h4>
+        <p>Un giocatore si infortuna o deve andare via: il <b>ritiro</b> sistema in un colpo tutte le sue
+        partite rimaste, con la regola che scegli tu, senza toccare quelle già giocate. E mentre il torneo
+        va avanti, una <b>copia di sicurezza</b> finisce ogni cinque minuti in una cartella sul computer:
+        si torna indietro a qualsiasi momento della giornata.</p>
+      </div>
+      <div class="card">
+        <span class="ic">👁</span>
+        <h4>Leggibile da tutti</h4>
+        <p>Le zone della classifica non si distinguono solo per colore — verde e rosso sono identici per
+        una persona su dodici — ma anche per <b>simbolo</b>: ▲ avanza, ◆ playoff, ▽ playout, ▼ retrocede.
+        Interfaccia in <b>italiano e inglese</b>, 14 temi grafici, caratteri pensati per essere letti
+        dall'ultima fila.</p>
+      </div>
+      <div class="card">
+        <span class="ic">💾</span>
+        <h4>I tuoi dati restano tuoi</h4>
+        <p>Tutto vive sul tuo computer: nessun account, nessun servizio in abbonamento, nessuna
+        raccolta di dati. Il torneo si esporta in un file e si riapre su un'altra macchina.
+        Fino a <b>quattro tornei simultanei</b> nello stesso programma, con i campi divisi
+        fra loro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ GALLERIA -->
+<section class="sec tight" id="galleria">
+  <div class="wrap">
+    <div class="eyebrow rv">Galleria</div>
+    <h2 class="rv">Schermate vere, dal manuale</h2>
+    <div class="gal rv">
+      <figure data-full="assets/shots/26_campione.webp"><img src="assets/shots/26_campione.webp" alt="La pagina del vincitore" loading="lazy"><figcaption>Il vincitore</figcaption></figure>
+      <figure data-full="assets/shots/27_archivio.webp"><img src="assets/shots/27_archivio.webp" alt="L'albo d'oro" loading="lazy"><figcaption>Albo d'oro</figcaption></figure>
+      <figure data-full="assets/shots/30_libro.webp"><img src="assets/shots/30_libro.webp" alt="Il libro dei ricordi" loading="lazy"><figcaption>Libro dei ricordi</figcaption></figure>
+      <figure data-full="assets/shots/02_setup.webp"><img src="assets/shots/02_setup.webp" alt="Setup del torneo" loading="lazy"><figcaption>Setup</figcaption></figure>
+      <figure data-full="assets/shots/13_tv.webp"><img src="assets/shots/13_tv.webp" alt="TV di campo" loading="lazy"><figcaption>TV di campo</figcaption></figure>
+      <figure data-full="assets/shots/08_finale.webp"><img src="assets/shots/08_finale.webp" alt="Tabellone della fase finale" loading="lazy"><figcaption>Fase finale</figcaption></figure>
+      <figure data-full="assets/shots/09_cronache.webp"><img src="assets/shots/09_cronache.webp" alt="Cronache del torneo" loading="lazy"><figcaption>Cronache</figcaption></figure>
+      <figure data-full="assets/shots/17_audio_off.webp"><img src="assets/shots/17_audio_off.webp" alt="Regia Audio" loading="lazy"><figcaption>Regia Audio</figcaption></figure>
+      <figure data-full="assets/shots/19_pretorneo.webp"><img src="assets/shots/19_pretorneo.webp" alt="Pre-Torneo" loading="lazy"><figcaption>Pre-Torneo</figcaption></figure>
+      <figure data-full="assets/shots/14_legge.webp"><img src="assets/shots/14_legge.webp" alt="La Legge" loading="lazy"><figcaption>La Legge</figcaption></figure>
+            <figure data-full="assets/shots/21_realtorneo.webp"><img src="assets/shots/21_realtorneo.webp" alt="Torneo Reale" loading="lazy"><figcaption>Torneo Reale</figcaption></figure>
+      <figure data-full="assets/shots/11_sos.webp"><img src="assets/shots/11_sos.webp" alt="Richiesta di S.O.S. dal campo" loading="lazy"><figcaption>S.O.S. dal campo</figcaption></figure>
+                      </div>
+  </div>
+</section>
+
+<!-- ================================================================ DOWNLOAD -->
+<section class="sec" id="download">
+  <div class="wrap">
+    <div class="eyebrow rv">Scarica</div>
+    <h2 class="rv">La versione dimostrativa, gratis</h2>
+    <p class="lead rv">Stesso programma, stessa installazione. Provi l'impianto — un torneo a girone
+    unico, i tabelloni dal vivo, le classifiche, la Presentazione, la stima della durata — e quando
+    ti convince <b>sblocchi tutto con un codice</b>, senza reinstallare niente. La licenza completa
+    costa <b>20 €</b> una tantum.</p>
+
+    <div class="dgrid rv">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v4.0.0/Subbuteo-Tournament-Center-4.0.0-macOS-AppleSilicon.dmg">
+        <div class="os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
+          <b>macOS</b>
+        </div>
+        <small>Apple Silicon — M1, M2, M3, M4<br>macOS 11 o successivo</small>
+        <span class="sz">.dmg · 317 MB</span>
+        <span class="go">Scarica
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v4.0.0/Subbuteo-Tournament-Center-4.0.0-macOS-Intel.dmg">
+        <div class="os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
+          <b>macOS</b>
+        </div>
+        <small>Intel — Mac con processore Intel<br>macOS 11 o successivo</small>
+        <span class="sz">.dmg · 323 MB</span>
+        <span class="go">Scarica
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v4.0.0/Subbuteo-Tournament-Center-Setup-4.0.0-Windows.exe">
+        <div class="os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
+          <b>Windows</b>
+        </div>
+        <small>Installer per 64 bit e ARM<br>Windows 10 e 11</small>
+        <span class="sz">.exe · 601 MB</span>
+        <span class="go">Scarica
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v4.0.0/Subbuteo-Tournament-Center-4.0.0-Linux-x86_64.AppImage">
+        <div class="os">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
+          <b>Linux</b>
+        </div>
+        <small>AppImage x86_64 — nessuna installazione<br>rendi eseguibile e apri</small>
+        <span class="sz">.AppImage · 325 MB</span>
+        <span class="go">Scarica
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+    </div>
+
+    <div class="webalt rv">
+      <p><b>Non vuoi installare niente?</b> La stessa versione dimostrativa gira anche nel browser,
+      su qualsiasi sistema operativo — utile per dare un'occhiata prima di scaricare mezzo giga.</p>
+      <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Apri nel browser</a>
+      <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v4.0.0/Manuale-Subbuteo-Tournament-Center-4.0.pdf" style="font-size:14px;padding:12px 22px">Manuale PDF · 92 pagine</a>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ================================================================ CONFRONTO -->
+<section class="sec" id="confronto">
+  <div class="wrap">
+    <div class="eyebrow rv">Il confronto</div>
+    <h2 class="rv">Che cosa cambia con la licenza</h2>
+    <p class="lead rv">La dimostrativa serve a farsi un'idea. La versione completa è quella che
+    porti in sala torneo.</p>
+    <table class="cmp rv">
+      <thead><tr><th>Funzione</th><th>Demo</th><th>Completa</th></tr></thead>
+      <tbody>
+        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 10</td></tr>
+        <tr><td>Consigliere delle formule e Torneo Reale</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Salvataggio e richiamo dei tornei</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Esportazione e importazione dei dati</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Gestione arbitrale</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Sorteggio e Cerimonia di Sorteggio</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Codici QR per App Campo e App Capitano</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Foto degli sfidanti e libro dei ricordi</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Archivio storico: albo d'oro e classifica perpetua</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Regia Audio (microfono, musica, annunci)</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Pre-Torneo: quote, pagamenti, ricevute</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>La Legge: i tre regolamenti</td><td class="no">✕</td><td class="yes">✓</td></tr>
+        <tr><td>Match Center, classifiche, cronache</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Presentazione, AUTO LIVE e TV di campo</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Stima della durata del torneo</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Documenti PDF in A4</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Aggiornamenti futuri</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================ LICENZA -->
+<section class="sec" id="licenza">
+  <div class="wrap">
+    <div class="eyebrow rv">La licenza</div>
+    <h2 class="rv">Quattro passaggi, una volta sola</h2>
+    <p class="lead rv">La licenza completa costa <b>20 €</b>, una sola volta. Per averla si scrive
+    direttamente all'autore a <b>onyxsubbuteo@gmail.com</b> allegando il proprio <b>codice
+    alfanumerico</b> e il <b>nome a cui intestare la licenza</b>; ricevuto il pagamento di 20 € con
+    PayPal, arriva il codice di attivazione. La licenza vale per il <b>singolo dispositivo</b>: si
+    attiva una volta e resta, verificata a ogni avvio <b>anche senza collegamento a Internet</b>.
+    Nessun abbonamento, nessun rinnovo.</p>
+
+    <div class="steps rv">
+      <div class="step">
+        <h4>Installa e apri</h4>
+        <p>Scarica la versione dimostrativa per il tuo sistema operativo e avviala. Non serve
+        registrarsi.</p>
+      </div>
+      <div class="step">
+        <h4>Copia la tua chiave</h4>
+        <p>Premi <b>🔑 Licenza</b> in alto a destra: il programma mostra l'identificativo di quel
+        computer.</p>
+        <span class="keybox">STC-XXXX-XXXX-XXXX-XXXX</span>
+      </div>
+      <div class="step">
+        <h4>Scrivi e paga 20 €</h4>
+        <p>Manda un'email con il tuo <b>codice alfanumerico</b> e il <b>nome</b> da mettere sulla
+        licenza, poi versa i <b>20 €</b> con PayPal (il codice QR è qui sotto).</p>
+      </div>
+      <div class="step">
+        <h4>Incolla e gioca</h4>
+        <p>Ti arriva il <b>codice di attivazione</b>: lo incolli nello stesso pannello e tutte
+        le funzioni si sbloccano all'istante, per sempre.</p>
+      </div>
+    </div>
+
+    <div class="pricewrap rv">
+      <div class="price">
+        <div class="eyebrow" style="margin-bottom:6px">Licenza completa</div>
+        <div class="amt"><b>20 €</b><span>una tantum, per un dispositivo</span></div>
+        <div class="minimo">pagamento unico con <b>PayPal</b> — a copertura del tempo dedicato e dei costi di produzione</div>
+        <p style="color:var(--mut);margin:0">Nessun canone, nessuna scadenza, aggiornamenti compresi.</p>
+        <ul>
+          <li>Tutte e <b>dieci le formule</b>, Consigliere e Torneo Reale</li>
+          <li><b>Salvataggio</b>, richiamo ed esportazione dei tornei</li>
+          <li><b>Gestione arbitrale</b> e assegnazione automatica dei campi</li>
+          <li>Cerimonia di <b>sorteggio</b> e composizione dei gironi</li>
+          <li><b>Regia Audio</b> e La Legge, i regolamenti ufficiali</li>
+          <li><b>Archivio storico</b>: albo d'oro, ranking, testa a testa</li>
+          <li><b>Foto degli sfidanti</b> e libro dei ricordi in PDF</li>
+          <li><b>Pre-Torneo</b> con quote, pagamenti e ricevute</li>
+          <li><b>App Campo e App Capitano</b> con i codici QR</li>
+          <li>Manuale completo da <b>92 pagine</b> in PDF</li>
+        </ul>
+      </div>
+
+      <div class="mailcard">
+        <h4>Richiedi il tuo codice</h4>
+        <p>Nell'email indica il <b>codice alfanumerico</b> che leggi nel pannello Licenza e il
+        <b>nome</b> a cui intestarla; poi versa i <b>20 €</b> con PayPal.</p>
+        <div class="mailbox">
+          <code id="mail">onyxsubbuteo@gmail.com</code>
+          <button class="copy" id="cp" type="button">Copia</button>
+        </div>
+        <a class="btn pri" style="font-size:14.5px;padding:14px 22px"
+           href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20Subbuteo%20Tournament%20Center%204.0&body=Buongiorno%2C%0A%0Avorrei%20acquistare%20la%20licenza%20completa%20di%20Subbuteo%20Tournament%20Center%20al%20prezzo%20di%2020%20%E2%82%AC.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AProvvedo%20al%20pagamento%20di%2020%20%E2%82%AC%20con%20PayPal.%0A%0AGrazie.">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/></svg>
+          Scrivi ora
+        </a>
+        <!-- PAYPAL: il QR va in assets/paypal-qr.png. Se il file manca, il blocco si nasconde da solo. -->
+        <div class="paypal" id="pp">
+          <a href="https://www.paypal.com/qrcodes/p2pqrc/YLFSMQL54CZ7J" target="_blank" rel="noopener"
+             title="Apri il pagamento PayPal">
+            <img src="assets/paypal-qr.png" alt="Codice QR PayPal per il pagamento di 20 €" width="118" height="118"
+                 onerror="document.getElementById('pp').classList.add('noqr')">
+          </a>
+          <span>I <b style="color:var(--txt)">20 €</b> si versano con <b style="color:var(--txt)">PayPal</b>:
+          inquadra il codice con il telefono, oppure toccalo per aprire il pagamento. Il codice di
+          attivazione ti arriva in risposta all'email.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="shot rv" style="margin-top:52px;max-width:760px" data-full="assets/shots/25_licenza.webp">
+      <img src="assets/shots/25_licenza.webp" alt="Il pannello della licenza nel programma" loading="lazy">
+    </div>
+
+    <!-- minisondaggio sul prezzo -->
+    <div class="pollwrap rv" id="poll">
+      <h3>Secondo te quanto vale?</h3>
+      <p class="sub">Il prezzo è 20 €. Ma tu quanto pagheresti per un programma come questo?
+      Un voto anonimo, giusto per farci un'idea.</p>
+      <div class="polls" id="poll-opts">
+        <button class="pollbtn" data-k="a"><span class="em">🙂</span> Meno di 15 € <b>vota</b></button>
+        <button class="pollbtn" data-k="b"><span class="em">👍</span> 15 – 25 € <b>vota</b></button>
+        <button class="pollbtn" data-k="c"><span class="em">💪</span> 26 – 40 € <b>vota</b></button>
+        <button class="pollbtn" data-k="d"><span class="em">🏆</span> Più di 40 € <b>vota</b></button>
+      </div>
+      <div class="pollres" id="poll-res" style="display:none"></div>
+      <div class="polltot" id="poll-tot"></div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ================================================================ FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="eyebrow rv">Domande</div>
+    <h2 class="rv">Quello che chiedono tutti</h2>
+    <div class="faq rv">
+      <details>
+        <summary>La licenza vale su più computer?</summary>
+        <div class="ans">No: il codice è firmato per <b>quel dispositivo</b> e su un altro non funziona.
+        Se cambi computer basta chiedere un nuovo codice comunicando il nuovo identificativo — e dal
+        pannello puoi sempre <b>rimuovere la licenza</b> dalla macchina che non usi più.</div>
+      </details>
+      <details>
+        <summary>Serve Internet per usarlo?</summary>
+        <div class="ans">No. Il programma funziona <b>completamente offline</b>, licenza compresa:
+        il codice viene verificato in locale a ogni avvio. Internet serve soltanto se vuoi collegare
+        i telefoni degli arbitri quando la sala non ha una rete Wi-Fi comune — e in quel caso il
+        programma apre da solo un tunnel gratuito.</div>
+      </details>
+      <details>
+        <summary>I telefoni degli arbitri devono installare un'app?</summary>
+        <div class="ans">No. L'App Campo e l'App Capitano sono <b>pagine web</b> servite dal computer
+        della Regia: si inquadra un QR e si è dentro. Funzionano su Android e iPhone, in italiano
+        e in inglese, e mettono in coda gli eventi se la rete cade.</div>
+      </details>
+      <details>
+        <summary>Che cosa succede ai tornei fatti in versione dimostrativa?</summary>
+        <div class="ans">In dimostrativa il torneo <b>vive solo finché la finestra resta aperta</b>:
+        il salvataggio è disattivato. Appena attivi la licenza il salvataggio riparte e da quel
+        momento tutto viene conservato sul tuo computer.</div>
+      </details>
+      <details>
+        <summary>macOS dice che l'applicazione non può essere aperta</summary>
+        <div class="ans">L'installer non è firmato con un certificato Apple a pagamento. Al primo avvio
+        fai <b>clic destro sull'icona → Apri</b> e conferma: da quel momento si apre normalmente.
+        Su Windows, se compare la schermata blu di SmartScreen, scegli
+        <b>Ulteriori informazioni → Esegui comunque</b>.</div>
+      </details>
+      <details>
+        <summary>Perché l'installer è così grande?</summary>
+        <div class="ans">Perché dentro c'è <b>tutto</b>: la libreria musicale, i 5.037 stemmi, le
+        bandiere, i tre regolamenti completi, i <b>45 brani originali</b> della libreria musicale e i loghi
+        delle competizioni ufficiali. Nulla viene scaricato dopo, così in sala torneo funziona anche senza rete.</div>
+      </details>
+      <details>
+        <summary>Posso usarlo per tornei ufficiali di federazione?</summary>
+        <div class="ans">Sì: le formule, i criteri di classifica e la procedura di abbinamento del
+        Calcio da Tavolo a squadre seguono i <b>regolamenti FISCT/FISTF</b>. Il programma resta però
+        uno strumento indipendente, non è un prodotto federale.</div>
+      </details>
+      <details>
+        <summary>Chi lo ha scritto?</summary>
+        <div class="ans">Software, manuale e questa pagina sono opera di <b>Antonio de Masellis</b>.
+        Per assistenza, segnalazioni e richieste di licenza: <code>onyxsubbuteo@gmail.com</code>.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ CTA finale -->
+<section class="sec tight" style="text-align:center;background:radial-gradient(700px 320px at 50% 40%,rgba(245,196,81,.09),transparent 68%)">
+  <div class="wrap rv">
+    <h2 style="margin:0 auto">Il prossimo torneo<br>merita una regia</h2>
+    <p class="lead" style="margin:22px auto 34px">Scarica la dimostrativa, provala su un girone,
+    e decidi con calma.</p>
+    <div class="cta" style="justify-content:center">
+      <a class="btn pri" href="#download">Scarica la demo</a>
+      <a class="btn sec" href="#licenza">Come si sblocca</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a class="brand" href="#top" style="margin-bottom:16px"><i class="dot"></i><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
+        <p style="max-width:44ch;margin-top:4px">Il gestionale per i tornei di Subbuteo e Calcio da
+        Tavolo. Versione 4.0 — luglio 2026. Software e manuale di Antonio de Masellis.</p>
+      </div>
+      <div>
+        <h5>Il programma</h5>
+        <a href="#funzioni">Funzioni</a>
+        <a href="#galleria">Galleria</a>
+        <a href="#download">Scarica la demo</a>
+        <a href="#confronto">Demo o completa</a>
+      </div>
+      <div>
+        <h5>Licenza e contatti</h5>
+        <a href="#licenza">Come si attiva</a>
+        <a href="#faq">Domande frequenti</a>
+        <a href="mailto:onyxsubbuteo@gmail.com">onyxsubbuteo@gmail.com</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>© 2026 <b>Antonio de Masellis</b>. Tutti i diritti riservati.</span>
+      <span class="hits" title="Visite alla pagina">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <b id="hits-n">—</b> visite
+      </span>
+      <span>Subbuteo è un marchio dei rispettivi titolari. Questo programma è un'opera indipendente
+      e non è affiliato ai titolari del marchio né alle federazioni citate.</span>
+    </div>
+  </div>
+</footer>
+
+<div id="lb"><button class="x" aria-label="Chiudi">×</button><img alt=""></div>
+
+<script>
+// nav compatta
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+// menu mobile
+const links=document.getElementById('links');
+document.getElementById('burger').onclick=()=>links.classList.toggle('open');
+links.addEventListener('click',e=>{if(e.target.tagName==='A')links.classList.remove('open')});
+// comparsa progressiva
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+}),{rootMargin:'0px 0px -8% 0px',threshold:.08});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%3)*70+'ms';io.observe(el)});
+// lightbox
+const lb=document.getElementById('lb'),lbi=lb.querySelector('img');
+function lbOpen(src){lbi.src=src;lb.classList.add('on');document.body.style.overflow='hidden'}
+function lbClose(){lb.classList.remove('on');document.body.style.overflow=''}
+document.querySelectorAll('[data-full]').forEach(el=>{
+  el.addEventListener('click',()=>lbOpen(el.dataset.full));
+});
+lb.addEventListener('click',lbClose);
+addEventListener('keydown',e=>{if(e.key==='Escape')lbClose()});
+// copia email
+const cp=document.getElementById('cp');
+cp.onclick=async()=>{
+  try{await navigator.clipboard.writeText(document.getElementById('mail').textContent.trim());
+    cp.textContent='Copiata';cp.classList.add('ok');
+    setTimeout(()=>{cp.textContent='Copia';cp.classList.remove('ok')},2000);
+  }catch(e){cp.textContent='Selezionala'}
+};
+
+/* ---------- contatore visite + minisondaggio ----------
+   Contati da un piccolo servizio anonimo e gratuito (Abacus): nessun cookie,
+   nessun dato personale, solo dei numeri interi condivisi fra i visitatori.
+   Se il servizio non risponde, si ripiega su un conteggio locale del browser,
+   così la pagina non resta mai con un trattino. */
+const HIT_NS=(new URLSearchParams(location.search).get('ns'))||'stc-demasellis';
+const HIT_API='https://abacus.jasoncameron.dev';
+const HIT_BASE=100;   // il contatore "parte da 100"
+const nf=new Intl.NumberFormat('it-IT');
+async function hitCall(verbo,chiave){
+  const r=await fetch(`${HIT_API}/${verbo}/${HIT_NS}/${chiave}`,{cache:'no-store'});
+  const d=await r.json();
+  return (d && typeof d.value==='number') ? d.value : 0;   // "Key not found" -> 0
+}
+// --- contatore
+(async()=>{
+  const el=document.getElementById('hits-n'); if(!el) return;
+  let n;
+  try{
+    if(sessionStorage.getItem('stc_hit')){ n=await hitCall('get','visite'); }
+    else { n=await hitCall('hit','visite'); sessionStorage.setItem('stc_hit','1'); }
+  }catch(e){
+    // servizio non raggiungibile: conteggio locale del browser
+    let loc=parseInt(localStorage.getItem('stc_hits_local')||'0',10);
+    if(!sessionStorage.getItem('stc_hit')){ loc++; localStorage.setItem('stc_hits_local',loc); sessionStorage.setItem('stc_hit','1'); }
+    n=loc;
+  }
+  el.textContent=nf.format(HIT_BASE+(n||0));
+})();
+
+// --- minisondaggio sul prezzo
+const POLL_KEYS=['a','b','c','d'];
+const POLL_LAB={a:'Meno di 15 €',b:'15 – 25 €',c:'26 – 40 €',d:'Più di 40 €'};
+const POLL_EM={a:'🙂',b:'👍',c:'💪',d:'🏆'};
+async function pollResults(){
+  // in parallelo, tollerando i buchi
+  const vals=await Promise.all(POLL_KEYS.map(k=>hitCall('get','price-'+k).catch(()=>0)));
+  const o={}; POLL_KEYS.forEach((k,i)=>o[k]=vals[i]||0); return o;
+}
+function pollRender(res,mine){
+  const box=document.getElementById('poll-res'), opts=document.getElementById('poll-opts'),
+        tot=document.getElementById('poll-tot');
+  const somma=POLL_KEYS.reduce((a,k)=>a+(res[k]||0),0);
+  opts.style.display='none'; box.style.display='';
+  box.innerHTML=POLL_KEYS.map(k=>{
+    const v=res[k]||0, pc=somma?Math.round(v/somma*100):0;
+    return `<div class="pollrow${k===mine?' mine':''}">
+      <div class="lab"><b>${POLL_EM[k]} ${POLL_LAB[k]}</b><span class="pc">${pc}%</span></div>
+      <div class="bar"><i data-w="${pc}"></i></div></div>`;
+  }).join('');
+  setTimeout(()=>box.querySelectorAll('.bar i').forEach(i=>{i.style.width=i.dataset.w+'%';}),40);
+  tot.innerHTML = (somma? nf.format(somma)+(somma===1?' voto':' voti')+' finora'
+                        : 'Sii il primo a votare!') +
+    ' · <a id="poll-again">rivota</a>';
+  const again=document.getElementById('poll-again');
+  if(again) again.onclick=()=>{ localStorage.removeItem('stc_price_vote');
+    opts.style.display=''; box.style.display='none'; tot.textContent=''; };
+}
+async function pollVote(k){
+  localStorage.setItem('stc_price_vote',k);
+  try{ await hitCall('hit','price-'+k); }catch(e){
+    // fallback locale: registra il voto in localStorage
+    const loc=JSON.parse(localStorage.getItem('stc_price_local')||'{}');
+    loc[k]=(loc[k]||0)+1; localStorage.setItem('stc_price_local',JSON.stringify(loc));
+  }
+  let res; try{ res=await pollResults(); }catch(e){ res=JSON.parse(localStorage.getItem('stc_price_local')||'{}'); }
+  pollRender(res,k);
+}
+document.querySelectorAll('#poll-opts .pollbtn').forEach(b=>{
+  b.addEventListener('click',()=>pollVote(b.dataset.k));
+});
+// se ha già votato, mostra subito i risultati
+(async()=>{
+  const gia=localStorage.getItem('stc_price_vote'); if(!gia) return;
+  let res; try{ res=await pollResults(); }catch(e){ res=JSON.parse(localStorage.getItem('stc_price_local')||'{}'); }
+  pollRender(res,gia);
+})();
+</script>
+</body>
+</html>

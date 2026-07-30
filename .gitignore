@@ -1,0 +1,4 @@
+dist/
+render/out/
+.claude/
+.DS_Store
