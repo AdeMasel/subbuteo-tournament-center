@@ -5,7 +5,7 @@ set -euo pipefail
 
 UTENTE="AdeMasel"
 REPO="subbuteo-tournament-center"
-TAG="v4.0.0"
+TAG="v5.0.0"
 QUI="$(cd "$(dirname "$0")" && pwd)"
 cd "$QUI"
 
@@ -36,7 +36,7 @@ render/out/
 EOF
 
 git add -A
-git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 3.0" || echo "▸ Niente da committare."
+git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 5.0" || echo "▸ Niente da committare."
 git push -u origin main
 
 echo "▸ Attivo GitHub Pages…"
@@ -50,13 +50,22 @@ if gh release view "$TAG" --repo "$UTENTE/$REPO" >/dev/null 2>&1; then
 else
   echo "▸ Creo la release $TAG…"
   gh release create "$TAG" --repo "$UTENTE/$REPO" \
-    --title "Subbuteo Tournament Center 4.0" \
+    --title "Subbuteo Tournament Center 5.0" \
     --notes "Versione dimostrativa per macOS, Windows e Linux.
 
 Il programma si installa in versione DIMOSTRATIVA: torneo a girone unico, tabelloni
 dal vivo, classifiche, Presentazione e stima della durata. Per sbloccare tutte le
 funzioni serve un codice di attivazione valido per il singolo dispositivo — le
 istruzioni sono su https://$(echo $UTENTE | tr '[:upper:]' '[:lower:]').github.io/$REPO/#licenza
+
+Novità della 5.0: la nuova App Replay. Un telefono punta il tavolo e riprende senza
+sosta, ma tiene in memoria solo gli ultimi otto secondi: quando succede qualcosa basta
+premere il tasto rosso e quegli otto secondi appena visti diventano una GIF animata,
+che arriva alla Regia abbinata alla partita. A fine gara il computer monta da solo tutte
+le azioni in un unico filmato. Nel libro dei ricordi arrivano i tabellini delle marcature,
+le pagine decorate e l'impaginazione a quattro partite per foglio, foto comprese; dalle
+foto d'archivio si può cancellare il singolo scatto; nella Regia Audio i filtri anti-rumore
+del browser si possono spegnere, così la voce e il vociare della sala passano intatti.
 
 Novità della 4.0: gli arbitri fotografano i due sfidanti dal telefono e le immagini
 arrivano alla Regia abbinate alla loro partita; a fine giornata ne esce un libro dei
@@ -86,12 +95,12 @@ fi
 
 echo "▸ Carico gli installer (circa 1,9 GB, ci vorrà un po')…"
 gh release upload "$TAG" --repo "$UTENTE/$REPO" --clobber \
-  dist/Subbuteo-Tournament-Center-4.0.0-macOS-AppleSilicon.dmg \
-  dist/Subbuteo-Tournament-Center-4.0.0-macOS-Intel.dmg \
-  dist/Subbuteo-Tournament-Center-Setup-4.0.0-Windows.exe \
-  dist/Subbuteo-Tournament-Center-4.0.0-Linux-x86_64.AppImage \
-  dist/Subbuteo-Tournament-Center-4.0.0-Linux-arm64.AppImage \
-  dist/Manuale-Subbuteo-Tournament-Center-4.0.0.pdf
+  dist/Subbuteo-Tournament-Center-5.0.0-macOS-AppleSilicon.dmg \
+  dist/Subbuteo-Tournament-Center-5.0.0-macOS-Intel.dmg \
+  dist/Subbuteo-Tournament-Center-Setup-5.0.0-Windows.exe \
+  dist/Subbuteo-Tournament-Center-5.0.0-Linux-x86_64.AppImage \
+  dist/Subbuteo-Tournament-Center-5.0.0-Linux-arm64.AppImage \
+  dist/Manuale-Subbuteo-Tournament-Center-5.0.pdf
 
 echo
 echo "✔ Fatto."

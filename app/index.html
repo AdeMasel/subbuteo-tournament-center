@@ -794,16 +794,54 @@ body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass
 .fotocard figcaption .del button{background:none;border:0;color:var(--muted);font-size:.72rem;
   cursor:pointer;text-decoration:underline;padding:0}
 .fotocard figcaption .del button:hover{color:var(--red,#e2564f)}
+/* replay in GIF: un blocco per partita, con la striscia delle azioni */
+.clipblk{border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:12px 14px;margin-bottom:14px}
+.clipblk .ch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.9rem}
+.clipblk .ch b{color:var(--text)}
+.clipblk .ch .ris{font-family:'Chakra Petch',monospace;color:var(--gold)}
+.clipblk .ch small{flex-basis:100%;color:var(--muted);font-size:.74rem;order:3}
+.clipblk .ch .cb{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.clipblk .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.clipblk .ccard{position:relative;margin:0;border-radius:10px;overflow:hidden;background:#05080f;border:1px solid var(--line);aspect-ratio:16/9}
+.clipblk .ccard img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.clipblk .ccard .n{position:absolute;left:6px;top:5px;font-size:.66rem;font-weight:700;background:rgba(0,0,0,.62);
+  border-radius:5px;padding:1px 7px;color:#fff}
+.clipblk .ccard .x{position:absolute;right:5px;top:4px;border:0;border-radius:6px;background:rgba(0,0,0,.55);
+  color:#fff;font-size:.7rem;line-height:1;padding:4px 6px;cursor:pointer;opacity:0;transition:opacity .2s}
+.clipblk .ccard:hover .x{opacity:1}
+.clipblk .ccard .x:hover{background:var(--red,#e2564f)}
 #fotolb{position:fixed;inset:0;z-index:150;background:rgba(3,6,14,.94);display:none;
   align-items:center;justify-content:center;padding:30px;cursor:zoom-out}
 #fotolb.on{display:flex}
 #fotolb img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,.8)}
 
+/* gestore delle foto d'archivio */
+.arc-nfoto{font-size:.7rem;color:var(--gold);margin-left:8px;opacity:.85;background:rgba(245,196,81,.1);
+  border:1px solid rgba(245,196,81,.28);border-radius:7px;padding:2px 7px;cursor:pointer;font-family:inherit}
+.arc-nfoto:hover{opacity:1;background:rgba(245,196,81,.2)}
+.arc-fotogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.arc-fcard{margin:0;position:relative;background:var(--card2);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden}
+.arc-fcard .ph{display:block;width:100%;aspect-ratio:4/3;background:#05080f}
+.arc-fcard .ph img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.arc-fcard .del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;
+  border:0;background:rgba(6,11,18,.82);color:#ff8f88;font-size:.8rem;cursor:pointer;
+  display:grid;place-items:center;transition:.2s}
+.arc-fcard .del:hover{background:#e2564f;color:#fff;transform:scale(1.1)}
+.arc-fcard figcaption{padding:8px 10px;font-size:.8rem;color:var(--text)}
+.arc-fcard figcaption b{color:var(--gold);font-family:'Chakra Petch',monospace}
+.arc-fcard figcaption small{display:block;color:var(--muted);font-size:.68rem;margin-top:3px}
+.arc-strip{position:relative}
+.arc-strip .sdel{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;
+  border:0;background:rgba(6,11,18,.8);color:#ff8f88;font-size:.62rem;cursor:pointer;
+  display:grid;place-items:center;opacity:0;transition:.2s;z-index:2}
+.arc-strip:hover .sdel{opacity:1}
+.arc-strip .sdel:hover{background:#e2564f;color:#fff}
+
 /* foto dentro l'archivio */
 .arc-champ{display:inline-flex;width:30px;height:30px;border-radius:6px;overflow:hidden;margin-right:7px;
   vertical-align:middle;background:rgba(245,196,81,.12)}
 .arc-champ img{width:100%;height:100%;object-fit:cover}
-.arc-nfoto{font-size:.7rem;color:var(--gold);margin-left:8px;opacity:.8}
 .arc-fotostrip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .arc-strip{width:104px;height:78px;border-radius:8px;overflow:hidden;background:var(--card2);
   border:1px solid var(--line);display:inline-flex}
@@ -1038,10 +1076,11 @@ body.no-anim .board.running{animation:none}
 #capqr-grid .cq img{width:26px;height:26px;object-fit:contain;vertical-align:middle;margin-right:6px}
 
 /* ---------- consigliere formule + torneo reale ---------- */
-#advisor,#realpick,#estim,#ritiro{position:fixed;inset:0;z-index:126;display:none;align-items:center;justify-content:center;background:rgba(4,7,18,.82);backdrop-filter:blur(6px)}
-#advisor.on,#realpick.on,#estim.on,#ritiro.on{display:flex}
+#advisor,#realpick,#estim,#ritiro,#arcfoto{position:fixed;inset:0;z-index:126;display:none;align-items:center;justify-content:center;background:rgba(4,7,18,.82);backdrop-filter:blur(6px)}
+#advisor.on,#realpick.on,#estim.on,#ritiro.on,#arcfoto.on{display:flex}
 #estim .adv-box{width:min(760px,94vw)}
 #ritiro .adv-box{width:min(520px,94vw)}
+#arcfoto .adv-box{width:min(920px,94vw)}
 .est-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:16px}
 .est-f{display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted)}
 .est-f b{color:var(--accent)}
@@ -1671,6 +1710,17 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   </div>
 </div>
 
+<!-- gestore delle foto di un'edizione archiviata -->
+<div id="arcfoto">
+  <div class="adv-box">
+    <div class="adv-head">
+      <h3>📷 Foto in archivio</h3><span id="arcfoto-tit" class="small muted"></span>
+      <button class="btn sec mini" onclick="closeArcFoto()">✕ Chiudi</button>
+    </div>
+    <div id="arcfoto-body" style="padding:16px 20px;overflow:auto"></div>
+  </div>
+</div>
+
 <!-- ============ ARCHIVIO STORICO ============ -->
 <section class="tab" id="tab-archivio">
   <div class="row spread">
@@ -1692,6 +1742,9 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   <h2 class="sect" style="margin-top:26px">📷 Le foto del torneo</h2>
   <p class="muted small" style="margin:-8px 0 16px">Gli scatti che gli arbitri fanno dal telefono, prima del fischio d'inizio e alla stretta di mano. Da qui nasce il libro dei ricordi.</p>
   <div id="foto-box"></div>
+  <h2 class="sect" style="margin-top:26px">🎞 I replay delle azioni</h2>
+  <p class="muted small" style="margin:-8px 0 16px">Gli otto secondi salvati dall'App Replay quando succede qualcosa in campo. A fine gara le azioni di ogni partita si montano in un unico filmato animato, qui sul tuo computer.</p>
+  <div id="clip-box"></div>
 </section>
 
 <div id="fotolb" onclick="fotoZoomClose()"><img id="fotolb-img" alt=""></div>
@@ -1838,6 +1891,8 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
             <span class="small muted">🎚 Guadagno microfono</span>
             <input type="range" id="spk-vol" min="0" max="200" value="100" style="flex:1;max-width:200px;accent-color:var(--accent)" oninput="spkVol(this.value)">
           </div>
+          <label class="ck small" style="margin-top:10px"><input type="checkbox" id="spk-filtri" onchange="spkFiltri(this.checked)"> Filtri anti-rumore del browser (cancellazione eco, soppressione rumore, guadagno automatico)</label>
+          <p class="small muted" style="margin:4px 0 0">Di norma <b>spenti</b>: sono filtri da videochiamata, tagliano le code della voce e attenuano il vociare della sala. Accendili solo se microfono e casse innescano il fischio. La modifica ha effetto alla prossima accensione dello speaker.</p>
           <p class="small muted" id="spk-hint" style="margin-top:8px">Mentre lo speaker è in onda la musica si abbassa da sola e torna al volume normale alla chiusura. Per evitare fischi (effetto larsen) tieni il microfono lontano dalle casse o usa un microfono direzionale.</p>
         </div>
       </div>
@@ -2301,7 +2356,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='4.0.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='5.0.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -2343,7 +2398,7 @@ const TR={
   "Regia Audio e La Legge":"Audio Booth and The Law",
   "Il catalogo delle miniature non è al momento disponibile.":"The figures catalogue is not available at the moment.",
   "Pre-Torneo con quote, pagamenti e ricevute":"Pre-Event with fees, payments and receipts",
-  "App Campo e App Capitano con i codici QR":"Field app and Captain app with QR codes",
+  "App Campo, App Capitano e App Replay con i codici QR":"Field app, Captain app and Replay app with QR codes",
   "Versione dimostrativa: è disponibile la sola formula a girone unico.":"Demo version: only the single-league format is available.",
   "Il collegamento dei dispositivi mobili è riservato alla versione completa.":"Connecting mobile devices requires the full version.",
   // stima della durata
@@ -2996,7 +3051,14 @@ async function spkStart(){
   if(SPK.on||SPK.busy)return SPK.on;
   SPK.busy=true;
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    /* I filtri del browser (cancellazione eco, soppressione rumore, guadagno
+       automatico) sono pensati per le videochiamate: su una voce da speaker
+       tagliano le code, "pompano" il volume e attenuano il vociare della sala,
+       che invece è l'atmosfera del torneo. Di norma restano SPENTI; si possono
+       riaccendere dalla Regia Audio se microfono e casse innescano il larsen. */
+    const filtri=S.spkFiltri===true;
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{
+      echoCancellation:filtri, noiseSuppression:filtri, autoGainControl:filtri}});
     SPK.stream=stream;
     SPK.ctx=SPK.ctx||new (window.AudioContext||window.webkitAudioContext)();
     if(SPK.ctx.state==='suspended')await SPK.ctx.resume();
@@ -3031,6 +3093,11 @@ function spkMode(m){
   if(SPK.on)spkStop();else spkUI();
 }
 function spkVol(v){if(SPK.gain)SPK.gain.gain.value=((+v)||0)/100*2;}
+function spkFiltri(on){
+  S.spkFiltri=!!on;persist();
+  toast(on?L('Filtri anti-rumore attivi alla prossima accensione dello speaker.')
+          :L('Filtri anti-rumore disattivati: voce e sala passano senza ritocchi.'));
+}
 function spkUI(){
   const b=$('#spk-btn');
   if(b){
@@ -3038,6 +3105,7 @@ function spkUI(){
     b.innerHTML=SPK.on?('🎙 '+L('IN ONDA')):(SPK.mode==='hold'?('🎙 '+L('PREMI E PARLA')):'🎙 SPEAKER');
   }
   const led=$('#hdr-mic');if(led)led.classList.toggle('on',SPK.on);
+  const f=$('#spk-filtri');if(f)f.checked=S.spkFiltri===true;
   const r=document.querySelector(`input[name="spk-mode"][value="${SPK.mode}"]`);if(r)r.checked=true;
 }
 
@@ -3595,7 +3663,7 @@ function renderLicense(){
         <li>${L('Regia Audio e La Legge')}</li>
         <li>${L('Archivio storico: albo d’oro, classifica perpetua, testa a testa')}</li>
         <li>${L('Pre-Torneo con quote, pagamenti e ricevute')}</li>
-        <li>${L('App Campo e App Capitano con i codici QR')}</li>
+        <li>${L('App Campo, App Capitano e App Replay con i codici QR')}</li>
       </ul>
     </div>`;
 }
@@ -6732,58 +6800,143 @@ function buildTentsHTML(){
    le classifiche finali e il campione. Da stampare o da mandare
    ai partecipanti la sera stessa.
    ========================================================= */
-function buildBookHTML(griglia){
+/* =========================================================
+   IL LIBRO DEI RICORDI
+   Copertina, le partite con le loro facce, IL TABELLINO DELLE
+   MARCATURE, le classifiche finali e il campione. Tre impaginazioni:
+   una pagina per partita (grande), due per riga, oppure QUATTRO per
+   pagina — foto comprese.
+   ========================================================= */
+const BK_CSS = `
+  .bk-cover{height:245mm;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:5mm;page-break-after:always;position:relative;
+    background:radial-gradient(70mm 70mm at 50% 30%,#fdf6e4,transparent 70%),linear-gradient(180deg,#fffdf7,#f7f0dd)}
+  .bk-cover::before{content:'';position:absolute;inset:9mm;border:1.6pt double #c9a227;border-radius:3mm}
+  .bk-cover::after{content:'';position:absolute;inset:12mm;border:.5pt solid #e2d3a0;border-radius:2mm}
+  .bk-logo{width:42mm;height:42mm;object-fit:contain;filter:drop-shadow(0 2mm 4mm rgba(0,0,0,.18))}
+  .bk-cover h1{font-family:'Oswald',sans-serif;font-size:30pt;letter-spacing:.04em;text-transform:uppercase;
+    margin:0;color:#8a6a12;text-shadow:0 .6mm 0 #e8d9a8}
+  .bk-cover .sub{font-size:11pt;color:#6b6250;letter-spacing:.22em;text-transform:uppercase}
+  .bk-cover .tit{font-family:'Oswald',sans-serif;font-size:13pt;letter-spacing:.3em;text-transform:uppercase;
+    color:#b08c2a;border-top:1pt solid #d8c690;border-bottom:1pt solid #d8c690;padding:3mm 9mm;margin-top:3mm}
+  .bk-orn{color:#c9a227;font-size:15pt;letter-spacing:.5em;margin-top:2mm}
+  .bk-sec{font-family:'Oswald',sans-serif;font-size:13pt;letter-spacing:.16em;text-transform:uppercase;
+    color:#8a6a12;padding:0 0 2mm;margin:0 0 6mm;
+    border-bottom:2.4pt solid;border-image:linear-gradient(90deg,#c9a227,#f0dfa8 45%,#c9a227) 1}
+  .bk-sec span{background:#fdf8ea;border:.6pt solid #e0cf95;border-radius:2mm;padding:.6mm 2.5mm;
+    font-size:8.5pt;color:#a8842a;margin-left:3mm;letter-spacing:.1em}
+  .bk-big{page-break-inside:avoid;break-inside:avoid;margin-bottom:8mm;border:.6pt solid #e3d7b4;
+    border-radius:2.5mm;overflow:hidden;background:linear-gradient(180deg,#fffdf6,#faf5e6)}
+  .bk-big .imgs{display:flex;gap:0}
+  .bk-big .imgs img{width:100%;object-fit:cover;max-height:74mm;display:block}
+  .bk-big .imgs img+img{border-left:.8pt solid #fff}
+  .bk-big .cap{display:flex;align-items:center;justify-content:center;gap:4mm;padding:3mm 4mm 1mm}
+  .bk-big .cap b{font-family:'Oswald',sans-serif;font-size:13.5pt;text-transform:uppercase;color:#2a2418}
+  .bk-big .cap .ris{font-family:'Chakra Petch',monospace;font-size:19pt;color:#fff;
+    background:linear-gradient(180deg,#c9a227,#a8821a);border-radius:1.6mm;padding:.4mm 3mm;
+    box-shadow:0 .5mm 1.4mm rgba(0,0,0,.22)}
+  .bk-big .meta{text-align:center;font-size:8.5pt;color:#7c7460;padding:0 4mm 2mm}
+  .bk-tab{display:grid;grid-template-columns:1fr auto 1fr;gap:0 3mm;padding:2.5mm 4mm 4mm;
+    border-top:.5pt dashed #ddd0aa;margin-top:1mm;align-content:start}
+  .bk-tab .col{font-size:8.6pt;line-height:1.5;color:#3a3427}
+  .bk-tab .col.r{text-align:right}
+  /* «marcature» sta sulla stessa riga dei primi gol, non al centro del vuoto */
+  .bk-tab .mid{font-family:'Oswald',sans-serif;font-size:7pt;letter-spacing:.14em;text-transform:uppercase;
+    color:#b09a5e;align-self:start;white-space:nowrap;padding-top:.6mm}
+  .bk-tab .g{white-space:nowrap;display:block}
+  .bk-tab .g .mn{font-family:'Chakra Petch',monospace;color:#a8821a;font-size:8pt}
+  .bk-tab .none{font-size:8pt;color:#9a927e;font-style:italic;grid-column:1/-1;text-align:center}
+  .bk-cards{padding:0 4mm 3mm;font-size:8pt;color:#7c7460;text-align:center}
+  .bk-gr{display:grid;grid-template-columns:1fr 1fr;gap:6mm}
+  .bk-gr .c{page-break-inside:avoid;break-inside:avoid;border:.6pt solid #e3d7b4;border-radius:2.5mm;
+    overflow:hidden;background:linear-gradient(180deg,#fffdf6,#faf5e6)}
+  .bk-gr .c img{width:100%;object-fit:cover;height:50mm;display:block}
+  .bk-gr .c .cap{text-align:center;font-size:9pt;padding:2mm 2mm 0}
+  .bk-gr .c .cap b{font-family:'Oswald',sans-serif;text-transform:uppercase}
+  .bk-gr .c .cap .ris{font-family:'Chakra Petch',monospace;color:#fff;background:#b08c2a;
+    border-radius:1.2mm;padding:.2mm 1.8mm;margin:0 1.5mm}
+  .bk-gr .c .meta{text-align:center;font-size:7.5pt;color:#8c8570;padding-bottom:1mm}
+  .bk-q{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:5mm;
+    height:242mm;page-break-after:always;break-after:page}
+  .bk-q .c{border:.6pt solid #e3d7b4;border-radius:2.5mm;overflow:hidden;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#fffdf6,#faf5e6);page-break-inside:avoid;break-inside:avoid}
+  .bk-q .c .ph{height:50mm;display:flex;gap:0;flex:0 0 auto;background:#efe8d4}
+  /* prima e dopo si dividono la striscia a metà esatta */
+  .bk-q .c .ph img{flex:1 1 0;min-width:0;width:auto;height:100%;object-fit:cover;display:block}
+  .bk-q .c .ph img+img{border-left:.8pt solid #fff}
+  .bk-q .c .cap{display:flex;align-items:center;justify-content:center;gap:2.5mm;padding:2.2mm 3mm .8mm}
+  .bk-q .c .cap b{font-family:'Oswald',sans-serif;font-size:10.5pt;text-transform:uppercase;color:#2a2418}
+  .bk-q .c .cap .ris{font-family:'Chakra Petch',monospace;font-size:13pt;color:#fff;
+    background:linear-gradient(180deg,#c9a227,#a8821a);border-radius:1.4mm;padding:.2mm 2.2mm}
+  .bk-q .c .meta{text-align:center;font-size:7.4pt;color:#8c8570;padding:0 3mm 1.5mm}
+  .bk-q .c .bk-tab{padding:1.8mm 3mm 2.5mm;flex:1 1 auto}
+  .bk-q .c .bk-tab .col{font-size:7.4pt;line-height:1.42}
+  .bk-q .c .bk-tab .mid{font-size:6pt}
+  .bk-champ{text-align:center;page-break-before:always;padding-top:16mm}
+  .bk-champ .nome{font-family:'Oswald',sans-serif;font-size:34pt;text-transform:uppercase;color:#8a6a12;
+    margin:4mm 0;text-shadow:0 .6mm 0 #e8d9a8}
+  .bk-champ .cr{width:34mm;height:34mm;object-fit:contain}
+  .bk-champ .foto{width:96mm;border-radius:2.5mm;border:.8pt solid #e3d7b4;margin-top:4mm}
+  .bk-champ .lauro{color:#c9a227;font-size:22pt;letter-spacing:.4em;margin-bottom:2mm}
+`;
+
+/* il tabellino: marcatori al minuto, divisi fra le due squadre */
+function bkTabellino(m,a,b){
+  const evs=[...((m&&m.events)||[])].sort((x,y)=>(x.min||0)-(y.min||0));
+  const gol=s=>evs.filter(e=>e.s===s).map(e=>
+    `<span class="g"><span class="mn">${e.min}′</span> ${esc(e.p||(s===1?a:b))}</span>`).join('');
+  const cds=((m&&m.cards)||[]).map(c=>
+    `${c.col==='r'?'🟥':'🟨'} ${esc(c.p||(c.s===1?a:b))} ${c.min}′`).join('  ·  ');
+  let h='<div class="bk-tab">';
+  if(evs.length){
+    h+=`<div class="col r">${gol(1)||'—'}</div>
+        <div class="mid">${L('marcature')}</div>
+        <div class="col">${gol(2)||'—'}</div>`;
+  }else{
+    h+=`<div class="none">${L('Reti non cronometrate')}</div>`;
+  }
+  h+='</div>';
+  if(cds)h+=`<div class="bk-cards">${cds}</div>`;
+  return h;
+}
+
+function buildBookHTML(modo){
   const ps=fotoPartite();
   const logo=S.cfg.logo?`<img class="bk-logo" src="${S.cfg.logo}">`:'';
   const data=S.cfg.date?new Date(S.cfg.date+'T12:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
-  let h=`<style>
-    .bk-cover{height:245mm;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      text-align:center;gap:6mm;page-break-after:always}
-    .bk-logo{width:44mm;height:44mm;object-fit:contain}
-    .bk-cover h1{font-family:'Oswald',sans-serif;font-size:30pt;letter-spacing:.04em;text-transform:uppercase;
-      margin:0;color:#8a6a12}
-    .bk-cover .sub{font-size:11pt;color:#555;letter-spacing:.22em;text-transform:uppercase}
-    .bk-cover .tit{font-family:'Oswald',sans-serif;font-size:13pt;letter-spacing:.3em;text-transform:uppercase;
-      color:#b08c2a;border-top:1pt solid #d8c690;border-bottom:1pt solid #d8c690;padding:3mm 8mm;margin-top:4mm}
-    .bk-sec{font-family:'Oswald',sans-serif;font-size:13pt;letter-spacing:.16em;text-transform:uppercase;
-      color:#8a6a12;border-bottom:1.5pt solid #d8c690;padding-bottom:1.5mm;margin:0 0 5mm}
-    .bk-big{page-break-inside:avoid;break-inside:avoid;margin-bottom:9mm}
-    .bk-big .imgs{display:flex;gap:3mm}
-    .bk-big .imgs img{width:100%;border-radius:2mm;object-fit:cover;max-height:78mm}
-    .bk-big .cap{display:flex;align-items:baseline;justify-content:center;gap:4mm;margin-top:3mm}
-    .bk-big .cap b{font-family:'Oswald',sans-serif;font-size:14pt;text-transform:uppercase}
-    .bk-big .cap .ris{font-family:'Chakra Petch',monospace;font-size:19pt;color:#8a6a12}
-    .bk-big .meta{text-align:center;font-size:8.5pt;color:#777;margin-top:1mm}
-    .bk-gr{display:grid;grid-template-columns:1fr 1fr;gap:6mm}
-    .bk-gr .c{page-break-inside:avoid;break-inside:avoid}
-    .bk-gr .c img{width:100%;border-radius:2mm;object-fit:cover;height:52mm}
-    .bk-gr .c .cap{text-align:center;font-size:9pt;margin-top:1.5mm}
-    .bk-gr .c .cap b{font-family:'Oswald',sans-serif;text-transform:uppercase}
-    .bk-gr .c .cap .ris{font-family:'Chakra Petch',monospace;color:#8a6a12;margin:0 2mm}
-    .bk-gr .c .meta{text-align:center;font-size:7.5pt;color:#888}
-    .bk-champ{text-align:center;page-break-before:always;padding-top:20mm}
-    .bk-champ .nome{font-family:'Oswald',sans-serif;font-size:34pt;text-transform:uppercase;color:#8a6a12;margin:4mm 0}
-    .bk-champ img{width:34mm;height:34mm;object-fit:contain}
-  </style><div class="pdfdoc">
+  let h=`<style>${BK_CSS}</style><div class="pdfdoc">
   <div class="bk-cover">
     ${logo}
     <div class="tit">${L('Libro dei ricordi')}</div>
     <h1>${esc(S.cfg.name||L('Torneo'))}</h1>
     <div class="sub">${esc([S.cfg.loc,data].filter(Boolean).join(' · '))}</div>
-    <div class="sub" style="margin-top:6mm">${(S.teams||[]).length} ${L('partecipanti')} · ${ps.length} ${L('partite fotografate')}</div>
+    <div class="bk-orn">❦ ❦ ❦</div>
+    <div class="sub" style="margin-top:4mm">${(S.teams||[]).length} ${L('partecipanti')} · ${ps.length} ${L('partite fotografate')}</div>
   </div>`;
 
   if(ps.length){
-    h+=`<h2 class="bk-sec">${L('Le partite')}</h2>`;
-    if(griglia){
-      h+='<div class="bk-gr">';
-      ps.forEach(p=>{
+    h+=`<h2 class="bk-sec">${L('Le partite')}<span>${ps.length}</span></h2>`;
+    if(modo==='quattro'){
+      for(let i=0;i<ps.length;i+=4){
+        h+='<div class="bk-q">'+ps.slice(i,i+4).map(p=>`
+          <div class="c">
+            <div class="ph">
+              ${p.f.prima?`<img src="${fotoSrc(p.f.prima)}">`:''}
+              ${p.f.dopo?`<img src="${fotoSrc(p.f.dopo)}">`:''}
+            </div>
+            <div class="cap"><b>${esc(p.a||'')}</b><span class="ris">${p.ra??'–'}–${p.rb??'–'}</span><b>${esc(p.b||'')}</b></div>
+            <div class="meta">${esc(p.fase)}${p.g?' · '+L('Girone')+' '+esc(p.g):''}${p.m.ref?' · '+L('Arbitro')+' '+esc(p.m.ref):''}</div>
+            ${bkTabellino(p.m,p.a,p.b)}
+          </div>`).join('')+'</div>';
+      }
+    }else if(modo==='due'){
+      h+='<div class="bk-gr">'+ps.map(p=>{
         const src=p.f.prima||p.f.dopo;
-        h+=`<div class="c"><img src="${fotoSrc(src)}">
+        return `<div class="c">${src?`<img src="${fotoSrc(src)}">`:''}
           <div class="cap"><b>${esc(p.a||'')}</b><span class="ris">${p.ra??'–'}–${p.rb??'–'}</span><b>${esc(p.b||'')}</b></div>
-          <div class="meta">${esc(p.fase)}</div></div>`;
-      });
-      h+='</div>';
+          <div class="meta">${esc(p.fase)}</div>
+          ${bkTabellino(p.m,p.a,p.b)}</div>`;
+      }).join('')+'</div>';
     }else{
       ps.forEach(p=>{
         h+=`<div class="bk-big"><div class="imgs">
@@ -6791,32 +6944,35 @@ function buildBookHTML(griglia){
           ${p.f.dopo?`<img src="${fotoSrc(p.f.dopo)}">`:''}</div>
           <div class="cap"><b>${esc(p.a||'')}</b><span class="ris">${p.ra??'–'} – ${p.rb??'–'}</span><b>${esc(p.b||'')}</b></div>
           <div class="meta">${esc(p.fase)}${p.g?' · '+L('Girone')+' '+esc(p.g):''}${p.m.ref?' · '+L('Arbitro')+' '+esc(p.m.ref):''}</div>
+          ${bkTabellino(p.m,p.a,p.b)}
         </div>`;
       });
     }
   }
-  // le classifiche finali, riusando quelle di sempre
   h+=`<h2 class="bk-sec" style="page-break-before:always">${L('Come è finita')}</h2>`;
   allGroups().forEach(g=>{
-    try{h+=`<h3 style="font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:11pt;margin:5mm 0 2mm">${L('Girone')} ${esc(g.name)}</h3>`+standingsHTML(g,{});}catch(e){}
+    try{h+=`<h3 style="font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:11pt;margin:5mm 0 2mm;color:#8a6a12">${L('Girone')} ${esc(g.name)}</h3>`+standingsHTML(g,{});}catch(e){}
   });
   if(S.champion){
     const cr=S.logos&&S.logos[S.champion];
-    h+=`<div class="bk-champ">${cr?`<img src="${cr}">`:''}
+    const sua=ps.filter(p=>(p.a===S.champion||p.b===S.champion)&&p.f.dopo).pop();
+    h+=`<div class="bk-champ">
+      <div class="lauro">❦</div>
+      ${cr?`<img class="cr" src="${cr}">`:''}
       <div style="font-family:'Oswald',sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:10pt;color:#b08c2a">${L('Il campione è')}</div>
       <div class="nome">${esc(S.champion)}</div>
-      <div style="font-size:9pt;color:#777">${esc(S.cfg.name||'')} · ${esc(data)}</div></div>`;
+      <div style="font-size:9pt;color:#777">${esc(S.cfg.name||'')} · ${esc(data)}</div>
+      ${sua?`<img class="foto" src="${fotoSrc(sua.f.dopo)}">`:''}</div>`;
   }
   h+='</div>';
   return h;
 }
-function printBook(){
+function printBook(modo){
   if(!S.started){toast(L('Avvia prima un torneo.'));return;}
   const ps=fotoPartite();
-  const griglia=ps.length>10;   // con tante partite un foglio per gara farebbe un tomo
-  openPdfPreview(buildBookHTML(griglia),L('Libro dei ricordi'));
+  const m=modo||(ps.length>10?'quattro':'grande');
+  openPdfPreview(buildBookHTML(m),L('Libro dei ricordi'));
 }
-
 function printTents(){
   openPdfPreview(buildTentsHTML(),L('Segnaposto da tavolo'));
 }
@@ -8152,7 +8308,14 @@ function renderFotoBox(){
     ? `<p class="small" style="color:var(--gold)">⚠ ${L('Il consenso alle foto è disattivato nel Pre-Torneo: sui telefoni la fotocamera non compare.')}</p>` : '';
   const testa=avviso+avvisoOrfane+`<div class="row spread" style="align-items:center;margin-bottom:12px">
       <span class="small muted">${ps.length} ${L('partite con foto')} · ${(FOTO.tot/1e6).toFixed(1)} MB</span>
-      <button class="btn" onclick="printBook()">📖 ${L('Libro dei ricordi (PDF)')}</button>
+      <span class="row" style="gap:8px;align-items:center">
+      <select id="bk-modo" style="min-width:190px" title="${L('Come impaginare le partite')}">
+        <option value="quattro">${L('4 partite per pagina')}</option>
+        <option value="due">${L('2 per riga, più grandi')}</option>
+        <option value="grande">${L('Una per blocco, grande')}</option>
+      </select>
+      <button class="btn" onclick="printBook(($('#bk-modo')||{}).value)">📖 ${L('Libro dei ricordi (PDF)')}</button>
+    </span>
     </div>`;
   if(!ps.length){
     box.innerHTML=testa+`<div class="arc-empty"><div class="big">📷</div>
@@ -8172,6 +8335,178 @@ function renderFotoBox(){
           ${p.f.dopo?`<button onclick="fotoElimina('${p.f.dopo}')">${L('togli dopo')}</button>`:''}</span>
       </figcaption>
     </figure>`).join('')+'</div>';
+}
+
+/* =========================================================
+   I REPLAY DELLE AZIONI — le clip in GIF dell'App Replay
+   Un telefono punta il campo e tiene sempre in memoria gli ultimi
+   otto secondi: quando succede qualcosa, l'operatore preme REC e
+   quegli otto secondi — già visti, non da prevedere — diventano una
+   GIF che arriva qui, legata alla partita. A fine gara le clip di
+   quella partita si montano in un unico filmato, sul computer della
+   Regia, senza programmi esterni e senza internet.
+   ========================================================= */
+const CLIP={list:[],tot:0,t:null,lavoro:false};
+const MONTSUF='-MONT';               // coda del nome per i filmati montati
+function clipAttive(){return !!(SYNC.lan&&SYNC.lan.clip&&SYNC.on);}
+function clipSrc(f){return syncBase()+'/api/clip?f='+encodeURIComponent(f);}
+function clipAggiorna(){
+  if(!clipAttive()){CLIP.list=[];CLIP.tot=0;return Promise.resolve();}
+  return fetch(syncBase()+'/api/clip').then(r=>r.json()).then(d=>{
+    if(d&&d.ok){CLIP.list=d.list||[];CLIP.tot=d.tot||0;}
+  }).catch(()=>{});
+}
+function clipAvvia(){
+  if(CLIP.t)clearInterval(CLIP.t);
+  CLIP.t=setInterval(()=>{if(clipAttive())clipAggiorna().then(renderClipBox);},15000);
+  clipAggiorna().then(renderClipBox);
+}
+/* le azioni di una partita, dalla prima all'ultima */
+function clipDi(mid){return CLIP.list.filter(x=>x.mid===mid).sort((a,b)=>a.ts-b.ts);}
+/* il filmato già montato di quella partita, se c'è */
+function clipMont(mid){
+  const l=CLIP.list.filter(x=>x.mid===mid+MONTSUF).sort((a,b)=>b.ts-a.ts);
+  return l[0]||null;
+}
+function clipElimina(f,dopo){
+  askConfirm(L('Cancellare questa clip?'),()=>{
+    fetch(syncBase()+'/api/clip?del='+encodeURIComponent(f))
+      .then(()=>clipAggiorna()).then(()=>{renderClipBox();if(dopo)dopo();});
+  });
+}
+function clipZoom(f){
+  $('#fotolb-img').src=clipSrc(f);
+  $('#fotolb').classList.add('on');
+}
+/* tutte le partite con almeno una clip, in ordine di calendario */
+function clipPartite(){
+  const out=[],visto=new Set();
+  const agg=(m,a,b,ra,rb,fase,g)=>{
+    const cs=clipDi(m.id);
+    if(!cs.length&&!clipMont(m.id))return;
+    visto.add(m.id);
+    out.push({m,cs,mont:clipMont(m.id),a,b,ra,rb,fase,g});
+  };
+  allGroups().forEach(g=>g.matches.forEach(m=>agg(m,m.home,m.away,m.hs,m.as,L('Giornata')+' '+(m.round||1),(allGroups().length>1?g.name:''))));
+  allKOs().forEach(k=>(k.rounds||[]).forEach(rd=>rd.matches.forEach(m=>agg(m,m.t1,m.t2,m.s1,m.s2,rd.name||k.title,''))));
+  (S.freeMatches||[]).forEach(m=>agg(m,m.home,m.away,m.hs,m.as,L('Partita libera'),''));
+  return out;
+}
+/* clip rimaste da un torneo precedente: le partite non esistono più */
+function clipOrfane(){
+  const vive=new Set();
+  allGroups().forEach(g=>g.matches.forEach(m=>vive.add(m.id)));
+  allKOs().forEach(k=>(k.rounds||[]).forEach(rd=>rd.matches.forEach(m=>vive.add(m.id))));
+  (S.freeMatches||[]).forEach(m=>vive.add(m.id));
+  return CLIP.list.filter(x=>!vive.has(String(x.mid).replace(new RegExp(MONTSUF+'$'),'')));
+}
+function clipPulisciOrfane(){
+  const orf=clipOrfane();
+  if(!orf.length)return;
+  askConfirm(L('Rimuovere')+' '+orf.length+' '+L('clip di un torneo precedente?'),()=>{
+    Promise.all(orf.map(x=>fetch(syncBase()+'/api/clip?del='+encodeURIComponent(x.f))))
+      .then(()=>clipAggiorna()).then(renderClipBox);
+  });
+}
+
+/* ---------- il montaggio ----------
+   Non si decomprime nulla: le GIF nascono tutte dallo stesso encoder,
+   con le stesse misure, quindi basta rimetterle in fila portandosi
+   dietro la tavolozza di ciascuna. È istantaneo e non perde qualità. */
+function clipMonta(mid,auto){
+  const cs=clipDi(mid);
+  if(!cs.length){if(!auto)toast(L('Nessuna azione da montare per questa partita.'));return Promise.resolve();}
+  if(CLIP.lavoro){if(!auto)toast(L('Sto già montando un filmato: un attimo.'));return Promise.resolve();}
+  CLIP.lavoro=true;renderClipBox();
+  toast('🎬 '+L('Monto il filmato delle azioni…'));
+  return loadScriptOnce('gifenc.js').catch(()=>null)
+    .then(()=>{
+      if(!window.gifMontage)throw new Error('gifenc');
+      return Promise.all(cs.map(c=>fetch(clipSrc(c.f)).then(r=>r.arrayBuffer())));
+    })
+    .then(bufs=>{
+      const blob=gifMontage(bufs,{pausa:700});
+      if(!blob)throw new Error('vuoto');
+      return new Promise((res,rej)=>{
+        const rd=new FileReader();
+        rd.onload=()=>res({d:rd.result,size:blob.size});
+        rd.onerror=()=>rej(new Error('lettura'));
+        rd.readAsDataURL(blob);
+      });
+    })
+    .then(o=>{
+      // via il montaggio precedente, così non se ne accumulano copie
+      const vecchi=CLIP.list.filter(x=>x.mid===mid+MONTSUF);
+      return Promise.all(vecchi.map(x=>fetch(syncBase()+'/api/clip?del='+encodeURIComponent(x.f)).catch(()=>{})))
+        .then(()=>fetch(syncBase()+'/api/clip',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({key:SYNC.key,mid:mid+MONTSUF,ts:Date.now(),gif:o.d})}))
+        .then(r=>r.json()).then(d=>{
+          if(!d||!d.ok)throw new Error((d&&d.err)||'invio');
+          return clipAggiorna().then(()=>{
+            CLIP.lavoro=false;renderClipBox();
+            const t=matchTeamsById(mid);
+            toast(`🎬 ${L('Filmato pronto')}${t?': '+t:''} — ${cs.length} ${L('azioni')} · ${(o.size/1e6).toFixed(1)} MB`);
+          });
+        });
+    })
+    .catch(e=>{
+      CLIP.lavoro=false;renderClipBox();
+      toast('⚠ '+L('Montaggio non riuscito')+(e&&e.message==='gifenc'?': '+L('manca il file gifenc.js accanto all’app.'):'.'));
+    });
+}
+function matchTeamsById(mid){
+  const f=findMatch(mid);if(!f)return '';
+  const t=matchTeams(f);
+  return t?`${t.t1} – ${t.t2}`:'';
+}
+/* scarica sul computer il filmato di una partita */
+function clipScarica(f,nome){
+  fetch(clipSrc(f)).then(r=>r.blob()).then(b=>{
+    const u=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=u;a.download=(nome||'replay')+'.gif';a.click();
+    setTimeout(()=>URL.revokeObjectURL(u),4000);
+  }).catch(()=>toast(L('Filmato non scaricabile.')));
+}
+
+function renderClipBox(){
+  const box=$('#clip-box');if(!box)return;
+  if(!clipAttive()){
+    box.innerHTML=`<p class="small muted">${L('I replay arrivano dall’App Replay sui telefoni: servono l’app desktop e la sincronizzazione attiva.')}</p>`;
+    return;
+  }
+  const ps=clipPartite();
+  const orf=clipOrfane();
+  const avvisoOrf=orf.length?`<p class="small" style="color:var(--muted)">🎞 ${orf.length} ${
+    L('clip non appartengono a nessuna partita di questo torneo.')}
+    <button class="btn sec mini" onclick="clipPulisciOrfane()">${L('Rimuovile')}</button></p>`:'';
+  const nAz=ps.reduce((a,p)=>a+p.cs.length,0);
+  const testa=avvisoOrf+`<div class="row spread" style="align-items:center;margin-bottom:12px">
+      <span class="small muted">${nAz} ${L('azioni')} · ${ps.length} ${L('partite')} · ${(CLIP.tot/1e6).toFixed(1)} MB</span>
+      ${CLIP.lavoro?`<span class="small" style="color:var(--gold)">🎬 ${L('montaggio in corso…')}</span>`:''}
+    </div>`;
+  if(!ps.length){
+    box.innerHTML=testa+`<div class="arc-empty"><div class="big">🎞</div>
+      <p>${L('Nessun replay per ora. Apri l’App Replay dal QR, scegli la partita e premi RECORD quando succede qualcosa: restano gli 8 secondi appena visti.')}</p></div>`;
+    return;
+  }
+  box.innerHTML=testa+ps.map(p=>`
+    <div class="clipblk">
+      <div class="ch">
+        <b>${esc(p.a||'')}</b> <span class="ris">${p.ra??'–'} – ${p.rb??'–'}</span> <b>${esc(p.b||'')}</b>
+        <small>${esc(p.fase)}${p.g?' · '+L('Girone')+' '+esc(p.g):''} · ${p.cs.length} ${L('azioni')}</small>
+        <span class="cb">
+          <button class="btn sec mini" ${CLIP.lavoro?'disabled':''} onclick="clipMonta('${p.m.id}')">🎬 ${p.mont?L('Rimonta'):L('Monta il filmato')}</button>
+          ${p.mont?`<button class="btn sec mini" onclick="clipZoom('${p.mont.f}')">▶ ${L('Guarda')}</button>
+                    <button class="btn sec mini" onclick="clipScarica('${p.mont.f}','${esc((p.a||'')+'-'+(p.b||''))}')">⬇ ${L('Salva')}</button>`:''}
+        </span>
+      </div>
+      <div class="cgrid">${p.cs.map((c,i)=>`
+        <figure class="ccard">
+          <img src="${clipSrc(c.f)}" alt="" onclick="clipZoom('${c.f}')">
+          <span class="n">${i+1}</span>
+          <button class="x" title="${L('Cancella')}" onclick="clipElimina('${c.f}')">✕</button>
+        </figure>`).join('')}</div>
+    </div>`).join('');
 }
 
 /* =========================================================
@@ -8620,7 +8955,7 @@ function renderArchivio(){
       const p=t.part||[];
       const cr=n=>{const x=p.find(y=>y.n===n);return arcCrest(x&&x.stemma,n,22);};
       h+=`<tr><td><b>${esc(t.nome)}</b>${t.luogo?`<span class="muted small"> · ${esc(t.luogo)}</span>`:''}
-          ${(t.foto&&t.foto.length)?`<span class="arc-nfoto" title="${t.foto.length} ${L('foto conservate')}">📷 ${t.foto.length}</span>`:''}</td>
+          ${(t.foto&&t.foto.length)?`<button class="arc-nfoto" title="${L('Gestisci le foto di questa edizione')}" onclick="arcFotoPanel('${t.id}')">📷 ${t.foto.length}</button>`:''}</td>
         <td class="mono">${esc(t.data||'')}</td>
         <td class="oro">${t.fotoChamp?`<span class="arc-champ" data-foto="${esc(t.fotoChamp)}"></span>`:cr(t.campione)}${esc(t.campione||'')}</td>
         <td>${t.podio&&t.podio[1]?cr(t.podio[1])+esc(t.podio[1]):'—'}</td>
@@ -8732,6 +9067,66 @@ function arcRiempiFoto(root){
     });
   });
 }
+/* =========================================================
+   CANCELLAZIONE DELLE SINGOLE FOTO DALL'ARCHIVIO
+   Una foto venuta male, uno sfondo che non si vuole conservare,
+   qualcuno che chiede di essere tolto: si cancella quella e basta,
+   senza toccare risultati, classifiche e il resto dell'edizione.
+   ========================================================= */
+function arcFotoDelUna(idTorneo,k,dopo){
+  const A=arcState(), t=A.tornei.find(x=>x.id===idTorneo);
+  if(!t)return;
+  const f=(t.foto||[]).find(x=>x.k===k);
+  const eti=f?`${f.a||''} ${f.ra??''}–${f.rb??''} ${f.b||''} (${f.quando||''})`:'';
+  askConfirm(L('Cancellare questa foto dall’archivio?')+(eti?'\n'+eti:''),()=>{
+    fidbDel(k).then(()=>{
+      t.foto=(t.foto||[]).filter(x=>x.k!==k);
+      if(t.fotoChamp===k){
+        // la foto del campione se n'è andata: ne scelgo un'altra sua, se c'è
+        const sue=(t.foto||[]).filter(x=>x.a===t.campione||x.b===t.campione);
+        const dp=sue.filter(x=>x.quando==='dopo');
+        t.fotoChamp=(dp[dp.length-1]||sue[sue.length-1]||{}).k||'';
+      }
+      const u=ARCURL.get(k); if(u){try{URL.revokeObjectURL(u);}catch(e){}ARCURL.delete(k);}
+      arcSave();
+      toast(L('Foto rimossa dall’archivio.'));
+      if(typeof dopo==='function')dopo();
+    });
+  });
+}
+/* pannello per edizione: tutte le sue foto, ognuna con la sua ✕ */
+function arcFotoPanel(id){
+  const t=arcState().tornei.find(x=>x.id===id);
+  if(!t){return;}
+  ARCFOTO_ID=id;
+  $('#arcfoto').classList.add('on');
+  renderArcFotoPanel();
+}
+let ARCFOTO_ID=null;
+function closeArcFoto(){$('#arcfoto').classList.remove('on');ARCFOTO_ID=null;}
+function renderArcFotoPanel(){
+  const box=$('#arcfoto-body');if(!box)return;
+  const t=arcState().tornei.find(x=>x.id===ARCFOTO_ID);
+  if(!t){box.innerHTML='';return;}
+  const fs=t.foto||[];
+  $('#arcfoto-tit').textContent=t.nome+(t.data?' · '+t.data:'');
+  if(!fs.length){
+    box.innerHTML=`<p class="muted small">${L('Questa edizione non ha più foto in archivio.')}</p>`;
+    return;
+  }
+  box.innerHTML=`<p class="small muted" style="margin:0 0 12px">${fs.length} ${L('foto conservate')} — ${
+    L('la ✕ cancella solo quella foto; risultati e classifiche restano intatti.')}</p>
+    <div class="arc-fotogrid">`+fs.map(f=>`
+      <figure class="arc-fcard">
+        <span class="ph" data-foto="${esc(f.k)}"></span>
+        <button class="del" title="${L('Cancella questa foto')}"
+          onclick="arcFotoDelUna('${t.id}','${esc(f.k)}',renderArcFotoPanel)">✕</button>
+        <figcaption>${esc(f.a||'')} <b>${f.ra??'–'}–${f.rb??'–'}</b> ${esc(f.b||'')}
+          <small>${esc(f.fase||'')} · ${esc(f.quando||'')}${t.fotoChamp===f.k?' · '+L('foto del campione'):''}</small>
+        </figcaption>
+      </figure>`).join('')+'</div>';
+  arcRiempiFoto(box);
+}
 function arcFotoZoom(k){
   arcFotoUrl(k).then(u=>{
     if(!u)return;
@@ -8840,10 +9235,12 @@ function renderArchivioGioc(){
     </div>
     ${(function(){
       const ks=[];
-      righe.forEach(({t})=>((t.foto||[]).filter(f=>f.a===n||f.b===n).forEach(f=>ks.push(f))));
+      righe.forEach(({t})=>((t.foto||[]).filter(f=>f.a===n||f.b===n).forEach(f=>ks.push({...f,tid:t.id}))));
       if(!ks.length)return '';
       return `<div class="arc-fotostrip">${ks.slice(0,12).map(f=>
-        `<span class="arc-strip" data-foto="${esc(f.k)}" title="${esc((f.a||'')+' '+(f.ra??'')+'-'+(f.rb??'')+' '+(f.b||''))}"></span>`).join('')}</div>`;
+        `<span class="arc-strip" data-foto="${esc(f.k)}" title="${esc((f.a||'')+' '+(f.ra??'')+'-'+(f.rb??'')+' '+(f.b||''))}">
+          <button class="sdel" title="${L('Cancella questa foto')}"
+            onclick="event.stopPropagation();arcFotoDelUna('${f.tid}','${esc(f.k)}',renderArchivioGioc)">✕</button></span>`).join('')}</div>`;
     })()}
     <table class="arc-tab"><thead><tr><th>${L('Torneo')}</th><th>${L('Data')}</th>
       <th style="text-align:center">${L('Piazz.')}</th><th style="text-align:center">V-P-S</th>
@@ -9612,6 +10009,16 @@ function syncApply(ev){
       else if(f.kind==='group'){f.m.done=f.m.hs!=null&&f.m.as!=null;checkGroupsComplete();checkChampion();renderAll();persist();}
       else if(f.kind==='free'){f.m.done=true;renderAll();persist();}
       break;}
+    /* --- App Replay: azione salvata e fine gara --- */
+    case 'clip':{
+      const t=matchTeams(f);
+      toast(`🎞 ${L('Azione salvata')}${t?': '+esc(t.t1)+' – '+esc(t.t2):''}`);
+      clipAggiorna().then(renderClipBox);
+      return;}
+    case 'clipend':{
+      // l'operatore ha chiuso la ripresa: il filmato si monta da solo
+      clipAggiorna().then(()=>clipMonta(ev.mid,true));
+      return;}
     case 'sos':{
       if(bi<0)return;
       const b=S.boards[bi];
@@ -9752,7 +10159,7 @@ function setSyncOn(v){SYNC.on=!!v;syncPersist();if(SYNC.on)syncStart();else sync
 function setSyncUrl(){const el=$('#sy-url');if(!el)return;SYNC.url=el.value.trim()||'http://127.0.0.1:8765';SYNC.lastSnapJson='';SYNC.lan=null;syncPersist();if(SYNC.on)syncStart();renderSyncUI();}
 function regenSyncKey(){SYNC.key=genSyncKey();SYNC.lastEv=0;SYNC.lastSnapJson='';syncPersist();renderSyncUI();toast(LANG==='en'?'New private key generated.':'Nuova chiave privata generata.');}
 function syncFetchInfo(){
-  fetch(syncBase()+'/api/info').then(r=>r.json()).then(d=>{SYNC.lan=d;renderSyncUI();bkRender();bkAvvia();fotoAvvia();}).catch(()=>{SYNC.lan=null;renderSyncUI();bkRender();});
+  fetch(syncBase()+'/api/info').then(r=>r.json()).then(d=>{SYNC.lan=d;renderSyncUI();bkRender();bkAvvia();fotoAvvia();clipAvvia();}).catch(()=>{SYNC.lan=null;renderSyncUI();bkRender();});
 }
 /* --- QR di collegamento: generale o legato a un singolo campo --- */
 function syncPhoneUrls(){
@@ -9931,6 +10338,8 @@ function syncQrLink(){
   const v=$('#sy-qrtarget')?$('#sy-qrtarget').value:'0';
   if(v&&String(v).startsWith('T:'))   // QR per il CAPITANO di una squadra (CdT)
     return base+'/capitano?k='+encodeURIComponent(SYNC.key)+'&t='+encodeURIComponent(String(v).slice(2));
+  if(v==='R')                          // QR per l'App REPLAY (riprese in GIF)
+    return base+'/replay?k='+encodeURIComponent(SYNC.key);
   const f=parseInt(v)||0;
   return base+'/?k='+encodeURIComponent(SYNC.key)+(f>0?'&f='+f:'');
 }
@@ -9943,6 +10352,7 @@ function renderSyncQR(){
   const F=Math.max(1,S.cfg.fields||1),off=S.cfg.fieldOffset||0;
   let opts=`<option value="0">${en?'Whole tournament (all fields)':'Tutto il torneo (tutti i campi)'}</option>`;
   for(let i=1;i<=F;i++){const n=off+i;opts+=`<option value="${n}">${en?'Field':'Campo'} ${n} ${en?'only':'soltanto'}</option>`;}
+  opts+=`<option value="R">🎞 ${en?'Replay app (highlight clips)':'App Replay (riprese delle azioni)'}</option>`;
   if(S.cfg.format==='squadre'&&S.teams&&S.teams.length){
     opts+=`<optgroup label="${en?'🧢 Captains (secret lineups & subs)':'🧢 Capitani (formazioni segrete e cambi)'}">`;
     S.teams.forEach(t=>{opts+=`<option value="T:${esc(t)}">🧢 ${en?'Captain':'Capitano'} — ${esc(t)}</option>`;});
@@ -9960,7 +10370,22 @@ function renderSyncQR(){
   }
   cv.style.width='164px';cv.style.height='164px';
   renderObs();
-  if(hint)hint.textContent=(en?'The QR contains address and key: the phone connects instantly. Pick a field to bind that phone to its matches only. ':'Il QR contiene indirizzo e chiave: il telefono si collega al volo. Scegli un campo per legare quel telefono solo alle sue partite. ')+link;
+  if(hint){
+    /* l'App Replay usa la telecamera, e i browser la aprono solo su https:
+       se il QR punta a un indirizzo di rete locale in chiaro, l'avviso qui
+       evita mezz'ora di tentativi al buio */
+    const replay=sel.value==='R';
+    const insicuro=replay&&/^http:\/\//i.test(link)&&!/^http:\/\/(localhost|127\.0\.0\.1)/i.test(link);
+    hint.innerHTML=(replay
+      ?(en?'The Replay app films the match and saves the last 8 seconds as an animated GIF. '
+          :'L’App Replay riprende la partita e salva gli ultimi 8 secondi come GIF animata. ')
+      :(en?'The QR contains address and key: the phone connects instantly. Pick a field to bind that phone to its matches only. '
+          :'Il QR contiene indirizzo e chiave: il telefono si collega al volo. Scegli un campo per legare quel telefono solo alle sue partite. '))
+      +esc(link)
+      +(insicuro?`<br><b style="color:var(--gold)">⚠ ${en
+        ?'The camera only opens over https: switch on the remote connection (Cloudflare) below and use that QR.'
+        :'La telecamera si apre solo su https: accendi qui sotto il collegamento da fuori casa (Cloudflare) e usa quel QR.'}</b>`:'');
+  }
 }
 function qrFullscreen(){
   if(!licGate('qr'))return;

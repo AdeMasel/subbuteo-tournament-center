@@ -1,6 +1,6 @@
 # Subbuteo Tournament Center — sito di presentazione
 
-Landing page della versione 3.0, pronta per essere pubblicata su un hosting gratuito
+Landing page della versione 5.0, pronta per essere pubblicata su un hosting gratuito
 **senza pubblicità**. Autore: Antonio de Masellis.
 
 ## Che cosa contiene
@@ -35,7 +35,7 @@ in tutto e superano i limiti per file dei servizi di hosting statico:
   pratico di traffico.
 
 I collegamenti nella pagina puntano già a
-`https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v4.0.0/…`.
+`https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v5.0.0/…`.
 
 ### In un colpo solo
 
@@ -47,7 +47,7 @@ Lo script, con `gh` già autenticato:
 
 1. crea (se non esiste) il repository pubblico `subbuteo-tournament-center`;
 2. carica la pagina, gli asset e la demo per browser;
-3. crea la release `v3.0.0` e vi allega i quattro installer e il manuale;
+3. crea la release `v5.0.0` e vi allega i cinque installer e il manuale;
 4. attiva GitHub Pages sul ramo `main`.
 
 Al termine il sito è su `https://ademasel.github.io/subbuteo-tournament-center/`.
@@ -74,8 +74,8 @@ mondiale e dominio personalizzato se un giorno ne vorrai uno.
   `https://www.paypal.com/qrcodes/p2pqrc/YLFSMQL54CZ7J`, cioè la destinazione letta dal codice
   stesso. Se un giorno cambi QR, sostituisci il file **e** l'indirizzo del link. Se il file manca,
   il blocco si nasconde da solo (`onerror`).
-* **Nuova versione** — cerca `4.0.0` (collegamenti agli installer), `v4.0.0` (tag della
-  release) e `Versione 4.0` (testi). Vanno rifatti anche i collegamenti fisici in `dist/`.
+* **Nuova versione** — cerca `5.0.0` (collegamenti agli installer), `v5.0.0` (tag della
+  release) e `Versione 5.0` (testi). Vanno rifatti anche i collegamenti fisici in `dist/`.
 
 ## Rigenerare i rendering
 

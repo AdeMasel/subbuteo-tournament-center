@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#070d1f">
+<title>Subbuteo — App Replay</title>
+<style>
+:root{
+  --bg1:#070d1f;--bg2:#0d1b3e;--accent:#f5b942;--accent2:#38e0ff;--danger:#ff4d6d;
+  --card:rgba(13,25,58,.85);--card2:rgba(255,255,255,.05);--line:rgba(255,255,255,.12);
+  --text:#eef2ff;--muted:#93a0c4;--ok:#3ddc84;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 70%,#122451);
+  color:var(--text);min-height:100dvh;padding:max(10px,env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));
+}
+header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+header .ball{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#f5b942 55%,#8a5a10);flex:0 0 auto}
+header h1{font-size:1.02rem;letter-spacing:.12em;text-transform:uppercase;flex:1;line-height:1.2}
+header h1 small{display:block;font-size:.6rem;color:var(--accent);letter-spacing:.3em}
+#lang{background:var(--card2);border:1px solid var(--line);color:var(--accent);border-radius:8px;padding:6px 10px;font-size:.72rem;letter-spacing:.08em}
+#status{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+#status.on{color:var(--ok);border-color:var(--ok)}
+#status.q{color:var(--accent);border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;backdrop-filter:blur(8px)}
+label{display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:12px 0 5px}
+input{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:13px 12px;font-size:1rem}
+input:focus{outline:none;border-color:var(--accent)}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:15px;font-size:1.02rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:14px;
+  background:linear-gradient(135deg,var(--accent),#ffd97a);color:#221703}
+.btn.sec{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.btn.mini{width:auto;display:inline-block;padding:9px 14px;font-size:.78rem;margin-top:0}
+.btn:disabled{opacity:.45}
+button{touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.muted{color:var(--muted)}.small{font-size:.78rem}
+h2.sect{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:14px 0 8px}
+.mrow{display:flex;align-items:center;gap:10px;padding:13px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--card2)}
+.mrow .fld{flex:0 0 auto;font-size:.62rem;letter-spacing:.1em;color:#0a0f22;background:var(--accent2);border-radius:6px;padding:3px 7px;font-weight:800}
+.mrow .tms{flex:1;min-width:0;font-size:.95rem;font-weight:600}
+.mrow .sc{flex:0 0 auto;font-weight:800;font-size:1.05rem;color:var(--accent)}
+.mrow .live{flex:0 0 auto;font-size:.6rem;color:#fff;background:var(--danger);border-radius:999px;padding:3px 8px;animation:blink 1.2s infinite}
+.mrow .nclip{flex:0 0 auto;font-size:.66rem;color:var(--accent2);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+@keyframes blink{50%{opacity:.45}}
+.mhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mhead .back{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 14px;font-size:1rem}
+.mhead .ctx{flex:1;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right}
+/* ---- inquadratura ---- */
+.viewer{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:16/9}
+.viewer video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.viewer .off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  text-align:center;padding:18px;font-size:.85rem;color:var(--muted);background:rgba(0,0,0,.6)}
+.viewer .off .ic{font-size:2.2rem;opacity:.6}
+.viewer .hud{position:absolute;left:10px;top:10px;right:10px;display:flex;align-items:center;gap:8px;pointer-events:none}
+.viewer .hud .dot{width:9px;height:9px;border-radius:50%;background:var(--danger);animation:blink 1.1s infinite;flex:0 0 auto}
+.viewer .hud .txt{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);border-radius:999px;padding:4px 10px}
+.viewer .hud .rest{margin-left:auto;font-size:.66rem;background:rgba(0,0,0,.55);border-radius:999px;padding:4px 10px;font-variant-numeric:tabular-nums}
+/* barra del buffer: mostra quanti secondi di memoria sono già pieni */
+.bufbar{height:6px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:10px 0 4px}
+.bufbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .3s}
+.buflab{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted)}
+/* il bottone REC è volutamente enorme: si preme al volo, senza guardare */
+.recbtn{width:100%;margin-top:14px;border:none;border-radius:18px;padding:24px 15px;font-size:1.5rem;font-weight:900;letter-spacing:.12em;
+  background:linear-gradient(135deg,#ff4d6d,#b3122f);color:#fff;box-shadow:0 10px 26px rgba(255,77,109,.32)}
+.recbtn:disabled{opacity:.5;box-shadow:none}
+.recbtn small{display:block;font-size:.62rem;letter-spacing:.16em;font-weight:600;opacity:.85;margin-top:6px;text-transform:uppercase}
+.recbtn.flash{animation:flash .5s}
+@keyframes flash{0%{transform:scale(1)}40%{transform:scale(.96);filter:brightness(1.5)}100%{transform:scale(1)}}
+.clipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
+.clipcard{position:relative;border-radius:11px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:16/9}
+.clipcard img{width:100%;height:100%;object-fit:cover;display:block}
+.clipcard .n{position:absolute;left:5px;top:4px;font-size:.6rem;background:rgba(0,0,0,.6);border-radius:5px;padding:1px 6px;font-weight:700}
+.clipcard .st{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.62);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:6px}
+.clipcard .st.err{color:var(--danger)}
+.finebtn{background:linear-gradient(135deg,#2ec26b,#1f8a4c)!important;color:#04240f!important}
+.avviso{border:1px solid var(--danger);background:rgba(255,77,109,.1);border-radius:12px;padding:13px;font-size:.82rem;line-height:1.55;margin-top:12px}
+.avviso b{color:var(--danger)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#0e1730;border:1px solid var(--accent);color:var(--text);border-radius:12px;padding:11px 18px;font-size:.85rem;z-index:99;max-width:92vw;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+.hidden{display:none!important}
+footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);letter-spacing:.14em}
+</style>
+</head>
+<body>
+<header>
+  <div class="ball"></div>
+  <h1 id="hdr-t">App Replay<small>Subbuteo Tournament Center</small></h1>
+  <button id="lang" onclick="cLang()">EN</button>
+  <span id="status">—</span>
+</header>
+
+<!-- ============ CONNESSIONE ============ -->
+<section id="scr-connect">
+  <div class="card">
+    <h2 class="sect" data-i>Collegati alla Regia</h2>
+    <label data-i>Indirizzo del server (mostrato nel gestionale)</label>
+    <input type="url" id="c-url" placeholder="https://qualcosa.trycloudflare.com" autocapitalize="off" autocorrect="off">
+    <label data-i>Chiave privata del torneo</label>
+    <input type="text" id="c-key" placeholder="ES. K7Q2-M9DR" autocapitalize="characters" autocorrect="off" style="text-transform:uppercase;letter-spacing:.2em;font-weight:700">
+    <label data-i>Il tuo nome (facoltativo)</label>
+    <input type="text" id="c-name" placeholder="Operatore video">
+    <button class="btn" onclick="connect()" data-i>🔌 Collegati</button>
+    <p class="small muted" style="margin-top:12px" data-i>Inquadra il QR mostrato dal gestionale in Opzioni → App Campo: indirizzo e chiave si compilano da soli.</p>
+    <div id="c-avviso" class="avviso hidden"></div>
+  </div>
+</section>
+
+<!-- ============ ELENCO PARTITE ============ -->
+<section id="scr-list" class="hidden">
+  <div class="card" style="padding:12px 16px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <img id="l-logo" style="display:none;width:44px;height:44px;object-fit:contain;border-radius:9px" alt="">
+      <div style="flex:1"><b id="l-tourn">—</b><div class="small muted" id="l-meta"></div></div>
+      <button class="btn sec mini" onclick="disconnect()" data-i>Esci</button>
+    </div>
+  </div>
+  <h2 class="sect" data-i>In campo adesso</h2>
+  <div id="l-live"></div>
+  <h2 class="sect" data-i>Prossime partite</h2>
+  <div id="l-next"></div>
+  <p class="small muted" style="margin-top:10px" data-i>Scegli la partita da riprendere: la telecamera parte e tiene sempre in memoria gli ultimi 8 secondi.</p>
+</section>
+
+<!-- ============ RIPRESA ============ -->
+<section id="scr-cam" class="hidden">
+  <div class="mhead">
+    <button class="back" onclick="showList()">←</button>
+    <div class="ctx" id="cam-ctx">—</div>
+  </div>
+  <div class="card" style="padding:12px">
+    <div style="font-size:1rem;font-weight:700;text-align:center;margin-bottom:10px" id="cam-teams">—</div>
+    <div class="viewer">
+      <video id="cam-v" playsinline muted autoplay></video>
+      <div class="hud hidden" id="cam-hud">
+        <span class="dot"></span><span class="txt" data-i>in memoria</span>
+        <span class="rest" id="cam-rest">30:00</span>
+      </div>
+      <div class="off" id="cam-off">
+        <div class="ic">🎥</div>
+        <div id="cam-offmsg" data-i>Tocca «Avvia la telecamera» e tieni il telefono in orizzontale.</div>
+      </div>
+    </div>
+    <div class="bufbar"><i id="cam-buf"></i></div>
+    <div class="buflab"><span id="cam-buflab">—</span><span id="cam-fps" class="muted"></span></div>
+    <button class="btn" id="cam-start" onclick="camAvvia()" data-i>🎥 Avvia la telecamera</button>
+    <button class="recbtn hidden" id="cam-rec" onclick="camRec()">⏺ RECORD<small data-i>salva gli ultimi 8 secondi</small></button>
+    <button class="btn sec hidden" id="cam-stop" onclick="camFerma()" data-i>■ Ferma la telecamera</button>
+    <div id="cam-avviso" class="avviso hidden"></div>
+  </div>
+
+  <h2 class="sect"><span data-i>Azioni salvate</span> <span id="cl-n" class="muted"></span></h2>
+  <div class="clipgrid" id="cl-grid"></div>
+  <p class="small muted" id="cl-vuoto" data-i>Nessuna azione salvata per questa partita.</p>
+
+  <button class="btn finebtn" onclick="camFine()" data-i>🏁 Fine partita — monta il filmato</button>
+  <p class="small muted" style="margin-top:8px" data-i>La Regia unirà tutte le azioni di questa partita in un unico filmato.</p>
+</section>
+
+<div class="toast" id="toast"></div>
+<footer>Antonio de Masellis</footer>
+
+<canvas id="cv" style="display:none"></canvas>
+<script src="gifenc.js"></script>
+<script>
+'use strict';
+/* ---------- lingua ---------- */
+const I18N={
+ "Collegati alla Regia":"Connect to the Control Desk",
+ "Indirizzo del server (mostrato nel gestionale)":"Server address (shown in the manager app)",
+ "Chiave privata del torneo":"Tournament private key",
+ "Il tuo nome (facoltativo)":"Your name (optional)",
+ "🔌 Collegati":"🔌 Connect",
+ "Inquadra il QR mostrato dal gestionale in Opzioni → App Campo: indirizzo e chiave si compilano da soli.":"Scan the QR shown by the manager app under Options → Field App: address and key fill in by themselves.",
+ "In campo adesso":"On the field now","Prossime partite":"Upcoming matches","Esci":"Leave",
+ "Scegli la partita da riprendere: la telecamera parte e tiene sempre in memoria gli ultimi 8 secondi.":"Pick the match to film: the camera starts and always keeps the last 8 seconds in memory.",
+ "Tocca «Avvia la telecamera» e tieni il telefono in orizzontale.":"Tap “Start the camera” and hold the phone horizontally.",
+ "🎥 Avvia la telecamera":"🎥 Start the camera","■ Ferma la telecamera":"■ Stop the camera",
+ "salva gli ultimi 8 secondi":"saves the last 8 seconds","in memoria":"buffering",
+ "Azioni salvate":"Saved highlights","Nessuna azione salvata per questa partita.":"No highlight saved for this match.",
+ "🏁 Fine partita — monta il filmato":"🏁 Match over — build the film",
+ "La Regia unirà tutte le azioni di questa partita in un unico filmato.":"The Control Desk will join every highlight of this match into a single film.",
+ "Collegato":"Connected","Non raggiungibile":"Unreachable","invio…":"sending…",
+ "Chiave o indirizzo mancanti.":"Missing key or address.",
+ "Connessione riuscita!":"Connected!","Server non raggiungibile o chiave errata.":"Server unreachable or wrong key.",
+ "Torneo non ancora pubblicato dalla Regia.":"Tournament not yet published by the Control Desk.",
+ "Nessuna partita in corso.":"No match in progress.","Nessuna partita in attesa.":"No pending match.",
+ "Girone":"Group","Giornata":"Matchday","Turno":"Round","Campo":"Field",
+ "Telecamera non disponibile su questo collegamento.":"Camera not available over this connection.",
+ "Telecamera negata: dai il permesso al browser.":"Camera denied: grant permission to the browser.",
+ "Nessuna telecamera trovata.":"No camera found.",
+ "Telecamera avviata: gli ultimi 8 secondi sono sempre pronti.":"Camera on: the last 8 seconds are always ready.",
+ "Creo la GIF…":"Building the GIF…","Azione salvata e inviata alla Regia.":"Highlight saved and sent to the Control Desk.",
+ "Clip non inviata: nessun collegamento.":"Clip not sent: no connection.","Clip non inviata":"Clip not sent",
+ "Ancora pochi fotogrammi: aspetta qualche secondo.":"Too few frames yet: wait a few seconds.",
+ "Mezz'ora di ripresa: la telecamera si è fermata da sola.":"Half an hour of filming: the camera stopped by itself.",
+ "Telecamera ferma.":"Camera stopped.","invio":"sending","errore":"error",
+ "Fine partita inviata: la Regia monta il filmato.":"End of match sent: the Control Desk is building the film.",
+ "secondi in memoria":"seconds buffered","pronto":"ready",
+ "Serve un collegamento sicuro":"A secure connection is required",
+ "Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, in Opzioni → App Campo, accendi il <b>collegamento da fuori casa (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona.":"Browsers only open the camera over <b>https</b>. In the manager app, under Options → Field App, switch on the <b>remote connection (Cloudflare)</b> and scan that QR: the address becomes https and filming works."
+};
+let LANG=localStorage.getItem('campo_lang')||'it';
+const T=s=>LANG==='en'?(I18N[s]||s):s;
+function cLang(){LANG=LANG==='en'?'it':'en';localStorage.setItem('campo_lang',LANG);applyLang();render();}
+function applyLang(){
+  document.getElementById('lang').textContent=LANG==='en'?'IT':'EN';
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    if(!el.__it)el.__it=el.textContent.trim();
+    el.textContent=LANG==='en'?(I18N[el.__it]||el.__it):el.__it;
+  });
+  avvisoSicurezza();
+}
+
+/* ---------- parametri della ripresa ----------
+   8 fotogrammi al secondo per 8 secondi: 64 immagini da 256×144.
+   Sono ~9 MB di memoria, che un telefono regge senza fatica, e danno
+   una GIF fluida ma leggera. Oltre i 30 minuti la ripresa si spegne da
+   sola: è il limite chiesto, e protegge anche la batteria.            */
+const FPS=8, SEC=8, NF=FPS*SEC, CW=256, CH=144, MAXMS=30*60*1000;
+
+/* ---------- stato ---------- */
+const LS='subbuteo_replay_v1';
+let cfg={url:'',key:'',name:''};
+try{cfg=Object.assign(cfg,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){}
+let DEV=localStorage.getItem(LS+'_dev');
+if(!DEV){DEV='r'+Math.random().toString(36).slice(2,10);localStorage.setItem(LS+'_dev',DEV);}
+let snap=null,seq=0,connected=false,curMid=null,pollT=null;
+let stream=null,grabT=null,camT0=0,restT=null;
+let buf=[],bufI=0;                 // anello di fotogrammi: buf[bufI] è il più vecchio
+let clips=[];                      // clip di questa sessione: {mid,ts,f,stato}
+let occupato=false;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let toastT=null;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2800);}
+function status(){
+  const el=$('#status');
+  el.textContent=connected?T('Collegato'):T('Non raggiungibile');
+  el.className=connected?'on':'';
+}
+function api(path){return cfg.url.replace(/\/+$/,'')+path;}
+
+/* la telecamera pretende https: se manca, lo si dice subito e chiaro */
+function sicuro(){return window.isSecureContext===true;}
+function avvisoSicurezza(){
+  const testo=`<b>${T('Serve un collegamento sicuro')}.</b><br>${T("Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, in Opzioni → App Campo, accendi il <b>collegamento da fuori casa (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona.")}`;
+  ['#c-avviso','#cam-avviso'].forEach(s=>{
+    const el=$(s);if(!el)return;
+    el.innerHTML=testo;el.classList.toggle('hidden',sicuro());
+  });
+}
+
+/* ---------- connessione ---------- */
+function connect(){
+  const url=$('#c-url').value.trim(),key=$('#c-key').value.trim().toUpperCase(),name=$('#c-name').value.trim();
+  if(!url||!key){toast(T('Chiave o indirizzo mancanti.'));return;}
+  cfg.url=url;cfg.key=key;cfg.name=name;localStorage.setItem(LS,JSON.stringify(cfg));
+  fetch(api('/api/state?key='+encodeURIComponent(key)),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(d=>{
+      connected=true;seq=0;
+      if(d.snap){snap=d.snap;seq=d.seq;}
+      toast(T(d.snap?'Connessione riuscita!':'Torneo non ancora pubblicato dalla Regia.'));
+      send({type:'hello'});
+      pollT=setInterval(poll,3000);
+      showList();
+    })
+    .catch(()=>{connected=false;status();toast(T('Server non raggiungibile o chiave errata.'));});
+}
+function disconnect(){
+  camFerma(true);clearInterval(pollT);connected=false;snap=null;
+  $('#scr-list').classList.add('hidden');$('#scr-cam').classList.add('hidden');
+  $('#scr-connect').classList.remove('hidden');status();
+}
+function poll(){
+  fetch(api('/api/state?key='+encodeURIComponent(cfg.key)+'&seq='+seq),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(d=>{connected=true;if(d.snap!==undefined){snap=d.snap;seq=d.seq;render();}else if(d.seq!==undefined)seq=d.seq;status();})
+    .catch(()=>{connected=false;status();});
+}
+function send(ev){
+  ev.by=cfg.name||undefined;ev.ts=Date.now();ev.dev=DEV;
+  fetch(api('/api/event'),{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:cfg.key,ev})}).catch(()=>{});
+}
+
+/* ---------- dati dallo snapshot ---------- */
+function allMatches(){
+  if(!snap)return[];
+  const out=[];
+  (snap.groups||[]).forEach(g=>(g.matches||[]).forEach(m=>out.push(Object.assign({ctx:(g.swiss?T('Turno'):(T('Girone')+' '+g.name+' · '+T('Giornata')))+' '+(m.r||1)},m))));
+  (snap.kos||[]).forEach(ko=>(ko.rounds||[]).forEach(rd=>(rd.matches||[]).forEach(m=>{
+    if(m.h&&m.a)out.push(Object.assign({ctx:ko.t+' · '+rd.name},m));
+  })));
+  (snap.free||[]).forEach(m=>out.push(Object.assign({ctx:'⚡'},m)));
+  return out;
+}
+function findM(id){return allMatches().find(m=>m.id===id);}
+function boardOf(id){return (snap&&snap.boards||[]).find(b=>b.mid===id);}
+function nClip(mid){return clips.filter(c=>c.mid===mid&&c.stato==='ok').length;}
+
+/* ---------- elenco ---------- */
+function showList(){
+  camFerma(true);curMid=null;
+  $('#scr-connect').classList.add('hidden');$('#scr-cam').classList.add('hidden');
+  $('#scr-list').classList.remove('hidden');
+  render();
+}
+function mrow(m){
+  const b=boardOf(m.id),n=nClip(m.id);
+  return `<div class="mrow" onclick="apriPartita('${m.id}')">
+    ${b?`<span class="fld">C${b.f}</span>`:''}
+    <span class="tms">${esc(m.h)} – ${esc(m.a)}</span>
+    ${n?`<span class="nclip">🎞 ${n}</span>`:''}
+    ${m.hs!=null||m.as!=null?`<span class="sc">${m.hs??0}–${m.as??0}</span>`:''}
+    ${m.live?`<span class="live">LIVE</span>`:''}
+  </div>`;
+}
+function render(){
+  status();
+  if(!$('#scr-list').classList.contains('hidden')){
+    const ms=allMatches();
+    const live=ms.filter(m=>m.live||boardOf(m.id));
+    const next=ms.filter(m=>!live.includes(m)&&!m.done).slice(0,24);
+    $('#l-live').innerHTML=live.map(mrow).join('')||`<p class="small muted">${T('Nessuna partita in corso.')}</p>`;
+    $('#l-next').innerHTML=next.map(mrow).join('')||`<p class="small muted">${T('Nessuna partita in attesa.')}</p>`;
+    $('#l-tourn').textContent=(snap&&snap.name)||'—';
+    $('#l-meta').textContent=(snap&&snap.sub)||'';
+    const lg=$('#l-logo');
+    if(snap&&snap.logo){lg.src=snap.logo;lg.style.display='';}else lg.style.display='none';
+  }
+  if(curMid){
+    const m=findM(curMid);
+    if(m){
+      $('#cam-teams').innerHTML=`${esc(m.h)} <span class="muted">–</span> ${esc(m.a)}`;
+      const b=boardOf(curMid);
+      $('#cam-ctx').textContent=(b?T('Campo')+' '+b.f+' · ':'')+(m.ctx||'');
+    }
+    renderClips();
+  }
+}
+function apriPartita(id){
+  curMid=id;
+  $('#scr-list').classList.add('hidden');$('#scr-cam').classList.remove('hidden');
+  bufReset();camUI();render();avvisoSicurezza();leggiClip();
+}
+/* le azioni già depositate (magari da un altro telefono, o prima di un
+   ricaricamento della pagina) tornano nell'elenco: la memoria vera è
+   quella della Regia, non quella del browser */
+function leggiClip(){
+  fetch(api('/api/clip'),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(d=>{
+      if(!d||!d.list)return;
+      d.list.forEach(x=>{
+        if(clips.some(c=>c.f===x.f||c.ts===x.ts))return;
+        clips.push({mid:x.mid,ts:x.ts,f:x.f,stato:'ok'});
+      });
+      clips.sort((a,b)=>b.ts-a.ts);
+      renderClips();render();
+    })
+    .catch(()=>{});
+}
+
+/* ================= TELECAMERA E MEMORIA CIRCOLARE =================
+   Non si registra su file: si tiene in RAM un anello di 64 immagini.
+   Ogni nuovo fotogramma sovrascrive il più vecchio, così in qualunque
+   istante la memoria contiene esattamente gli ultimi 8 secondi. Quando
+   l'operatore preme REC, quell'anello viene letto in ordine e diventa
+   una GIF: è il motivo per cui si cattura l'azione DOPO averla vista.  */
+function bufReset(){buf=[];bufI=0;aggiornaBuf();}
+function camUI(){
+  const on=!!stream;
+  $('#cam-start').classList.toggle('hidden',on);
+  $('#cam-rec').classList.toggle('hidden',!on);
+  $('#cam-stop').classList.toggle('hidden',!on);
+  $('#cam-off').classList.toggle('hidden',on);
+  $('#cam-hud').classList.toggle('hidden',!on);
+}
+function camAvvia(){
+  if(stream)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    avvisoSicurezza();toast(T('Telecamera non disponibile su questo collegamento.'));return;
+  }
+  navigator.mediaDevices.getUserMedia({
+    video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30}},
+    audio:false
+  }).then(s=>{
+    stream=s;
+    const v=$('#cam-v');
+    v.srcObject=s;
+    const p=v.play();if(p&&p.catch)p.catch(()=>{});
+    camT0=Date.now();bufReset();camUI();
+    grabT=setInterval(grab,Math.round(1000/FPS));
+    restT=setInterval(tickResto,1000);tickResto();
+    toast(T('Telecamera avviata: gli ultimi 8 secondi sono sempre pronti.'));
+  }).catch(err=>{
+    const n=err&&err.name;
+    if(n==='NotAllowedError'||n==='SecurityError'){avvisoSicurezza();toast(T('Telecamera negata: dai il permesso al browser.'));}
+    else if(n==='NotFoundError'||n==='OverconstrainedError')toast(T('Nessuna telecamera trovata.'));
+    else{avvisoSicurezza();toast(T('Telecamera non disponibile su questo collegamento.'));}
+  });
+}
+function camFerma(muto){
+  clearInterval(grabT);clearInterval(restT);grabT=restT=null;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;$('#cam-v').srcObject=null;}
+  camUI();
+  if(!muto)toast(T('Telecamera ferma.'));
+}
+function tickResto(){
+  const rest=Math.max(0,MAXMS-(Date.now()-camT0));
+  const s=Math.round(rest/1000);
+  $('#cam-rest').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  if(rest<=0){camFerma(true);toast(T("Mezz'ora di ripresa: la telecamera si è fermata da sola."));}
+}
+/* ritaglio "cover": qualunque sia l'orientamento del telefono, la clip
+   esce sempre 256×144, così tutte si montano insieme senza scarti */
+function grab(){
+  const v=$('#cam-v');
+  if(!v.videoWidth)return;
+  const cv=$('#cv');
+  if(cv.width!==CW){cv.width=CW;cv.height=CH;}
+  const cx=cv.getContext('2d',{willReadFrequently:true});
+  const k=Math.max(CW/v.videoWidth,CH/v.videoHeight);
+  const w=v.videoWidth*k,h=v.videoHeight*k;
+  cx.drawImage(v,(CW-w)/2,(CH-h)/2,w,h);
+  const d=cx.getImageData(0,0,CW,CH).data;
+  if(buf.length<NF)buf.push(d);
+  else{buf[bufI]=d;bufI=(bufI+1)%NF;}
+  aggiornaBuf();
+}
+function aggiornaBuf(){
+  const q=buf.length/NF;
+  $('#cam-buf').style.width=Math.round(q*100)+'%';
+  $('#cam-buflab').textContent=(buf.length/FPS).toFixed(1)+' '+T('secondi in memoria');
+  $('#cam-fps').textContent=buf.length>=NF?T('pronto'):'';
+  const r=$('#cam-rec');if(r)r.disabled=occupato||buf.length<FPS*2;
+}
+function bufOrdinato(){
+  // l'anello va srotolato: dal più vecchio al più recente
+  if(buf.length<NF)return buf.slice();
+  return buf.slice(bufI).concat(buf.slice(0,bufI));
+}
+
+/* ---------- REC: gli 8 secondi appena visti diventano una GIF ---------- */
+function camRec(){
+  if(occupato||!curMid)return;
+  const fr=bufOrdinato();
+  if(fr.length<FPS*2){toast(T('Ancora pochi fotogrammi: aspetta qualche secondo.'));return;}
+  occupato=true;aggiornaBuf();
+  const b=$('#cam-rec');b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');
+  const ts=Date.now(),mid=curMid;
+  clips.unshift({mid,ts,f:null,stato:'gif'});renderClips();
+  /* l'encoder blocca il filo di esecuzione per qualche decimo di secondo:
+     lo si lancia dopo un respiro, così la scritta «Creo la GIF…» compare */
+  setTimeout(()=>{
+    let blob=null;
+    try{
+      blob=codifica(fr,96);
+      // rete di palestra: se pesa troppo si ricomprime più stretta
+      if(blob&&blob.size>4*1024*1024)blob=codifica(fr,48);
+      if(blob&&blob.size>6*1024*1024)blob=codifica(fr.filter((x,i)=>i%2===0),48,2);
+    }catch(e){blob=null;}
+    const c=clips.find(x=>x.ts===ts);
+    if(!blob){if(c)c.stato='err';occupato=false;aggiornaBuf();renderClips();return;}
+    if(c)c.stato='invio';renderClips();
+    const rd=new FileReader();
+    rd.onload=()=>invia(mid,ts,rd.result);
+    rd.onerror=()=>{if(c)c.stato='err';occupato=false;aggiornaBuf();renderClips();};
+    rd.readAsDataURL(blob);
+  },60);
+}
+function codifica(fr,colori,salto){
+  const g=new GifEnc(CW,CH,{delay:Math.round(1000/FPS)*(salto||1),colors:colori});
+  fr.forEach(f=>g.addFrame(f));
+  return g.finish();
+}
+function invia(mid,ts,dataUrl){
+  fetch(api('/api/clip'),{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:cfg.key,mid,ts,gif:dataUrl})})
+    .then(r=>r.json())
+    .then(d=>{
+      const c=clips.find(x=>x.ts===ts);
+      if(d&&d.ok){
+        if(c){c.stato='ok';c.f=d.file;}
+        toast('🎞 '+T('Azione salvata e inviata alla Regia.'));
+        send({type:'clip',mid,file:d.file});
+      }else{
+        if(c)c.stato='err';
+        toast(T('Clip non inviata')+(d&&d.err?': '+d.err:''));
+      }
+      occupato=false;aggiornaBuf();renderClips();render();
+    })
+    .catch(()=>{
+      const c=clips.find(x=>x.ts===ts);if(c)c.stato='err';
+      toast(T('Clip non inviata: nessun collegamento.'));
+      occupato=false;aggiornaBuf();renderClips();
+    });
+}
+function renderClips(){
+  const mie=clips.filter(c=>c.mid===curMid);
+  const g=$('#cl-grid'),v=$('#cl-vuoto');
+  $('#cl-n').textContent=mie.length?'· '+mie.length:'';
+  v.classList.toggle('hidden',!!mie.length);
+  g.innerHTML=mie.map((c,i)=>{
+    const n=mie.length-i;
+    const st=c.stato==='ok'?''
+      :`<div class="st${c.stato==='err'?' err':''}">${c.stato==='gif'?T('Creo la GIF…'):c.stato==='invio'?T('invio')+'…':T('errore')}</div>`;
+    const im=c.f?`<img src="${api('/api/clip?f='+encodeURIComponent(c.f))}" alt="">`:'';
+    return `<div class="clipcard">${im}<span class="n">${n}</span>${st}</div>`;
+  }).join('');
+}
+
+/* ---------- fine partita: la Regia monta il filmato ---------- */
+function camFine(){
+  if(!curMid)return;
+  send({type:'clipend',mid:curMid});
+  toast('🏁 '+T('Fine partita inviata: la Regia monta il filmato.'));
+  camFerma(true);
+  showList();
+}
+
+/* ---------- avvio ---------- */
+(function(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('u'))cfg.url=q.get('u');
+  if(q.get('k'))cfg.key=q.get('k').toUpperCase();
+  if(!cfg.url&&location.protocol.startsWith('http')&&!/github/.test(location.host))cfg.url=location.origin;
+  $('#c-url').value=cfg.url||'';$('#c-key').value=cfg.key||'';$('#c-name').value=cfg.name||'';
+  applyLang();status();avvisoSicurezza();
+  const m=q.get('m');
+  if(cfg.url&&cfg.key&&q.get('auto')!=='0'){
+    connect();
+    if(m)setTimeout(()=>{if(findM(m))apriPartita(m);},900);
+  }
+  // se il telefono va in tasca la ripresa si ferma da sola: niente batteria bruciata
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden&&stream){camFerma(true);toast(T('Telecamera ferma.'));}
+  });
+})();
+</script>
+</body>
+</html>
