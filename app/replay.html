@@ -80,6 +80,13 @@ h2.sect{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(-
 .finebtn{background:linear-gradient(135deg,#2ec26b,#1f8a4c)!important;color:#04240f!important}
 .avviso{border:1px solid var(--danger);background:rgba(255,77,109,.1);border-radius:12px;padding:13px;font-size:.82rem;line-height:1.55;margin-top:12px}
 .avviso b{color:var(--danger)}
+/* riquadro diagnostico: dice sempre a quale server si sta parlando */
+.diag{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:12px;padding:11px 13px;
+  font-size:.78rem;line-height:1.55;margin-top:12px;color:var(--muted)}
+.diag.ok{border-color:rgba(61,220,132,.4)}
+.diag.err{border-color:var(--danger);background:rgba(255,77,109,.09);color:var(--text)}
+.diag.err b{color:var(--danger)}
+.diag .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;color:var(--accent2);word-break:break-all}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#0e1730;border:1px solid var(--accent);color:var(--text);border-radius:12px;padding:11px 18px;font-size:.85rem;z-index:99;max-width:92vw;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:opacity .25s;pointer-events:none}
 .toast.on{opacity:1}
 .hidden{display:none!important}
@@ -105,7 +112,8 @@ footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);let
     <label data-i>Il tuo nome (facoltativo)</label>
     <input type="text" id="c-name" placeholder="Operatore video">
     <button class="btn" onclick="connect()" data-i>🔌 Collegati</button>
-    <p class="small muted" style="margin-top:12px" data-i>Inquadra il QR mostrato dal gestionale in Opzioni → App Campo: indirizzo e chiave si compilano da soli.</p>
+    <p class="small muted" style="margin-top:12px" data-i>Inquadra il QR mostrato dal gestionale nella sezione Regia: indirizzo e chiave si compilano da soli.</p>
+    <div id="c-diag" class="diag hidden"></div>
     <div id="c-avviso" class="avviso hidden"></div>
   </div>
 </section>
@@ -175,7 +183,7 @@ const I18N={
  "Chiave privata del torneo":"Tournament private key",
  "Il tuo nome (facoltativo)":"Your name (optional)",
  "🔌 Collegati":"🔌 Connect",
- "Inquadra il QR mostrato dal gestionale in Opzioni → App Campo: indirizzo e chiave si compilano da soli.":"Scan the QR shown by the manager app under Options → Field App: address and key fill in by themselves.",
+ "Inquadra il QR mostrato dal gestionale nella sezione Regia: indirizzo e chiave si compilano da soli.":"Scan the QR shown by the manager app in the Control Desk section: address and key fill in by themselves.",
  "In campo adesso":"On the field now","Prossime partite":"Upcoming matches","Esci":"Leave",
  "Scegli la partita da riprendere: la telecamera parte e tiene sempre in memoria gli ultimi 8 secondi.":"Pick the match to film: the camera starts and always keeps the last 8 seconds in memory.",
  "Tocca «Avvia la telecamera» e tieni il telefono in orizzontale.":"Tap “Start the camera” and hold the phone horizontally.",
@@ -201,8 +209,14 @@ const I18N={
  "Telecamera ferma.":"Camera stopped.","invio":"sending","errore":"error",
  "Fine partita inviata: la Regia monta il filmato.":"End of match sent: the Control Desk is building the film.",
  "secondi in memoria":"seconds buffered","pronto":"ready",
+ "Inquadra il QR mostrato dal gestionale nella sezione Regia: indirizzo e chiave si compilano da soli.":"Scan the QR shown by the manager app in the Control Desk section: address and key fill in by themselves.",
+ "Server":"Server","Indirizzo non compatibile":"Incompatible address",
+ "Questa pagina è servita in https ma punta a un indirizzo in chiaro: il browser blocca la chiamata. Inquadra di nuovo il QR del tunnel dal gestionale.":"This page is served over https but points to a plain address: the browser blocks the call. Scan the tunnel QR again from the manager app.",
+ "Collegamento non riuscito":"Connection failed",
+ "Il server risponde ma rifiuta la chiave: controlla la chiave privata mostrata dal gestionale.":"The server answers but rejects the key: check the private key shown by the manager app.",
+ "Il server non risponde. Controlla che il gestionale sia aperto, che il telefono sia sulla stessa Wi-Fi (oppure che il tunnel sia acceso) e che il firewall lasci passare il programma.":"The server does not answer. Check that the manager app is open, that the phone is on the same Wi-Fi (or that the tunnel is on) and that the firewall lets the program through.",
  "Serve un collegamento sicuro":"A secure connection is required",
- "Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, in Opzioni → App Campo, accendi il <b>collegamento da fuori casa (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona.":"Browsers only open the camera over <b>https</b>. In the manager app, under Options → Field App, switch on the <b>remote connection (Cloudflare)</b> and scan that QR: the address becomes https and filming works."
+ "Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, nella sezione <b>Regia</b>, accendi il <b>tunnel Internet (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona. A tunnel acceso la spia accanto all'orologio della Regia diventa verde.":"Browsers only open the camera over <b>https</b>. In the manager app, in the <b>Control Desk</b> section, switch on the <b>Internet tunnel (Cloudflare)</b> and scan that QR: the address becomes https and filming works. With the tunnel on, the light next to the Control Desk clock turns green."
 };
 let LANG=localStorage.getItem('campo_lang')||'it';
 const T=s=>LANG==='en'?(I18N[s]||s):s;
@@ -249,11 +263,31 @@ function api(path){return cfg.url.replace(/\/+$/,'')+path;}
 /* la telecamera pretende https: se manca, lo si dice subito e chiaro */
 function sicuro(){return window.isSecureContext===true;}
 function avvisoSicurezza(){
-  const testo=`<b>${T('Serve un collegamento sicuro')}.</b><br>${T("Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, in Opzioni → App Campo, accendi il <b>collegamento da fuori casa (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona.")}`;
+  const testo=`<b>${T('Serve un collegamento sicuro')}.</b><br>${T("Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, nella sezione <b>Regia</b>, accendi il <b>tunnel Internet (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona. A tunnel acceso la spia accanto all'orologio della Regia diventa verde.")}`;
   ['#c-avviso','#cam-avviso'].forEach(s=>{
     const el=$(s);if(!el)return;
     el.innerHTML=testo;el.classList.toggle('hidden',sicuro());
   });
+}
+
+/* Un collegamento che non parte è la cosa più frustrante a bordo campo:
+   qui si dice sempre a quale indirizzo si sta parlando e, quando fallisce,
+   qual è la causa più probabile invece di un generico «non raggiungibile». */
+function diag(html,tipo){
+  const el=$('#c-diag');if(!el)return;
+  if(!html){el.classList.add('hidden');return;}
+  el.className='diag '+(tipo||'');el.innerHTML=html;el.classList.remove('hidden');
+}
+function misto(){   // pagina https che chiama un indirizzo in chiaro: il browser blocca
+  return location.protocol==='https:'&&/^http:\/\//i.test(cfg.url||'');
+}
+function diagIndirizzo(){
+  if(!cfg.url){diag('');return;}
+  if(misto()){
+    diag(`<b>⚠ ${T('Indirizzo non compatibile')}.</b><br>${T('Questa pagina è servita in https ma punta a un indirizzo in chiaro: il browser blocca la chiamata. Inquadra di nuovo il QR del tunnel dal gestionale.')}<br><span class="mono">${esc(cfg.url)}</span>`,'err');
+    return;
+  }
+  diag(`${T('Server')}: <span class="mono">${esc(cfg.url)}</span>`,'ok');
 }
 
 /* ---------- connessione ---------- */
@@ -261,17 +295,29 @@ function connect(){
   const url=$('#c-url').value.trim(),key=$('#c-key').value.trim().toUpperCase(),name=$('#c-name').value.trim();
   if(!url||!key){toast(T('Chiave o indirizzo mancanti.'));return;}
   cfg.url=url;cfg.key=key;cfg.name=name;localStorage.setItem(LS,JSON.stringify(cfg));
+  diagIndirizzo();
+  if(misto())return;
   fetch(api('/api/state?key='+encodeURIComponent(key)),{cache:'no-store'})
-    .then(r=>r.json())
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(d=>{
       connected=true;seq=0;
       if(d.snap){snap=d.snap;seq=d.seq;}
       toast(T(d.snap?'Connessione riuscita!':'Torneo non ancora pubblicato dalla Regia.'));
+      diag('');
       send({type:'hello'});
-      pollT=setInterval(poll,3000);
+      clearInterval(pollT);pollT=setInterval(poll,3000);
       showList();
     })
-    .catch(()=>{connected=false;status();toast(T('Server non raggiungibile o chiave errata.'));});
+    .catch(e=>{
+      connected=false;status();
+      const m=String((e&&e.message)||'');
+      diag(`<b>⚠ ${T('Collegamento non riuscito')}.</b><br>`+
+        (/HTTP 40[13]/.test(m)
+          ? T('Il server risponde ma rifiuta la chiave: controlla la chiave privata mostrata dal gestionale.')
+          : T('Il server non risponde. Controlla che il gestionale sia aperto, che il telefono sia sulla stessa Wi-Fi (oppure che il tunnel sia acceso) e che il firewall lasci passare il programma.'))+
+        `<br><span class="mono">${esc(cfg.url)}</span>${m?' · '+esc(m):''}`,'err');
+      toast(T('Server non raggiungibile o chiave errata.'));
+    });
 }
 function disconnect(){
   camFerma(true);clearInterval(pollT);connected=false;snap=null;
@@ -529,11 +575,17 @@ function camFine(){
 /* ---------- avvio ---------- */
 (function(){
   const q=new URLSearchParams(location.search);
-  if(q.get('u'))cfg.url=q.get('u');
   if(q.get('k'))cfg.key=q.get('k').toUpperCase();
-  if(!cfg.url&&location.protocol.startsWith('http')&&!/github/.test(location.host))cfg.url=location.origin;
+  /* L'indirizzo da cui questa pagina è stata servita VINCE su quello salvato
+     dalla volta scorsa. Senza questa regola, un telefono che si era collegato
+     in Wi-Fi (http://192.168…) e che poi inquadra il QR del tunnel continuava
+     a chiamare il vecchio indirizzo in chiaro: il browser blocca la chiamata
+     (contenuto misto su pagina https) e l'app sembrava semplicemente morta.
+     Un ?u= esplicito resta comunque prioritario, per i casi particolari. */
+  if(q.get('u'))cfg.url=q.get('u');
+  else if(location.protocol.startsWith('http')&&!/github/.test(location.host))cfg.url=location.origin;
   $('#c-url').value=cfg.url||'';$('#c-key').value=cfg.key||'';$('#c-name').value=cfg.name||'';
-  applyLang();status();avvisoSicurezza();
+  applyLang();status();avvisoSicurezza();diagIndirizzo();
   const m=q.get('m');
   if(cfg.url&&cfg.key&&q.get('auto')!=='0'){
     connect();

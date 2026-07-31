@@ -153,7 +153,10 @@ let subsSent={};       // mid -> n cambi richiesti da questo telefono
 /* deep-link dal QR: ?u=indirizzo&k=chiave&t=squadra */
 (function(){
   const q=new URLSearchParams(location.search);
-  const u=q.get('u')||((q.get('k')&&location.origin.startsWith('http'))?location.origin:null);
+  /* l'indirizzo da cui la pagina è servita vince su quello salvato: passando
+     dalla Wi-Fi al tunnel https il vecchio indirizzo in chiaro sarebbe
+     bloccato dal browser come contenuto misto */
+  const u=q.get('u')||((location.protocol.startsWith('http')&&!/github/.test(location.host))?location.origin:null);
   if(u)cfg.url=u;
   if(q.get('k'))cfg.key=q.get('k').toUpperCase();
   if(q.get('t'))cfg.team=q.get('t');

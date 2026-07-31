@@ -643,6 +643,41 @@ body.no-anim #present .pbg .beam,body.no-anim #present .pbg .fball,body.no-anim 
 #present #present-xfade.on{opacity:1}
 #present.xfading #present-grid{animation:pxin .9s ease both}
 @keyframes pxin{from{opacity:0}to{opacity:1}}
+/* --- striscia delle foto della giornata (solo in Presentazione) ---------
+   Scorre da sola in fondo allo schermo, come la sfilata di fotografie a bordo
+   campo: la sala riconosce le facce mentre guarda i risultati. Il nastro è
+   duplicato due volte e traslato del 50%, così il giro si chiude senza salti. */
+#present .pfoto{flex:0 0 auto;width:100%;max-width:1640px;margin:2.5vh auto 0;
+  border-top:1px solid var(--line);padding-top:1.4vh}
+#present .pfoto-lab{font-family:'Oswald',sans-serif;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--accent2);font-size:clamp(.62rem,1vw,.9rem);margin-bottom:1vh;text-align:center;opacity:.85}
+#present .pfoto-clip{overflow:hidden;width:100%;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+#present .pfoto-run{display:flex;gap:1.2vw;width:max-content;animation:pfotoscroll linear infinite}
+#present .pfoto-run:hover{animation-play-state:paused}
+@keyframes pfotoscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+body.no-anim #present .pfoto-run{animation:none}
+#present .pfoto-it{flex:0 0 auto;width:clamp(150px,13vw,232px);background:var(--card);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;backdrop-filter:blur(6px)}
+#present .pfoto-it .ph{position:relative}
+#present .pfoto-it img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#05080f}
+/* targhetta del momento dello scatto: resta sempre leggibile, anche quando
+   la riga della fase si accorcia sui riquadri stretti */
+#present .pfoto-it .mom{position:absolute;left:.4vw;bottom:.5vh;font-family:'Oswald',sans-serif;
+  font-size:clamp(.5rem,.72vw,.66rem);letter-spacing:.14em;text-transform:uppercase;
+  padding:.25vh .5vw;border-radius:99px;background:rgba(4,8,18,.78);color:var(--accent2);
+  border:1px solid color-mix(in srgb,var(--accent2) 45%,transparent)}
+#present .pfoto-it .mom.dopo{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+#present .pfoto-it .cap{padding:.7vh .7vw .9vh;text-align:center;line-height:1.25}
+/* i nomi lunghi vanno a capo invece di sparire dietro i puntini: con due
+   righe ci sta anche «Giocatore 8 3–1 Giocatore 3» per intero */
+#present .pfoto-it .cap b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  font-family:'Oswald',sans-serif;font-size:clamp(.6rem,.95vw,.86rem);
+  text-transform:uppercase;letter-spacing:.04em;overflow:hidden;min-height:2.4em}
+#present .pfoto-it .cap .ris{font-family:'Chakra Petch',monospace;color:var(--gold);font-size:clamp(.66rem,1.05vw,.95rem)}
+#present .pfoto-it .cap small{display:block;color:var(--muted);font-size:clamp(.52rem,.8vw,.72rem);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.2vh}
 /* auto-fit: l'intera vista viene scalata per stare in UNA sola schermata */
 #present .pfit{transform-origin:top center;width:100%}
 #present-title.pfading{opacity:0}
@@ -1275,6 +1310,45 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 #hdr-mic i{width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#b6ffcb,#26e04f 60%,#0b7a26);
   box-shadow:0 0 10px #2ee557,0 0 22px rgba(46,229,87,.7);animation:micled 1.2s ease-in-out infinite}
 @keyframes micled{50%{opacity:.55;box-shadow:0 0 5px #2ee557,0 0 10px rgba(46,229,87,.4)}}
+/* Spia del tunnel Internet: dice a colpo d'occhio se i telefoni possono
+   collegarsi da fuori — e soprattutto se l'indirizzo è https, senza il quale
+   l'App Replay non può accendere la telecamera. */
+#hdr-tun{display:none;align-items:center;gap:5px;font-size:.95rem;margin-right:2px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:3px 9px;
+  color:var(--muted);white-space:nowrap;transition:border-color .25s,color .25s}
+#hdr-tun.on{display:flex}
+#hdr-tun i{width:9px;height:9px;border-radius:50%;flex:0 0 auto;
+  background:radial-gradient(circle at 35% 30%,#cfd7e8,#7c8aa6 60%,#3d4859)}
+#hdr-tun .tl{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+#hdr-tun.att{color:#7ff0c6;border-color:rgba(46,229,160,.55)}
+#hdr-tun.att i{background:radial-gradient(circle at 35% 30%,#c8fff0,#26e0a8 60%,#0b7a5c);
+  box-shadow:0 0 9px #2ee5b0,0 0 20px rgba(46,229,176,.6)}
+#hdr-tun.avv{color:var(--gold);border-color:rgba(212,175,55,.5)}
+#hdr-tun.avv i{background:radial-gradient(circle at 35% 30%,#ffe9a8,#e0a83a 60%,#8a6a12);
+  box-shadow:0 0 8px #e0a83a;animation:micled 1s ease-in-out infinite}
+#hdr-tun.err{color:#ff9db0;border-color:rgba(255,77,109,.5)}
+#hdr-tun.err i{background:radial-gradient(circle at 35% 30%,#ffc9d4,#ff4d6d 60%,#8a1226);box-shadow:0 0 8px #ff4d6d}
+@media(max-width:900px){#hdr-tun .tl{display:none}}
+/* ---------- sezione REGIA: banda di gruppo e riquadri ---------- */
+.rgband{display:flex;align-items:center;gap:14px;font-family:'Oswald',sans-serif;font-size:.95rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 14px;font-weight:600}
+.rgband::after{content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,var(--gold),color-mix(in srgb,var(--gold) 18%,transparent) 70%,transparent)}
+/* due colonne esatte: con auto-fit su schermi larghi ne nascevano tre e la
+   prima fila restava spaiata, con un vuoto a destra */
+.rggrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.rggrid{grid-template-columns:1fr}}
+.rgspan{grid-column:1/-1}
+.rgcard{position:relative;overflow:hidden}
+.rgcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--accent2),transparent 80%);opacity:.5}
+.rgkey{font-family:'Oswald',sans-serif;font-size:1.5rem;letter-spacing:.28em;color:var(--gold);
+  text-shadow:0 0 14px color-mix(in srgb,var(--gold) 45%,transparent)}
+.rgqr{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.rgqr canvas{background:#fff;border-radius:12px;width:172px;height:172px;cursor:zoom-in;flex:0 0 auto;
+  padding:6px;box-shadow:0 8px 26px rgba(0,0,0,.4)}
+.rgqr-side{flex:1;min-width:180px}
+.rgtun{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 /* ---------- pre-torneo: pagina bianca "quaderno" ---------- */
 #tab-pretorneo .paper{background:#fdfcf7;color:#1d2433;border:1px solid #d8d2bd;border-radius:12px;
   background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(70,110,160,.14) 27px 28px);
@@ -1436,6 +1510,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   <select id="mt-sel" onchange="switchTournament(this.value)" title="Torneo attivo (fino a 4 simultanei)"></select>
   <button id="lang-btn" onclick="toggleLang()" title="Italiano / International (English)">🌐 EN</button>
   <span id="hdr-mic" title="Speaker attivo — microfono in onda">🎙<i></i></span>
+  <span id="hdr-tun" onclick="tabTo('audio')" title="Tunnel Internet"><i></i><span class="tl">Tunnel</span></span>
   <button id="lic-btn" onclick="openLicense()" title="Licenza">🔑</button>
   <div id="hdr-clock">--:--</div>
 </header>
@@ -1443,7 +1518,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 <nav id="tabs">
   <button data-tab="setup" onclick="tabTo('setup')" class="on">⚙ Setup</button>
   <button data-tab="opzioni" onclick="tabTo('opzioni')">Opzioni</button>
-  <button data-tab="audio" onclick="tabTo('audio')">🎙 Regia Audio</button>
+  <button data-tab="audio" onclick="tabTo('audio')">🎛 Regia</button>
   <button data-tab="pretorneo" onclick="tabTo('pretorneo');renderPre()">📒 Pre-Torneo</button>
   <button data-tab="gironi" onclick="tabTo('gironi')" disabled>Gironi</button>
   <button data-tab="finale" onclick="tabTo('finale')" disabled>Fase Finale</button>
@@ -1595,7 +1670,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
           <button class="btn sec mini" onclick="addTierRow()">+ Aggiungi fascia</button>
           <p class="small muted" style="margin-top:6px">Posizioni = piazzamenti nei gironi che entrano nella fascia (es. "1,2"). La prima fascia assegna il titolo.</p>
         </div>
-        <p class="small muted" style="margin-top:4px">🎵 Musica di sottofondo, suoni e annunci si gestiscono nella sezione <b>🎙 Regia Audio</b>.</p>
+        <p class="small muted" style="margin-top:4px">🎵 Musica di sottofondo, suoni e annunci si gestiscono nella sezione <b>🎛 Regia</b>.</p>
       </div>
     </div>
 
@@ -1788,68 +1863,6 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
       <div class="tb-list" id="tb-editor2"></div>
     </div>
     <div class="card">
-      <h3 class="subt">📡 App Campo (telefoni)</h3>
-      <label class="ck"><input type="checkbox" id="sy-on" onchange="setSyncOn(this.checked)"> Sincronizzazione attiva (pubblica il torneo e riceve gli aggiornamenti dal campo)</label>
-      <div style="margin-top:12px">
-        <label class="f">Server di sincronizzazione</label>
-        <div class="row"><input type="text" id="sy-url" placeholder="http://127.0.0.1:8765" style="flex:1;min-width:200px"><button class="btn sec mini" onclick="setSyncUrl()">Applica</button></div>
-      </div>
-      <div style="margin-top:12px">
-        <label class="f">Chiave privata del torneo (richiesta a ogni telefono)</label>
-        <div class="row" style="align-items:center">
-          <b id="sy-key" style="font-family:'Oswald',sans-serif;font-size:1.5rem;letter-spacing:.28em;color:var(--gold)"></b>
-          <button class="btn sec mini" onclick="regenSyncKey()">🎲 Rigenera</button>
-        </div>
-      </div>
-      <div id="sy-phone" class="small" style="margin-top:12px;line-height:1.7"></div>
-      <div id="sy-obs" style="margin-top:14px;display:none">
-        <label class="f">📺 Grafica per la diretta (OBS e simili)</label>
-        <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
-          <select id="obs-layout" onchange="renderObs()" style="min-width:170px">
-            <option value="lower">Fascia in basso</option>
-            <option value="corner">Riquadro d'angolo</option>
-            <option value="full">Schermo pieno (intervalli)</option>
-          </select>
-          <select id="obs-campo" onchange="renderObs()" style="min-width:150px"></select>
-          <label class="small" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="obs-tick" checked onchange="renderObs()"> striscia risultati</label>
-          <button class="btn sec mini" onclick="obsCopy()">📋 Copia il link</button>
-          <button class="btn sec mini" onclick="obsPreview()">👁 Anteprima</button>
-        </div>
-        <p class="small muted" id="obs-hint" style="margin-top:8px"></p>
-      </div>
-      <div id="sy-addr-wrap" style="margin-top:14px;display:none">
-        <label class="f">Indirizzo che i telefoni devono raggiungere</label>
-        <select id="sy-addr" style="width:100%" onchange="syncPickAddr()"></select>
-        <p class="small muted" id="sy-addr-hint" style="margin-top:6px"></p>
-      </div>
-      <div style="margin-top:14px">
-        <label class="f">Codice QR di collegamento (inquadra col telefono)</label>
-        <div class="row" style="align-items:flex-start;gap:16px">
-          <canvas id="sy-qr" style="background:#fff;border-radius:10px;width:164px;height:164px;cursor:zoom-in" onclick="qrFullscreen()"></canvas>
-          <div style="flex:1;min-width:170px">
-            <select id="sy-qrtarget" style="width:100%" onchange="renderSyncQR()"></select>
-            <button class="btn sec mini" id="sy-capqr-btn" style="display:none;margin-top:6px" onclick="openCapQr()">🧢 QR di tutti i capitani</button>
-            <div class="row" style="margin-top:10px">
-              <button class="btn sec mini" onclick="qrFullscreen()">⛶ Schermo intero</button>
-              <button class="btn sec mini" onclick="shareWhatsApp()">📤 Invia su WhatsApp</button>
-            </div>
-            <p class="small muted" id="sy-qrhint" style="margin-top:10px">Il QR contiene indirizzo e chiave: il telefono è collegato al volo. Scegli un campo per legare quel telefono solo alle sue partite.</p>
-          </div>
-        </div>
-        <div id="sy-devices" class="small" style="margin-top:10px"></div>
-      </div>
-      <div style="margin-top:14px">
-        <label class="f">🌍 Accesso da Internet (fuori dalla Wi-Fi locale)</label>
-        <div class="row" style="align-items:center">
-          <button class="btn sec mini" id="sy-tunnel-btn" onclick="setSyncTunnel()">🌍 Attiva tunnel Internet</button>
-          <span class="small" id="sy-tunnel-status" style="flex:1;min-width:160px"></span>
-        </div>
-        <p class="small muted" style="margin-top:6px" id="sy-tunnel-hint">Crea un indirizzo https pubblico temporaneo (Cloudflare quick tunnel, gratuito e senza account): QR e link passano automaticamente a quell'indirizzo, e i telefoni funzionano anche fuori dalla rete locale. Richiede il programma gratuito <b>cloudflared</b> sul computer della Regia. In alternativa: relay permanente con <b>sync-server.js</b> su un host pubblico.</p>
-      </div>
-      <div id="sy-status" class="small muted" style="margin-top:8px">—</div>
-      <p class="small muted" style="margin-top:10px">Nell'app desktop il server è integrato e parte da solo: i telefoni sulla stessa Wi-Fi aprono l'indirizzo mostrato qui sopra e inseriscono la chiave. Dal browser (o via internet) indica l'indirizzo di un relay avviato con <b>sync-server.js</b>. Dall'App Campo si aggiornano risultati, gol col minuto, tiri piazzati e — nel CdT — formazioni e referti dei 4 tavoli: la Regia resta l'unica fonte ufficiale.</p>
-    </div>
-    <div class="card">
       <h3 class="subt">Dati</h3>
       <div class="row">
         <button class="btn sec" onclick="exportJSON()">💾 Esporta torneo (JSON)</button>
@@ -1871,9 +1884,84 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   </div>
 </section>
 
-<!-- ============ REGIA AUDIO ============ -->
+<!-- ============ REGIA (app mobili + audio) ============ -->
 <section class="tab" id="tab-audio">
-  <h2 class="sect">🎙 Regia Audio</h2>
+  <h2 class="sect">🎛 Regia</h2>
+  <p class="muted small" style="margin:-8px 0 18px">Il banco di regia del torneo: da qui esce la voce dallo speaker, la musica e i segnali di gara, e da qui si collegano i telefoni a bordo campo — arbitri, capitani e riprese.</p>
+
+  <!-- ---------- le app sui telefoni ---------- -->
+  <h3 class="rgband">📡 Le app sui telefoni</h3>
+  <div class="rggrid">
+    <div class="card rgcard">
+      <h3 class="subt">🔗 Collegamento</h3>
+      <label class="ck"><input type="checkbox" id="sy-on" onchange="setSyncOn(this.checked)"> Sincronizzazione attiva (pubblica il torneo e riceve gli aggiornamenti dal campo)</label>
+      <div style="margin-top:14px">
+        <label class="f">Chiave privata del torneo (richiesta a ogni telefono)</label>
+        <div class="row" style="align-items:center">
+          <b id="sy-key" class="rgkey"></b>
+          <button class="btn sec mini" onclick="regenSyncKey()">🎲 Rigenera</button>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <label class="f">Server di sincronizzazione</label>
+        <div class="row"><input type="text" id="sy-url" placeholder="http://127.0.0.1:8765" style="flex:1;min-width:190px"><button class="btn sec mini" onclick="setSyncUrl()">Applica</button></div>
+      </div>
+      <div id="sy-addr-wrap" style="margin-top:14px;display:none">
+        <label class="f">Indirizzo che i telefoni devono raggiungere</label>
+        <select id="sy-addr" style="width:100%" onchange="syncPickAddr()"></select>
+        <p class="small muted" id="sy-addr-hint" style="margin-top:6px"></p>
+      </div>
+      <div id="sy-phone" class="small" style="margin-top:14px;line-height:1.7"></div>
+      <div id="sy-status" class="small muted" style="margin-top:10px">—</div>
+    </div>
+
+    <div class="card rgcard">
+      <h3 class="subt">📱 Codice QR di collegamento</h3>
+      <div class="rgqr">
+        <canvas id="sy-qr" onclick="qrFullscreen()" title="Tocca per lo schermo intero"></canvas>
+        <div class="rgqr-side">
+          <select id="sy-qrtarget" style="width:100%" onchange="renderSyncQR()"></select>
+          <button class="btn sec mini" id="sy-capqr-btn" style="display:none;margin-top:8px" onclick="openCapQr()">🧢 QR di tutti i capitani</button>
+          <div class="row" style="margin-top:10px">
+            <button class="btn sec mini" onclick="qrFullscreen()">⛶ Schermo intero</button>
+            <button class="btn sec mini" onclick="shareWhatsApp()">📤 WhatsApp</button>
+          </div>
+        </div>
+      </div>
+      <p class="small muted" id="sy-qrhint" style="margin-top:12px">Il QR contiene indirizzo e chiave: il telefono è collegato al volo. Scegli un campo per legare quel telefono solo alle sue partite.</p>
+      <div id="sy-devices" class="small" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card rgcard rgspan">
+      <h3 class="subt">🌍 Accesso da Internet (tunnel)</h3>
+      <div class="rgtun">
+        <button class="btn sec" id="sy-tunnel-btn" onclick="setSyncTunnel()">🌍 Attiva tunnel Internet</button>
+        <span class="small" id="sy-tunnel-status" style="flex:1;min-width:180px"></span>
+      </div>
+      <p class="small muted" style="margin-top:10px" id="sy-tunnel-hint">Crea un indirizzo https pubblico temporaneo (Cloudflare quick tunnel, gratuito e senza account): QR e link passano automaticamente a quell'indirizzo, e i telefoni funzionano anche fuori dalla rete locale. Richiede il programma gratuito <b>cloudflared</b> sul computer della Regia. In alternativa: relay permanente con <b>sync-server.js</b> su un host pubblico.</p>
+      <p class="small" style="margin-top:8px;color:var(--gold)">🎞 L'<b>App Replay</b> funziona <b>solo</b> con il tunnel acceso: i browser aprono la telecamera soltanto su https. Quando è attivo, lo vedi anche dalla spia accanto all'orologio.</p>
+    </div>
+
+    <div id="sy-obs" class="card rgcard rgspan" style="display:none">
+      <h3 class="subt">📺 Grafica per la diretta (OBS e simili)</h3>
+      <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
+        <select id="obs-layout" onchange="renderObs()" style="min-width:170px">
+          <option value="lower">Fascia in basso</option>
+          <option value="corner">Riquadro d'angolo</option>
+          <option value="full">Schermo pieno (intervalli)</option>
+        </select>
+        <select id="obs-campo" onchange="renderObs()" style="min-width:150px"></select>
+        <label class="small" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="obs-tick" checked onchange="renderObs()"> striscia risultati</label>
+        <button class="btn sec mini" onclick="obsCopy()">📋 Copia il link</button>
+        <button class="btn sec mini" onclick="obsPreview()">👁 Anteprima</button>
+      </div>
+      <p class="small muted" id="obs-hint" style="margin-top:8px"></p>
+    </div>
+  </div>
+  <p class="small muted" style="margin:12px 0 0">Nell'app desktop il server è integrato e parte da solo: i telefoni sulla stessa Wi-Fi aprono l'indirizzo mostrato qui sopra e inseriscono la chiave. Dal browser (o via internet) indica l'indirizzo di un relay avviato con <b>sync-server.js</b>. Dall'App Campo si aggiornano risultati, gol col minuto, tiri piazzati e — nel CdT — formazioni e referti dei 4 tavoli: la Regia resta l'unica fonte ufficiale.</p>
+
+  <!-- ---------- audio ---------- -->
+  <h3 class="rgband" style="margin-top:26px">🎙 Voce, effetti e musica</h3>
   <div class="grid g2">
     <div class="card">
       <h3 class="subt">🎙 Speaker della Regia</h3>
@@ -2083,6 +2171,11 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
     <div class="pgrid" id="present-grid"></div>
     <!-- livello di dissolvenza incrociata: ospita l'istantanea della vista uscente -->
     <div class="pgrid pxfade" id="present-xfade" aria-hidden="true"></div>
+  </div>
+  <!-- striscia delle foto della giornata: scorre da sola in fondo alla sala -->
+  <div class="pfoto" id="present-foto" style="display:none">
+    <div class="pfoto-lab" id="present-foto-lab">📷 Le foto della giornata</div>
+    <div class="pfoto-clip"><div class="pfoto-run" id="present-foto-run"></div></div>
   </div>
 </div>
 
@@ -2356,7 +2449,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='5.0.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='5.1.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -2395,7 +2488,8 @@ const TR={
   "Tutte le dieci formule di gioco, Torneo Reale e Consigliere":"All ten formats, Real Tournament and the Adviser",
   "Gestione arbitrale e assegnazione automatica dei campi":"Referee management and automatic field assignment",
   "Cerimonia di sorteggio e composizione dei gironi":"Draw ceremony and group composition",
-  "Regia Audio e La Legge":"Audio Booth and The Law",
+  "Regia e La Legge":"Control Desk and The Law",
+  "Le foto della giornata":"Today's photos","a fine gara":"at the final whistle","prima del via":"before kick-off",
   "Il catalogo delle miniature non è al momento disponibile.":"The figures catalogue is not available at the moment.",
   "Pre-Torneo con quote, pagamenti e ricevute":"Pre-Event with fees, payments and receipts",
   "App Campo, App Capitano e App Replay con i codici QR":"Field app, Captain app and Replay app with QR codes",
@@ -2456,7 +2550,7 @@ const TR={
   "🧢 QR di tutti i capitani":"🧢 All captains' QR codes",
   "I capitani esistono nella formula a squadre (CdT).":"Captains exist in the team (CdT) format.",
   // regia audio + pre-torneo
-  "🎙 Regia Audio":"🎙 Audio Booth","📒 Pre-Torneo":"📒 Pre-Event","🎙 Speaker della Regia":"🎙 Announcer Mic",
+  "🎛 Regia":"🎛 Control Desk","📒 Pre-Torneo":"📒 Pre-Event","🎙 Speaker della Regia":"🎙 Announcer Mic",
   "IN ONDA":"ON AIR","PREMI E PARLA":"PUSH TO TALK",
   "Permesso microfono negato: consenti l’accesso al microfono.":"Microphone permission denied: allow microphone access.",
   "Microfono non disponibile":"Microphone not available",
@@ -2590,7 +2684,7 @@ const TR={
   "🗑 Nuovo torneo (azzera)":"🗑 New tournament (reset)","🧨 Azzera TUTTI i tornei":"🧨 Reset ALL tournaments",
   "Lingua / Language":"Lingua / Language","Applica":"Apply","Applica a tutti i campi":"Apply to all fields",
   // sync / app campo
-  "📡 App Campo (telefoni)":"📡 Field App (phones)",
+  "📡 Le app sui telefoni":"📡 The phone apps",
   "Sincronizzazione attiva (pubblica il torneo e riceve gli aggiornamenti dal campo)":"Sync on (publishes the tournament and receives updates from the field)",
   "Server di sincronizzazione":"Sync server",
   "Chiave privata del torneo (richiesta a ogni telefono)":"Tournament private key (required on every phone)",
@@ -3055,7 +3149,7 @@ async function spkStart(){
        automatico) sono pensati per le videochiamate: su una voce da speaker
        tagliano le code, "pompano" il volume e attenuano il vociare della sala,
        che invece è l'atmosfera del torneo. Di norma restano SPENTI; si possono
-       riaccendere dalla Regia Audio se microfono e casse innescano il larsen. */
+       riaccendere dalla sezione Regia se microfono e casse innescano il larsen. */
     const filtri=S.spkFiltri===true;
     const stream=await navigator.mediaDevices.getUserMedia({audio:{
       echoCancellation:filtri, noiseSuppression:filtri, autoGainControl:filtri}});
@@ -3588,7 +3682,7 @@ function licRemove(){
 const DEMO_LOCKS={
   save:'salvataggio e richiamo dei tornei',
   refs:'gestione degli arbitri',
-  audio:'sezione Regia Audio',
+  audio:'sezione Regia',
   legge:'sezione La Legge',
   draw:'sorteggi e cerimonia',
   pre:'sezione Pre-Torneo',
@@ -3660,7 +3754,7 @@ function renderLicense(){
         <li>${L('Tutte le dieci formule di gioco, Torneo Reale e Consigliere')}</li>
         <li>${L('Gestione arbitrale e assegnazione automatica dei campi')}</li>
         <li>${L('Cerimonia di sorteggio e composizione dei gironi')}</li>
-        <li>${L('Regia Audio e La Legge')}</li>
+        <li>${L('Regia e La Legge')}</li>
         <li>${L('Archivio storico: albo d’oro, classifica perpetua, testa a testa')}</li>
         <li>${L('Pre-Torneo con quote, pagamenti e ricevute')}</li>
         <li>${L('App Campo, App Capitano e App Replay con i codici QR')}</li>
@@ -7814,7 +7908,7 @@ function fitPresentText(){
 }
 let presentOpen=false,presentView=null;
 function presentIsLive(){return S.boards.some(b=>b.matchId);}
-function openPresent(){presentOpen=true;presentView=null;$('#present').classList.add('on');presentRender();if(S.autoLive)startAutoLive();updateWakeLock();}
+function openPresent(){presentOpen=true;presentView=null;$('#present').classList.add('on');presentRender();renderPresentFoto();if(S.autoLive)startAutoLive();updateWakeLock();}
 function closePresent(){presentOpen=false;stopAutoLive();$('#present').classList.remove('on');if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});updateWakeLock();}
 function presentShow(v){presentView=v;presentRender();}
 /* prossimo turno: SOLO le partite da giocare, in ordine di campo,
@@ -7888,6 +7982,7 @@ function presentRender(){
     grid.innerHTML=cal?('<div class="plist">'+cal+'</div>')
       :(S.champion?`<div class="pcard"><div class="pf">${LANG==='en'?'Champion':'Campione'}</div><div class="pn goldtxt" style="font-size:2.4rem;white-space:normal">${esc(S.champion)}</div></div>`:`<div class="pcard"><p class="muted">${LANG==='en'?'No match scheduled.':'Nessuna partita in calendario.'}</p></div>`);
   }
+  renderPresentFoto();
   requestAnimationFrame(()=>{fitPresentText();presentFit();});
 }
 /* --- cronache in Presentazione: gli ultimi tabellini con marcatori --- */
@@ -8237,8 +8332,8 @@ function fotoAggiorna(){
 }
 function fotoAvvia(){
   if(FOTO.t)clearInterval(FOTO.t);
-  FOTO.t=setInterval(()=>{if(fotoAttive())fotoAggiorna().then(renderFotoBox);},15000);
-  fotoAggiorna().then(renderFotoBox);
+  FOTO.t=setInterval(()=>{if(fotoAttive())fotoAggiorna().then(()=>{renderFotoBox();renderPresentFoto();});},15000);
+  fotoAggiorna().then(()=>{renderFotoBox();renderPresentFoto();});
 }
 function fotoDi(mid){
   const o={};
@@ -8273,6 +8368,61 @@ function fotoPartite(){
     if(f.prima||f.dopo)out.push({m,f,a:m.home,b:m.away,ra:m.hs,rb:m.as,fase:L('Partita libera'),g:''});
   });
   return out;
+}
+/* --- le foto della GIORNATA IN CORSO -----------------------------------
+   Servono alla striscia che scorre in fondo alla Presentazione: non tutte
+   le foto del torneo, ma solo quelle del turno che si sta giocando, perché
+   in sala interessa vedere le facce di adesso. Qui non si pretende che il
+   risultato ci sia già: lo scatto «prima» arriva col fischio d'inizio. */
+function fotoGiornata(){
+  const out=[];
+  const agg=(m,a,b,ra,rb,ctx)=>{
+    const f=fotoDi(m.id);
+    ['prima','dopo'].forEach(q=>{if(f[q])out.push({f:f[q],a,b,ra,rb,ctx,quando:q});});
+  };
+  allGroups().forEach(g=>{
+    if(!g.matches||!g.matches.length)return;
+    const pre=(g.swiss||S.cfg.format==='campionato')?'':L('Girone ');
+    const rounds=[...new Set(g.matches.map(m=>m.round))].sort((a,b)=>a-b);
+    let cur=rounds.find(r=>g.matches.some(m=>m.round===r&&!m.done));
+    if(cur==null)cur=rounds[rounds.length-1];
+    g.matches.filter(m=>m.round===cur).forEach(m=>
+      agg(m,m.home,m.away,m.hs,m.as,`${pre}${g.name} · ${g.swiss?L('Turno'):L('Giornata')} ${cur}`));
+  });
+  allKOs().forEach(ko=>{
+    let rd=(ko.rounds||[]).find(r=>r.matches.some(m=>m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&!koWinner(m)));
+    if(!rd)rd=(ko.rounds||[])[(ko.rounds||[]).length-1];
+    if(!rd)return;
+    rd.matches.forEach(m=>{
+      if(m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE)agg(m,m.t1,m.t2,m.s1,m.s2,`${ko.title} · ${rd.name}`);
+    });
+  });
+  (S.freeMatches||[]).forEach(m=>agg(m,m.home,m.away,m.hs,m.as,L('Partita libera')));
+  return out;
+}
+function renderPresentFoto(){
+  const box=$('#present-foto'),run=$('#present-foto-run');
+  if(!box||!run)return;
+  const spegni=()=>{box.style.display='none';run.innerHTML='';run.__firma='';};
+  if(!presentOpen||!fotoAttive())return spegni();
+  const ps=fotoGiornata();
+  if(!ps.length)return spegni();
+  /* si ricostruisce solo se le foto sono davvero cambiate: rifare l'HTML a
+     ogni render farebbe ripartire lo scorrimento da capo a ogni secondo */
+  const firma=ps.map(p=>p.f).join('|');
+  if(run.__firma===firma){box.style.display='';return;}
+  run.__firma=firma;
+  const uno=p=>`<figure class="pfoto-it">
+      <div class="ph"><img src="${fotoSrc(p.f)}" alt="" loading="lazy">
+        <span class="mom ${p.quando}">${p.quando==='dopo'?L('a fine gara'):L('prima del via')}</span></div>
+      <figcaption class="cap"><b>${esc(p.a||'')} <span class="ris">${p.ra??'–'}–${p.rb??'–'}</span> ${esc(p.b||'')}</b>
+      <small>${esc(p.ctx)}</small></figcaption>
+    </figure>`;
+  // nastro doppio: la traslazione del 50% riporta il primo riquadro al via
+  run.innerHTML=ps.map(uno).join('')+ps.map(uno).join('');
+  run.style.animationDuration=Math.max(18,ps.length*6)+'s';
+  $('#present-foto-lab').textContent='📷 '+L('Le foto della giornata')+' · '+ps.length;
+  box.style.display='';
 }
 function fotoPulisciOrfane(){
   const vive=new Set();
@@ -10153,8 +10303,20 @@ async function syncTick(){
   syncBusy=false;
   syncStatusUI();
 }
-function syncStart(){if(SYNC.timer)clearInterval(SYNC.timer);SYNC.lastSnapJson='';SYNC.timer=setInterval(syncTick,2000);syncTick();syncFetchInfo();}
-function syncStop(){if(SYNC.timer)clearInterval(SYNC.timer);SYNC.timer=null;}
+function syncStart(){
+  if(SYNC.timer)clearInterval(SYNC.timer);
+  SYNC.lastSnapJson='';SYNC.timer=setInterval(syncTick,2000);syncTick();syncFetchInfo();
+  /* lo stato del server (tunnel compreso) può cambiare da solo: cloudflared
+     cade, oppure viene avviato da fuori. Un controllo ogni 15 secondi tiene
+     onesta la spia accanto all'orologio senza pesare su nulla. */
+  if(SYNC.infoTimer)clearInterval(SYNC.infoTimer);
+  SYNC.infoTimer=setInterval(()=>{if(SYNC.on)syncFetchInfo();},15000);
+}
+function syncStop(){
+  if(SYNC.timer)clearInterval(SYNC.timer);SYNC.timer=null;
+  if(SYNC.infoTimer)clearInterval(SYNC.infoTimer);SYNC.infoTimer=null;
+  hdrTunUI();
+}
 function setSyncOn(v){SYNC.on=!!v;syncPersist();if(SYNC.on)syncStart();else syncStop();renderSyncUI();}
 function setSyncUrl(){const el=$('#sy-url');if(!el)return;SYNC.url=el.value.trim()||'http://127.0.0.1:8765';SYNC.lastSnapJson='';SYNC.lan=null;syncPersist();if(SYNC.on)syncStart();renderSyncUI();}
 function regenSyncKey(){SYNC.key=genSyncKey();SYNC.lastEv=0;SYNC.lastSnapJson='';syncPersist();renderSyncUI();toast(LANG==='en'?'New private key generated.':'Nuova chiave privata generata.');}
@@ -10275,6 +10437,40 @@ function syncTunnelUI(){
     st.innerHTML=`<a href="#" onclick="cfDownload();return false" class="muted" style="font-size:.78rem">⬇️ ${en?'download cloudflared (needed for the tunnel)':'scarica cloudflared (necessario per il tunnel)'}</a>`;
     btn.textContent=en?'🌍 Enable Internet tunnel':'🌍 Attiva tunnel Internet';
   }
+  hdrTunUI();
+}
+/* --- la spia accanto all'orologio ---------------------------------------
+   Il tunnel è la differenza fra «i telefoni funzionano solo in sala» e
+   «funzionano ovunque», ed è l'unico modo per far accendere la telecamera
+   dell'App Replay (serve https). Meritava una spia sempre sott'occhio,
+   invece di doverla andare a cercare in una sezione. */
+function hdrTunUI(){
+  const el=$('#hdr-tun');if(!el)return;
+  const en=LANG==='en';
+  const tun=SYNC.lan&&SYNC.lan.tunnel;
+  const lbl=el.querySelector('.tl');
+  el.classList.remove('att','avv','err');
+  if(!SYNC.on||!SYNC.lan){el.classList.remove('on');return;}
+  el.classList.add('on');
+  if(tun&&tun.url){
+    el.classList.add('att');
+    if(lbl)lbl.textContent=en?'Tunnel on':'Tunnel attivo';
+    el.title=(en?'Internet tunnel active — phones reach the Control Desk from anywhere and the Replay camera works (https):\n'
+                :'Tunnel Internet attivo — i telefoni raggiungono la Regia da ovunque e la telecamera dell\'App Replay funziona (https):\n')+tun.url;
+  }else if(tun&&tun.starting){
+    el.classList.add('avv');
+    if(lbl)lbl.textContent=en?'Tunnel…':'Tunnel…';
+    el.title=en?'Starting the Internet tunnel…':'Avvio del tunnel Internet in corso…';
+  }else if(tun&&tun.err){
+    el.classList.add('err');
+    if(lbl)lbl.textContent=en?'Tunnel':'Tunnel';
+    el.title=(en?'Internet tunnel not active: ':'Tunnel Internet non attivo: ')+tun.err+
+             (en?'\nClick to open the Control Desk section.':'\nTocca per aprire la sezione Regia.');
+  }else{
+    if(lbl)lbl.textContent=en?'Tunnel off':'Tunnel spento';
+    el.title=en?'Internet tunnel off: phones only work on the local Wi-Fi, and the Replay camera stays blocked (it needs https).\nClick to open the Control Desk section.'
+               :'Tunnel Internet spento: i telefoni funzionano solo sulla Wi-Fi locale e la telecamera dell\'App Replay resta bloccata (serve https).\nTocca per aprire la sezione Regia.';
+  }
 }
 /* scarica cloudflared nella versione giusta per il SISTEMA OPERATIVO del
    computer che ospita il gestionale (os/arch dal server, con ripiego sul browser) */
@@ -10368,7 +10564,7 @@ function renderSyncQR(){
     if(hint)hint.innerHTML='⚠ '+L('L’indirizzo è troppo lungo per un codice QR: usa il pulsante WhatsApp per mandare il collegamento, oppure accorcia il nome della squadra.')+'<br>'+esc(link);
     return;
   }
-  cv.style.width='164px';cv.style.height='164px';
+  cv.style.width='172px';cv.style.height='172px';
   renderObs();
   if(hint){
     /* l'App Replay usa la telecamera, e i browser la aprono solo su https:

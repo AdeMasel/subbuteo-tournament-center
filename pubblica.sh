@@ -5,7 +5,7 @@ set -euo pipefail
 
 UTENTE="AdeMasel"
 REPO="subbuteo-tournament-center"
-TAG="v5.0.0"
+TAG="v5.1.0"
 QUI="$(cd "$(dirname "$0")" && pwd)"
 cd "$QUI"
 
@@ -36,7 +36,7 @@ render/out/
 EOF
 
 git add -A
-git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 5.0" || echo "▸ Niente da committare."
+git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 5.1" || echo "▸ Niente da committare."
 git push -u origin main
 
 echo "▸ Attivo GitHub Pages…"
@@ -50,13 +50,23 @@ if gh release view "$TAG" --repo "$UTENTE/$REPO" >/dev/null 2>&1; then
 else
   echo "▸ Creo la release $TAG…"
   gh release create "$TAG" --repo "$UTENTE/$REPO" \
-    --title "Subbuteo Tournament Center 5.0" \
+    --title "Subbuteo Tournament Center 5.1" \
     --notes "Versione dimostrativa per macOS, Windows e Linux.
 
 Il programma si installa in versione DIMOSTRATIVA: torneo a girone unico, tabelloni
 dal vivo, classifiche, Presentazione e stima della durata. Per sbloccare tutte le
 funzioni serve un codice di attivazione valido per il singolo dispositivo — le
 istruzioni sono su https://$(echo $UTENTE | tr '[:upper:]' '[:lower:]').github.io/$REPO/#licenza
+
+Novità della 5.1: la sezione «Regia Audio» diventa «Regia» e raccoglie anche tutto
+il collegamento con i telefoni (chiave, QR, dispositivi, tunnel e grafica per la
+diretta), prima sparso nelle Opzioni. Accanto all'orologio compare una spia che dice
+se il tunnel Cloudflare è acceso — è la condizione perché l'App Replay possa accendere
+la telecamera. Nella Presentazione, sotto ai risultati, scorre una striscia con le foto
+della giornata in corso, ognuna con squadre, risultato e momento dello scatto. Corretto
+un errore che impediva alle app mobili di collegarsi passando dalla Wi-Fi al tunnel:
+l'indirizzo memorizzato vinceva su quello da cui la pagina veniva servita e il browser
+bloccava la chiamata come contenuto misto.
 
 Novità della 5.0: la nuova App Replay. Un telefono punta il tavolo e riprende senza
 sosta, ma tiene in memoria solo gli ultimi otto secondi: quando succede qualcosa basta
@@ -95,12 +105,12 @@ fi
 
 echo "▸ Carico gli installer (circa 1,9 GB, ci vorrà un po')…"
 gh release upload "$TAG" --repo "$UTENTE/$REPO" --clobber \
-  dist/Subbuteo-Tournament-Center-5.0.0-macOS-AppleSilicon.dmg \
-  dist/Subbuteo-Tournament-Center-5.0.0-macOS-Intel.dmg \
-  dist/Subbuteo-Tournament-Center-Setup-5.0.0-Windows.exe \
-  dist/Subbuteo-Tournament-Center-5.0.0-Linux-x86_64.AppImage \
-  dist/Subbuteo-Tournament-Center-5.0.0-Linux-arm64.AppImage \
-  dist/Manuale-Subbuteo-Tournament-Center-5.0.pdf
+  dist/Subbuteo-Tournament-Center-5.1.0-macOS-AppleSilicon.dmg \
+  dist/Subbuteo-Tournament-Center-5.1.0-macOS-Intel.dmg \
+  dist/Subbuteo-Tournament-Center-Setup-5.1.0-Windows.exe \
+  dist/Subbuteo-Tournament-Center-5.1.0-Linux-x86_64.AppImage \
+  dist/Subbuteo-Tournament-Center-5.1.0-Linux-arm64.AppImage \
+  dist/Manuale-Subbuteo-Tournament-Center-5.1.pdf
 
 echo
 echo "✔ Fatto."
