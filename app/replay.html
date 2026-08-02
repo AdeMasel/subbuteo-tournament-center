@@ -73,7 +73,7 @@ h2.sect{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(-
 @keyframes flash{0%{transform:scale(1)}40%{transform:scale(.96);filter:brightness(1.5)}100%{transform:scale(1)}}
 .clipgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
 .clipcard{position:relative;border-radius:11px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:16/9}
-.clipcard img{width:100%;height:100%;object-fit:cover;display:block}
+.clipcard img,.clipcard video{width:100%;height:100%;object-fit:cover;display:block}
 .clipcard .n{position:absolute;left:5px;top:4px;font-size:.6rem;background:rgba(0,0,0,.6);border-radius:5px;padding:1px 6px;font-weight:700}
 .clipcard .st{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.62);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:6px}
 .clipcard .st.err{color:var(--danger)}
@@ -173,7 +173,7 @@ footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);let
 <footer>Antonio de Masellis</footer>
 
 <canvas id="cv" style="display:none"></canvas>
-<script src="gifenc.js"></script>
+<script src="mp4enc.js"></script>
 <script>
 'use strict';
 /* ---------- lingua ---------- */
@@ -202,9 +202,11 @@ const I18N={
  "Telecamera negata: dai il permesso al browser.":"Camera denied: grant permission to the browser.",
  "Nessuna telecamera trovata.":"No camera found.",
  "Telecamera avviata: gli ultimi 8 secondi sono sempre pronti.":"Camera on: the last 8 seconds are always ready.",
- "Creo la GIF…":"Building the GIF…","Azione salvata e inviata alla Regia.":"Highlight saved and sent to the Control Desk.",
+ "Preparo il video…":"Preparing the video…","Azione salvata e inviata alla Regia.":"Highlight saved and sent to the Control Desk.",
  "Clip non inviata: nessun collegamento.":"Clip not sent: no connection.","Clip non inviata":"Clip not sent",
  "Ancora pochi fotogrammi: aspetta qualche secondo.":"Too few frames yet: wait a few seconds.",
+ "Questo telefono non sa registrare video: serve un browser più recente.":"This phone cannot record video: a newer browser is needed.",
+ "Clip troppo pesante per la rete: riprova.":"Clip too heavy for the network: try again.",
  "Mezz'ora di ripresa: la telecamera si è fermata da sola.":"Half an hour of filming: the camera stopped by itself.",
  "Telecamera ferma.":"Camera stopped.","invio":"sending","errore":"error",
  "Fine partita inviata: la Regia monta il filmato.":"End of match sent: the Control Desk is building the film.",
@@ -231,11 +233,13 @@ function applyLang(){
 }
 
 /* ---------- parametri della ripresa ----------
-   8 fotogrammi al secondo per 8 secondi: 64 immagini da 256×144.
-   Sono ~9 MB di memoria, che un telefono regge senza fatica, e danno
-   una GIF fluida ma leggera. Oltre i 30 minuti la ripresa si spegne da
-   sola: è il limite chiesto, e protegge anche la batteria.            */
-const FPS=8, SEC=8, NF=FPS*SEC, CW=256, CH=144, MAXMS=30*60*1000;
+   15 fotogrammi al secondo per 8 secondi, a 1280×720. Non si tengono più i
+   fotogrammi grezzi (otto secondi di 720p non compresso sarebbero 236 MB):
+   l'encoder H.264 gira sempre e in memoria restano solo i pacchetti già
+   compressi, poche centinaia di kB. La misura è FISSA per tutti i telefoni,
+   così le clip di una partita si montano insieme senza scarti.
+   Oltre i 30 minuti la ripresa si spegne da sola: protegge la batteria.  */
+const FPS=15, SEC=8, CW=1280, CH=720, MAXMS=30*60*1000;
 
 /* ---------- stato ---------- */
 const LS='subbuteo_replay_v1';
@@ -245,7 +249,7 @@ let DEV=localStorage.getItem(LS+'_dev');
 if(!DEV){DEV='r'+Math.random().toString(36).slice(2,10);localStorage.setItem(LS+'_dev',DEV);}
 let snap=null,seq=0,connected=false,curMid=null,pollT=null;
 let stream=null,grabT=null,camT0=0,restT=null;
-let buf=[],bufI=0;                 // anello di fotogrammi: buf[bufI] è il più vecchio
+let reg=null;                      // registratore MP4 (mp4enc.js)
 let clips=[];                      // clip di questa sessione: {mid,ts,f,stato}
 let occupato=false;
 
@@ -417,10 +421,14 @@ function leggiClip(){
 /* ================= TELECAMERA E MEMORIA CIRCOLARE =================
    Non si registra su file: si tiene in RAM un anello di 64 immagini.
    Ogni nuovo fotogramma sovrascrive il più vecchio, così in qualunque
-   istante la memoria contiene esattamente gli ultimi 8 secondi. Quando
-   l'operatore preme REC, quell'anello viene letto in ordine e diventa
-   una GIF: è il motivo per cui si cattura l'azione DOPO averla vista.  */
-function bufReset(){buf=[];bufI=0;aggiornaBuf();}
+   istante la memoria contiene esattamente gli ultimi 8 secondi — non i
+   fotogrammi, che a 720p non ci starebbero, ma i pacchetti già compressi
+   dall'encoder H.264. Quando l'operatore preme REC quell'anello diventa un
+   MP4: è il motivo per cui si cattura l'azione DOPO averla vista.       */
+function bufReset(){
+  if(reg){reg.ferma();reg=null;}
+  aggiornaBuf();
+}
 function camUI(){
   const on=!!stream;
   $('#cam-start').classList.toggle('hidden',on);
@@ -434,6 +442,9 @@ function camAvvia(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     avvisoSicurezza();toast(T('Telecamera non disponibile su questo collegamento.'));return;
   }
+  if(!MP4||!MP4.disponibile){
+    toast(T('Questo telefono non sa registrare video: serve un browser più recente.'));return;
+  }
   navigator.mediaDevices.getUserMedia({
     video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30}},
     audio:false
@@ -443,6 +454,8 @@ function camAvvia(){
     v.srcObject=s;
     const p=v.play();if(p&&p.catch)p.catch(()=>{});
     camT0=Date.now();bufReset();camUI();
+    reg=MP4.Registratore({larghezza:CW,altezza:CH,fps:FPS,secondi:SEC,bitrate:2500000});
+    reg.avvia();
     grabT=setInterval(grab,Math.round(1000/FPS));
     restT=setInterval(tickResto,1000);tickResto();
     toast(T('Telecamera avviata: gli ultimi 8 secondi sono sempre pronti.'));
@@ -469,67 +482,57 @@ function tickResto(){
    esce sempre 256×144, così tutte si montano insieme senza scarti */
 function grab(){
   const v=$('#cam-v');
-  if(!v.videoWidth)return;
+  if(!v.videoWidth||!reg)return;
   const cv=$('#cv');
   if(cv.width!==CW){cv.width=CW;cv.height=CH;}
-  const cx=cv.getContext('2d',{willReadFrequently:true});
+  const cx=cv.getContext('2d');
   const k=Math.max(CW/v.videoWidth,CH/v.videoHeight);
   const w=v.videoWidth*k,h=v.videoHeight*k;
   cx.drawImage(v,(CW-w)/2,(CH-h)/2,w,h);
-  const d=cx.getImageData(0,0,CW,CH).data;
-  if(buf.length<NF)buf.push(d);
-  else{buf[bufI]=d;bufI=(bufI+1)%NF;}
+  reg.aggiungi(cv);          // il fotogramma va all'encoder, non in memoria
   aggiornaBuf();
 }
 function aggiornaBuf(){
-  const q=buf.length/NF;
+  const sec=reg?reg.secondiInMemoria:0;
+  const q=Math.min(1,sec/SEC);
   $('#cam-buf').style.width=Math.round(q*100)+'%';
-  $('#cam-buflab').textContent=(buf.length/FPS).toFixed(1)+' '+T('secondi in memoria');
-  $('#cam-fps').textContent=buf.length>=NF?T('pronto'):'';
-  const r=$('#cam-rec');if(r)r.disabled=occupato||buf.length<FPS*2;
-}
-function bufOrdinato(){
-  // l'anello va srotolato: dal più vecchio al più recente
-  if(buf.length<NF)return buf.slice();
-  return buf.slice(bufI).concat(buf.slice(0,bufI));
+  $('#cam-buflab').textContent=sec.toFixed(1)+' '+T('secondi in memoria');
+  $('#cam-fps').textContent=(reg&&reg.pronto)?T('pronto'):'';
+  const r=$('#cam-rec');if(r)r.disabled=occupato||!reg||sec<2;
 }
 
-/* ---------- REC: gli 8 secondi appena visti diventano una GIF ---------- */
+/* ---------- REC: gli 8 secondi appena visti diventano un MP4 ---------- */
 function camRec(){
-  if(occupato||!curMid)return;
-  const fr=bufOrdinato();
-  if(fr.length<FPS*2){toast(T('Ancora pochi fotogrammi: aspetta qualche secondo.'));return;}
+  if(occupato||!curMid||!reg)return;
+  if(!reg.pronto){toast(T('Ancora pochi fotogrammi: aspetta qualche secondo.'));return;}
   occupato=true;aggiornaBuf();
   const b=$('#cam-rec');b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');
   const ts=Date.now(),mid=curMid;
-  clips.unshift({mid,ts,f:null,stato:'gif'});renderClips();
-  /* l'encoder blocca il filo di esecuzione per qualche decimo di secondo:
-     lo si lancia dopo un respiro, così la scritta «Creo la GIF…» compare */
-  setTimeout(()=>{
-    let blob=null;
-    try{
-      blob=codifica(fr,96);
-      // rete di palestra: se pesa troppo si ricomprime più stretta
-      if(blob&&blob.size>4*1024*1024)blob=codifica(fr,48);
-      if(blob&&blob.size>6*1024*1024)blob=codifica(fr.filter((x,i)=>i%2===0),48,2);
-    }catch(e){blob=null;}
+  clips.unshift({mid,ts,f:null,stato:'video'});renderClips();
+  /* l'encoder lavora in coda: clip() aspetta che abbia finito, quindi qui non
+     si blocca mai il filo di esecuzione come faceva la vecchia codifica */
+  reg.clip().then(blob=>{
     const c=clips.find(x=>x.ts===ts);
     if(!blob){if(c)c.stato='err';occupato=false;aggiornaBuf();renderClips();return;}
+    if(blob.size>MAXCLIP){
+      if(c)c.stato='err';
+      toast(T('Clip troppo pesante per la rete: riprova.'));
+      occupato=false;aggiornaBuf();renderClips();return;
+    }
     if(c)c.stato='invio';renderClips();
     const rd=new FileReader();
     rd.onload=()=>invia(mid,ts,rd.result);
     rd.onerror=()=>{if(c)c.stato='err';occupato=false;aggiornaBuf();renderClips();};
     rd.readAsDataURL(blob);
-  },60);
+  }).catch(()=>{
+    const c=clips.find(x=>x.ts===ts);if(c)c.stato='err';
+    occupato=false;aggiornaBuf();renderClips();
+  });
 }
-function codifica(fr,colori,salto){
-  const g=new GifEnc(CW,CH,{delay:Math.round(1000/FPS)*(salto||1),colors:colori});
-  fr.forEach(f=>g.addFrame(f));
-  return g.finish();
-}
+const MAXCLIP=12*1024*1024;
 function invia(mid,ts,dataUrl){
   fetch(api('/api/clip'),{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({key:cfg.key,mid,ts,gif:dataUrl})})
+    body:JSON.stringify({key:cfg.key,mid,ts,mp4:dataUrl})})
     .then(r=>r.json())
     .then(d=>{
       const c=clips.find(x=>x.ts===ts);
@@ -557,8 +560,8 @@ function renderClips(){
   g.innerHTML=mie.map((c,i)=>{
     const n=mie.length-i;
     const st=c.stato==='ok'?''
-      :`<div class="st${c.stato==='err'?' err':''}">${c.stato==='gif'?T('Creo la GIF…'):c.stato==='invio'?T('invio')+'…':T('errore')}</div>`;
-    const im=c.f?`<img src="${api('/api/clip?f='+encodeURIComponent(c.f))}" alt="">`:'';
+      :`<div class="st${c.stato==='err'?' err':''}">${c.stato==='video'?T('Preparo il video…'):c.stato==='invio'?T('invio')+'…':T('errore')}</div>`;
+    const im=c.f?`<video src="${api('/api/clip?f='+encodeURIComponent(c.f))}" muted playsinline preload="metadata"></video>`:'';
     return `<div class="clipcard">${im}<span class="n">${n}</span>${st}</div>`;
   }).join('');
 }

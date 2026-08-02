@@ -829,7 +829,7 @@ body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass
 .fotocard figcaption .del button{background:none;border:0;color:var(--muted);font-size:.72rem;
   cursor:pointer;text-decoration:underline;padding:0}
 .fotocard figcaption .del button:hover{color:var(--red,#e2564f)}
-/* replay in GIF: un blocco per partita, con la striscia delle azioni */
+/* replay video: un blocco per partita, con la striscia delle azioni */
 .clipblk{border:1px solid var(--line);border-radius:12px;background:var(--card2);padding:12px 14px;margin-bottom:14px}
 .clipblk .ch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.9rem}
 .clipblk .ch b{color:var(--text)}
@@ -838,7 +838,7 @@ body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass
 .clipblk .ch .cb{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
 .clipblk .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
 .clipblk .ccard{position:relative;margin:0;border-radius:10px;overflow:hidden;background:#05080f;border:1px solid var(--line);aspect-ratio:16/9}
-.clipblk .ccard img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.clipblk .ccard img,.clipblk .ccard video{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
 .clipblk .ccard .n{position:absolute;left:6px;top:5px;font-size:.66rem;font-weight:700;background:rgba(0,0,0,.62);
   border-radius:5px;padding:1px 7px;color:#fff}
 .clipblk .ccard .x{position:absolute;right:5px;top:4px;border:0;border-radius:6px;background:rgba(0,0,0,.55);
@@ -1349,6 +1349,26 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   padding:6px;box-shadow:0 8px 26px rgba(0,0,0,.4)}
 .rgqr-side{flex:1;min-width:180px}
 .rgtun{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+/* interruttore del tunnel: con cloudflared incluso non c'è più niente da
+   installare, quindi il comando torna a essere quello che è — un interruttore */
+.tunsw{display:inline-flex;align-items:center;gap:11px;cursor:pointer;user-select:none;
+  padding:7px 14px 7px 9px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(12,22,36,.7);transition:border-color .2s,background .2s}
+.tunsw:hover{border-color:var(--gold)}
+.tunsw input{position:absolute;opacity:0;width:0;height:0}
+.tunsw .tsw{position:relative;width:46px;height:26px;border-radius:999px;flex:0 0 auto;
+  background:#243347;border:1px solid rgba(140,175,210,.28);transition:background .25s,border-color .25s}
+.tunsw .tsw::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;
+  border-radius:50%;background:#8fa6bd;transition:transform .25s,background .25s}
+.tunsw .tswl{font-size:.86rem;letter-spacing:.02em;color:var(--mut)}
+.tunsw input:checked+.tsw{background:rgba(58,217,141,.28);border-color:rgba(58,217,141,.55)}
+.tunsw input:checked+.tsw::after{transform:translateX(20px);background:var(--ok,#3ad98d)}
+.tunsw input:focus-visible+.tsw{outline:2px solid var(--gold);outline-offset:2px}
+.tunsw.avv .tsw{background:rgba(245,196,81,.26);border-color:rgba(245,196,81,.55)}
+.tunsw.avv .tsw::after{background:var(--gold);animation:tswpulse 1s infinite}
+.tunsw.on .tswl{color:var(--ok,#3ad98d)}
+.tunsw.ko .tsw{background:rgba(226,86,79,.22);border-color:rgba(226,86,79,.5)}
+@keyframes tswpulse{0%,100%{opacity:1}50%{opacity:.35}}
 /* ---------- pre-torneo: pagina bianca "quaderno" ---------- */
 #tab-pretorneo .paper{background:#fdfcf7;color:#1d2433;border:1px solid #d8d2bd;border-radius:12px;
   background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(70,110,160,.14) 27px 28px);
@@ -1935,10 +1955,14 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
     <div class="card rgcard rgspan">
       <h3 class="subt">🌍 Accesso da Internet (tunnel)</h3>
       <div class="rgtun">
-        <button class="btn sec" id="sy-tunnel-btn" onclick="setSyncTunnel()">🌍 Attiva tunnel Internet</button>
+        <label class="tunsw" id="sy-tunnel-sw" title="Accendi o spegni il tunnel Internet">
+          <input type="checkbox" id="sy-tunnel-chk" onchange="setSyncTunnel(this.checked)">
+          <span class="tsw"></span>
+          <b class="tswl" id="sy-tunnel-btn">Tunnel Internet</b>
+        </label>
         <span class="small" id="sy-tunnel-status" style="flex:1;min-width:180px"></span>
       </div>
-      <p class="small muted" style="margin-top:10px" id="sy-tunnel-hint">Crea un indirizzo https pubblico temporaneo (Cloudflare quick tunnel, gratuito e senza account): QR e link passano automaticamente a quell'indirizzo, e i telefoni funzionano anche fuori dalla rete locale. Richiede il programma gratuito <b>cloudflared</b> sul computer della Regia. In alternativa: relay permanente con <b>sync-server.js</b> su un host pubblico.</p>
+      <p class="small muted" style="margin-top:10px" id="sy-tunnel-hint">Crea un indirizzo https pubblico temporaneo (Cloudflare quick tunnel, gratuito e senza account): QR e link passano automaticamente a quell'indirizzo, e i telefoni funzionano anche fuori dalla rete locale. <b>cloudflared è incluso nel programma</b>: non devi installare niente, basta l'interruttore. In alternativa: relay permanente con <b>sync-server.js</b> su un host pubblico.</p>
       <p class="small" style="margin-top:8px;color:var(--gold)">🎞 L'<b>App Replay</b> funziona <b>solo</b> con il tunnel acceso: i browser aprono la telecamera soltanto su https. Quando è attivo, lo vedi anche dalla spia accanto all'orologio.</p>
     </div>
 
@@ -2449,7 +2473,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='5.1.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='5.3.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -7766,6 +7790,124 @@ document.addEventListener('keydown',e=>{
 });
 
 /* =========================================================
+   TASTI FUNZIONE (F1–F12)
+   ---------------------------------------------------------
+   Il giorno del torneo si lavora con una mano sul mouse e una sulla tastiera,
+   spesso al buio e con lo schermo grande alle spalle. I dodici tasti in cima
+   alla tastiera si trovano al tatto: sono la scorciatoia giusta per saltare
+   fra le sezioni senza cercare il menù.
+
+   Tre regole per non dare fastidio:
+   · mentre si scrive in un campo di testo funziona solo F1 (l'aiuto);
+   · con un pannello aperto (TV, sorteggio, PDF…) i tasti di navigazione
+     restano fermi: prima si chiude con Esc;
+   · ogni tasto che non può agire lo dice, invece di non fare nulla.
+   ========================================================= */
+const FKEYS=[
+  ['F1', ()=>fkeyAiuto(),        'Aiuto: questo elenco'],
+  ['F2', ()=>tabTo('setup'),     'Setup del torneo'],
+  ['F3', ()=>tabTo('live'),      'Live — il Match Center'],
+  ['F4', ()=>fkeyTabellone(),    'Gironi / Fase finale'],
+  ['F5', ()=>tabTo('classifica'),'Classifiche'],
+  ['F6', ()=>tabTo('cronache'),  'Cronache'],
+  ['F7', ()=>tabTo('audio'),     'Regia'],
+  ['F8', ()=>fkeyPresent(),      'Presentazione: apri o chiudi'],
+  ['F9', ()=>fkeyAutoLive(),     'AUTO LIVE: avvia o ferma'],
+  ['F10',()=>fkeySpeaker(),      'Speaker della Regia: in onda / fuori onda'],
+  ['F11',()=>fkeyPieno(),        'Presentazione a schermo intero'],
+  // La Legge non è una semplice sezione: openLegge carica i regolamenti
+  ['F12',()=>openLegge(),        'La Legge — i regolamenti']
+];
+function fkeyTabellone(){
+  // dove ha senso andare dipende dalla formula: se non ci sono gironi, la
+  // fase finale è l'unico tabellone che esiste
+  const gironi=S.started&&S.groups&&S.groups.length;
+  tabTo(gironi?'gironi':'finale');
+}
+function fkeyPresent(){ if(presentOpen)closePresent(); else openPresent(); }
+function fkeyAutoLive(){
+  if(typeof toggleAutoLive!=='function')return;
+  if(!S.started){toast(LANG==='en'?'Start the tournament first.':'Prima avvia il torneo.');return;}
+  toggleAutoLive();
+}
+function fkeySpeaker(){
+  if(typeof spkToggle!=='function'){return;}
+  if(!presentOpen&&$('#tab-audio')&&!$('#tab-audio').classList.contains('on'))tabTo('audio');
+  spkToggle();
+}
+function fkeyPieno(){
+  if(!presentOpen)openPresent();
+  setTimeout(()=>{try{presentFullscreen();}catch(e){}},presentOpen?0:260);
+}
+/* c'è un pannello a schermo intero aperto?
+   NB: offsetParent è sempre nullo per gli elementi in position:fixed — e gli
+   overlay lo sono tutti — quindi non serve a dire se sono visibili. */
+function fkeyVisibile(el){
+  if(!el)return false;
+  const st=getComputedStyle(el);
+  return st.display!=='none'&&st.visibility!=='hidden'&&el.getClientRects().length>0;
+}
+function fkeyOccupato(){
+  if(tvBoard!=null)return true;
+  return ['#ceremony','#pairing','#realpick','#advisor','#estim','#license','#pdfprev',
+          '#miniature','#capqr','#arcfoto','#shootout','#fkeys'].some(sel=>fkeyVisibile($(sel)));
+}
+function fkeyAiuto(){
+  let ov=$('#fkeys');
+  const en=LANG==='en';
+  if(!ov){
+    ov=document.createElement('div');ov.id='fkeys';
+    ov.style.cssText='position:fixed;inset:0;z-index:9000;display:flex;align-items:center;'+
+      'justify-content:center;background:rgba(4,8,18,.72);backdrop-filter:blur(3px)';
+    ov.onclick=e=>{if(e.target===ov)ov.remove();};
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML='<div style="max-width:560px;width:92%;background:linear-gradient(180deg,#0f1c2b,#0b1725);'+
+    'border:1px solid var(--line);border-radius:16px;padding:22px 26px;box-shadow:0 24px 60px rgba(0,0,0,.55)">'+
+    '<h3 style="font-family:var(--fh);letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px">'+
+    (en?'Function keys':'Tasti funzione')+'</h3>'+
+    '<p class="small muted" style="margin:0 0 14px">'+
+    (en?'They work anywhere, except while you are typing in a field.'
+       :'Funzionano ovunque, tranne mentre stai scrivendo in un campo.')+'</p>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:.88rem">'+
+    FKEYS.map(([k,,d])=>'<tr><td style="padding:5px 10px 5px 0;white-space:nowrap"><b style="font-family:var(--fn,monospace);'+
+      'background:rgba(245,196,81,.14);border:1px solid rgba(245,196,81,.3);border-radius:5px;'+
+      'padding:1px 8px;color:var(--gold)">'+k+'</b></td><td style="padding:5px 0;color:var(--mut)">'+
+      esc(fkeyDesc(d,en))+'</td></tr>').join('')+
+    '</table>'+
+    '<div style="margin-top:16px;text-align:right"><button class="btn sec" onclick="document.getElementById(\'fkeys\').remove()">'+
+    (en?'Close':'Chiudi')+'</button></div></div>';
+}
+function fkeyDesc(d,en){
+  if(!en)return d;
+  const T={'Aiuto: questo elenco':'Help: this list','Setup del torneo':'Tournament setup',
+    'Live — il Match Center':'Live — the Match Center','Gironi / Fase finale':'Groups / Final stage',
+    'Classifiche':'Standings','Cronache':'Match reports','Regia':'Control Desk',
+    'Presentazione: apri o chiudi':'Presentation: open or close',
+    'AUTO LIVE: avvia o ferma':'AUTO LIVE: start or stop',
+    'Speaker della Regia: in onda / fuori onda':'Control Desk speaker: on air / off air',
+    'Presentazione a schermo intero':'Presentation full screen',
+    'La Legge — i regolamenti':'The Law — the rulebooks'};
+  return T[d]||d;
+}
+document.addEventListener('keydown',e=>{
+  if(!/^F([1-9]|1[0-2])$/.test(e.key))return;
+  if(e.ctrlKey||e.metaKey||e.altKey)return;           // lascio stare le combinazioni del sistema
+  const a=document.activeElement,tag=a&&a.tagName;
+  const scrivendo=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(a&&a.isContentEditable);
+  if(scrivendo&&e.key!=='F1')return;
+  const voce=FKEYS.find(f=>f[0]===e.key);
+  if(!voce)return;
+  // con un pannello aperto navigare alle spalle confonde: si chiude prima
+  if(e.key!=='F1'&&fkeyOccupato()){
+    toast(LANG==='en'?'Close the open panel first (Esc).':'Chiudi prima il pannello aperto (Esc).');
+    e.preventDefault();return;
+  }
+  e.preventDefault();
+  try{voce[1]();}catch(err){}
+});
+
+/* =========================================================
    PRESENTAZIONE PROSSIMO TURNO (per schermo in sala)
    ========================================================= */
 function nextMatchesToShow(){
@@ -8488,11 +8630,11 @@ function renderFotoBox(){
 }
 
 /* =========================================================
-   I REPLAY DELLE AZIONI — le clip in GIF dell'App Replay
+   I REPLAY DELLE AZIONI — le clip video dell'App Replay
    Un telefono punta il campo e tiene sempre in memoria gli ultimi
    otto secondi: quando succede qualcosa, l'operatore preme REC e
-   quegli otto secondi — già visti, non da prevedere — diventano una
-   GIF che arriva qui, legata alla partita. A fine gara le clip di
+   quegli otto secondi — già visti, non da prevedere — diventano un
+   MP4 a 720p che arriva qui, legato alla partita. A fine gara le clip di
    quella partita si montano in un unico filmato, sul computer della
    Regia, senza programmi esterni e senza internet.
    ========================================================= */
@@ -8525,8 +8667,23 @@ function clipElimina(f,dopo){
   });
 }
 function clipZoom(f){
-  $('#fotolb-img').src=clipSrc(f);
-  $('#fotolb').classList.add('on');
+  const lb=$('#fotolb'),img=$('#fotolb-img');
+  let v=$('#fotolb-video');
+  if(/\.gif$/i.test(f)){                       // vecchia clip animata
+    if(v)v.style.display='none';
+    img.style.display='';img.src=clipSrc(f);
+  }else{
+    if(!v){                                     // il riquadro video si crea una volta sola
+      v=document.createElement('video');v.id='fotolb-video';
+      v.controls=true;v.playsInline=true;v.loop=true;
+      v.style.cssText='max-width:92vw;max-height:86vh;border-radius:12px;background:#000';
+      img.parentNode.insertBefore(v,img);
+    }
+    img.style.display='none';img.removeAttribute('src');
+    v.style.display='';v.src=clipSrc(f);
+    const g=v.play();if(g&&g.catch)g.catch(()=>{});
+  }
+  lb.classList.add('on');
 }
 /* tutte le partite con almeno una clip, in ordine di calendario */
 function clipPartite(){
@@ -8560,22 +8717,28 @@ function clipPulisciOrfane(){
 }
 
 /* ---------- il montaggio ----------
-   Non si decomprime nulla: le GIF nascono tutte dallo stesso encoder,
-   con le stesse misure, quindi basta rimetterle in fila portandosi
-   dietro la tavolozza di ciascuna. È istantaneo e non perde qualità. */
+   Non si ricomprime nulla: le clip nascono tutte dallo stesso encoder, con
+   la stessa configurazione e le stesse misure, quindi basta rileggerne i
+   campioni e riscrivere un solo contenitore. È istantaneo e non perde un
+   fotogramma — il file montato pesa quanto la somma delle clip. */
 function clipMonta(mid,auto){
   const cs=clipDi(mid);
   if(!cs.length){if(!auto)toast(L('Nessuna azione da montare per questa partita.'));return Promise.resolve();}
   if(CLIP.lavoro){if(!auto)toast(L('Sto già montando un filmato: un attimo.'));return Promise.resolve();}
   CLIP.lavoro=true;renderClipBox();
   toast('🎬 '+L('Monto il filmato delle azioni…'));
-  return loadScriptOnce('gifenc.js').catch(()=>null)
+  // dalla 5.3 le clip sono MP4; sul disco possono restare quelle GIF delle
+  // versioni precedenti, e quelle si montano ancora col vecchio encoder
+  const vecchie=cs.every(c=>/\.gif$/i.test(c.f));
+  const modulo=vecchie?'gifenc.js':'mp4enc.js';
+  return loadScriptOnce(modulo).catch(()=>null)
     .then(()=>{
-      if(!window.gifMontage)throw new Error('gifenc');
+      if(vecchie?!window.gifMontage:!(window.MP4&&MP4.montaMp4))throw new Error(modulo);
+      if(!vecchie&&cs.some(c=>/\.gif$/i.test(c.f)))throw new Error('misto');
       return Promise.all(cs.map(c=>fetch(clipSrc(c.f)).then(r=>r.arrayBuffer())));
     })
     .then(bufs=>{
-      const blob=gifMontage(bufs,{pausa:700});
+      const blob=vecchie?gifMontage(bufs,{pausa:700}):MP4.montaMp4(bufs,700);
       if(!blob)throw new Error('vuoto');
       return new Promise((res,rej)=>{
         const rd=new FileReader();
@@ -8589,7 +8752,7 @@ function clipMonta(mid,auto){
       const vecchi=CLIP.list.filter(x=>x.mid===mid+MONTSUF);
       return Promise.all(vecchi.map(x=>fetch(syncBase()+'/api/clip?del='+encodeURIComponent(x.f)).catch(()=>{})))
         .then(()=>fetch(syncBase()+'/api/clip',{method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({key:SYNC.key,mid:mid+MONTSUF,ts:Date.now(),gif:o.d})}))
+          body:JSON.stringify({key:SYNC.key,mid:mid+MONTSUF,ts:Date.now(),mp4:o.d})}))
         .then(r=>r.json()).then(d=>{
           if(!d||!d.ok)throw new Error((d&&d.err)||'invio');
           return clipAggiorna().then(()=>{
@@ -8613,7 +8776,7 @@ function matchTeamsById(mid){
 function clipScarica(f,nome){
   fetch(clipSrc(f)).then(r=>r.blob()).then(b=>{
     const u=URL.createObjectURL(b),a=document.createElement('a');
-    a.href=u;a.download=(nome||'replay')+'.gif';a.click();
+    a.href=u;a.download=(nome||'replay')+(/\.gif$/i.test(f)?'.gif':'.mp4');a.click();
     setTimeout(()=>URL.revokeObjectURL(u),4000);
   }).catch(()=>toast(L('Filmato non scaricabile.')));
 }
@@ -8652,7 +8815,9 @@ function renderClipBox(){
       </div>
       <div class="cgrid">${p.cs.map((c,i)=>`
         <figure class="ccard">
-          <img src="${clipSrc(c.f)}" alt="" onclick="clipZoom('${c.f}')">
+          ${/\.gif$/i.test(c.f)
+            ?`<img src="${clipSrc(c.f)}" alt="" onclick="clipZoom('${c.f}')">`
+            :`<video src="${clipSrc(c.f)}" muted playsinline preload="metadata" onclick="clipZoom('${c.f}')"></video>`}
           <span class="n">${i+1}</span>
           <button class="x" title="${L('Cancella')}" onclick="clipElimina('${c.f}')">✕</button>
         </figure>`).join('')}</div>
@@ -10406,36 +10571,68 @@ function syncPickAddr(){
   renderSyncUI();renderSyncQR();
 }
 /* --- tunnel Internet (Cloudflare quick tunnel via server integrato) --- */
-function setSyncTunnel(){
+function setSyncTunnel(voluto){
   const en=LANG==='en';
   const tun=SYNC.lan&&SYNC.lan.tunnel;
-  const turnOn=!(tun&&(tun.active||tun.starting));
+  // dall'interruttore arriva lo stato voluto; da una chiamata senza argomenti
+  // (vecchie scorciatoie) si continua a fare il contrario di com'è adesso
+  const turnOn=typeof voluto==='boolean'?voluto:!(tun&&(tun.active||tun.starting));
+  const chk=$('#sy-tunnel-chk');if(chk)chk.checked=turnOn;   // risposta immediata al tocco
+  if(turnOn){const sw=$('#sy-tunnel-sw');if(sw){sw.classList.remove('ko');sw.classList.add('avv');}
+    const st=$('#sy-tunnel-status');if(st)st.textContent=en?'⏳ starting…':'⏳ avvio in corso…';}
   fetch(syncBase()+'/api/tunnel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on:turnOn})})
     .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
     .then(()=>{
+      // il quick tunnel ci mette dai 3 ai 15 secondi: si ricontrolla finché
+      // non compare l'indirizzo (o finché il server non dice che è fallito)
       let tries=0;
-      const refresh=()=>{syncFetchInfo();if(++tries<6&&turnOn)setTimeout(refresh,1500);};
+      const refresh=()=>{
+        syncFetchInfo();
+        const t=SYNC.lan&&SYNC.lan.tunnel;
+        const finito=!turnOn||(t&&(t.url||t.err));
+        if(!finito&&++tries<14)setTimeout(refresh,1500);
+      };
       setTimeout(refresh,800);
       toast(turnOn?(en?'Starting Internet tunnel…':'Avvio del tunnel Internet…'):(en?'Tunnel stopped.':'Tunnel disattivato.'));
     })
-    .catch(()=>toast(en?'Tunnel control available only on the desktop app (local server).':'Il controllo del tunnel è disponibile solo dall\'app desktop (server locale).'));
+    .catch(()=>{
+      const chk=$('#sy-tunnel-chk');if(chk)chk.checked=!turnOn;
+      const sw=$('#sy-tunnel-sw');if(sw)sw.classList.remove('avv');
+      syncTunnelUI();
+      toast(en?'Tunnel control available only on the desktop app (local server).':'Il controllo del tunnel è disponibile solo dall\'app desktop (server locale).');
+    });
 }
 function syncTunnelUI(){
-  const st=$('#sy-tunnel-status'),btn=$('#sy-tunnel-btn');if(!st||!btn)return;
+  const st=$('#sy-tunnel-status'),lbl=$('#sy-tunnel-btn'),
+        sw=$('#sy-tunnel-sw'),chk=$('#sy-tunnel-chk');
+  if(!st||!lbl)return;
   const en=LANG==='en';
   const tun=SYNC.lan&&SYNC.lan.tunnel;
+  // con cloudflared incluso (cf) non c'è più niente da scaricare: il link
+  // compare solo nella versione web o eseguendo il server di sincronizzazione da solo
+  const incluso=!!(SYNC.lan&&SYNC.lan.cf);
+  const scarica=incluso?'':` — <a href="#" onclick="cfDownload();return false" style="color:var(--accent)">⬇️ ${
+    en?'download cloudflared for this computer':'scarica cloudflared per questo computer'}</a>`;
+  if(sw)sw.classList.remove('on','avv','ko');
   if(tun&&tun.url){
     st.innerHTML=`✅ <b style="color:var(--ok)">${esc(tun.url)}</b>`;
-    btn.textContent=en?'🛑 Stop tunnel':'🛑 Disattiva tunnel';
+    lbl.textContent=en?'Tunnel on':'Tunnel acceso';
+    if(chk)chk.checked=true; if(sw)sw.classList.add('on');
   }else if(tun&&tun.starting){
     st.textContent=en?'⏳ starting…':'⏳ avvio in corso…';
-    btn.textContent=en?'🛑 Cancel':'🛑 Annulla';
+    lbl.textContent=en?'Starting…':'Avvio…';
+    if(chk)chk.checked=true; if(sw)sw.classList.add('avv');
   }else if(tun&&tun.err){
-    st.innerHTML=`⚠️ ${esc(tun.err)}${/installato|installed/.test(tun.err)?` — <a href="#" onclick="cfDownload();return false" style="color:var(--accent)">⬇️ ${en?'download cloudflared for this computer':'scarica cloudflared per questo computer'}</a>`:''}`;
-    btn.textContent=en?'🌍 Enable Internet tunnel':'🌍 Attiva tunnel Internet';
+    st.innerHTML=`⚠️ ${esc(tun.err)}${/trovat|found|installat|installed/.test(tun.err)?scarica:''}`;
+    lbl.textContent=en?'Internet tunnel':'Tunnel Internet';
+    if(chk)chk.checked=false; if(sw)sw.classList.add('ko');
   }else{
-    st.innerHTML=`<a href="#" onclick="cfDownload();return false" class="muted" style="font-size:.78rem">⬇️ ${en?'download cloudflared (needed for the tunnel)':'scarica cloudflared (necessario per il tunnel)'}</a>`;
-    btn.textContent=en?'🌍 Enable Internet tunnel':'🌍 Attiva tunnel Internet';
+    st.innerHTML=incluso?`<span class="muted" style="font-size:.78rem">${
+      en?'ready — cloudflared is included in the program':'pronto — cloudflared è incluso nel programma'}</span>`
+      :`<a href="#" onclick="cfDownload();return false" class="muted" style="font-size:.78rem">⬇️ ${
+      en?'download cloudflared (needed for the tunnel)':'scarica cloudflared (necessario per il tunnel)'}</a>`;
+    lbl.textContent=en?'Internet tunnel':'Tunnel Internet';
+    if(chk)chk.checked=false;
   }
   hdrTunUI();
 }
@@ -10534,7 +10731,7 @@ function syncQrLink(){
   const v=$('#sy-qrtarget')?$('#sy-qrtarget').value:'0';
   if(v&&String(v).startsWith('T:'))   // QR per il CAPITANO di una squadra (CdT)
     return base+'/capitano?k='+encodeURIComponent(SYNC.key)+'&t='+encodeURIComponent(String(v).slice(2));
-  if(v==='R')                          // QR per l'App REPLAY (riprese in GIF)
+  if(v==='R')                          // QR per l'App REPLAY (riprese video)
     return base+'/replay?k='+encodeURIComponent(SYNC.key);
   const f=parseInt(v)||0;
   return base+'/?k='+encodeURIComponent(SYNC.key)+(f>0?'&f='+f:'');
@@ -10573,8 +10770,8 @@ function renderSyncQR(){
     const replay=sel.value==='R';
     const insicuro=replay&&/^http:\/\//i.test(link)&&!/^http:\/\/(localhost|127\.0\.0\.1)/i.test(link);
     hint.innerHTML=(replay
-      ?(en?'The Replay app films the match and saves the last 8 seconds as an animated GIF. '
-          :'L’App Replay riprende la partita e salva gli ultimi 8 secondi come GIF animata. ')
+      ?(en?'The Replay app films the match and saves the last 8 seconds as an MP4 video. '
+          :'L’App Replay riprende la partita e salva gli ultimi 8 secondi in un video MP4. ')
       :(en?'The QR contains address and key: the phone connects instantly. Pick a field to bind that phone to its matches only. '
           :'Il QR contiene indirizzo e chiave: il telefono si collega al volo. Scegli un campo per legare quel telefono solo alle sue partite. '))
       +esc(link)

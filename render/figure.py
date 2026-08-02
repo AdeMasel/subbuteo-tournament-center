@@ -37,11 +37,18 @@ def _chain(name, pts, radii, material, smooth=2):
 
 def dome(x, y, rot, col, topcol, R=0.0108, H=0.0072):
     """Base a cupola: sfera schiacciata tagliata piatta + disco colorato in cima."""
+    # Gli operatori di Blender lavorano sulla SELEZIONE: se resta selezionato
+    # qualcosa della miniatura precedente, transform_apply e modifier_apply lo
+    # coinvolgono e la cupola finisce fuori posto e deformata. Si parte puliti.
+    bpy.ops.object.select_all(action='DESELECT')
     bpy.ops.mesh.primitive_uv_sphere_add(radius=R, segments=64, ring_count=32, location=(x, y, 0))
     d = bpy.context.object
     d.name = 'Cupola'
     d.scale = (1, 1, .85)
-    bpy.ops.object.transform_apply(scale=True)
+    bpy.ops.object.select_all(action='DESELECT')
+    d.select_set(True)
+    bpy.context.view_layer.objects.active = d
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     # taglio piatto in sommità
     bpy.ops.mesh.primitive_cube_add(size=1, location=(x, y, H + .01))
     cut = bpy.context.object
@@ -49,6 +56,8 @@ def dome(x, y, rot, col, topcol, R=0.0108, H=0.0072):
     b = d.modifiers.new('B', 'BOOLEAN')
     b.operation = 'DIFFERENCE'
     b.object = cut
+    bpy.ops.object.select_all(action='DESELECT')
+    d.select_set(True)
     bpy.context.view_layer.objects.active = d
     bpy.ops.object.modifier_apply(modifier='B')
     bpy.data.objects.remove(cut, do_unlink=True)
@@ -63,10 +72,12 @@ def dome(x, y, rot, col, topcol, R=0.0108, H=0.0072):
     bpy.ops.object.shade_smooth()
     # disco colorato incassato sul piano superiore
     rt = R * math.sqrt(max(0., 1 - (H / (R * .85)) ** 2)) - .0002
+    bpy.ops.object.select_all(action='DESELECT')
     bpy.ops.mesh.primitive_cylinder_add(radius=rt, depth=.0007, location=(x, y, H - .0001), vertices=64)
     t = bpy.context.object
     t.data.materials.append(topcol)
     bpy.ops.object.shade_smooth()
+    bpy.ops.object.select_all(action='DESELECT')
     for o in (d, t):
         o.rotation_euler[2] = rot
     return [d, t], H

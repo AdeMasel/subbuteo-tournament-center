@@ -5,7 +5,7 @@ set -euo pipefail
 
 UTENTE="AdeMasel"
 REPO="subbuteo-tournament-center"
-TAG="v5.1.0"
+TAG="v5.3.0"
 QUI="$(cd "$(dirname "$0")" && pwd)"
 cd "$QUI"
 
@@ -36,7 +36,7 @@ render/out/
 EOF
 
 git add -A
-git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 5.1" || echo "▸ Niente da committare."
+git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 5.3" || echo "▸ Niente da committare."
 git push -u origin main
 
 echo "▸ Attivo GitHub Pages…"
@@ -50,13 +50,28 @@ if gh release view "$TAG" --repo "$UTENTE/$REPO" >/dev/null 2>&1; then
 else
   echo "▸ Creo la release $TAG…"
   gh release create "$TAG" --repo "$UTENTE/$REPO" \
-    --title "Subbuteo Tournament Center 5.1" \
+    --title "Subbuteo Tournament Center 5.3" \
     --notes "Versione dimostrativa per macOS, Windows e Linux.
 
 Il programma si installa in versione DIMOSTRATIVA: torneo a girone unico, tabelloni
 dal vivo, classifiche, Presentazione e stima della durata. Per sbloccare tutte le
 funzioni serve un codice di attivazione valido per il singolo dispositivo — le
 istruzioni sono su https://$(echo $UTENTE | tr '[:upper:]' '[:lower:]').github.io/$REPO/#licenza
+
+Novità della 5.3: le riprese dell'App Replay non sono più GIF animate a 256
+pixel ma video MP4 a 1280x720 — cinque volte i pixel e, a parità di secondi, un
+file più leggero di prima. Il montaggio di fine partita rimette in fila le azioni
+senza ricomprimerle, quindi non perde un fotogramma. «La Legge» accoglie il
+quarto regolamento, le regole avanzate WASPA, in italiano e in inglese: 132
+passaggi consultabili come gli altri. E i dodici tasti funzione della tastiera
+saltano da una sezione all'altra senza cercare il menu: F1 mostra l'elenco.
+
+Novità della 5.2: il tunnel Internet è diventato un interruttore. cloudflared — il
+componente gratuito di Cloudflare che apre il collegamento — ora viaggia dentro il
+programma: non c'è più niente da scaricare né da installare a mano, si accende
+l'interruttore nella sezione Regia e in una decina di secondi compare l'indirizzo
+https pubblico. È la strada più rapida per far funzionare i telefoni fuori dalla sala
+e per accendere la telecamera dell'App Replay, che senza https non parte.
 
 Novità della 5.1: la sezione «Regia Audio» diventa «Regia» e raccoglie anche tutto
 il collegamento con i telefoni (chiave, QR, dispositivi, tunnel e grafica per la
@@ -105,12 +120,12 @@ fi
 
 echo "▸ Carico gli installer (circa 1,9 GB, ci vorrà un po')…"
 gh release upload "$TAG" --repo "$UTENTE/$REPO" --clobber \
-  dist/Subbuteo-Tournament-Center-5.1.0-macOS-AppleSilicon.dmg \
-  dist/Subbuteo-Tournament-Center-5.1.0-macOS-Intel.dmg \
-  dist/Subbuteo-Tournament-Center-Setup-5.1.0-Windows.exe \
-  dist/Subbuteo-Tournament-Center-5.1.0-Linux-x86_64.AppImage \
-  dist/Subbuteo-Tournament-Center-5.1.0-Linux-arm64.AppImage \
-  dist/Manuale-Subbuteo-Tournament-Center-5.1.pdf
+  dist/Subbuteo-Tournament-Center-5.3.0-macOS-AppleSilicon.dmg \
+  dist/Subbuteo-Tournament-Center-5.3.0-macOS-Intel.dmg \
+  dist/Subbuteo-Tournament-Center-Setup-5.3.0-Windows.exe \
+  dist/Subbuteo-Tournament-Center-5.3.0-Linux-x86_64.AppImage \
+  dist/Subbuteo-Tournament-Center-5.3.0-Linux-arm64.AppImage \
+  dist/Manuale-Subbuteo-Tournament-Center-5.3.pdf
 
 echo
 echo "✔ Fatto."

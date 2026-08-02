@@ -83,7 +83,11 @@ mondiale e dominio personalizzato se un giorno ne vorrai uno.
 /Applications/Blender.app/Contents/MacOS/Blender --background --python render/scene.py -- --shot pitch --out render/out --samples 400
 ```
 
-L'inquadratura usata dal sito è `pitch` (panno + pallone + porta). Le altre — `hero`, `ball`, `team`, `box` — includono le miniature modellate in `figure.py` e NON sono usate: il giocatore 3D non è fedele al pezzo originale. La scena è in scala
+L'inquadratura usata dal sito è `pitch` (panno segnato + pallone + porta); `cover` è quella
+verticale della copertina del manuale. Le altre — `hero`, `ball`, `team`, `box` — includono le
+miniature modellate in `figure.py` e **non vanno usate da nessuna parte**: il giocatore 3D non è
+fedele al pezzo originale (base disegnata al contrario, figura poco credibile). I file già
+presenti in `render/out/` sono avanzi di quei tentativi. La scena è in scala
 reale (miniature di 3,5 cm): le luci sono di pochi watt e i diaframmi molto chiusi,
 come in una vera macro. Poi si riconvertono in WebP con lo script che sta in fondo a
 questo file.

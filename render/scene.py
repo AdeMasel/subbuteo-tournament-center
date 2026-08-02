@@ -82,6 +82,37 @@ def line(x, y, w, h, rot=0):
     return o
 
 
+# ---------------------------------------------------------------- segnatura del campo
+def cerchio(x, y, r, w=0.0011):
+    """Riga bianca circolare (cerchio di centrocampo): un toro schiacciato sul panno."""
+    bpy.ops.mesh.primitive_torus_add(location=(x, y, 0.00035), major_radius=r, minor_radius=w,
+                                     major_segments=192, minor_segments=8)
+    o = bpy.context.object
+    o.scale = (1, 1, 0.30)
+    o.data.materials.append(WHITE_LINE)
+    bpy.ops.object.shade_smooth()
+    return o
+
+
+def dischetto(x, y, r=0.0016):
+    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=.0004, location=(x, y, 0.00035), vertices=48)
+    o = bpy.context.object
+    o.data.materials.append(WHITE_LINE)
+    return o
+
+
+def area(y, verso=1, w=0.140, d=0.052, wp=0.064, dp=0.021):
+    """Area di rigore, area piccola e dischetto, come sono stampate sul panno."""
+    t = 0.0020
+    line(0, y - verso * d, w, t)                       # linea dell'area grande
+    line(-w / 2, y - verso * d / 2, t, d)              # laterale sinistra
+    line(w / 2, y - verso * d / 2, t, d)               # laterale destra
+    line(0, y - verso * dp, wp, t)                     # area piccola
+    line(-wp / 2, y - verso * dp / 2, t, dp)
+    line(wp / 2, y - verso * dp / 2, t, dp)
+    dischetto(0, y - verso * d * 0.60)                 # dischetto del rigore
+
+
 # ---------------------------------------------------------------- miniatura HW
 import figure as FIG
 
@@ -152,9 +183,14 @@ def goal(y, w=0.14, h=0.045):
     cb.rotation_euler[1] = math.pi / 2
     posts.append(cb)
     # rete: piano con trama a quadretti in alpha
-    bpy.ops.mesh.primitive_plane_add(size=1, location=(0, y + 0.022, h / 2))
+    # la rete sta poco dietro i pali: con uno scarto fisso, sulle porte piccole
+    # sembrava staccata e sospesa dietro il telaio
+    bpy.ops.mesh.primitive_plane_add(size=1, location=(0, y + h * 0.22, h / 2))
     net = bpy.context.object
-    net.scale = (w, 1, h)
+    # Il piano sta in XY: la scala va data PRIMA della rotazione, quindi
+    # l'altezza è la Y locale. Con (w, 1, h) la rete diventava alta un metro
+    # e nei rendering compariva come una parete grigia sopra la traversa.
+    net.scale = (w, h, 1)
     net.rotation_euler[0] = math.pi / 2
     m = bpy.data.materials.new('Rete')
     m.use_nodes = True
@@ -247,10 +283,13 @@ make_baize()
 if SHOT == 'pitch':
     # Panno, pallone e porta: nessuna miniatura (il modello 3D del giocatore
     # non regge il confronto con il pezzo originale, quindi non lo si usa).
-    line(0, 0.235, 0.90, 0.0022)
-    line(0, 0.105, 0.90, 0.0020)
+    # Il pallone sta a destra e la porta sfocata sul fondo: la metà sinistra
+    # resta libera per il titolo del sito.
+    line(0, 0.520, 0.90, 0.0022)          # linea di fondo
+    area(0.520, verso=1)                  # area grande, area piccola e dischetto
+    line(0, 0.105, 0.90, 0.0020)          # linea di metà campo
     ball(0.040, -0.004, 0.0092)
-    goal(0.52, w=0.26, h=0.078)
+    goal(0.520, w=0.150, h=0.048)
     lights(4.8)
     camera((-0.010, -0.235, 0.030), (0.012, 0.030, 0.011), lens=85, fstop=13.0, focus=0.236)
     W, H = 2000, 1125
@@ -266,6 +305,33 @@ elif SHOT == 'hero':
     lights(4.6)
     camera((-0.030, -0.250, 0.052), (0.004, 0.020, 0.019), lens=85, fstop=16.0, focus=0.252)
     W, H = 2000, 1125
+
+elif SHOT == 'cover':
+    # Copertina del manuale: verticale, il tavolo visto quasi da bordo campo.
+    # In fuoco stanno il pallone e la linea; le miniature restano appena morbide
+    # (il modello del giocatore regge la media distanza, non il primissimo piano)
+    # e la porta chiude il fondo — è l'immagine di una partita in corso, che è
+    # esattamente ciò di cui il programma tiene il tempo e il punteggio.
+    # SOLO IL PANNO: niente miniature. Il modello 3D del giocatore non regge il
+    # confronto col pezzo vero (e la base, nell'originale, è una cupola che poggia
+    # sul feltro, non un piattello). Un campo pronto per il fischio d'inizio dice
+    # la stessa cosa ed è onesto.
+    # Alla scala del panno la profondità di campo è cortissima: diaframma chiuso.
+    # metà campo vista da bordo panno: cerchio di centrocampo in primo piano,
+    # area e porta sul fondo, il pallone in mezzo — un campo pronto al fischio
+    # Un campo di Subbuteo è largo quasi quaranta volte il pallone: inquadrarlo
+    # tutto lo farebbe sembrare un tavolo qualsiasi. Si sta invece dentro l'area,
+    # come una fotografia da bordo campo.
+    line(0, 0.620, 0.90, 0.0022)          # linea di fondo
+    line(-0.330, 0.300, 0.0022, 0.640)    # laterale sinistra
+    line(0.330, 0.300, 0.0022, 0.640)     # laterale destra
+    area(0.620, verso=1)                  # area grande, area piccola e dischetto
+    ball(-0.020, 0.492, 0.0092)           # il pallone appena fuori dal dischetto
+    goal(0.620, w=0.150, h=0.048)
+    lights(6.2)
+    # dall'alto e di tre quarti: da qui la segnatura si legge come un disegno
+    camera((-0.052, 0.140, 0.250), (0.004, 0.545, 0.004), lens=50, fstop=22.0, focus=0.470)
+    W, H = 1500, 2000
 
 elif SHOT == 'ball':
     ball(0, 0, 0.0092)
