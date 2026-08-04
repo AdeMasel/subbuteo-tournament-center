@@ -154,9 +154,30 @@ nav#tabs button .dotlive{display:inline-block;width:8px;height:8px;border-radius
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
 /* ---------- ticker (striscia risultati, formato broadcast) ---------- */
-#ticker-wrap{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(0,0,0,.45);height:68px;display:flex;align-items:center;margin-top:10px;position:relative}
+/* La striscia è una barra da regia televisiva: angoli arrotondati, fondo che
+   sfuma dal nero verso destra, e un filo di luce sul bordo alto — quello che
+   in una grafica da diretta dà l'idea del vetro invece del rettangolo piatto. */
+#ticker-wrap{overflow:hidden;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(100deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.46) 42%,rgba(0,0,0,.30) 100%);
+  height:68px;display:flex;align-items:center;margin:10px 10px 0;position:relative;
+  box-shadow:0 10px 26px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.07)}
 #ticker-wrap.hidden{display:none}
-#ticker-label{flex:0 0 auto;background:var(--accent3);color:#fff;font-family:'Oswald',sans-serif;font-size:1.05rem;letter-spacing:.22em;padding:0 24px;text-transform:uppercase;z-index:2;height:100%;display:flex;align-items:center;box-shadow:6px 0 18px rgba(0,0,0,.45)}
+/* la pastiglia «Ultimi risultati»: gradiente sul colore d'accento, non tinta
+   piatta, e un bordo sfumato che la stacca dal testo che scorre */
+#ticker-label{flex:0 0 auto;color:#fff;font-family:'Oswald',sans-serif;font-size:1.02rem;
+  letter-spacing:.22em;padding:0 26px 0 22px;text-transform:uppercase;z-index:2;
+  height:100%;display:flex;align-items:center;position:relative;
+  background:linear-gradient(135deg,
+    color-mix(in srgb,var(--accent3) 88%,#fff 12%) 0%,
+    var(--accent3) 55%,
+    color-mix(in srgb,var(--accent3) 78%,#000 22%) 100%);
+  border-radius:13px 0 0 13px;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
+  box-shadow:10px 0 26px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.22)}
+/* sfumatura di raccordo fra la pastiglia e la striscia */
+#ticker-label::after{content:'';position:absolute;right:-22px;top:0;bottom:0;width:22px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent3) 78%,#000 22%),transparent);
+  pointer-events:none}
 /* il testo scorrevole sfuma gradualmente avvicinandosi alla scritta "Ultimi risultati" (non passa mai sotto) */
 #ticker-clip{flex:1;min-width:0;overflow:hidden;height:100%;display:flex;align-items:center;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 170px,#000 calc(100% - 26px),transparent);
@@ -986,7 +1007,56 @@ footer{position:fixed;bottom:4px;right:12px;left:auto;text-align:right;font-size
 #countdown .cd-lbl{font-family:'Oswald',sans-serif;letter-spacing:.45em;text-transform:uppercase;color:var(--muted);margin-top:14px;font-size:1rem}
 
 /* ---------- orologio simulato & tabellino board ---------- */
+/* ---------- GIRONI E CLASSIFICHE: tipografia da tabellone ----------
+   Queste due sezioni finiscono spesso sul proiettore, e vanno lette dal fondo
+   della sala. Nomi e numeri passano ai caratteri della regia — Oswald per i
+   nomi, Chakra Petch per le cifre, che è monospaziato e non fa ballare le
+   colonne — e crescono. I COLORI restano quelli delle zone di classifica:
+   qui si tocca solo il carattere, non il significato. */
+#tab-gironi table,#tab-classifica table{font-size:1.02rem}
+#tab-gironi th,#tab-classifica th{font-family:'Oswald',sans-serif;font-size:.86rem;
+  letter-spacing:.14em;text-transform:uppercase}
+#tab-gironi td,#tab-classifica td{padding-top:11px;padding-bottom:11px}
+/* i nomi di squadra e giocatore: condensato, grande, leggibile da lontano */
+#tab-gironi td:nth-child(2),#tab-classifica td:nth-child(2){
+  font-family:'Oswald',sans-serif;font-size:1.24rem;letter-spacing:.02em}
+/* tutte le cifre: monospaziate, così le colonne restano incolonnate */
+#tab-classifica td:nth-child(n+3),#tab-gironi td:nth-child(n+3){
+  font-family:'Chakra Petch',monospace;font-size:1.1rem;font-weight:700;
+  font-variant-numeric:tabular-nums}
+/* la posizione in classifica: il numero più grande della riga */
+#tab-classifica td:first-child{font-family:'Chakra Petch',monospace;font-size:1.26rem;
+  font-weight:700;font-variant-numeric:tabular-nums}
+#tab-gironi h3,#tab-classifica h3{font-size:1.28rem;letter-spacing:.1em}
+@media (max-width:900px){
+  #tab-gironi table,#tab-classifica table{font-size:.92rem}
+  #tab-gironi td:nth-child(2),#tab-classifica td:nth-child(2){font-size:1.06rem}
+}
+
+/* riquadro della moviola in Live */
+#live-replay{position:fixed;inset:0;z-index:130;display:none;align-items:flex-end;justify-content:center;
+  padding-bottom:34px;pointer-events:none;background:transparent}
+#live-replay.on{display:flex}
+#live-replay .lr-card{pointer-events:auto;position:relative;width:min(46vw,560px);
+  background:linear-gradient(180deg,rgba(10,16,30,.96),rgba(6,11,22,.98));
+  border:1px solid var(--line);border-radius:14px;padding:10px 10px 8px;
+  box-shadow:0 22px 60px rgba(0,0,0,.6);animation:lrSu .28s ease-out}
+@keyframes lrSu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+#live-replay video{width:100%;border-radius:10px;display:block;background:#000}
+#live-replay .lr-tit{font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  font-size:.86rem;color:var(--accent);margin:0 2px 7px}
+#live-replay .lr-x{position:absolute;top:8px;right:9px;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(0,0,0,.55);color:var(--text);cursor:pointer;line-height:1}
+
 .board{position:relative;overflow:hidden}
+/* cornice che pulsa a fine tempo: si vede con la coda dell'occhio da lontano,
+   che è come si guarda un tabellone mentre si fa altro */
+.board.attende-fase{animation:attesaFase 1.5s ease-in-out infinite}
+@keyframes attesaFase{
+  0%,100%{box-shadow:0 0 0 1px var(--warn),0 0 0 rgba(255,176,32,0)}
+  50%    {box-shadow:0 0 0 2px var(--warn),0 0 22px 2px rgba(255,176,32,.42)}
+}
+body.no-anim .board.attende-fase{animation:none;box-shadow:0 0 0 2px var(--warn)}
 .simclock{font-family:'Chakra Petch',monospace;font-size:1.35rem;color:var(--accent);margin-top:4px;text-shadow:0 0 10px color-mix(in srgb,var(--accent) 45%,transparent)}
 .simclock small{font-family:'Oswald',sans-serif;font-size:.58rem;letter-spacing:.26em;color:var(--muted);text-transform:uppercase;margin-left:8px}
 .cardbar{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px 0 8px}
@@ -1422,6 +1492,26 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   body.print-cronache #tab-cronache{display:block!important}
   body.print-cronache #tab-classifica{display:none!important}
   .cron .evmin{color:#555}
+  /* NIENTE deve superare la larghezza stampabile: bastano pochi millimetri
+     perché la stampante tagli il bordo dell'ultima colonna. Si azzerano i
+     margini del contenitore e si obbligano tabelle e schede a stare dentro. */
+  html,body{margin:0;padding:0;width:auto;overflow:visible}
+  main{margin:0!important;padding:0!important;max-width:100%!important;width:auto!important}
+  .card,section.tab,.grid,.row{max-width:100%!important;box-sizing:border-box}
+  table{max-width:100%!important;width:100%!important;box-sizing:border-box;
+        border-collapse:collapse;table-layout:auto}
+  table th,table td{word-break:normal;overflow-wrap:anywhere}
+  /* le immagini non devono mai spingere la pagina in larghezza */
+  img{max-width:100%!important;height:auto}
+  /* SU CARTA SI VA A UNA COLONNA. A schermo le classifiche stanno affiancate
+     due per riga; in A4 ogni colonna scende a 325px, mentre una tabella con
+     nomi e otto colonne non si stringe sotto i ~330px: il risultato era che
+     la seconda colonna usciva dal foglio di pochi millimetri e la stampante
+     tagliava il bordo. Una colonna sola: nessun taglio e si legge meglio. */
+  .grid,.grid.g2,.grid.g3,.duo,.cols2{grid-template-columns:1fr!important;
+    column-count:1!important;display:block!important}
+  .grid>*,.grid.g2>*{margin-bottom:14px}
+  .card{padding:12px 14px!important}
   input{border:none;color:#000;background:none}
 }
 /* ===== MINIATURE HW — catalogo delle squadre originali (palette vetrina/museo) ===== */
@@ -1647,6 +1737,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
           </div>
           <div style="display:flex;align-items:flex-end;padding-bottom:6px">
             <label class="ck"><input type="checkbox" id="s-onehalf"> Partite a tempo unico (cronometro simulato 0′–90′ su un solo tempo)</label>
+            <label class="ck"><input type="checkbox" id="s-noantic"> Non anticipare gare del turno successivo per riempire i campi (si completa una giornata alla volta)</label>
           </div>
           <div style="display:flex;align-items:flex-end;padding-bottom:6px">
             <label class="ck"><input type="checkbox" id="s-goalroar" checked onchange="S.soundGoal=this.checked;persist()"> Boato del pubblico al gol</label>
@@ -2463,7 +2554,7 @@ function defaultState(){return{
   cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,
        ritorno:false,third:true,swissRounds:5,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
        refSource:'players',refPool:[],showPlayers:false,showRefBoard:true,fotoConsenso:true,
-       poffN:4,poutN:0,poffFmt:'ko',chQ:8,kohTarget:5,consB:false,oneHalf:false,
+       poffN:4,poutN:0,poffFmt:'ko',chQ:8,kohTarget:5,consB:false,oneHalf:false,noAnticipo:false,
        cdSecs:5,logo:null,
        tb:['h2h','dr','gf','v','gs'],
        tiers:[{name:'Tabellone Gold',ranks:'1,2',fmt:'ko'},{name:'Tabellone Silver',ranks:'3,4',fmt:'ko'}]},
@@ -2473,7 +2564,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='5.3.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='5.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -3644,16 +3735,61 @@ async function sha256hex(s){
 /* impronta del dispositivo: un identificativo casuale creato al primo avvio,
    legato alle caratteristiche della macchina; copiare i dati su un altro
    computer non basta a far valere la licenza */
-async function deviceId(){
-  if(LIC.dev)return LIC.dev;
+/* ---------------------------------------------------------------------------
+   L'IDENTIFICATIVO DEL DISPOSITIVO
+
+   Fino alla 5.3 era l'impronta di: seme casuale + piattaforma + numero di core
+   + RISOLUZIONE DELLO SCHERMO + fuso orario + lingua. Il seme, da solo, era già
+   unico e permanente; il resto non aggiungeva sicurezza — non è un segreto —
+   ma aggiungeva FRAGILITÀ, e in sala torneo si vedeva: bastava collegare il
+   proiettore o spostare la finestra sul secondo schermo perché `screen.width`
+   cambiasse, l'identificativo con lui, e il programma richiedesse la licenza
+   come se fosse un altro computer. (Lo stesso poteva succedere viaggiando in
+   un altro fuso orario.)
+
+   Ora l'identificativo VERO è quello stabile, che dipende dal solo seme. Per
+   non invalidare le licenze già emesse si continua a calcolare anche quello
+   vecchio, e la verifica accetta entrambi; in più, all'attivazione, si ricorda
+   l'identificativo per cui la licenza è stata emessa, così da quel momento la
+   licenza resta valida su questo computer qualunque cosa accada allo schermo.
+   --------------------------------------------------------------------------- */
+function licSeme(){
   let seed=localStorage.getItem('subbuteo_dev_seed');
   if(!seed){seed=[...crypto.getRandomValues(new Uint8Array(16))].map(x=>x.toString(16).padStart(2,'0')).join('');
     localStorage.setItem('subbuteo_dev_seed',seed);}
+  return seed;
+}
+function licFormato(hex){
+  return ('STC-'+hex.slice(0,4)+'-'+hex.slice(4,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)).toUpperCase();
+}
+/* stabile: dipende SOLO dal seme, quindi non cambia mai su questo computer */
+async function deviceIdStabile(){
+  if(LIC.devStabile)return LIC.devStabile;
+  LIC.devStabile=licFormato(await sha256hex(licSeme()+'::stc'));
+  return LIC.devStabile;
+}
+/* storico: com'era calcolato fino alla 5.3, per le licenze già emesse */
+async function deviceIdStorico(){
+  if(LIC.devStorico)return LIC.devStorico;
   const hw=[navigator.platform||'',navigator.hardwareConcurrency||'',
     screen.width+'x'+screen.height+'x'+(screen.colorDepth||''),
     Intl.DateTimeFormat().resolvedOptions().timeZone||'',navigator.language||''].join('|');
-  const hex=await sha256hex(seed+'::'+hw);
-  LIC.dev=('STC-'+hex.slice(0,4)+'-'+hex.slice(4,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)).toUpperCase();
+  LIC.devStorico=licFormato(await sha256hex(licSeme()+'::'+hw));
+  return LIC.devStorico;
+}
+/* tutti gli identificativi che questo computer può legittimamente esibire */
+async function deviceIds(){
+  const l=[await deviceIdStabile(),await deviceIdStorico()];
+  const memo=localStorage.getItem('subbuteo_lic_dev');   // quello della licenza attivata
+  if(memo&&l.indexOf(memo)<0)l.push(memo);
+  return l;
+}
+/* quello da mostrare e da comunicare all'autore: se una licenza è già attiva
+   si mostra il suo, altrimenti quello stabile */
+async function deviceId(){
+  if(LIC.dev)return LIC.dev;
+  const memo=localStorage.getItem('subbuteo_lic_dev');
+  LIC.dev=memo||await deviceIdStabile();
   return LIC.dev;
 }
 /* un codice di licenza è: <payload base64url>.<firma base64url> */
@@ -3665,8 +3801,8 @@ async function licVerify(code){
     const ok=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},key,b64d(s),b64d(p));
     if(!ok)return null;
     const data=JSON.parse(new TextDecoder().decode(b64d(p)));
-    const dev=await deviceId();
-    if(data.id&&data.id!==dev)return{err:'device'};      // licenza di un altro dispositivo
+    const miei=await deviceIds();
+    if(data.id&&miei.indexOf(data.id)<0)return{err:'device'};  // licenza di un altro dispositivo
     if(data.exp&&Date.now()>data.exp)return{err:'exp'};   // licenza scaduta
     return{ok:true,to:data.to||'',exp:data.exp||null,id:data.id||''};
   }catch(e){return null;}
@@ -3676,7 +3812,16 @@ async function licLoad(){
   const code=localStorage.getItem('subbuteo_licenza')||'';
   if(code){
     const r=await licVerify(code);
-    if(r&&r.ok){LIC.ok=true;LIC.to=r.to;LIC.exp=r.exp;}
+    if(r&&r.ok){
+      LIC.ok=true;LIC.to=r.to;LIC.exp=r.exp;
+      /* licenza attivata prima della 5.4, quando l'identificativo dipendeva
+         anche dallo schermo: la si «fissa» ora, al primo avvio in cui è ancora
+         riconosciuta, così non si perderà più al cambio di monitor */
+      if(r.id&&!localStorage.getItem('subbuteo_lic_dev')){
+        localStorage.setItem('subbuteo_lic_dev',r.id);
+        LIC.dev=r.id;
+      }
+    }
   }
   LIC.checked=true;
   applyLicenseUI();
@@ -3690,6 +3835,10 @@ async function licActivate(){
   if(r.err==='device'){toast('⛔ '+(en?'This licence belongs to another device.':'Questa licenza appartiene a un altro dispositivo.'));return;}
   if(r.err==='exp'){toast('⛔ '+(en?'Licence expired.':'Licenza scaduta.'));return;}
   localStorage.setItem('subbuteo_licenza',code.trim());
+  /* si ricorda l'identificativo per cui è stata emessa: da qui in poi la
+     licenza resta valida anche se cambia schermo, fuso orario o lingua */
+  if(r.id)localStorage.setItem('subbuteo_lic_dev',r.id);
+  LIC.dev=r.id||LIC.dev;
   LIC.ok=true;LIC.to=r.to;LIC.exp=r.exp;
   applyLicenseUI();renderLicense();
   crowdRoar&&crowdRoar();
@@ -4498,13 +4647,23 @@ function assignFields(){
     remaining.push({m,r:m.round||1,gi});
   }));
   remaining.sort((a,b)=>a.r-b.r||a.gi-b.gi);
-  let guard=0;
+  /* Con «resta nel turno» acceso, un'ondata usa SOLO gare della giornata più
+     arretrata ancora da giocare: i campi liberi restano liberi invece di
+     anticipare gare del turno dopo. Serve a chi vuole che tutti finiscano una
+     giornata prima che qualcuno cominci la successiva — più lento, ma più
+     leale, ed è l'unico modo di avere classifiche allineate a ogni turno. */
+  const soloTurno=!!S.cfg.noAnticipo;
+  let guard=0,ondata=0;
   while(remaining.length&&guard++<2000){
     const busy=new Set();let slot=0;
+    ondata++;                                  // in quale giro di campi finisce
+    const turno=soloTurno?remaining[0].r:null;
     for(let i=0;i<remaining.length&&slot<cap;){
       const p=remaining[i];
+      if(soloTurno&&p.r!==turno)break;         // finita la giornata: stop
       if(busy.has(p.m.home)||busy.has(p.m.away)){i++;continue;}
       p.m.field=off+slot*span+1;
+      p.m.wave=ondata;
       slot++;
       busy.add(p.m.home);busy.add(p.m.away);
       remaining.splice(i,1);
@@ -5199,6 +5358,7 @@ function readSetup(){
   if($('#s-kohtarget'))S.cfg.kohTarget=Math.max(0,parseInt($('#s-kohtarget').value)||0);
   if($('#s-consb'))S.cfg.consB=$('#s-consb').checked;
   if($('#s-onehalf'))S.cfg.oneHalf=$('#s-onehalf').checked;
+  if($('#s-noantic'))S.cfg.noAnticipo=$('#s-noantic').checked;
 }
 function setupError(msg){$('#setup-error').textContent=msg||'';}
 /* --- Setup a torneo in corso: mostra «Applica variazioni» e blocca i campi
@@ -5235,6 +5395,7 @@ function applyChanges(){
   if($('#s-showrefboard'))S.cfg.showRefBoard=$('#s-showrefboard').checked;
   if($('#s-goalroar'))S.soundGoal=$('#s-goalroar').checked;
   if($('#s-kohtarget'))S.cfg.kohTarget=Math.max(0,parseInt($('#s-kohtarget').value)||0);
+  if($('#s-noantic'))S.cfg.noAnticipo=$('#s-noantic').checked;   // non è strutturale: si cambia anche a torneo iniziato
   if($('#s-onehalf')){
     S.cfg.oneHalf=$('#s-onehalf').checked;
     S.boards.forEach(b=>{if(!b.started&&!b.running){b.oneHalf=S.cfg.oneHalf;b.phaseIdx=0;}});
@@ -7019,7 +7180,8 @@ function bkTabellino(m,a,b){
 }
 
 function buildBookHTML(modo){
-  const ps=fotoPartite();
+  const ps=bookPartite();
+  const conFoto=ps.filter(p=>p.f&&(p.f.prima||p.f.dopo)).length;
   const logo=S.cfg.logo?`<img class="bk-logo" src="${S.cfg.logo}">`:'';
   const data=S.cfg.date?new Date(S.cfg.date+'T12:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
   let h=`<style>${BK_CSS}</style><div class="pdfdoc">
@@ -7029,7 +7191,7 @@ function buildBookHTML(modo){
     <h1>${esc(S.cfg.name||L('Torneo'))}</h1>
     <div class="sub">${esc([S.cfg.loc,data].filter(Boolean).join(' · '))}</div>
     <div class="bk-orn">❦ ❦ ❦</div>
-    <div class="sub" style="margin-top:4mm">${(S.teams||[]).length} ${L('partecipanti')} · ${ps.length} ${L('partite fotografate')}</div>
+    <div class="sub" style="margin-top:4mm">${(S.teams||[]).length} ${L('partecipanti')} · ${ps.length} ${L('partite')}${conFoto?' · '+conFoto+' '+L('fotografate'):''}</div>
   </div>`;
 
   if(ps.length){
@@ -7547,7 +7709,11 @@ function boardHTML(b,i){
   if(cur){const tt=matchTeams(cur);optHtml+=`<option value="${b.matchId}" selected>▶ ${esc(tt.t1)} vs ${esc(tt.t2)}</option>`;}
   opts.forEach(o=>{if(o.id!==b.matchId)optHtml+=`<option value="${o.id}">${esc(o.label)}</option>`;});
   const curRef=cur&&cur.m&&cur.m.ref?cur.m.ref:null;
-  let h=`<div class="card board${b.running?' running':''}" id="board-${i}">
+  /* Tempo scaduto e partita non finita: la cornice pulsa per dire che il
+     prossimo gesto è «Fase succ.». È il momento in cui, in sala, si perdono
+     i minuti — il campo è fermo e nessuno se ne accorge. */
+  const attendeFase=!b.running&&b.remaining<=0&&b.matchId&&!b.done;
+  let h=`<div class="card board${b.running?' running':''}${attendeFase?' attende-fase':''}" id="board-${i}">
     <div class="bhead">
       <span class="fieldtag">${fieldLabel(b.field)}</span>
       <select onchange="boardAssign(${i},this.value)">${optHtml}</select>
@@ -7656,6 +7822,8 @@ function updateBoardClock(i){
     el.textContent=fmtClock(b.remaining);
     el.classList.toggle('warn10',b.remaining>0&&b.remaining<=10);
     el.classList.toggle('zero',b.remaining<=0);
+    const card=el.closest('.board');
+    if(card)card.classList.toggle('attende-fase',!b.running&&b.remaining<=0&&!!b.matchId&&!b.done);
   }
   const sim=document.getElementById(`bsim-${i}`);
   if(sim)sim.innerHTML='⏱ '+fmtSim(simSeconds(b))+'<small>minuto simulato</small>';
@@ -8068,6 +8236,32 @@ function nextRoundHTML(){
     return prow(w.home,w.away,'<span class="pvs goldtxt">VS</span>',{field:fieldLabel(w.field),evs,ref:w.ref||''});
   }).join('')+'</div>';
 }
+/* ---------- al massimo QUATTRO risultati alla volta ----------
+   Su uno schermo in sala una lista di dodici gare non si legge: i caratteri
+   si rimpiccioliscono e nessuno distingue più i punteggi. Se ne mostrano
+   quattro per volta, a rotazione lenta, dando la precedenza alle gare in
+   corso — quelle sono la ragione per cui il pubblico sta guardando. */
+const PRESENT_MAX=4, PRESENT_GIRO=7000;
+let presentPag=0,presentPagT=null,presentPagFirma='';
+function presentFinestra(items){
+  if(!items||items.length<=PRESENT_MAX){presentPagFirma='';return items||[];}
+  // le gare in corso davanti, il resto nell'ordine naturale
+  const ord=items.slice().sort((a,b)=>(b.live?1:0)-(a.live?1:0));
+  const pagine=Math.ceil(ord.length/PRESENT_MAX);
+  const firma=items.map(i=>i.a+'|'+i.b).join(',');
+  if(firma!==presentPagFirma){presentPagFirma=firma;presentPag=0;}
+  if(presentPag>=pagine)presentPag=0;
+  if(!presentPagT){
+    presentPagT=setInterval(()=>{
+      if(!presentOpen){clearInterval(presentPagT);presentPagT=null;return;}
+      presentPag++;presentRender();
+    },PRESENT_GIRO);
+  }
+  const da=presentPag*PRESENT_MAX;
+  const fetta=ord.slice(da,da+PRESENT_MAX);
+  fetta.__pagina=(presentPag%pagine)+1;fetta.__pagine=pagine;
+  return fetta;
+}
 function presentRender(){
   if(!presentOpen)return;
   const live=presentIsLive();
@@ -8086,12 +8280,12 @@ function presentRender(){
   const varg=String(presentView||'').split('#')[1];
   if(vbase==='live'&&varg!=null){          // AUTO LIVE: risultati di UN girone (o dei KO)
     if(varg==='ko'){
-      const items=koRoundItems();
+      const items=presentFinestra(koRoundItems());
       title.textContent=(items[0]&&items[0].label)||L('Fase Finale');
       grid.innerHTML='<div class="plist">'+items.map(it=>prow(it.a,it.b,scoreMid(it.sa,it.sb,it.live),{live:it.live,evs:evStr(it.events,it.a,it.b)})).join('')+'</div>';
     }else{
       const g=allGroups()[+varg];
-      const items=g?groupRoundItems(g):[];
+      const items=presentFinestra(g?groupRoundItems(g):[]);
       const pre=(g&&(g.swiss||S.cfg.format==='campionato'))?'':L('Girone ');
       title.textContent=g?`${pre}${g.name} · ${(items[0]&&items[0].label)||''} · ${LANG==='en'?'RESULTS':'RISULTATI'}`:'';
       grid.innerHTML=items.length
@@ -8108,7 +8302,7 @@ function presentRender(){
     grid.innerHTML=nextRoundHTML();
   }else if(presentView==='live'){
     title.textContent=LANG==='en'?'Current matchday · LIVE':'Giornata in corso · LIVE';
-    const items=currentRoundItems();
+    const items=presentFinestra(currentRoundItems());
     grid.innerHTML=items.length
       ?'<div class="plist">'+items.map(it=>prow(it.a,it.b,scoreMid(it.sa,it.sb,it.live),{live:it.live,evs:evStr(it.events,it.a,it.b)})).join('')+'</div>'
       :`<div class="pcard"><p class="muted">${LANG==='en'?'No match with a score.':'Nessuna gara con punteggio.'}</p></div>`;
@@ -8495,6 +8689,31 @@ function fotoZoom(f){
 }
 function fotoZoomClose(){$('#fotolb').classList.remove('on');}
 /* tutte le partite con almeno una foto, in ordine di calendario */
+/* --- le partite del LIBRO DEI RICORDI ---------------------------------
+   Fino alla 5.3 il libro si costruiva da fotoPartite(), cioè dalle sole gare
+   FOTOGRAFATE: una partita giocata senza foto spariva del tutto, risultato e
+   tabellino compresi, e il libro raccontava solo i pezzi di torneo che
+   qualcuno aveva ripreso. Qui si parte invece da TUTTE le gare giocate; le
+   foto restano dove ci sono, e l'impaginazione le sa già omettere. */
+function bookPartite(){
+  const out=[],vuote={prima:null,dopo:null};
+  const giocata=(r1,r2,done)=>!!done||r1!=null||r2!=null;
+  allGroups().forEach(g=>g.matches.forEach(m=>{
+    if(!giocata(m.hs,m.as,m.done))return;
+    out.push({m,f:fotoDi(m.id)||vuote,a:m.home,b:m.away,ra:m.hs,rb:m.as,
+              fase:L('Giornata')+' '+(m.round||1),g:(allGroups().length>1?g.name:'')});
+  }));
+  allKOs().forEach(k=>(k.rounds||[]).forEach(rd=>rd.matches.forEach(m=>{
+    if(!m.t1||!m.t2||m.t1===BYE||m.t2===BYE)return;
+    if(!giocata(m.s1,m.s2,false))return;
+    out.push({m,f:fotoDi(m.id)||vuote,a:m.t1,b:m.t2,ra:m.s1,rb:m.s2,fase:rd.name||k.title,g:''});
+  })));
+  (S.freeMatches||[]).forEach(m=>{
+    if(!giocata(m.hs,m.as,m.done))return;
+    out.push({m,f:fotoDi(m.id)||vuote,a:m.home,b:m.away,ra:m.hs,rb:m.as,fase:L('Partita libera'),g:''});
+  });
+  return out;
+}
 function fotoPartite(){
   const out=[];
   allGroups().forEach(g=>g.matches.forEach(m=>{
@@ -8520,7 +8739,10 @@ function fotoGiornata(){
   const out=[];
   const agg=(m,a,b,ra,rb,ctx)=>{
     const f=fotoDi(m.id);
-    ['prima','dopo'].forEach(q=>{if(f[q])out.push({f:f[q],a,b,ra,rb,ctx,quando:q});});
+    /* nella striscia della Presentazione vanno gli scatti PRIMA del via: sono
+       le presentazioni degli sfidanti, quelle che hanno senso mentre la gara
+       è in corso. Le foto di fine gara restano nell'archivio e nel libro. */
+    if(f.prima)out.push({f:f.prima,a,b,ra,rb,ctx,quando:'prima'});
   };
   allGroups().forEach(g=>{
     if(!g.matches||!g.matches.length)return;
@@ -8640,6 +8862,43 @@ function renderFotoBox(){
    ========================================================= */
 const CLIP={list:[],tot:0,t:null,lavoro:false};
 const MONTSUF='-MONT';               // coda del nome per i filmati montati
+/* ---------- L'AZIONE APPENA ARRIVATA, SUBITO A SCHERMO ----------
+   Nella sola sezione Live: quando un campo manda una clip, compare un riquadro
+   in basso al centro che la riproduce una volta e sparisce da solo. È il gesto
+   della moviola in regia — si guarda l'episodio contestato mentre il ricordo
+   è fresco, senza andare a cercarlo nelle Cronache e senza perdere di vista i
+   tabelloni, che restano dove sono. */
+let replayT=null;
+function chiudiReplay(){
+  const box=$('#live-replay');
+  if(!box)return;
+  box.classList.remove('on');
+  const v=box.querySelector('video'); if(v){try{v.pause();}catch(e){} v.removeAttribute('src');v.load&&v.load();}
+  clearTimeout(replayT);replayT=null;
+}
+function mostraReplay(mid,file,t){
+  const inLive=$('#tab-live')&&$('#tab-live').classList.contains('on');
+  if(!inLive||!file||/\.gif$/i.test(file))return;      // le vecchie GIF restano nelle Cronache
+  let box=$('#live-replay');
+  if(!box){
+    box=document.createElement('div');box.id='live-replay';
+    box.innerHTML='<div class="lr-card"><div class="lr-tit"></div>'+
+      '<video muted playsinline></video>'+
+      '<button class="lr-x" title="Chiudi">✕</button></div>';
+    document.body.appendChild(box);
+    box.querySelector('.lr-x').onclick=chiudiReplay;
+    box.onclick=e=>{if(e.target===box)chiudiReplay();};
+  }
+  box.querySelector('.lr-tit').textContent='🎞 '+(t?t.t1+' – '+t.t2:L('Azione'));
+  const v=box.querySelector('video');
+  v.src=clipSrc(file);
+  box.classList.add('on');
+  clearTimeout(replayT);
+  const g=v.play();if(g&&g.catch)g.catch(()=>{});
+  // si chiude da sola a fine filmato, o dopo 15 secondi se qualcosa si inceppa
+  v.onended=chiudiReplay;
+  replayT=setTimeout(chiudiReplay,15000);
+}
 function clipAttive(){return !!(SYNC.lan&&SYNC.lan.clip&&SYNC.on);}
 function clipSrc(f){return syncBase()+'/api/clip?f='+encodeURIComponent(f);}
 function clipAggiorna(){
@@ -10328,7 +10587,11 @@ function syncApply(ev){
     case 'clip':{
       const t=matchTeams(f);
       toast(`🎞 ${L('Azione salvata')}${t?': '+esc(t.t1)+' – '+esc(t.t2):''}`);
-      clipAggiorna().then(renderClipBox);
+      clipAggiorna().then(()=>{
+        renderClipBox();
+        // solo in Live: l'azione appena arrivata si guarda subito, sul posto
+        mostraReplay(ev.mid,ev.file,t);
+      });
       return;}
     case 'clipend':{
       // l'operatore ha chiuso la ripresa: il filmato si monta da solo
@@ -11160,6 +11423,7 @@ function renderSetupFromState(){
   if($('#s-kohtarget'))$('#s-kohtarget').value=S.cfg.kohTarget??5;
   if($('#s-consb'))$('#s-consb').checked=!!S.cfg.consB;
   if($('#s-onehalf'))$('#s-onehalf').checked=!!S.cfg.oneHalf;
+  if($('#s-noantic'))$('#s-noantic').checked=!!S.cfg.noAnticipo;
   if($('#s-goalroar'))$('#s-goalroar').checked=S.soundGoal!==false;
   if($('#s-penshots'))$('#s-penshots').value=S.cfg.penShots||5;
   if($('#s-compose'))$('#s-compose').value=S.cfg.compose||'auto';
