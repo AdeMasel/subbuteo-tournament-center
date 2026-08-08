@@ -8,15 +8,15 @@ set -uo pipefail
 export PATH="$PATH:$HOME/.local/bin"
 cd "$(dirname "$0")"
 
-TAG="v5.3.0"
+TAG="v5.5.0"
 REPO="AdeMasel/subbuteo-tournament-center"
 FILE=(
-  "Manuale-Subbuteo-Tournament-Center-5.3.pdf"
-  "Subbuteo-Tournament-Center-5.3.0-macOS-AppleSilicon.dmg"
-  "Subbuteo-Tournament-Center-5.3.0-macOS-Intel.dmg"
-  "Subbuteo-Tournament-Center-Setup-5.3.0-Windows.exe"
-  "Subbuteo-Tournament-Center-5.3.0-Linux-x86_64.AppImage"
-  "Subbuteo-Tournament-Center-5.3.0-Linux-arm64.AppImage"
+  "Manuale-Subbuteo-Tournament-Center-5.5.pdf"
+  "Subbuteo-Tournament-Center-5.5.0-macOS-AppleSilicon.dmg"
+  "Subbuteo-Tournament-Center-5.5.0-macOS-Intel.dmg"
+  "Subbuteo-Tournament-Center-Setup-5.5.0-Windows.exe"
+  "Subbuteo-Tournament-Center-5.5.0-Linux-x86_64.AppImage"
+  "Subbuteo-Tournament-Center-5.5.0-Linux-arm64.AppImage"
 )
 
 # dimensione dell'allegato già presente sulla release (vuoto se non c'è)
