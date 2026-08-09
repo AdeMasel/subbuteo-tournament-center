@@ -5,7 +5,7 @@ set -euo pipefail
 
 UTENTE="AdeMasel"
 REPO="subbuteo-tournament-center"
-TAG="v5.5.0"
+TAG="v6.0.0"
 QUI="$(cd "$(dirname "$0")" && pwd)"
 cd "$QUI"
 
@@ -36,7 +36,7 @@ render/out/
 EOF
 
 git add -A
-git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 5.5" || echo "▸ Niente da committare."
+git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 6.0" || echo "▸ Niente da committare."
 git push -u origin main
 
 echo "▸ Attivo GitHub Pages…"
@@ -50,13 +50,23 @@ if gh release view "$TAG" --repo "$UTENTE/$REPO" >/dev/null 2>&1; then
 else
   echo "▸ Creo la release $TAG…"
   gh release create "$TAG" --repo "$UTENTE/$REPO" \
-    --title "Subbuteo Tournament Center 5.5" \
+    --title "Subbuteo Tournament Center 6.0" \
     --notes "Versione dimostrativa per macOS, Windows e Linux.
 
 Il programma si installa in versione DIMOSTRATIVA: torneo a girone unico, tabelloni
 dal vivo, classifiche, Presentazione e stima della durata. Per sbloccare tutte le
 funzioni serve un codice di attivazione valido per il singolo dispositivo — le
 istruzioni sono su https://$(echo $UTENTE | tr '[:upper:]' '[:lower:]').github.io/$REPO/#licenza
+
+Novità della 6.0: le figurine dei partecipanti. Ogni giocatore diventa una figurina
+come quelle dell'album — il volto fotografato montato sul mezzobusto con la maglia della
+sua squadra, il cognome in grande, lo stemma e il nome della squadra. Un tasto Genera la
+compone e la manda al libro dei ricordi; tutto offline, sul proprio computer.
+
+Dentro il programma c'è ora un catalogo di oltre 3.700 maglie: prime divisioni di tutto
+il mondo, molte seconde e terze categorie, Champions League, Europa League e tutte le
+nazionali. Si sceglie la squadra e maglia e stemma vengono abbinati da soli, senza Internet.
+Le maglie provengono da footballkitarchive.com, usate con autorizzazione e citate nei crediti.
 
 Novità della 5.5: tre formule di gioco che mancavano. La coppa andata e ritorno,
 dove ogni turno si gioca in due gare e conta la somma delle reti, col campo invertito
@@ -159,12 +169,12 @@ fi
 
 echo "▸ Carico gli installer (circa 1,9 GB, ci vorrà un po')…"
 gh release upload "$TAG" --repo "$UTENTE/$REPO" --clobber \
-  dist/Subbuteo-Tournament-Center-5.5.0-macOS-AppleSilicon.dmg \
-  dist/Subbuteo-Tournament-Center-5.5.0-macOS-Intel.dmg \
-  dist/Subbuteo-Tournament-Center-Setup-5.5.0-Windows.exe \
-  dist/Subbuteo-Tournament-Center-5.5.0-Linux-x86_64.AppImage \
-  dist/Subbuteo-Tournament-Center-5.5.0-Linux-arm64.AppImage \
-  dist/Manuale-Subbuteo-Tournament-Center-5.5.pdf
+  dist/Subbuteo-Tournament-Center-6.0.0-macOS-AppleSilicon.dmg \
+  dist/Subbuteo-Tournament-Center-6.0.0-macOS-Intel.dmg \
+  dist/Subbuteo-Tournament-Center-Setup-6.0.0-Windows.exe \
+  dist/Subbuteo-Tournament-Center-6.0.0-Linux-x86_64.AppImage \
+  dist/Subbuteo-Tournament-Center-6.0.0-Linux-arm64.AppImage \
+  dist/Manuale-Subbuteo-Tournament-Center-6.0.pdf
 
 echo
 echo "✔ Fatto."
