@@ -5,7 +5,7 @@ set -euo pipefail
 
 UTENTE="AdeMasel"
 REPO="subbuteo-tournament-center"
-TAG="v6.0.0"
+TAG="v6.1.0"
 QUI="$(cd "$(dirname "$0")" && pwd)"
 cd "$QUI"
 
@@ -36,7 +36,7 @@ render/out/
 EOF
 
 git add -A
-git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 6.0" || echo "▸ Niente da committare."
+git commit -q -m "Sito di presentazione di Subbuteo Tournament Center 6.1" || echo "▸ Niente da committare."
 git push -u origin main
 
 echo "▸ Attivo GitHub Pages…"
@@ -50,13 +50,32 @@ if gh release view "$TAG" --repo "$UTENTE/$REPO" >/dev/null 2>&1; then
 else
   echo "▸ Creo la release $TAG…"
   gh release create "$TAG" --repo "$UTENTE/$REPO" \
-    --title "Subbuteo Tournament Center 6.0" \
+    --title "Subbuteo Tournament Center 6.1" \
     --notes "Versione dimostrativa per macOS, Windows e Linux.
 
 Il programma si installa in versione DIMOSTRATIVA: torneo a girone unico, tabelloni
 dal vivo, classifiche, Presentazione e stima della durata. Per sbloccare tutte le
 funzioni serve un codice di attivazione valido per il singolo dispositivo — le
 istruzioni sono su https://$(echo $UTENTE | tr '[:upper:]' '[:lower:]').github.io/$REPO/#licenza
+
+Novità della 6.1: la Presentazione si sdoppia. Il tabellone si apre in una seconda
+finestra da mettere sul proiettore e mandare a tutto schermo: sul portatile restano la
+Regia e i cronometri, sul telone scorrono risultati, classifiche e prossimo turno. Le
+due finestre restano allineate da sole, senza rete di mezzo.
+
+I partecipanti si iscrivono da soli inquadrando un codice QR: mandano cognome, squadra
+e la foto del volto, che diventa subito la loro figurina. Le figurine si stampano ora in
+un album A4 pronto da ritagliare, ed esistono anche nella versione squadra con stemma
+grande e rosa dei giocatori. Classifiche, calendario e classifica marcatori si esportano
+in CSV per Excel o Fogli Google.
+
+Nelle partite fra nazionali si possono suonare i due inni: sono 153, riconosciuti
+automaticamente dal nome del paese, e il programma chiede se eseguirli prima del fischio
+d'inizio. L'archivio degli inni si scarica a parte (Inni-Nazionali-153.zip) e si mette
+accanto al programma.
+
+Nuovo tema Ghiaccio: lastre di vetro trasparente, brina che scende e un riflesso che
+scorre sulla superficie.
 
 Novità della 6.0: le figurine dei partecipanti. Ogni giocatore diventa una figurina
 come quelle dell'album — il volto fotografato montato sul mezzobusto con la maglia della
@@ -169,12 +188,12 @@ fi
 
 echo "▸ Carico gli installer (circa 1,9 GB, ci vorrà un po')…"
 gh release upload "$TAG" --repo "$UTENTE/$REPO" --clobber \
-  dist/Subbuteo-Tournament-Center-6.0.0-macOS-AppleSilicon.dmg \
-  dist/Subbuteo-Tournament-Center-6.0.0-macOS-Intel.dmg \
-  dist/Subbuteo-Tournament-Center-Setup-6.0.0-Windows.exe \
-  dist/Subbuteo-Tournament-Center-6.0.0-Linux-x86_64.AppImage \
-  dist/Subbuteo-Tournament-Center-6.0.0-Linux-arm64.AppImage \
-  dist/Manuale-Subbuteo-Tournament-Center-6.0.pdf
+  dist/Subbuteo-Tournament-Center-6.1.0-macOS-AppleSilicon.dmg \
+  dist/Subbuteo-Tournament-Center-6.1.0-macOS-Intel.dmg \
+  dist/Subbuteo-Tournament-Center-Setup-6.1.0-Windows.exe \
+  dist/Subbuteo-Tournament-Center-6.1.0-Linux-x86_64.AppImage \
+  dist/Subbuteo-Tournament-Center-6.1.0-Linux-arm64.AppImage \
+  dist/Manuale-Subbuteo-Tournament-Center-6.1.pdf
 
 echo
 echo "✔ Fatto."

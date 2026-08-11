@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Subbuteo Tournament Center — il gestionale per i tornei di Calcio da Tavolo</title>
-<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 10 formule, sorteggio spettacolare, app per arbitri, capitani e replay, classifiche, foto e libro dei ricordi, manuale da 97 pagine. Demo gratuita per macOS, Windows e Linux; licenza completa 20 €.">
+<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 13 formule, figurine dei partecipanti con 3.713 maglie, sorteggio spettacolare, app per arbitri e replay, doppio schermo, classifiche, libro dei ricordi, manuale da 103 pagine. Demo gratuita per macOS, Windows e Linux; licenza completa 20 €.">
 <meta name="author" content="Antonio de Masellis">
 <meta property="og:title" content="Subbuteo Tournament Center">
 <meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
@@ -277,12 +277,19 @@ section{position:relative}
 .paypal{display:flex;align-items:center;gap:11px;margin-top:auto;padding-top:18px;
   border-top:1px solid var(--line);color:var(--mut2);font-size:13.5px}
 .paypal svg{width:24px;height:24px;flex:0 0 auto;color:#2b8cd0}
-.paypal img{width:118px;height:118px;flex:0 0 auto;border-radius:9px;background:#fff;padding:6px;
+.paypal img{width:230px;height:230px;flex:0 0 auto;border-radius:14px;background:#fff;padding:12px;
   box-shadow:0 10px 26px -14px rgba(0,0,0,.9)}
 .paypal.noqr img,.paypal.noqr a{display:none}
 .paypal a{flex:0 0 auto;line-height:0;border-radius:9px;transition:transform .2s,box-shadow .2s}
 .paypal a:hover{transform:translateY(-2px);box-shadow:0 14px 30px -14px rgba(43,140,208,.8)}
-.paypal{align-items:flex-start;gap:15px}
+.paypal{align-items:center;gap:14px;flex-direction:column;text-align:center;
+  background:linear-gradient(180deg,rgba(43,140,208,.10),rgba(43,140,208,.03));
+  border:1px solid rgba(43,140,208,.35);border-radius:16px;padding:18px 16px;margin-top:18px}
+.paypal img{box-shadow:0 10px 34px -10px rgba(43,140,208,.65)}
+.pp-mail{font-family:var(--fn);font-size:16px;color:#fff;background:rgba(43,140,208,.22);
+  border:1px solid rgba(43,140,208,.5);border-radius:10px;padding:9px 14px;letter-spacing:.02em;
+  display:inline-block;margin-top:4px}
+.pp-tit{font-weight:700;color:#dff0ff;font-size:15px}
 
 /* minisondaggio sul prezzo */
 .pollwrap{max-width:640px;margin:34px auto 0;background:linear-gradient(180deg,var(--panel),#0b1725);
@@ -426,7 +433,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
   <div class="hero-img"><img src="assets/hero.webp" alt="Il pallone sul panno verde del campo da gioco" fetchpriority="high"></div>
   <div class="hero-in">
     <div class="wrap">
-      <div class="eyebrow">Versione 6.0 · Broadcast Edition</div>
+      <div class="eyebrow">Versione 6.1 · Broadcast Edition</div>
       <h1>Il torneo<br>diventa<em>una diretta</em></h1>
       <p class="sub">Dalla prima iscrizione all'ultima premiazione: <b>Subbuteo Tournament Center</b>
       gestisce gironi, tabelloni, cronometri, arbitri e classifiche — e li racconta al pubblico
@@ -460,12 +467,12 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
 <!-- ================================================================ NUMERI -->
 <section class="stats">
   <div class="statgrid">
-    <div class="stat"><b>10</b><span>Formule di gioco</span></div>
+    <div class="stat"><b>13</b><span>Formule di gioco</span></div>
     <div class="stat"><b>18</b><span>Tornei reali ufficiali</span></div>
     <div class="stat"><b>5.037</b><span>Stemmi di club</span></div>
-    <div class="stat"><b>45</b><span>Brani originali</span></div>
-    <div class="stat"><b>700</b><span>Articoli di regolamento</span></div>
-    <div class="stat"><b>83</b><span>Pagine di manuale</span></div>
+    <div class="stat"><b>3.713</b><span>Maglie da gioco</span></div>
+    <div class="stat"><b>153</b><span>Inni nazionali</span></div>
+    <div class="stat"><b>103</b><span>Pagine di manuale</span></div>
   </div>
 </section>
 
@@ -496,7 +503,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
     <!-- 1 -->
     <div class="feat">
       <div class="ftxt rv">
-        <h3>Dieci formule, e chi ti dice quale scegliere</h3>
+        <h3>Tredici formule, e chi ti dice quale scegliere</h3>
         <p>Gironi con eliminazione diretta e ripescaggi, gironi a fasce, campionato (anche
         andata e ritorno), eliminazione diretta con consolazione, sistema svizzero, playoff con
         formula Page e playout, fase campionato in stile Champions, doppia eliminazione,
@@ -702,7 +709,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
     <div class="feat">
       <div class="ftxt rv">
         <h3>Le figurine dei partecipanti, in un clic</h3>
-        <p>La grande novità della <b>6.0</b>: ogni partecipante diventa una <b>figurina</b> come quelle
+        <p>La grande novità della <b>6.1</b>: ogni partecipante diventa una <b>figurina</b> come quelle
         dell'album. Il suo <b>volto fotografato</b> viene montato sul mezzobusto con la <b>maglia</b> della
         squadra che rappresenta, con il <b>cognome</b> in grande, lo <b>stemma</b> e il nome della squadra —
         e con un tasto <b>Genera</b> finisce nel libro dei ricordi.</p>
@@ -715,9 +722,33 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
           <li>Album delle figurine incluso nel <b>libro dei ricordi</b> del torneo</li>
           <li>Ogni figurina si scarica anche singolarmente</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 6.0</span><span class="tag">Figurine</span><span class="tag">3.700 maglie</span><span class="tag">Album</span></div>
+        <div class="tagrow"><span class="tag n">Novità 6.1</span><span class="tag">Figurine</span><span class="tag">3.700 maglie</span><span class="tag">Album</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/40_figurine.webp"><img src="assets/shots/40_figurine.webp" alt="Le figurine dei partecipanti" loading="lazy"></div>
+    </div>
+
+    <!-- 10a2: doppio schermo, iscrizioni QR, esportazioni -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>Due schermi: la regia da una parte, lo spettacolo dall'altra</h3>
+        <p>Fino a ieri la Presentazione era una vista sola: o guardavi tu i comandi, o li vedeva il
+        pubblico. Dalla <b>6.1</b> il tabellone si apre in una <b>seconda finestra</b> da trascinare sul
+        proiettore e mandare a tutto schermo: sul portatile resti con la Regia, i cronometri e i punteggi;
+        sul telone scorrono risultati, classifiche e prossimo turno. Le due finestre restano allineate da
+        sole, senza rete di mezzo.</p>
+        <p>I partecipanti, intanto, si <b>iscrivono da soli</b>: inquadrano un codice QR e mandano cognome,
+        squadra e <b>foto del volto</b> — che diventa subito la loro figurina. E quando serve rimettere mano
+        ai numeri, classifiche, calendario e <b>classifica marcatori</b> si esportano in <b>CSV</b> per
+        Excel o Fogli Google.</p>
+        <ul class="flist">
+          <li>Tabellone separato sul proiettore, comandi solo sul tuo schermo</li>
+          <li><b>Iscrizioni via QR</b> con foto: la figurina è pronta prima del fischio d'inizio</li>
+          <li>Esportazione <b>CSV</b> di classifiche, calendario e marcatori</li>
+          <li><b>153 inni nazionali</b> (archivio da scaricare a parte): nelle partite fra nazionali si suonano prima del via, se lo chiedi</li>
+        </ul>
+        <div class="tagrow"><span class="tag n">Novità 6.1</span><span class="tag">Doppio schermo</span><span class="tag">Iscrizioni QR</span><span class="tag">CSV</span><span class="tag">Inni</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/43_ghiaccio.webp"><img src="assets/shots/43_ghiaccio.webp" alt="Il tema Ghiaccio e la nuova barra con Secondo schermo" loading="lazy"></div>
     </div>
 
     <!-- 10b: le novità della 5.5 -->
@@ -887,7 +918,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
     costa <b>20 €</b> una tantum.</p>
 
     <div class="dgrid rv">
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.0.0/Subbuteo-Tournament-Center-6.0.0-macOS-AppleSilicon.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.1.0/Subbuteo-Tournament-Center-6.1.0-macOS-AppleSilicon.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
@@ -899,7 +930,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.0.0/Subbuteo-Tournament-Center-6.0.0-macOS-Intel.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.1.0/Subbuteo-Tournament-Center-6.1.0-macOS-Intel.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
@@ -911,7 +942,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.0.0/Subbuteo-Tournament-Center-Setup-6.0.0-Windows.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.1.0/Subbuteo-Tournament-Center-Setup-6.1.0-Windows.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
@@ -923,7 +954,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.0.0/Subbuteo-Tournament-Center-6.0.0-Linux-x86_64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.1.0/Subbuteo-Tournament-Center-6.1.0-Linux-x86_64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
@@ -940,7 +971,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
       <p><b>Non vuoi installare niente?</b> La stessa versione dimostrativa gira anche nel browser,
       su qualsiasi sistema operativo — utile per dare un'occhiata prima di scaricare mezzo giga.</p>
       <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Apri nel browser</a>
-      <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.0.0/Manuale-Subbuteo-Tournament-Center-6.0.pdf" style="font-size:14px;padding:12px 22px">Manuale PDF · 101 pagine</a>
+      <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.1.0/Manuale-Subbuteo-Tournament-Center-6.1.pdf" style="font-size:14px;padding:12px 22px">Manuale PDF · 103 pagine</a>
     </div>
   </div>
 </section>
@@ -957,7 +988,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
     <table class="cmp rv">
       <thead><tr><th>Funzione</th><th>Demo</th><th>Completa</th></tr></thead>
       <tbody>
-        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 10</td></tr>
+        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 13</td></tr>
         <tr><td>Consigliere delle formule e Torneo Reale</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Salvataggio e richiamo dei tornei</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Esportazione e importazione dei dati</td><td class="no">✕</td><td class="yes">✓</td></tr>
@@ -987,7 +1018,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
     <p class="lead rv">La licenza completa costa <b>20 €</b>, una sola volta. Per averla si scrive
     direttamente all'autore a <b>onyxsubbuteo@gmail.com</b> allegando il proprio <b>codice
     alfanumerico</b> e il <b>nome a cui intestare la licenza</b>; ricevuto il pagamento di 20 € con
-    PayPal, arriva il codice di attivazione. La licenza vale per il <b>singolo dispositivo</b>: si
+    <b>PayPal sull'account ademase@gmail.com</b>, arriva il codice di attivazione. La licenza vale per il <b>singolo dispositivo</b>: si
     attiva una volta e resta, verificata a ogni avvio <b>anche senza collegamento a Internet</b>.
     Nessun abbonamento, nessun rinnovo.</p>
 
@@ -1006,7 +1037,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
       <div class="step">
         <h4>Scrivi e paga 20 €</h4>
         <p>Manda un'email con il tuo <b>codice alfanumerico</b> e il <b>nome</b> da mettere sulla
-        licenza, poi versa i <b>20 €</b> con PayPal (il codice QR è qui sotto).</p>
+        licenza, poi versa i <b>20 €</b> con PayPal a <b>ademase@gmail.com</b> (il codice QR è qui sotto).</p>
       </div>
       <div class="step">
         <h4>Incolla e gioca</h4>
@@ -1022,7 +1053,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
         <div class="minimo">pagamento unico con <b>PayPal</b> — a copertura del tempo dedicato e dei costi di produzione</div>
         <p style="color:var(--mut);margin:0">Nessun canone, nessuna scadenza, aggiornamenti compresi.</p>
         <ul>
-          <li>Tutte e <b>dieci le formule</b>, Consigliere e Torneo Reale</li>
+          <li>Tutte e <b>tredici le formule</b>, Consigliere e Torneo Reale</li>
           <li><b>Salvataggio</b>, richiamo ed esportazione dei tornei</li>
           <li><b>Gestione arbitrale</b> e assegnazione automatica dei campi</li>
           <li>Cerimonia di <b>sorteggio</b> e composizione dei gironi</li>
@@ -1031,20 +1062,20 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
           <li><b>Foto degli sfidanti</b> e libro dei ricordi in PDF</li>
           <li><b>Pre-Torneo</b> con quote, pagamenti e ricevute</li>
           <li><b>App Campo, App Capitano e App Replay</b> con i codici QR</li>
-          <li>Manuale completo da <b>97 pagine</b> in PDF</li>
+          <li>Manuale completo da <b>103 pagine</b> in PDF</li>
         </ul>
       </div>
 
       <div class="mailcard">
         <h4>Richiedi il tuo codice</h4>
         <p>Nell'email indica il <b>codice alfanumerico</b> che leggi nel pannello Licenza e il
-        <b>nome</b> a cui intestarla; poi versa i <b>20 €</b> con PayPal.</p>
+        <b>nome</b> a cui intestarla; poi versa i <b>20 €</b> con PayPal a <b>ademase@gmail.com</b>.</p>
         <div class="mailbox">
           <code id="mail">onyxsubbuteo@gmail.com</code>
           <button class="copy" id="cp" type="button">Copia</button>
         </div>
         <a class="btn pri" style="font-size:14.5px;padding:14px 22px"
-           href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20Subbuteo%20Tournament%20Center%206.0&body=Buongiorno%2C%0A%0Avorrei%20acquistare%20la%20licenza%20completa%20di%20Subbuteo%20Tournament%20Center%20al%20prezzo%20di%2020%20%E2%82%AC.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AProvvedo%20al%20pagamento%20di%2020%20%E2%82%AC%20con%20PayPal.%0A%0AGrazie.">
+           href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20Subbuteo%20Tournament%20Center%206.1&body=Buongiorno%2C%0A%0Avorrei%20acquistare%20la%20licenza%20completa%20di%20Subbuteo%20Tournament%20Center%20al%20prezzo%20di%2020%20%E2%82%AC.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AProvvedo%20al%20pagamento%20di%2020%20%E2%82%AC%20con%20PayPal.%0A%0AGrazie.">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/></svg>
           Scrivi ora
         </a>
@@ -1052,12 +1083,14 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
         <div class="paypal" id="pp">
           <a href="https://www.paypal.com/qrcodes/p2pqrc/YLFSMQL54CZ7J" target="_blank" rel="noopener"
              title="Apri il pagamento PayPal">
-            <img src="assets/paypal-qr.png" alt="Codice QR PayPal per il pagamento di 20 €" width="118" height="118"
+            <img src="assets/paypal-qr.png" alt="Codice QR PayPal per il pagamento di 20 €" width="230" height="230"
                  onerror="document.getElementById('pp').classList.add('noqr')">
           </a>
-          <span>I <b style="color:var(--txt)">20 €</b> si versano con <b style="color:var(--txt)">PayPal</b>:
-          inquadra il codice con il telefono, oppure toccalo per aprire il pagamento. Il codice di
-          attivazione ti arriva in risposta all'email.</span>
+          <div class="pp-tit">Pagamento con PayPal — 20 €</div>
+          <span>Inquadra il codice con il telefono, oppure toccalo per aprire il pagamento.
+          Il versamento va all'account PayPal:</span>
+          <code class="pp-mail">ademase@gmail.com</code>
+          <span style="font-size:13.5px">Il codice di attivazione ti arriva in risposta all'email.</span>
         </div>
       </div>
     </div>
@@ -1164,7 +1197,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
       <div>
         <a class="brand" href="#top" style="margin-bottom:16px"><i class="dot"></i><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
         <p style="max-width:44ch;margin-top:4px">Il gestionale per i tornei di Subbuteo e Calcio da
-        Tavolo. Versione 6.0 — agosto 2026. Software e manuale di Antonio de Masellis.</p>
+        Tavolo. Versione 6.1 — agosto 2026. Software e manuale di Antonio de Masellis.</p>
       </div>
       <div>
         <h5>Il programma</h5>
