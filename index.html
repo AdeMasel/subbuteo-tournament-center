@@ -409,23 +409,42 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
   .rv{opacity:1;transform:none}
 }
 </style>
-<style>
-.langsw{position:fixed;top:14px;right:14px;z-index:9999;display:flex;gap:6px;
-  background:rgba(10,14,22,.72);backdrop-filter:blur(8px);padding:5px 7px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.16)}
-.langsw a{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;
-  font:600 12px/1 system-ui,sans-serif;color:#dfe7f5;text-decoration:none;letter-spacing:.04em}
-.langsw a.on{background:#f0c465;color:#1a1400}
-.langsw svg{width:18px;height:13px;border-radius:2px;display:block}
-@media(max-width:640px){.langsw{top:8px;right:8px}.langsw a{padding:4px 7px;font-size:11px}}
-</style>
 <link rel="alternate" hreflang="it" href="https://ademasel.github.io/subbuteo-tournament-center/index.html">
 <link rel="alternate" hreflang="en" href="https://ademasel.github.io/subbuteo-tournament-center/index-en.html">
 <link rel="alternate" hreflang="x-default" href="https://ademasel.github.io/subbuteo-tournament-center/index.html">
+<style>
+/* --- CORREZIONI --- */
+/* «.sec» era usata sia per le SEZIONI (padding:104px 0) sia per i pulsanti
+   secondari: a parità di specificità vinceva la sezione, e ogni pulsante
+   secondario diventava un riquadro alto 236px. Qui si rimette il padding del
+   pulsante con specificità maggiore, senza toccare le sezioni. */
+.btn.sec{padding:16px 30px}
+/* selettore di lingua dentro la barra: prima era sovrapposto e copriva
+   il pulsante «Prova gratis» */
+.langsw{display:inline-flex;gap:5px;align-items:center;margin-left:14px;
+  background:rgba(10,14,22,.55);padding:4px 5px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.14)}
+.langsw a{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:999px;
+  font:600 12px/1 system-ui,sans-serif;color:#dfe7f5;text-decoration:none;letter-spacing:.04em}
+.langsw a.on{background:#f0c465;color:#1a1400}
+.langsw a:hover{background:rgba(255,255,255,.12)}
+.langsw a.on:hover{background:#f0c465}
+.langsw svg{width:18px;height:13px;border-radius:2px;display:block;flex:0 0 auto}
+/* scheda di download del manuale con la copertina vera */
+.manualdl{display:flex;align-items:center;gap:16px;text-decoration:none;
+  background:rgba(19,34,52,.72);border:1px solid var(--line2);border-radius:14px;
+  padding:12px 20px 12px 12px;transition:transform .2s,border-color .2s,background .2s}
+.manualdl:hover{transform:translateY(-2px);border-color:var(--gold);background:rgba(25,44,66,.9)}
+.manualdl img{width:58px;height:82px;object-fit:cover;border-radius:6px;flex:0 0 auto;
+  box-shadow:0 8px 20px -8px rgba(0,0,0,.8)}
+.manualdl .mt{display:flex;flex-direction:column;gap:3px}
+.manualdl .mt b{font-family:var(--fh);text-transform:uppercase;letter-spacing:.075em;
+  font-size:15px;color:var(--txt)}
+.manualdl .mt span{font-size:12.5px;color:var(--mut2)}
+@media(max-width:640px){.langsw{margin-left:0}.manualdl img{width:46px;height:65px}}
+</style>
 </head>
 <body>
-<div class="langsw" role="navigation" aria-label="Language"><a href="index.html" class="on" hreflang="it" title="Italiano"><svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#009246"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ce2b37"/></svg>IT</a><a href="index-en.html" class="" hreflang="en" title="English"><svg viewBox="0 0 60 30"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><g clip-path="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>EN</a></div>
-
 <header class="nav" id="nav">
   <div class="navin">
     <a class="brand" href="#top"><i class="dot"></i><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
@@ -437,7 +456,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
       <a href="#confronto">Demo o completa</a>
       <a href="#licenza">Licenza</a>
       <a href="#faq">FAQ</a>
-      <a class="navcta" href="#download">Prova gratis</a>
+      <a class="navcta" href="#download">Prova gratis</a><div class="langsw" role="navigation" aria-label="Lingua"><a href="index.html" class="on" hreflang="it" title="Italiano"><svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#009246"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ce2b37"/></svg>IT</a><a href="index-en.html" class="" hreflang="en" title="English"><svg viewBox="0 0 60 30"><clipPath id="ukit"><path d="M0,0 v30 h60 v-30 z"/></clipPath><g clip-path="url(#ukit)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>EN</a></div>
     </nav>
   </div>
 </header>
@@ -997,7 +1016,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
       <p><b>Non vuoi installare niente?</b> La stessa versione dimostrativa gira anche nel browser,
       su qualsiasi sistema operativo — utile per dare un'occhiata prima di scaricare mezzo giga.</p>
       <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Apri nel browser</a>
-      <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Manuale-Subbuteo-Tournament-Center-6.3.pdf" style="font-size:14px;padding:12px 22px">Manuale PDF · 138 pagine</a>
+      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Manuale-Subbuteo-Tournament-Center-6.3.pdf"><img src="assets/copertina-manuale.jpg" alt="Manuale PDF" loading="lazy"><span class="mt"><b>Manuale PDF</b><span>138 pagine · con appendice sulle formule</span></span></a>
       <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Inni-Nazionali-153.zip" style="font-size:14px;padding:12px 22px">🎵 Inni nazionali · 153 brani (393 MB)</a>
     </div>
   </div>
