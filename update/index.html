@@ -2601,7 +2601,8 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
     <!-- Aggiornamenti: solo nell'app desktop (viene mostrata da updInit) -->
     <div class="card" id="upd-card" style="display:none">
       <h3 class="subt">Aggiornamenti</h3>
-      <p class="small muted" style="margin-top:0">Le correzioni e le nuove funzioni si scaricano da sole, e in pochi secondi: viene preso <b>solo ciò che è cambiato</b> — di solito un megabyte — non l’intero programma. Musica e maglie restano dove sono.</p>
+      <p class="small muted" style="margin-top:0"><b>Le correzioni e le nuove funzioni si scaricano da sole, in pochi secondi.</b>
+      Viene preso solo ciò che è cambiato — di solito un megabyte — non l’intero programma. Musica e maglie restano dove sono.</p>
       <div class="row" style="gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
         <button class="btn sec mini" id="upd-btn" onclick="updControlla()">🔄 Controlla aggiornamenti</button>
         <button class="btn mini" id="upd-apply" onclick="updApplica()" style="display:none">✅ Applica e riavvia</button>
@@ -3222,7 +3223,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='6.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='6.4.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -3785,7 +3786,9 @@ const TR={
   "Quanto in fretta scorrono i risultati sul rullo in alto":"How fast the results scroll on the ticker at the top",
   "Velocità del rullo":"Ticker speed",
   "Aggiornamenti":"Updates",
-  "Le correzioni e le nuove funzioni si scaricano da sole, e in pochi secondi: viene preso <b>solo ciò che è cambiato</b> — di solito un megabyte — non l’intero programma. Musica e maglie restano dove sono.":"Fixes and new features download on their own, in seconds: <b>only what changed</b> is fetched — usually a megabyte — not the whole program. Music and kits stay where they are.",
+  "Le correzioni e le nuove funzioni si scaricano da sole, in pochi secondi.":"Fixes and new features download on their own, in seconds.",
+  "Viene preso solo ciò che è cambiato — di solito un megabyte — non l’intero programma. Musica e maglie restano dove sono.":"Only what changed is fetched — usually a megabyte — not the whole program. Music and kits stay where they are.",
+  "pacchetto":"package",
   "🔄 Controlla aggiornamenti":"🔄 Check for updates",
   "✅ Applica e riavvia":"✅ Apply and restart",
   "Versione installata:":"Installed version:",
@@ -13635,7 +13638,16 @@ async function updInit(){
   const card=document.getElementById('upd-card');
   if(!updSupportato()){ if(card)card.style.display='none'; return; }
   if(card)card.style.display='';
-  try{ const v=await window.STCUpdate.versione(); const el=document.getElementById('upd-ver'); if(el)el.textContent='v'+v; }catch(e){}
+  /* La versione da mostrare è quella del CONTENUTO che sta girando adesso
+     (APP_VERSION), non quella del pacchetto installato: dopo un aggiornamento
+     automatico il pacchetto resta indietro e la scheda annunciava una versione
+     vecchia. Il numero del pacchetto si mostra accanto solo quando è diverso,
+     perché è l'informazione che serve per capire se occorre un installer. */
+  try{
+    const shell=await window.STCUpdate.versione();
+    const el=document.getElementById('upd-ver');
+    if(el)el.textContent='v'+APP_VERSION+(shell&&shell!==APP_VERSION?' ('+L('pacchetto')+' v'+shell+')':'');
+  }catch(e){ const el=document.getElementById('upd-ver'); if(el)el.textContent='v'+APP_VERSION; }
   try{ window.STCUpdate.suStato(updStato); }catch(e){}   // notifiche dal controllo in background
 }
 function themeAnim(t){const e=THEMES.find(x=>x[0]===t);return e?e[2]:'grid';}

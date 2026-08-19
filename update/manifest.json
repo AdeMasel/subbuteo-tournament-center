@@ -1,7 +1,7 @@
 {
- "content": "6.4.0",
+ "content": "6.4.1",
  "minShell": "6.3.4",
- "notes": "6.4: stampe A4 con margini garantiti (sinistro 25mm), niente tagli né pagine saltate.",
+ "notes": "6.4.1: corretta la scheda Aggiornamenti — ora mostra la versione vera e traduce in inglese.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "013a35f874d8c7e9ad076d42e4766ecd5429dd347807fb4aad260d2fa7b697ca",
-   "size": 1060642
+   "sha256": "8c7b884f93163b57c2716de8419a57b369e01918d0279c1537abff60513d77b7",
+   "size": 1061236
   },
   "iscrizione.html": {
    "sha256": "5711b1965af5c6e04846654b0e8f8d32c6a53c9ad8ccc68ce9521eedb3c86646",
