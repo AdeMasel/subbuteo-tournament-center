@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Iscrizione al torneo</title>
+<style>
+:root{--bg:#0d1420;--card:#151f30;--line:#26334d;--txt:#e8eef8;--mut:#8ba0c0;--acc:#f0c465;--ok:#43d18a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,sans-serif;
+  min-height:100vh;padding:18px;display:flex;flex-direction:column;gap:14px;max-width:520px;margin:0 auto}
+h1{font-size:1.25rem;margin:6px 0 0;text-align:center}
+.sub{color:var(--mut);font-size:.9rem;text-align:center;margin:0 0 6px}
+label{display:block;font-size:.82rem;color:var(--mut);margin:0 0 5px}
+input[type=text]{width:100%;background:#1b2740;color:var(--txt);border:1px solid var(--line);
+  border-radius:12px;padding:14px;font-size:1.05rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.foto-wrap{text-align:center}
+.foto-anteprima{width:170px;height:170px;border-radius:50%;object-fit:cover;border:3px solid var(--acc);
+  background:#0c1220;display:inline-block}
+.foto-vuota{width:170px;height:170px;border-radius:50%;border:2px dashed var(--line);display:flex;
+  align-items:center;justify-content:center;color:var(--mut);font-size:.85rem;margin:0 auto}
+button{width:100%;border:0;border-radius:14px;padding:16px;font-size:1.05rem;font-weight:700;cursor:pointer}
+.btn-foto{background:#1c2740;color:var(--txt);border:1px solid var(--line);margin-top:12px}
+.btn-invia{background:linear-gradient(180deg,#f5d489,#e0a92e);color:#1a1400}
+.msg{text-align:center;padding:12px;border-radius:12px;font-size:.95rem;display:none}
+.msg.ok{background:rgba(67,209,138,.14);border:1px solid var(--ok);color:#bff3d8;display:block}
+.msg.err{background:rgba(226,72,72,.14);border:1px solid #e24848;color:#f6c9c9;display:block}
+.foot{color:var(--mut);font-size:.72rem;text-align:center;margin-top:4px}
+</style></head>
+<body>
+<h1>Iscrizione al torneo</h1>
+<p class="sub" id="sub">Compila e invia: la tua figurina sarà pronta in Regia.</p>
+
+<div class="card foto-wrap">
+  <div id="foto-box"><div class="foto-vuota">Foto del volto</div></div>
+  <button class="btn-foto" onclick="document.getElementById('foto-in').click()">📷 Scatta / scegli la foto</button>
+  <!-- niente attributo «capture»: con quello il telefono apre d'ufficio la
+       fotocamera frontale e NON lascia scegliere dalla galleria. Senza, iOS e
+       Android propongono entrambe le strade — è quello che serve qui. -->
+  <input type="file" id="foto-in" accept="image/*" style="display:none">
+</div>
+
+<div class="card">
+  <label>Cognome (comparirà sulla figurina)</label>
+  <input type="text" id="cognome" placeholder="es. Rossi" autocomplete="family-name">
+  <label style="margin-top:14px">Squadra che rappresenti</label>
+  <input type="text" id="team" placeholder="es. Inter" autocomplete="off">
+</div>
+
+<div class="msg" id="msg"></div>
+<button class="btn-invia" id="invia" onclick="invia()">✔ Iscrivimi</button>
+<p class="foot">I dati restano sul computer dell'organizzatore.</p>
+
+<script>
+const q=new URLSearchParams(location.search);
+const KEY=(q.get('key')||'').toUpperCase();
+let foto=null;
+if(!KEY){document.getElementById('sub').textContent='Link non valido: manca la chiave del torneo.';}
+
+document.getElementById('foto-in').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0];
+  if(!f){ msg('Nessuna foto selezionata.',true); return; }
+  msg('Preparo la foto…',false);
+  const rd=new FileReader();
+  rd.onerror=()=>msg('Non riesco a leggere la foto dal telefono.',true);
+  rd.onload=()=>ridimensiona(rd.result,640,.82).then(d=>{
+    foto=d;
+    document.getElementById('foto-box').innerHTML='<img class="foto-anteprima" src="'+d+'">';
+    msg('Foto pronta ('+Math.round(d.length/1365)+' KB). Ora compila e invia.',false);
+  }).catch(()=>msg('Immagine non leggibile: prova con un\'altra foto.',true));
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+
+// la foto si rimpicciolisce SUL TELEFONO: bastano ~100 KB per una figurina
+function ridimensiona(dataUrl,lato,qual){
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.onload=()=>{
+      let{width:w,height:h}=im; const k=Math.min(1,lato/Math.max(w,h));
+      w=Math.round(w*k); h=Math.round(h*k);
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(im,0,0,w,h);
+      res(cv.toDataURL('image/jpeg',qual||.82));
+    };
+    im.onerror=rej; im.src=dataUrl;
+  });
+}
+function msg(t,err){const m=document.getElementById('msg');m.textContent=t;m.className='msg '+(err?'err':'ok');}
+function invia(){
+  const cognome=document.getElementById('cognome').value.trim();
+  const team=document.getElementById('team').value.trim();
+  if(!KEY){msg('Link non valido.',true);return;}
+  if(!cognome){msg('Scrivi almeno il cognome.',true);return;}
+  const b=document.getElementById('invia'); b.disabled=true; b.textContent='Invio…';
+  fetch('/api/iscrizione',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:KEY,cognome,team,img:foto})})
+    .then(r=>r.json()).then(d=>{
+      if(d&&d.ok){ msg('✅ Iscrizione inviata! Puoi iscrivere un\'altra persona.',false);
+        document.getElementById('cognome').value=''; document.getElementById('team').value='';
+        foto=null; document.getElementById('foto-box').innerHTML='<div class="foto-vuota">Foto del volto</div>';
+      } else msg('Non inviata'+(d&&d.err?': '+d.err:'')+'.',true);
+    })
+    .catch(()=>msg('Nessun collegamento con la Regia.',true))
+    .finally(()=>{ b.disabled=false; b.textContent='✔ Iscrivimi'; });
+}
+</script>
+</body></html>

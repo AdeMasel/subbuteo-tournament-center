@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#070d1f">
+<title>Subbuteo — App Campo</title>
+<style>
+:root{
+  --bg1:#070d1f;--bg2:#0d1b3e;--accent:#f5b942;--accent2:#38e0ff;--danger:#ff4d6d;
+  --card:rgba(13,25,58,.85);--card2:rgba(255,255,255,.05);--line:rgba(255,255,255,.12);
+  --text:#eef2ff;--muted:#93a0c4;--ok:#3ddc84;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 70%,#122451);
+  color:var(--text);min-height:100dvh;padding:max(10px,env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));
+}
+header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+header .ball{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#f5b942 55%,#8a5a10);flex:0 0 auto}
+header h1{font-size:1.02rem;letter-spacing:.12em;text-transform:uppercase;flex:1;line-height:1.2}
+header h1 small{display:block;font-size:.6rem;color:var(--accent);letter-spacing:.3em}
+#lang{background:var(--card2);border:1px solid var(--line);color:var(--accent);border-radius:8px;padding:6px 10px;font-size:.72rem;letter-spacing:.08em}
+#status{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+#status.on{color:var(--ok);border-color:var(--ok)}
+#status.q{color:var(--accent);border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;backdrop-filter:blur(8px)}
+label{display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:12px 0 5px}
+input,select{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:13px 12px;font-size:1rem}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:15px;font-size:1.02rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:14px;
+  background:linear-gradient(135deg,var(--accent),#ffd97a);color:#221703}
+.btn.sec{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.btn.mini{width:auto;display:inline-block;padding:9px 14px;font-size:.78rem;margin-top:0}
+.btn:disabled{opacity:.45}
+.muted{color:var(--muted)}.small{font-size:.78rem}
+h2.sect{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:14px 0 8px}
+.mrow{display:flex;align-items:center;gap:10px;padding:13px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--card2)}
+.mrow .fld{flex:0 0 auto;font-size:.62rem;letter-spacing:.1em;color:#0a0f22;background:var(--accent2);border-radius:6px;padding:3px 7px;font-weight:800}
+.mrow .tms{flex:1;min-width:0;font-size:.95rem;font-weight:600}
+.mrow .tms .ref{display:block;font-size:.66rem;color:var(--muted);font-weight:400;margin-top:2px}
+.mrow .sc{flex:0 0 auto;font-weight:800;font-size:1.05rem;color:var(--accent)}
+.mrow .live{flex:0 0 auto;font-size:.6rem;color:#fff;background:var(--danger);border-radius:999px;padding:3px 8px;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.45}}
+.mrow:active{border-color:var(--accent)}
+/* schermata partita */
+.mhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.mhead .back{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 14px;font-size:1rem}
+.mhead .ctx{flex:1;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right}
+.simline{display:flex;justify-content:center;gap:14px;align-items:baseline;margin:2px 0 10px;color:var(--accent2);font-size:.85rem}
+.simline b{font-size:1.5rem;font-variant-numeric:tabular-nums}
+.scorebig{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start;text-align:center}
+.scorebig .tn{font-size:.95rem;font-weight:700;min-height:2.3em;display:flex;align-items:center;justify-content:center;line-height:1.2}
+.scorebig .tn small{display:block;font-size:.64rem;color:var(--muted);font-weight:400}
+.scorebig .gl{font-size:3.4rem;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1}
+.scorebig .x{font-size:1.4rem;color:var(--muted);padding-top:34px}
+/* anti-perdita tap: niente doppio-tap zoom né ritardi sui pulsanti */
+button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,0);user-select:none;-webkit-user-select:none}
+.gl.bump{animation:bump .3s cubic-bezier(.2,1.4,.4,1)}
+@keyframes bump{45%{transform:scale(1.3);color:#fff}}
+.gb{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:10px}
+.gb button.plus{width:70px;height:56px;border-radius:12px;border:none;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent),#ffd97a);color:#221703}
+/* il −1 è volutamente piccolo e defilato: riduce i tocchi accidentali */
+.gb button.minus{width:34px;height:30px;border-radius:8px;border:1px solid var(--line);font-size:.8rem;font-weight:700;background:rgba(0,0,0,.25);color:var(--muted);opacity:.75}
+.mclock{display:flex;flex-direction:column;align-items:center;gap:2px;margin:0 0 12px}
+.mclock .ck{font-size:2.6rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--text);line-height:1;letter-spacing:.04em}
+.mclock .ck.live{color:var(--accent)}
+.mclock .ph{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.mclock .sm{font-size:.8rem;color:var(--accent2)}
+.sosbtn{width:100%;background:linear-gradient(135deg,#e0574d,#b83227)!important;color:#fff!important;margin-top:12px;font-size:1rem}
+.sosbox{border-radius:14px;padding:16px;margin-top:12px;text-align:center}
+.sosbox.wait{background:rgba(224,168,58,.14);border:1px solid #e0a83a;color:#f0d59a;animation:blink 1.2s infinite}
+.sosbox.susp{background:rgba(90,60,150,.2);border:1px solid #8f7bff}
+.sosbox .t{font-weight:700;margin-bottom:10px;font-size:.95rem;color:#fff}
+.sosbox .hint{font-size:.76rem;color:var(--muted);margin-top:10px;line-height:1.5}
+.btn.sosresume{width:100%;background:linear-gradient(135deg,#2ec26b,#1f8a4c)!important;color:#04240f!important;font-size:1.05rem}
+.fotorow{display:flex;gap:12px}
+.fotoslot{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.fotoslot .fslab{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.fotoslot .fsimg{width:100%;aspect-ratio:4/3;border-radius:12px;border:1px dashed var(--line);
+  background:var(--card2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.fotoslot .fsimg img{width:100%;height:100%;object-fit:cover}
+.fotoslot .fsimg .vuoto{font-size:1.6rem;opacity:.35}
+.fotoslot .fsimg .car{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.fotoslot .btn{width:100%;padding:10px}
+.cardrow{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px}
+.cardrow .cgrp{display:flex;gap:8px}
+.cardrow button{width:46px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card2);font-size:1.05rem}
+.cardrow .lbl{font-size:.6rem;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.cardsline{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.cardsline span{font-size:.7rem;border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.tcards{display:flex;gap:6px}
+.tcards button{width:34px;height:30px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);font-size:.8rem}
+.evline{font-size:.74rem;color:var(--muted);margin-top:10px;text-align:center;line-height:1.6;word-break:break-word}
+/* tavoli CdT */
+.tblrow{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--card2)}
+.tblrow .tt{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+.tgrid{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center}
+.tgrid .pn{font-size:.82rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tgrid .pn.r{text-align:right}
+.tgrid .ts{font-weight:800;color:var(--accent);font-size:1.05rem;white-space:nowrap}
+.tgb{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-top:8px}
+.tgb .side{display:flex;gap:6px;align-items:center}
+.tgb button.plus{width:52px;height:42px;border-radius:10px;border:none;font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--accent),#ffd97a);color:#221703}
+.tgb button.minus{width:30px;height:26px;border-radius:7px;border:1px solid var(--line);font-size:.72rem;font-weight:700;background:rgba(0,0,0,.25);color:var(--muted);opacity:.75}
+.lineup select{margin-bottom:6px;padding:10px}
+.pengrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#0e1730;border:1px solid var(--accent);color:var(--text);border-radius:12px;padding:11px 18px;font-size:.85rem;z-index:99;max-width:92vw;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+.hidden{display:none!important}
+/* La Legge (mobile) — palette giudiziaria */
+.legge-open{background:linear-gradient(135deg,#c79a3a,#8a6a1e)!important;color:#1a1206!important;margin-bottom:14px}
+#scr-legge .ctx{color:#e9c56a;text-align:left;flex:1}
+.legge-docsm{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+.legge-docsm .ld{flex:0 0 auto;border:1px solid rgba(233,197,106,.35);border-radius:12px;padding:9px 13px;font-size:.82rem;background:rgba(40,28,58,.6);color:#f3e6c8;white-space:nowrap}
+.legge-docsm .ld.on{background:linear-gradient(135deg,#e9c56a,#b8912f);color:#1a1206;border-color:transparent;font-weight:700}
+.lg-mic{width:52px;border:1px solid rgba(233,197,106,.35);border-radius:10px;background:rgba(0,0,0,.3);color:#e9c56a;font-size:1.2rem;flex:0 0 auto}
+.lg-mic.rec{background:var(--danger);color:#fff;border-color:transparent;animation:blink 1s infinite}
+.lg-ans{border:1px solid #e9c56a;border-radius:14px;padding:16px;margin-top:12px;background:linear-gradient(180deg,rgba(60,42,90,.55),rgba(30,20,46,.65))}
+.lg-ans .h{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.lg-ans .src{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:#e9c56a;color:#1a1206;border-radius:999px;padding:2px 9px;font-weight:700}
+.lg-ans .ref{color:#e9c56a;font-weight:700;font-size:.92rem}
+.lg-ans .chap{font-size:.68rem;color:#c9b48a;width:100%}
+.lg-ans .body{font-size:.96rem;line-height:1.6;color:#fdf6e6}
+.lg-ans .play{margin-top:12px;width:100%;background:linear-gradient(135deg,#e9c56a,#b8912f);color:#1a1206;border:none;border-radius:10px;padding:12px;font-weight:700}
+.lg-rl{border:1px solid rgba(233,197,106,.28);border-radius:11px;padding:11px 13px;margin-top:8px;background:rgba(40,28,58,.5)}
+.lg-rl .m{font-size:.64rem;color:#e9c56a;letter-spacing:.08em;text-transform:uppercase}
+.lg-rl .x{font-size:.85rem;color:#e8ddc4;margin-top:3px;line-height:1.5}
+footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);letter-spacing:.14em}
+</style>
+</head>
+<body>
+<header>
+  <div class="ball"></div>
+  <h1 id="hdr-t">App Campo<small>Subbuteo Tournament Center</small></h1>
+  <button id="lang" onclick="cLang()">EN</button>
+  <span id="status">—</span>
+</header>
+
+<!-- ============ CONNESSIONE ============ -->
+<section id="scr-connect">
+  <div class="card">
+    <h2 class="sect" data-i>Collegati alla Regia</h2>
+    <label data-i>Indirizzo del server (mostrato nel gestionale)</label>
+    <input type="url" id="c-url" placeholder="http://192.168.1.50:8765" autocapitalize="off" autocorrect="off">
+    <label data-i>Chiave privata del torneo</label>
+    <input type="text" id="c-key" placeholder="ES. K7Q2-M9DR" autocapitalize="characters" autocorrect="off" style="text-transform:uppercase;letter-spacing:.2em;font-weight:700">
+    <label data-i>Il tuo nome (facoltativo, compare negli aggiornamenti)</label>
+    <input type="text" id="c-name" placeholder="Arbitro / Operatore">
+    <button class="btn" onclick="connect()" data-i>🔌 Collegati</button>
+    <p class="small muted" style="margin-top:12px" data-i>Il telefono deve essere sulla stessa rete Wi-Fi della Regia (oppure usa l'indirizzo del relay pubblico). Indirizzo e chiave sono mostrati nel gestionale nella sezione Regia.</p>
+  </div>
+</section>
+
+<!-- ============ ELENCO PARTITE ============ -->
+<section id="scr-list" class="hidden">
+  <div class="card" style="padding:12px 16px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <img id="l-logo" style="display:none;width:44px;height:44px;object-fit:contain;border-radius:9px" alt="">
+      <div style="flex:1"><b id="l-tourn">—</b><div class="small muted" id="l-meta"></div></div>
+      <button class="btn sec mini" onclick="disconnect()" data-i>Esci</button>
+    </div>
+  </div>
+  <button class="btn legge-open" onclick="openLegge()" data-i>⚖️ La Legge — regolamenti</button>
+  <h2 class="sect" data-i>In campo adesso</h2>
+  <div id="l-live"></div>
+  <h2 class="sect" data-i>Prossime partite</h2>
+  <div id="l-next"></div>
+</section>
+
+<!-- ============ LA LEGGE (regolamenti) ============ -->
+<section id="scr-legge" class="hidden">
+  <div class="mhead">
+    <button class="back" onclick="showList()">←</button>
+    <div class="ctx">⚖️ <span data-i>La Legge</span></div>
+  </div>
+  <div id="lg-sos"></div>
+  <div class="legge-docsm" id="lg-docs"></div>
+  <div class="card">
+    <div style="display:flex;gap:8px">
+      <input type="text" id="lg-q" placeholder="Chiedi una regola…" onkeydown="if(event.key==='Enter')lgAsk()" oninput="lgLive()" style="flex:1">
+      <button class="lg-mic" id="lg-mic" onclick="lgMic()">🎙️</button>
+    </div>
+    <button class="btn" style="margin-top:10px" onclick="lgAsk()" data-i>Chiedi all'esperto</button>
+  </div>
+  <div id="lg-answer"></div>
+  <div id="lg-results"></div>
+</section>
+
+<!-- ============ PARTITA ============ -->
+<section id="scr-match" class="hidden">
+  <div class="mhead">
+    <button class="back" onclick="showList()">←</button>
+    <div class="ctx" id="m-ctx"></div>
+  </div>
+  <div class="card">
+    <div class="mclock" id="m-clockbox" style="display:none">
+      <span class="ph" id="m-phase"></span>
+      <span class="ck" id="m-clock">00:00</span>
+      <span class="sm" id="m-simmin"></span>
+    </div>
+    <div class="scorebig">
+      <div><div class="tn" id="m-t1"></div><div class="gl" id="m-g1">0</div><div class="gb"><button class="plus" onclick="goal(1,1)">+1</button><button class="minus" onclick="goal(1,-1)">−1</button></div></div>
+      <div class="x">—</div>
+      <div><div class="tn" id="m-t2"></div><div class="gl" id="m-g2">0</div><div class="gb"><button class="plus" onclick="goal(2,1)">+1</button><button class="minus" onclick="goal(2,-1)">−1</button></div></div>
+    </div>
+    <div class="cardrow" id="m-cardrow">
+      <span class="cgrp"><button onclick="card(1,'y')">🟨</button><button onclick="card(1,'r')">🟥</button></span>
+      <span class="lbl" data-i>Cartellini</span>
+      <span class="cgrp"><button onclick="card(2,'y')">🟨</button><button onclick="card(2,'r')">🟥</button></span>
+    </div>
+    <div class="cardsline" id="m-cards"></div>
+    <div class="evline" id="m-ref"></div>
+  </div>
+  <div id="m-tables"></div>
+  <div class="card" id="m-foto-card" style="display:none">
+    <h2 class="sect" style="margin-top:0" data-i>📷 Foto degli sfidanti</h2>
+    <p class="small muted" style="margin:-6px 0 12px" data-i>Uno scatto prima di cominciare e uno alla stretta di mano: finiranno nel libro dei ricordi del torneo.</p>
+    <div class="fotorow">
+      <div class="fotoslot" id="fs-prima">
+        <div class="fslab" data-i>Prima</div>
+        <div class="fsimg" id="fi-prima"></div>
+        <button class="btn sec" onclick="fotoScatta('prima')" data-i>📷 Scatta</button>
+      </div>
+      <div class="fotoslot" id="fs-dopo">
+        <div class="fslab" data-i>Dopo</div>
+        <div class="fsimg" id="fi-dopo"></div>
+        <button class="btn sec" onclick="fotoScatta('dopo')" data-i>📷 Scatta</button>
+      </div>
+    </div>
+    <input type="file" id="foto-file" accept="image/*" capture="environment" style="display:none" onchange="fotoDaFile(this)">
+    <p class="small muted" id="foto-hint" style="margin-top:10px"></p>
+  </div>
+  <div id="m-sos"></div>
+  <div class="card" id="m-pen-card" style="display:none">
+    <h2 class="sect" style="margin-top:0" data-i>🥅 Tiri piazzati (esito)</h2>
+    <div class="pengrid">
+      <div><label id="m-pen-l1"></label><input type="number" id="m-p1" min="0" inputmode="numeric"></div>
+      <div><label id="m-pen-l2"></label><input type="number" id="m-p2" min="0" inputmode="numeric"></div>
+    </div>
+    <button class="btn sec" onclick="sendPen()" data-i>Invia esito tiri</button>
+  </div>
+  <button class="btn" onclick="finishMatch()" data-i>🏁 Partita conclusa</button>
+  <p class="small muted" style="margin-top:10px;text-align:center" data-i>Ogni tocco viene inviato alla Regia: è lei a confermare e registrare tutto ufficialmente.</p>
+</section>
+
+<div class="toast" id="toast"></div>
+<footer>SUBBUTEO TOURNAMENT CENTER · APP CAMPO</footer>
+
+<script>
+'use strict';
+/* ---------- lingua ---------- */
+const I18N={
+ "Collegati alla Regia":"Connect to the Control Desk",
+ "Indirizzo del server (mostrato nel gestionale)":"Server address (shown in the manager app)",
+ "Chiave privata del torneo":"Tournament private key",
+ "Il tuo nome (facoltativo, compare negli aggiornamenti)":"Your name (optional, shown on updates)",
+ "🔌 Collegati":"🔌 Connect",
+ "Il telefono deve essere sulla stessa rete Wi-Fi della Regia (oppure usa l'indirizzo del relay pubblico). Indirizzo e chiave sono mostrati nel gestionale nella sezione Regia.":"The phone must be on the same Wi-Fi network as the Control Desk (or use the public relay address). Address and key are shown in the manager app in the Control Desk section.",
+ "In campo adesso":"On the field now","Prossime partite":"Upcoming matches","Esci":"Leave",
+ "🥅 Tiri piazzati (esito)":"🥅 Penalty shoot-out (result)","Invia esito tiri":"Send shoot-out result",
+ "🏁 Partita conclusa":"🏁 Match finished",
+ "Ogni tocco viene inviato alla Regia: è lei a confermare e registrare tutto ufficialmente.":"Every tap is sent to the Control Desk: it confirms and officially records everything.",
+ "Nessuna partita in corso.":"No match in progress.","Nessuna partita in attesa.":"No pending match.",
+ "arbitro":"referee","Tavolo":"Table","Formazioni":"Line-ups","Conferma formazioni":"Confirm line-ups",
+ "Collegato":"Connected","Non raggiungibile":"Unreachable","invio…":"sending…",
+ "Inviato ✓":"Sent ✓","Chiave o indirizzo mancanti.":"Missing key or address.",
+ "Connessione riuscita!":"Connected!","Server non raggiungibile o chiave errata.":"Server unreachable or wrong key.",
+ "Torneo non ancora pubblicato dalla Regia.":"Tournament not yet published by the Control Desk.",
+ "Esito inviato.":"Result sent.","Richiesta di fine partita inviata alla Regia.":"End-of-match request sent to the Control Desk.",
+ "Giornata":"Matchday","Turno":"Round","min. simulato":"sim. minute","Girone":"Group",
+ "Campo":"Field","tutte":"all","Cartellini":"Cards","fermo":"paused",
+ "⚖️ La Legge — regolamenti":"⚖️ The Law — rules","La Legge":"The Law","Tutti":"All",
+ "Chiedi una regola…":"Ask a rule…","Chiedi all'esperto":"Ask the expert",
+ "Carico i regolamenti…":"Loading the regulations…","Regolamenti non disponibili sul server.":"Regulations not available on the server.",
+ "Nessuna regola trovata.":"No rule found.","Regola":"Rule","Leggi ad alta voce":"Read aloud",
+ "Voce non supportata.":"Voice not supported.","Input vocale non supportato (usa Chrome).":"Voice input not supported (use Chrome).",
+ "Puoi gestire solo le partite del tuo campo.":"You can only manage matches on your field.",
+ "S.O.S. — chiedi sospensione":"S.O.S. — request suspension","Richiesta di sospensione inviata — in attesa del consenso della Regia…":"Suspension request sent — awaiting the Control Desk's consent…",
+ "Gioco sospeso":"Play suspended","RIPARTI":"RESUME","Puoi consultare La Legge; da lì potrai far ripartire il timer.":"You can consult The Law; from there you can resume the timer.",
+ "Richiesta inviata alla Regia.":"Request sent to the Control Desk.","Ripresa richiesta.":"Resume requested."
+};
+let LANG=localStorage.getItem('campo_lang')||'it';
+const T=s=>LANG==='en'?(I18N[s]||s):s;
+function cLang(){LANG=LANG==='en'?'it':'en';localStorage.setItem('campo_lang',LANG);applyLang();render();}
+function applyLang(){
+  document.getElementById('lang').textContent=LANG==='en'?'IT':'EN';
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    if(!el.__it)el.__it=el.textContent.trim();
+    el.textContent=LANG==='en'?(I18N[el.__it]||el.__it):el.__it;
+  });
+}
+
+/* ---------- stato ---------- */
+const LS='subbuteo_campo_v1';
+let cfg={url:'',key:'',name:'',field:null};
+try{cfg=Object.assign(cfg,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){}
+/* identità univoca del telefono (per il registro dispositivi della Regia) */
+let DEV=localStorage.getItem(LS+'_dev');
+if(!DEV){DEV='d'+Math.random().toString(36).slice(2,10);localStorage.setItem(LS+'_dev',DEV);}
+let snap=null,snapAt=0,seq=0,connected=false,curMid=null,pollT=null,flushT=null,clockT=null;
+let queue=[];try{queue=JSON.parse(localStorage.getItem(LS+'_q')||'[]');}catch(e){}
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let toastT=null;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
+function status(){
+  const el=$('#status');
+  if(queue.length){el.textContent=queue.length+' '+T('invio…');el.className='q';return;}
+  el.textContent=connected?T('Collegato'):T('Non raggiungibile');
+  el.className=connected?'on':'';
+}
+function api(path){return cfg.url.replace(/\/+$/,'')+path;}
+
+/* ---------- connessione ---------- */
+function connect(){
+  const url=$('#c-url').value.trim(),key=$('#c-key').value.trim().toUpperCase(),name=$('#c-name').value.trim();
+  if(!url||!key){toast(T('Chiave o indirizzo mancanti.'));return;}
+  cfg.url=url;cfg.key=key;cfg.name=name;localStorage.setItem(LS,JSON.stringify(cfg));
+  fetch(api('/api/state?key='+encodeURIComponent(key)),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(d=>{
+      connected=true;seq=0;
+      if(d.snap){snap=d.snap;snapAt=Date.now();seq=d.seq;}
+      toast(T(d.snap?'Connessione riuscita!':'Torneo non ancora pubblicato dalla Regia.'));
+      send({type:'hello',field:cfg.field||null}); // il telefono si presenta alla Regia
+      startLoops();showList();render();
+    })
+    .catch(()=>{connected=false;status();toast(T('Server non raggiungibile o chiave errata.'));});
+}
+function disconnect(){stopLoops();connected=false;snap=null;$('#scr-list').classList.add('hidden');$('#scr-match').classList.add('hidden');$('#scr-legge').classList.add('hidden');$('#scr-connect').classList.remove('hidden');status();}
+function startLoops(){
+  stopLoops();
+  pollT=setInterval(poll,2500);poll();
+  flushT=setInterval(flush,1600);flush();
+  clockT=setInterval(tickClock,500);
+}
+function stopLoops(){clearInterval(pollT);clearInterval(flushT);clearInterval(clockT);}
+function poll(){
+  fetch(api('/api/state?key='+encodeURIComponent(cfg.key)+'&seq='+seq),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(d=>{connected=true;if(d.snap!==undefined){snap=d.snap;snapAt=Date.now();seq=d.seq;adjKeyGc();render();}else if(d.seq!==undefined)seq=d.seq;status();})
+    .catch(()=>{connected=false;status();});
+}
+/* --- orologio sincronizzato con la Regia: interpola localmente
+   il tempo rimanente ricevuto nello snapshot --- */
+function fmtClock(sec){sec=Math.max(0,Math.round(sec));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');}
+function boardClock(b){
+  if(!b)return null;
+  let rem=b.rem??0;
+  if(b.run)rem=Math.max(0,rem-(Date.now()-snapAt)/1000);
+  let min=b.min??0;
+  if(b.run&&b.tot>0&&SIMSEG[b.ph]){ // avanza anche il minuto simulato tra un poll e l'altro
+    const seg=SIMSEG[b.ph];
+    const el=Math.min(1,Math.max(0,(b.tot-rem)/b.tot));
+    min=Math.min(seg[1],seg[0]+Math.floor(el*(seg[1]-seg[0])));
+  }
+  return{rem,min,run:b.run,ph:b.ph};
+}
+const SIMSEG={'1° Tempo':[0,45],'2° Tempo':[45,90],'Tempo Unico':[0,90],'Tempo Supplementare':[90,120]};
+function tickClock(){
+  if(!curMid)return;
+  const b=boardOf(curMid);if(!b)return;
+  const c=boardClock(b);if(!c)return;
+  const ck=$('#m-clock'),sm=$('#m-simmin');
+  if(ck){ck.textContent=fmtClock(c.rem);ck.classList.toggle('live',!!c.run);}
+  if(sm)sm.textContent=`⏱ ${c.min}′ ${T('min. simulato')}${c.run?'':' · '+T('fermo')}`;
+}
+
+/* ---------- coda eventi ---------- */
+function send(ev){
+  ev.by=cfg.name||undefined;ev.ts=Date.now();ev.dev=DEV;ev.fld=cfg.field||null;
+  queue.push(ev);localStorage.setItem(LS+'_q',JSON.stringify(queue));
+  status();flush();
+}
+let flushing=false;
+function flush(){
+  if(flushing||!queue.length)return;
+  flushing=true;
+  const ev=queue[0];
+  fetch(api('/api/event'),{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:cfg.key,ev})})
+    .then(r=>{if(!r.ok)throw 0;return r.json();})
+    .then(()=>{queue.shift();localStorage.setItem(LS+'_q',JSON.stringify(queue));connected=true;status();flushing=false;if(queue.length)flush();})
+    .catch(()=>{connected=false;status();flushing=false;});
+}
+
+/* ---------- dati dallo snapshot ---------- */
+function allMatches(){
+  if(!snap)return[];
+  const out=[];
+  (snap.groups||[]).forEach(g=>(g.matches||[]).forEach(m=>out.push(Object.assign({ctx:(g.swiss?T('Turno'):(T('Girone')+' '+g.name+' · '+T('Giornata')))+' '+(m.r||1),kind:'group'},m))));
+  (snap.kos||[]).forEach(ko=>(ko.rounds||[]).forEach(rd=>(rd.matches||[]).forEach(m=>{
+    if(m.h&&m.a)out.push(Object.assign({ctx:ko.t+' · '+rd.name,kind:'ko'},m));
+  })));
+  (snap.free||[]).forEach(m=>out.push(Object.assign({ctx:'⚡',kind:'free'},m)));
+  return out;
+}
+function findM(id){return allMatches().find(m=>m.id===id);}
+function boardOf(id){return (snap&&snap.boards||[]).find(b=>b.mid===id);}
+
+/* ---------- render ---------- */
+function showList(){curMid=null;$('#scr-connect').classList.add('hidden');$('#scr-match').classList.add('hidden');$('#scr-legge').classList.add('hidden');$('#scr-list').classList.remove('hidden');render();}
+function openMatch(id){
+  const m=findM(id);
+  if(cfg.field&&m&&!onMyField(m)){toast(T('Puoi gestire solo le partite del tuo campo.'));return;}
+  curMid=id;$('#scr-list').classList.add('hidden');$('#scr-match').classList.remove('hidden');render();
+}
+function mrow(m){
+  const b=boardOf(m.id);
+  return `<div class="mrow" onclick="openMatch('${m.id}')">
+    ${b?`<span class="fld">C${b.f}</span>`:''}
+    <span class="tms">${esc(m.h)} – ${esc(m.a)}${m.ref?`<span class="ref">🧑‍⚖️ ${T('arbitro')}: ${esc(m.ref)}</span>`:''}</span>
+    ${m.hs!=null||m.as!=null?`<span class="sc">${m.hs??0}–${m.as??0}</span>`:''}
+    ${m.live?`<span class="live">LIVE</span>`:''}
+  </div>`;
+}
+/* filtro "collegamento univoco": il telefono legato a un campo vede solo le sue gare */
+function fieldSpan(){return snap&&snap.sq?4:1;}
+function onMyField(m){
+  if(!cfg.field)return true;
+  const b=boardOf(m.id);
+  const f=b?b.f:m.f;
+  if(f==null)return true; // campi non ancora assegnati: mostra
+  return cfg.field>=f&&cfg.field<f+fieldSpan();
+}
+function clearField(){cfg.field=null;localStorage.setItem(LS,JSON.stringify(cfg));render();}
+function render(){
+  applyLang();status();
+  if(!snap)return;
+  $('#l-tourn').textContent=snap.n||'Torneo';
+  {const lg=$('#l-logo');if(lg){if(snap.logo){lg.src=snap.logo;lg.style.display='';}else lg.style.display='none';}}
+  const meta=(snap.loc||'')+(snap.loc&&snap.date?' · ':'')+(snap.date||'');
+  $('#l-meta').innerHTML=esc(meta)+(cfg.field
+    ?` <span style="color:var(--accent2);font-weight:700">· ${T('Campo')} ${cfg.field}</span> <a href="#" onclick="clearField();return false" style="color:var(--muted);font-size:.9em">✕ ${T('tutte')}</a>`
+    :'');
+  const ms=allMatches().filter(onMyField);
+  const live=ms.filter(m=>m.live||boardOf(m.id));
+  const next=ms.filter(m=>!m.done&&!m.live&&!boardOf(m.id)).slice(0,30);
+  $('#l-live').innerHTML=live.length?live.map(mrow).join(''):`<p class="small muted">${T('Nessuna partita in corso.')}</p>`;
+  $('#l-next').innerHTML=next.length?next.map(mrow).join(''):`<p class="small muted">${T('Nessuna partita in attesa.')}</p>`;
+  if(curMid)renderMatch();
+  renderLeggeSos();
+}
+/* partita sospesa gestita da questo telefono (rispetta il vincolo di campo) */
+function suspendedMatch(){
+  if(!snap||!snap.boards)return null;
+  const b=(snap.boards||[]).find(bb=>bb.susp&&bb.mid&&(!cfg.field||onMyField(findM(bb.mid)||{})));
+  return b?findM(b.mid):null;
+}
+/* banner RIPARTI dentro «La Legge»: anche a gioco sospeso si può far ripartire il timer */
+function renderLeggeSos(){
+  const box=$('#lg-sos');if(!box)return;
+  const m=suspendedMatch();
+  if(!m){box.innerHTML='';sosResumeMid=null;return;}
+  sosResumeMid=m.id;
+  box.innerHTML=`<div class="sosbox susp" style="margin-bottom:12px"><div class="t">⏸ ${T('Gioco sospeso')} · ${esc(m.h)} – ${esc(m.a)}</div>
+    <button class="btn sosresume" onclick="sosResume()">▶️ ${T('RIPARTI')}</button></div>`;
+}
+function cardsLine(m){
+  const el=$('#m-cards');if(!el)return;
+  el.innerHTML=(m.cards||[]).map(c=>
+    `<span>${c.col==='r'?'🟥':'🟨'} ${c.min}′ ${esc(c.p||(c.s===1?m.h:m.a))}</span>`).join('');
+}
+/* =========================================================
+   FOTO DEGLI SFIDANTI
+   Due scatti per partita — prima del fischio d'inizio e alla stretta
+   di mano — che la Regia raccoglie per il libro dei ricordi.
+
+   NOTA IMPORTANTE: getUserMedia (il mirino dentro la pagina) funziona
+   SOLO in contesto sicuro (https o localhost). In sala torneo si è quasi
+   sempre su LAN in chiaro, dove il browser la blocca. Per questo la
+   strada principale è il campo file con «capture»: apre la fotocamera
+   del telefono e funziona anche in http. Il mirino integrato resta
+   disponibile quando il tunnel Internet è attivo.
+   ========================================================= */
+const FOTO={quando:'prima',stato:{},inCorso:false};
+function fotoDisponibili(){return !!(snap&&snap.foto);}
+function fotoUrl(mid,quando){
+  return api('/api/photo?f='+encodeURIComponent(mid+'__'+quando+'.jpg'))+'&t='+(FOTO.stato[mid+quando]||0);
+}
+function fotoRender(){
+  const card=$('#m-foto-card');if(!card)return;
+  const m=curMid?findM(curMid):null;
+  if(!m||!fotoDisponibili()){card.style.display='none';return;}
+  card.style.display='';
+  ['prima','dopo'].forEach(q=>{
+    const box=$('#fi-'+q);if(!box)return;
+    const c=(snap.fotoList||[]).find(x=>x.mid===curMid&&x.quando===q);
+    box.innerHTML=c?`<img src="${fotoUrl(curMid,q)}" alt="">`
+                   :`<span class="vuoto">📷</span>`;
+    const b=box.parentElement.querySelector('.btn');
+    if(b)b.textContent=c?T('↻ Rifai'):T('📷 Scatta');
+  });
+  const h=$('#foto-hint');
+  if(h)h.textContent=window.isSecureContext?'':T('Si apre la fotocamera del telefono: scatta, conferma e la foto parte da sola.');
+}
+function fotoScatta(quando){
+  if(!curMid)return;
+  FOTO.quando=quando;
+  const inp=$('#foto-file');
+  if(inp){inp.value='';inp.click();}
+}
+function fotoDaFile(inp){
+  const f=inp.files&&inp.files[0];
+  if(!f){return;}
+  const q=FOTO.quando,mid=curMid;
+  fotoMostraCaricamento(q,true);
+  const rd=new FileReader();
+  rd.onload=()=>fotoRidimensiona(rd.result,1280,.8).then(d=>fotoInvia(mid,q,d)).catch(()=>{
+    fotoMostraCaricamento(q,false);toast(T('Immagine non leggibile.'));
+  });
+  rd.onerror=()=>{fotoMostraCaricamento(q,false);toast(T('Immagine non leggibile.'));};
+  rd.readAsDataURL(f);
+  inp.value='';
+}
+/* la foto viene rimpicciolita SUL TELEFONO: cruda pesa 3-8 MB e
+   strozzerebbe la rete della palestra; così ne bastano 200 KB */
+function fotoRidimensiona(dataUrl,lato,q){
+  return new Promise((res,rej)=>{
+    const im=new Image();
+    im.onload=()=>{
+      let{width:w,height:h}=im;
+      const k=Math.min(1,lato/Math.max(w,h));
+      w=Math.round(w*k);h=Math.round(h*k);
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(im,0,0,w,h);
+      res(cv.toDataURL('image/jpeg',q||.8));
+    };
+    im.onerror=rej;
+    im.src=dataUrl;
+  });
+}
+function fotoMostraCaricamento(q,on){
+  const box=$('#fi-'+q);if(!box)return;
+  const vecchio=box.querySelector('.car');
+  if(on&&!vecchio){const d=document.createElement('div');d.className='car';d.textContent=T('invio…');box.appendChild(d);}
+  if(!on&&vecchio)vecchio.remove();
+}
+function fotoInvia(mid,quando,dataUrl){
+  fetch(api('/api/photo'),{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:cfg.key,mid,quando,img:dataUrl})})
+    .then(r=>r.json())
+    .then(d=>{
+      fotoMostraCaricamento(quando,false);
+      if(d&&d.ok){
+        FOTO.stato[mid+quando]=Date.now();
+        snap.fotoList=(snap.fotoList||[]).filter(x=>!(x.mid===mid&&x.quando===quando));
+        snap.fotoList.push({mid,quando});
+        fotoRender();
+        toast('📷 '+T('Foto inviata alla Regia'));
+      }else toast(T('Foto non inviata')+(d&&d.err?': '+d.err:''));
+    })
+    .catch(()=>{fotoMostraCaricamento(quando,false);toast(T('Foto non inviata: nessun collegamento.'));});
+}
+
+function renderMatch(){
+  const m=findM(curMid);if(!m){showList();return;}
+  const b=boardOf(m.id);
+  $('#m-ctx').textContent=m.ctx||'';
+  const cb=$('#m-clockbox');
+  if(b){
+    cb.style.display='';
+    $('#m-phase').textContent=b.ph||'';
+    tickClock();
+  }else cb.style.display='none';
+  cardsLine(m);
+  $('#m-t1').innerHTML=esc(m.h)+(m.ph1?`<small>${esc(m.ph1)}</small>`:'');
+  $('#m-t2').innerHTML=esc(m.a)+(m.ph2?`<small>${esc(m.ph2)}</small>`:'');
+  const madj=adjOf(m.id);
+  $('#m-g1').textContent=Math.max(0,(m.hs??0)+madj.h);
+  $('#m-g2').textContent=Math.max(0,(m.as??0)+madj.a);
+  $('#m-ref').textContent=m.ref?`🧑‍⚖️ ${T('arbitro')}: ${m.ref}`:'';
+  renderSos(m,b);
+  /* tiri piazzati per KO */
+  const pc=$('#m-pen-card');
+  if(m.kind==='ko'){pc.style.display='';$('#m-pen-l1').textContent=m.h;$('#m-pen-l2').textContent=m.a;}
+  else pc.style.display='none';
+  /* CdT: 4 tavoli (i cartellini si danno per giocatore, sul tavolo) */
+  const tb=$('#m-tables');
+  $('#m-cardrow').style.display=(snap.sq&&m.sub&&m.kind!=='free')?'none':'';
+  fotoRender();
+  if(snap.sq&&m.sub&&m.kind!=='free'){
+    const base=(b?b.f:m.f)||1;
+    const html=m.sub.map((g,k)=>{
+      const sadj=adjOf(m.id+'#'+k);
+      return `
+      <div class="tblrow">
+        <div class="tt">${T('Tavolo')} ${base+k}</div>
+        <div class="tgrid">
+          <span class="pn">${esc(g.ph||'—')}</span>
+          <span class="ts">${Math.max(0,(g.h??0)+sadj.h)} – ${Math.max(0,(g.a??0)+sadj.a)}</span>
+          <span class="pn r">${esc(g.pa||'—')}</span>
+        </div>
+        <div class="tgb">
+          <span class="side"><button class="plus" onclick="subGoal(${k},1,1)">+1</button><button class="minus" onclick="subGoal(${k},1,-1)">−1</button></span>
+          <span class="tcards"><button onclick="cardT(${k},1,'y')">🟨</button><button onclick="cardT(${k},1,'r')">🟥</button><button onclick="cardT(${k},2,'y')">🟨</button><button onclick="cardT(${k},2,'r')">🟥</button></span>
+          <span class="side"><button class="minus" onclick="subGoal(${k},2,-1)">−1</button><button class="plus" onclick="subGoal(${k},2,1)">+1</button></span>
+        </div>
+      </div>`;}).join('')+lineupHTML(m);
+    // il DOM dei tavoli si ricostruisce SOLO se il contenuto è cambiato:
+    // così un tocco durante il poll non atterra mai su un pulsante rimosso
+    if(tb.__last!==html){tb.innerHTML=html;tb.__last=html;}
+  }else{tb.innerHTML='';tb.__last='';}
+}
+function lineupHTML(m){
+  const rh=(snap.rosters&&snap.rosters[m.h])||[],ra=(snap.rosters&&snap.rosters[m.a])||[];
+  if(!rh.length&&!ra.length)return'';
+  const sel=(list,side,k,cur)=>`<select id="lu-${side}-${k}"><option value=""></option>${list.map(p=>`<option${p===cur?' selected':''}>${esc(p)}</option>`).join('')}</select>`;
+  return `<div class="card lineup"><h2 class="sect" style="margin-top:0">🧢 ${T('Formazioni')}</h2>
+    ${[0,1,2,3].map(k=>`<div class="tgrid" style="margin-bottom:4px">
+      ${sel(rh,1,k,m.sub[k]&&m.sub[k].ph)}<span class="small muted">T${k+1}</span>${sel(ra,2,k,m.sub[k]&&m.sub[k].pa)}
+    </div>`).join('')}
+    <button class="btn sec" onclick="sendLineup()">${T('Conferma formazioni')}</button></div>`;
+}
+
+/* ---------- azioni ---------- */
+/* Correzioni locali "ottimistiche": il punteggio mostrato si aggiorna SUBITO
+   al tocco (senza aspettare il giro snapshot Regia→telefono, 3–5 s) e si
+   riallinea da solo quando la Regia applica l'evento. Risolve il
+   "sistema che non risponde" segnalato assegnando le reti dal telefono. */
+let ADJ={};   // chiave: mid (o mid#tavolo) → {h,a,bh,ba,ts}
+function adjKeyGc(){
+  Object.keys(ADJ).forEach(key=>{
+    const a=ADJ[key];
+    const hash=key.indexOf('#');
+    const mid=hash<0?key:key.slice(0,hash);
+    const m=findM(mid);
+    if(!m){delete ADJ[key];return;}
+    let cur=null;
+    if(hash<0)cur={h:m.hs??0,a:m.as??0};
+    else{const g=m.sub&&m.sub[+key.slice(hash+1)];if(g)cur={h:g.h??0,a:g.a??0};}
+    if(!cur){delete ADJ[key];return;}
+    // la Regia ha recepito (punteggio cambiato) oppure la correzione è vecchia
+    if(cur.h!==a.bh||cur.a!==a.ba||Date.now()-a.ts>8000)delete ADJ[key];
+  });
+}
+function adjOf(key){const a=ADJ[key];return a?{h:a.h,a:a.a}:{h:0,a:0};}
+function bumpScore(el){if(!el)return;el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
+function goal(side,delta){
+  const m=findM(curMid);if(!m)return;
+  if(snap.sq&&m.sub&&m.kind!=='free')return; /* nel CdT si segna sui tavoli */
+  const a=ADJ[curMid]||(ADJ[curMid]={h:0,a:0,bh:m.hs??0,ba:m.as??0,ts:Date.now()});
+  if(side===1)a.h+=delta;else a.a+=delta;a.ts=Date.now();
+  if(navigator.vibrate)try{navigator.vibrate(delta>0?35:15);}catch(e){}
+  renderMatch();
+  bumpScore($(side===1?'#m-g1':'#m-g2'));
+  send({type:'goal',mid:curMid,side,delta});
+}
+function subGoal(k,side,delta){
+  const m=findM(curMid);if(!m||!m.sub||!m.sub[k])return;
+  const g=m.sub[k];
+  const key=curMid+'#'+k;
+  const a=ADJ[key]||(ADJ[key]={h:0,a:0,bh:g.h??0,ba:g.a??0,ts:Date.now()});
+  if(side===1)a.h+=delta;else a.a+=delta;a.ts=Date.now();
+  if(navigator.vibrate)try{navigator.vibrate(delta>0?35:15);}catch(e){}
+  renderMatch();
+  send({type:'subgoal',mid:curMid,t:k,side,delta});
+}
+function sendLineup(){
+  const names1=[0,1,2,3].map(k=>{const s=$('#lu-1-'+k);return s?s.value:'';});
+  const names2=[0,1,2,3].map(k=>{const s=$('#lu-2-'+k);return s?s.value:'';});
+  send({type:'lineup',mid:curMid,h:names1,a:names2});
+  toast(T('Inviato ✓'));
+}
+function card(side,col){
+  const m=findM(curMid);if(!m)return;
+  (m.cards=m.cards||[]).push({s:side,col,min:(boardOf(m.id)?boardClock(boardOf(m.id)).min:0)});
+  cardsLine(m);
+  send({type:'card',mid:curMid,side,col});
+  toast((col==='r'?'🟥 ':'🟨 ')+T('Inviato ✓'));
+}
+function cardT(k,side,col){
+  const m=findM(curMid);if(!m||!m.sub||!m.sub[k])return;
+  const p=side===1?m.sub[k].ph:m.sub[k].pa;
+  (m.cards=m.cards||[]).push({s:side,col,t:k,p,min:(boardOf(m.id)?boardClock(boardOf(m.id)).min:0)});
+  cardsLine(m);
+  send({type:'card',mid:curMid,side,col,t:k});
+  toast((col==='r'?'🟥 ':'🟨 ')+(p?p+' — ':'')+T('Inviato ✓'));
+}
+function sendPen(){
+  const p1=parseInt($('#m-p1').value),p2=parseInt($('#m-p2').value);
+  if(isNaN(p1)||isNaN(p2))return;
+  send({type:'pen',mid:curMid,p1,p2});
+  toast(T('Esito inviato.'));
+}
+function finishMatch(){
+  send({type:'finish',mid:curMid});
+  toast(T('Richiesta di fine partita inviata alla Regia.'));
+  showList();
+}
+/* ---------- S.O.S.: sospensione del timer richiesta alla Regia ---------- */
+let sosReqLocal={};   // mid -> true (richiesta inviata, in attesa del consenso)
+function renderSos(m,b){
+  const box=$('#m-sos');if(!box)return;
+  if(!b){box.innerHTML='';return;}   // S.O.S. solo per partite su un campo
+  const suspended=b.susp;
+  if(suspended)delete sosReqLocal[m.id];
+  const pending=b.sos||sosReqLocal[m.id];
+  if(suspended){
+    box.innerHTML=`<div class="sosbox susp"><div class="t">⏸ ${T('Gioco sospeso')}</div>
+      <button class="btn sosresume" onclick="sosResume()">▶️ ${T('RIPARTI')}</button>
+      <div class="hint">${T('Puoi consultare La Legge; da lì potrai far ripartire il timer.')}</div></div>`;
+  }else if(pending){
+    box.innerHTML=`<div class="sosbox wait"><div class="t">🆘 ${T('Richiesta di sospensione inviata — in attesa del consenso della Regia…')}</div></div>`;
+  }else{
+    box.innerHTML=`<button class="btn sosbtn" onclick="sosRequest()">🆘 ${T('S.O.S. — chiedi sospensione')}</button>`;
+  }
+}
+function sosRequest(){
+  if(!curMid)return;
+  sosReqLocal[curMid]=true;
+  send({type:'sos',mid:curMid});
+  toast(T('Richiesta inviata alla Regia.'));
+  renderMatch();
+}
+function sosResume(){
+  const mid=curMid||sosResumeMid;
+  if(!mid)return;
+  delete sosReqLocal[mid];
+  send({type:'resume',mid});
+  toast(T('Ripresa richiesta.'));
+  if(curMid)renderMatch();
+}
+let sosResumeMid=null;
+
+/* ---------- LA LEGGE (regolamenti, mobile) ---------- */
+let lg={loaded:false,loading:false,doc:null,rec:null,recording:false,lastQ:''};
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=()=>res(1);s.onerror=()=>rej();document.head.appendChild(s);});}
+window.REG_CACHE=window.REG_CACHE||{};   // edizioni it/en dei regolamenti in cache
+function openLegge(){
+  $('#scr-list').classList.add('hidden');$('#scr-match').classList.add('hidden');
+  $('#scr-legge').classList.remove('hidden');
+  const want=LANG==='en'?'en':'it';
+  if(window.REGOLAMENTI)window.REG_CACHE[window.REGOLAMENTI.lang||'it']=window.REGOLAMENTI;
+  if(lg.loaded&&window.REGOLAMENTI&&(window.REGOLAMENTI.lang||'it')===want){lgRenderDocs();return;}
+  if(lg.loaded&&window.REG_CACHE[want]){window.REGOLAMENTI=window.REG_CACHE[want];window.Legge.build();lgRenderDocs();return;}
+  if(lg.loading)return; lg.loading=true;
+  $('#lg-results').innerHTML=`<p class="small muted" style="text-align:center;margin-top:14px">${T('Carico i regolamenti…')}</p>`;
+  const srcName=want==='en'?'regolamenti_en.js':'regolamenti.js';
+  const need=[];
+  if(!window.REG_CACHE[want])need.push(
+    loadScript(srcName).catch(()=>loadScript((cfg.url||'').replace(/\/+$/,'')+'/'+srcName))
+    .catch(()=>{ // edizione inglese assente sul server: ripiega sull'italiano
+      if(want==='en'&&!window.REG_CACHE.it)return loadScript('regolamenti.js').catch(()=>loadScript((cfg.url||'').replace(/\/+$/,'')+'/regolamenti.js'));
+      throw 0;
+    }));
+  Promise.all(need)
+    .then(()=>window.Legge?1:loadScript('legge.js').catch(()=>loadScript((cfg.url||'').replace(/\/+$/,'')+'/legge.js')))
+    .then(()=>{
+      if(window.REGOLAMENTI)window.REG_CACHE[window.REGOLAMENTI.lang||'it']=window.REGOLAMENTI;
+      if(window.REG_CACHE[want])window.REGOLAMENTI=window.REG_CACHE[want];
+      lg.loaded=true;lg.loading=false;window.Legge.build();$('#lg-results').innerHTML='';lgRenderDocs();
+    })
+    .catch(()=>{lg.loading=false;$('#lg-results').innerHTML=`<p class="small muted" style="text-align:center;margin-top:14px">${T('Regolamenti non disponibili sul server.')}</p>`;});
+}
+function lgRenderDocs(){
+  const box=$('#lg-docs');if(!box||!window.Legge)return;
+  const docs=window.Legge.docs();
+  let h=`<div class="ld${lg.doc==null?' on':''}" onclick="lgSelectDoc(null)">📚 ${T('Tutti')}</div>`;
+  docs.forEach(d=>{h+=`<div class="ld${lg.doc===d.id?' on':''}" onclick="lgSelectDoc('${d.id}')">${esc(d.ente)}</div>`;});
+  box.innerHTML=h;
+}
+function lgSelectDoc(id){lg.doc=id;lgRenderDocs();if(lg.lastQ)lgAsk(true);}
+function lgLive(){
+  clearTimeout(lg._t);const q=$('#lg-q').value.trim();
+  if(q.length<3){$('#lg-results').innerHTML='';return;}
+  lg._t=setTimeout(()=>{
+    const res=window.Legge.search(q,lg.doc,6);
+    $('#lg-results').innerHTML=res.map(r=>`<div class="lg-rl" onclick="lgOpen('${r.doc}','${r.r}')"><div class="m">${esc(window.Legge.docName(r.doc))} · reg. ${esc(r.r)}</div><div class="x">${esc(r.t.slice(0,150))}${r.t.length>150?'…':''}</div></div>`).join('');
+  },180);
+}
+function lgAsk(keep){
+  if(!window.Legge)return;
+  const q=$('#lg-q').value.trim();if(!q)return;
+  lg.lastQ=q;
+  const a=window.Legge.ask(q,lg.doc);
+  const box=$('#lg-answer');
+  if(!a.best){box.innerHTML=`<div class="lg-ans"><div class="body">${T('Nessuna regola trovata.')}</div></div>`;$('#lg-results').innerHTML='';return;}
+  const b=a.best;
+  box.innerHTML=`<div class="lg-ans">
+    <div class="h"><span class="src">${esc(window.Legge.docName(b.doc))}</span><span class="ref">${T('Regola')} ${esc(b.r)}</span>${b.c?`<span class="chap">${esc(b.c)}</span>`:''}</div>
+    <div class="body">${esc(b.t)}</div>
+    <button class="play" onclick="lgSpeak(${JSON.stringify(a.spoken).replace(/"/g,'&quot;')})">🔊 ${T('Leggi ad alta voce')}</button>
+  </div>`;
+  $('#lg-results').innerHTML=a.related.map(r=>`<div class="lg-rl" onclick="lgOpen('${r.doc}','${r.r}')"><div class="m">${esc(window.Legge.docName(r.doc))} · reg. ${esc(r.r)}</div><div class="x">${esc(r.t.slice(0,150))}${r.t.length>150?'…':''}</div></div>`).join('');
+  if(!keep)lgSpeak(a.spoken);
+}
+function lgOpen(doc,ref){
+  const d=window.REGOLAMENTI.docs.find(x=>x.id===doc);if(!d)return;
+  const p=d.passaggi.find(x=>x.r===ref);if(!p)return;
+  $('#lg-answer').innerHTML=`<div class="lg-ans"><div class="h"><span class="src">${esc(window.Legge.docName(doc))}</span><span class="ref">${T('Regola')} ${esc(ref)}</span>${p.c?`<span class="chap">${esc(p.c)}</span>`:''}</div><div class="body">${esc(p.t)}</div><button class="play" onclick="lgSpeak(${JSON.stringify('Regola '+ref+'. '+p.t).replace(/"/g,'&quot;')})">🔊 ${T('Leggi ad alta voce')}</button></div>`;
+  $('#lg-answer').scrollIntoView({behavior:'smooth',block:'start'});
+}
+let lgVoices=null;
+function lgPickVoice(){
+  if(!('speechSynthesis'in window))return null;
+  const vs=speechSynthesis.getVoices();
+  const it=vs.filter(v=>/^it/i.test(v.lang));
+  return it.find(v=>/google|female|federica|alice|elsa/i.test(v.name))||it[0]||null;
+}
+function lgSpeak(text){
+  if(!('speechSynthesis'in window)){toast(T('Voce non supportata.'));return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='it-IT';const v=lgPickVoice();if(v)u.voice=v;u.rate=.98;u.pitch=1.05;
+  speechSynthesis.speak(u);
+}
+function speechErrMsg(code){
+  const en=LANG==='en';
+  if(code==='not-allowed'||code==='service-not-allowed')return en?'Microphone denied: allow it in the browser settings.':'Microfono negato: consentilo nelle impostazioni del browser.';
+  if(code==='no-speech')return en?'No speech detected. Tap and speak clearly.':'Nessuna voce rilevata. Tocca e parla chiaramente.';
+  if(code==='network')return en?'Voice recognition needs Internet.':'Il riconoscimento vocale richiede Internet.';
+  if(code==='audio-capture')return en?'No microphone found.':'Nessun microfono rilevato.';
+  if(code==='insecure')return en?'Voice needs a secure page (https). Use the Internet tunnel link, or type.':'La voce richiede una pagina sicura (https). Usa il link del tunnel Internet, oppure scrivi.';
+  return en?'Voice error. Try again or type.':'Errore voce. Riprova o scrivi.';
+}
+function lgMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast(T('Input vocale non supportato (usa Chrome).'));return;}
+  if(!window.isSecureContext){toast(speechErrMsg('insecure'));return;}
+  if(lg.recording){lg.rec&&lg.rec.stop();return;}
+  const begin=()=>{
+    let rec;try{rec=new SR();}catch(e){toast(speechErrMsg('generic'));return;}
+    rec.lang=LANG==='en'?'en-US':'it-IT';rec.interimResults=true;rec.maxAlternatives=1;rec.continuous=false;
+    lg.rec=rec;lg.recording=true;$('#lg-mic').classList.add('rec');
+    rec.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;$('#lg-q').value=t;lgLive();};
+    rec.onerror=e=>{lg.recording=false;$('#lg-mic').classList.remove('rec');toast(speechErrMsg(e&&e.error));};
+    rec.onend=()=>{lg.recording=false;$('#lg-mic').classList.remove('rec');if($('#lg-q').value.trim())lgAsk();};
+    try{rec.start();}catch(e){lg.recording=false;$('#lg-mic').classList.remove('rec');toast(speechErrMsg('generic'));}
+  };
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{s.getTracks().forEach(t=>t.stop());begin();}).catch(()=>toast(speechErrMsg('not-allowed')));
+  }else begin();
+}
+
+/* ---------- avvio ---------- */
+(function(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('k'))cfg.key=q.get('k').toUpperCase();
+  if(q.get('f'))cfg.field=Math.max(1,parseInt(q.get('f'))||0)||null; // QR legato a un campo
+  /* l'indirizzo da cui la pagina è servita vince su quello della volta scorsa:
+     passando dalla Wi-Fi al tunnel https, il vecchio indirizzo in chiaro
+     verrebbe bloccato dal browser come contenuto misto */
+  if(q.get('u'))cfg.url=q.get('u');
+  else if(location.protocol.startsWith('http')&&!/github/.test(location.host))cfg.url=location.origin;
+  $('#c-url').value=cfg.url||'';$('#c-key').value=cfg.key||'';$('#c-name').value=cfg.name||'';
+  applyLang();status();
+  if(cfg.url&&cfg.key&&q.get('auto')!=='0')connect();
+})();
+</script>
+</body>
+</html>

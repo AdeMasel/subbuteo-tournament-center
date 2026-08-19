@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Subbuteo — grafica per la diretta</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Sfondo TRASPARENTE: in OBS questa pagina va messa come «Browser source»
+   sopra la ripresa del tavolo. Nessun colore di fondo, nessuna barra. */
+html,body{margin:0;padding:0;background:transparent;overflow:hidden;
+  font-family:'Inter',-apple-system,'Segoe UI',sans-serif;color:#fff;
+  -webkit-font-smoothing:antialiased;user-select:none}
+:root{
+  --gold:#f5c451;--gold2:#e0a92e;--bg:rgba(8,14,24,.97);--bg2:rgba(14,24,38,.97);
+  --line:rgba(245,196,81,.35);--ombra:0 10px 34px rgba(0,0,0,.55);
+}
+.hide{display:none!important}
+#stage{position:fixed;inset:0;transform-origin:center center}
+
+/* ---------------- fascia bassa (predefinita) ---------------- */
+.lowerwrap{position:absolute;left:50%;bottom:5.5vh;transform:translateX(-50%);
+  animation:sali .7s cubic-bezier(.2,1,.3,1)}
+.lowerwrap.conTick{bottom:calc(4vh + 46px)}
+.lower{position:relative;
+  display:flex;align-items:stretch;border-radius:12px;overflow:hidden;
+  box-shadow:var(--ombra);border:1px solid var(--line)}
+@keyframes sali{from{transform:translate(-50%,26px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+@keyframes salic{from{transform:translateY(26px);opacity:0}to{transform:none;opacity:1}}
+.lower .side{display:flex;align-items:center;gap:14px;padding:0 22px;background:var(--bg);
+  min-width:min(30vw,340px)}
+.lower .side.b{flex-direction:row-reverse;text-align:right}
+.lower .side img{width:44px;height:44px;object-fit:contain;flex:0 0 auto;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.lower .side .ini{width:44px;height:44px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  background:rgba(245,196,81,.16);color:var(--gold);font-family:'Oswald',sans-serif;font-size:1.05rem}
+.lower .nm{font-family:'Oswald',sans-serif;font-weight:500;text-transform:uppercase;
+  letter-spacing:.045em;font-size:clamp(15px,2.1vh,26px);line-height:1.15;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-width:min(24vw,270px)}
+.lower .nm small{display:block;font-family:'Inter',sans-serif;text-transform:none;letter-spacing:0;
+  font-size:.62em;color:rgba(255,255,255,.6);font-weight:400;margin-top:2px}
+.lower .score{display:flex;align-items:center;gap:14px;padding:14px 26px;
+  background:linear-gradient(180deg,#1d2a3e,#101a29);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.lower .score b{font-family:'Chakra Petch',monospace;font-weight:700;font-size:clamp(26px,4.6vh,52px);
+  line-height:1;min-width:1.1em;text-align:center}
+.lower .score .sep{color:var(--gold);opacity:.6;font-size:clamp(20px,3.4vh,38px)}
+.lower .clock{display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:0 20px;background:var(--bg2);min-width:110px}
+.lower .clock .t{font-family:'Chakra Petch',monospace;font-weight:700;font-size:clamp(17px,2.6vh,30px);
+  color:var(--gold);line-height:1}
+.lower .clock .m{font-size:clamp(9px,1.2vh,12px);letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.62);margin-top:5px;white-space:nowrap}
+.lower .clock.run .t{animation:pulsa 2s ease-in-out infinite}
+@keyframes pulsa{0%,100%{opacity:1}50%{opacity:.62}}
+.lowerwrap .campo{position:absolute;top:-13px;left:50%;transform:translateX(-50%);z-index:2;
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  background:linear-gradient(180deg,#ffd873,var(--gold2));color:#171200;padding:3px 14px;border-radius:999px;
+  white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+
+/* ---------------- riquadro d'angolo ---------------- */
+.corner{position:absolute;display:flex;align-items:center;gap:12px;padding:12px 18px;
+  background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:var(--ombra);
+  animation:salic .6s ease-out}
+.corner.tl{top:4vh;left:4vh}.corner.tr{top:4vh;right:4vh}
+.corner.bl{bottom:4vh;left:4vh}.corner.br{bottom:4vh;right:4vh}
+.corner .r{display:flex;align-items:center;gap:10px}
+.corner img{width:26px;height:26px;object-fit:contain}
+.corner .ini{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(245,196,81,.16);color:var(--gold);font-family:'Oswald',sans-serif;font-size:.7rem}
+.corner .nm{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;
+  font-size:15px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.corner .sc{font-family:'Chakra Petch',monospace;font-weight:700;font-size:22px;color:var(--gold);min-width:1.2em;text-align:center}
+.corner .ck{font-family:'Chakra Petch',monospace;font-size:15px;color:rgba(255,255,255,.75);
+  border-left:1px solid var(--line);padding-left:12px;margin-left:4px}
+
+/* ---------------- schermo pieno (intervalli, presentazione) ---------------- */
+.full{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3vh;background:radial-gradient(120% 90% at 50% 50%,rgba(10,18,30,.86),rgba(3,6,12,.94));
+  animation:sfuma .8s ease-out}
+@keyframes sfuma{from{opacity:0}to{opacity:1}}
+.full .tit{font-family:'Chakra Petch',monospace;font-size:1.5vh;letter-spacing:.34em;text-transform:uppercase;
+  color:rgba(245,196,81,.8)}
+.full .duo{display:flex;align-items:center;gap:5vw}
+.full .sq{display:flex;flex-direction:column;align-items:center;gap:2vh;width:26vw}
+.full .sq img{width:14vh;height:14vh;object-fit:contain;filter:drop-shadow(0 6px 20px rgba(0,0,0,.7))}
+.full .sq .ini{width:14vh;height:14vh;border-radius:50%;display:grid;place-items:center;
+  background:rgba(245,196,81,.14);color:var(--gold);font-family:'Oswald',sans-serif;font-size:5vh}
+.full .sq .nm{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.05em;
+  font-size:3.4vh;text-align:center;line-height:1.15}
+.full .sq .nm small{display:block;font-family:'Inter',sans-serif;text-transform:none;letter-spacing:0;
+  font-size:.5em;color:rgba(255,255,255,.6);margin-top:.6vh}
+.full .vs{font-family:'Chakra Petch',monospace;font-weight:700;font-size:11vh;line-height:1;
+  background:linear-gradient(180deg,#fff3cf,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.full .info{font-family:'Oswald',sans-serif;letter-spacing:.2em;text-transform:uppercase;
+  font-size:1.9vh;color:rgba(255,255,255,.7)}
+
+/* ---------------- striscia dei risultati ---------------- */
+.tick{position:absolute;left:0;right:0;bottom:0;height:36px;background:rgba(6,11,18,.9);
+  border-top:1px solid var(--line);display:flex;align-items:center;overflow:hidden}
+.tick .lab{flex:0 0 auto;background:linear-gradient(180deg,#ffd873,var(--gold2));color:#171200;
+  font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  padding:0 14px;height:100%;display:flex;align-items:center}
+.tick .run{white-space:nowrap;padding-left:100%;animation:scorri 34s linear infinite;
+  font-family:'Chakra Petch',monospace;font-size:14px;letter-spacing:.03em}
+@keyframes scorri{to{transform:translateX(-100%)}}
+.tick .run b{color:var(--gold)}
+.tick .run span{opacity:.45;margin:0 14px}
+
+/* ---------------- messaggio di servizio ---------------- */
+#msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;
+  font-family:'Oswald',sans-serif;letter-spacing:.12em;text-transform:uppercase;font-size:16px;
+  color:rgba(255,255,255,.62);background:rgba(6,11,18,.86);border:1px solid var(--line);
+  border-radius:12px;padding:22px 30px;max-width:70vw;line-height:1.7}
+#msg b{color:var(--gold)}
+#msg .k{font-family:'Chakra Petch',monospace;text-transform:none;letter-spacing:0;
+  background:rgba(245,196,81,.1);padding:2px 7px;border-radius:5px;font-size:14px}
+</style>
+</head>
+<body>
+<div id="stage"><div id="msg">Grafica per la diretta<br><span style="font-size:13px;opacity:.8">in attesa del collegamento…</span></div></div>
+
+<script>
+/* =========================================================
+   GRAFICA PER LA DIRETTA (OBS / streaming)
+   Da usare come «Browser source» sopra la ripresa del tavolo:
+   lo sfondo è trasparente, si vede solo il tabellone.
+
+   Indirizzo:  /overlay?k=CHIAVE[&f=CAMPO][&l=lower|corner|full]
+               [&pos=tl|tr|bl|br][&tick=0|1][&scale=1][&u=INDIRIZZO]
+   ========================================================= */
+const q=new URLSearchParams(location.search);
+const cfg={
+  url:q.get('u')||location.origin,
+  key:(q.get('k')||'').toUpperCase(),
+  campo:parseInt(q.get('f'))||0,
+  layout:(q.get('l')||'lower').toLowerCase(),
+  pos:(q.get('pos')||'tl').toLowerCase(),
+  tick:q.get('tick')!=='0',
+  scale:parseFloat(q.get('scale'))||1
+};
+if(cfg.scale!==1){const st=document.getElementById('stage');st.style.transform='scale('+cfg.scale+')';}
+
+let snap=null,snapAt=0,seq=0,vivo=false,errori=0;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function api(p){return String(cfg.url).replace(/\/+$/,'')+p;}
+
+function poll(){
+  if(!cfg.key)return;
+  fetch(api('/api/state?key='+encodeURIComponent(cfg.key)+'&seq='+seq),{cache:'no-store'})
+    .then(r=>r.json())
+    .then(d=>{
+      vivo=true;errori=0;
+      if(d.snap!==undefined){snap=d.snap;snapAt=Date.now();seq=d.seq;}
+      else if(d.seq!==undefined)seq=d.seq;
+      render();
+    })
+    .catch(()=>{if(++errori>4){vivo=false;render();}});
+}
+/* orologio interpolato fra un aggiornamento e l'altro, così i secondi
+   scorrono davvero invece di saltare */
+const SEG={'1° Tempo':[0,45],'2° Tempo':[45,90],'Tempo Unico':[0,90],'Tempo Supplementare':[90,120]};
+function clock(b){
+  if(!b)return null;
+  let rem=b.rem||0;
+  if(b.run)rem=Math.max(0,rem-(Date.now()-snapAt)/1000);
+  let min=b.min||0;
+  if(b.run&&b.tot>0&&SEG[b.ph]){
+    const g=SEG[b.ph],el=Math.min(1,Math.max(0,(b.tot-rem)/b.tot));
+    min=Math.min(g[1],g[0]+Math.floor(el*(g[1]-g[0])));
+  }
+  return{rem,min,run:!!b.run,ph:b.ph||''};
+}
+function mmss(s){s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+
+/* la partita da mostrare: quella del campo richiesto, altrimenti
+   la prima in corso, altrimenti la prima assegnata */
+function scegliBoard(){
+  if(!snap||!snap.boards)return null;
+  const bs=snap.boards.filter(b=>b.mid);
+  if(cfg.campo>0)return bs.find(b=>b.f===cfg.campo)||null;
+  return bs.find(b=>b.run)||bs[0]||null;
+}
+function trovaGara(mid){
+  if(!snap||!mid)return null;
+  for(const g of snap.groups||[])for(const m of g.matches||[])
+    if(m.id===mid)return{h:m.h,a:m.a,hs:m.hs,as:m.as,fase:'',ref:m.ref};
+  for(const k of snap.kos||[])for(const r of k.rounds||[])for(const m of r.matches||[])
+    if(m.id===mid)return{h:m.t1,a:m.t2,hs:m.s1,as:m.s2,fase:r.name||k.t||'',ref:m.ref};
+  for(const m of snap.free||[])if(m.id===mid)return{h:m.h,a:m.a,hs:m.hs,as:m.as,fase:'',ref:null};
+  return null;
+}
+function stemma(n,cls){
+  const u=snap&&snap.crests&&snap.crests[n];
+  if(u)return `<img src="${u}" alt="">`;
+  const ini=String(n||'?').split(/\s+/).map(w=>w[0]||'').join('').slice(0,3).toUpperCase();
+  return `<span class="ini">${esc(ini)}</span>`;
+}
+function nomeCampo(b){
+  if(!b||b.f==null)return '';
+  return (snap&&snap.sq?'Tavoli ':'Campo ')+b.f+(snap&&snap.sq?'–'+(b.f+3):'');
+}
+function ultimiRisultati(){
+  const out=[];
+  (snap.groups||[]).forEach(g=>(g.matches||[]).forEach(m=>{
+    if(m.done&&m.hs!=null)out.push(`${esc(m.h)} <b>${m.hs}–${m.as}</b> ${esc(m.a)}`);
+  }));
+  (snap.kos||[]).forEach(k=>(k.rounds||[]).forEach(r=>(r.matches||[]).forEach(m=>{
+    if(m.s1!=null&&m.s2!=null)out.push(`${esc(m.t1)} <b>${m.s1}–${m.s2}</b> ${esc(m.t2)}`);
+  })));
+  return out.slice(-14);
+}
+
+/* Ridisegnare tutto a ogni aggiornamento farebbe ripartire l'animazione
+   d'ingresso ogni volta: in diretta si vedrebbe lampeggiare. Si ricostruisce
+   solo quando cambia davvero qualcosa; i secondi li muove il tick locale. */
+let ultimaFirma='';
+function render(forza){
+  const st=$('#stage');
+  if(!cfg.key){
+    ultimaFirma='';st.innerHTML=`<div id="msg">Manca la chiave del torneo<br>
+      <span class="k">…/overlay?k=XXXX-XXXX</span><br>
+      <span style="font-size:13px;opacity:.75">copiala dal pannello «App Campo» della Regia</span></div>`;
+    return;
+  }
+  if(!vivo||!snap){
+    if(ultimaFirma==='@off')return;ultimaFirma='@off';st.innerHTML=`<div id="msg">In attesa della Regia…<br>
+      <span style="font-size:13px;opacity:.75">${esc(String(cfg.url).replace(/^https?:\/\//,''))}</span></div>`;
+    return;
+  }
+  const b=scegliBoard();
+  const g=b?trovaGara(b.mid):null;
+  if(!g){
+    const f2='@vuoto'+(cfg.campo||0);if(ultimaFirma===f2)return;ultimaFirma=f2;st.innerHTML=`<div id="msg">${cfg.campo?('Campo '+cfg.campo+' libero'):'Nessuna partita in corso'}<br>
+      <span style="font-size:13px;opacity:.75">${esc(snap.n||'')}</span></div>`;
+    return;
+  }
+  const c=clock(b)||{rem:0,min:0,run:false,ph:''};
+  const hs=g.hs??0, as=g.as??0;
+  const ris=cfg.layout==='lower'&&cfg.tick?ultimiRisultati():[];
+  const firma=[cfg.layout,cfg.pos,g.h,g.a,hs,as,b.f,c.ph,g.fase,g.ref,c.run,ris.length,ris.join('|')].join('§');
+  if(!forza&&firma===ultimaFirma)return;
+  ultimaFirma=firma;
+
+  if(cfg.layout==='full'){
+    st.innerHTML=`<div class="full">
+      <div class="tit">${esc(snap.n||'')}${g.fase?' · '+esc(g.fase):''}</div>
+      <div class="duo">
+        <div class="sq">${stemma(g.h)}<div class="nm">${esc(g.h)}</div></div>
+        <div class="vs">${hs} – ${as}</div>
+        <div class="sq">${stemma(g.a)}<div class="nm">${esc(g.a)}</div></div>
+      </div>
+      <div class="info">${esc(nomeCampo(b))}${c.ph?' · '+esc(c.ph):''} · ${c.min}′ · ${mmss(c.rem)}${g.ref?' · Arbitro '+esc(g.ref):''}</div>
+    </div>`;
+    fissaEntrata();return;
+  }
+  if(cfg.layout==='corner'){
+    st.innerHTML=`<div class="corner ${['tl','tr','bl','br'].includes(cfg.pos)?cfg.pos:'tl'}">
+      <div class="r">${stemma(g.h)}<span class="nm">${esc(g.h)}</span><span class="sc">${hs}</span></div>
+      <div class="r"><span class="sc">${as}</span><span class="nm">${esc(g.a)}</span>${stemma(g.a)}</div>
+      <span class="ck">${c.min}′</span>
+    </div>`;
+    fissaEntrata();return;
+  }
+  /* fascia bassa */
+  st.innerHTML=`<div class="lowerwrap${ris.length?' conTick':''}">
+      ${b&&b.f!=null?`<div class="campo">${esc(nomeCampo(b))}${g.fase?' · '+esc(g.fase):''}</div>`:''}
+      <div class="lower">
+      <div class="side a">${stemma(g.h)}<div class="nm">${esc(g.h)}</div></div>
+      <div class="score"><b>${hs}</b><span class="sep">–</span><b>${as}</b></div>
+      <div class="side b">${stemma(g.a)}<div class="nm">${esc(g.a)}</div></div>
+      <div class="clock${c.run?' run':''}"><span class="t">${mmss(c.rem)}</span><span class="m">${c.min}′ ${c.run?'in gioco':'fermo'}</span></div>
+      </div>
+    </div>
+    ${ris.length?`<div class="tick"><div class="lab">Ultimi risultati</div>
+      <div class="run">${ris.join('<span>·</span>')}<span>·</span>${ris.join('<span>·</span>')}</div></div>`:''}`;
+  fissaEntrata();
+}
+/* Se il browser di OBS congela le animazioni (scena non attiva, sorgente
+   nascosta) l'animazione d'ingresso resterebbe ferma sul fotogramma iniziale
+   e la grafica non si vedrebbe. Passato il tempo dell'ingresso la si toglie:
+   così lo stato finale è garantito comunque. */
+function fissaEntrata(){
+  setTimeout(()=>{
+    document.querySelectorAll('.lowerwrap,.corner,.full').forEach(e=>{e.style.animation='none';});
+  },900);
+}
+
+/* i secondi scorrono localmente, il collegamento aggiorna il resto */
+let ultimoTesto='';
+setInterval(()=>{
+  if(!snap)return;
+  const b=scegliBoard();if(!b)return;
+  const c=clock(b);if(!c)return;
+  const t=$('.lower .clock .t')||$('.corner .ck');
+  if(!t)return;
+  const nuovo=$('.corner .ck')?(c.min+'′'):mmss(c.rem);
+  if(nuovo!==ultimoTesto){t.textContent=nuovo;ultimoTesto=nuovo;}
+  const m=$('.lower .clock .m');
+  if(m)m.textContent=c.min+'′ '+(c.run?'in gioco':'fermo');
+},250);
+
+render();
+poll();
+setInterval(poll,1500);
+</script>
+</body>
+</html>

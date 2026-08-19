@@ -1,0 +1,72 @@
+{
+ "content": "6.3.4",
+ "minShell": "6.3.4",
+ "notes": "Prima versione con aggiornamento automatico del contenuto.",
+ "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
+ "files": {
+  "bandiere.js": {
+   "sha256": "2743e343f650bb9f7d1f33d135e51de0ae9cc63a09e42f42ae773aedade4f41a",
+   "size": 154284
+  },
+  "campo.html": {
+   "sha256": "954a0a0b6610429d2e21590e8e3a004a5e04f52ecabc594c50bc0cd4ffcd6cdc",
+   "size": 50573
+  },
+  "capitano.html": {
+   "sha256": "47820fe4399c0339cf80aea4efa111904ef96eec85da3499daf142b494a7fe97",
+   "size": 26250
+  },
+  "gifenc.js": {
+   "sha256": "d4abcba938a8ed397f8493c8473b32a73c0eb176c8e85c8498b69d8937ffea2b",
+   "size": 14206
+  },
+  "index.html": {
+   "sha256": "cc4382ef5dc9484895893799ffc94e4f1d4f7b880a4f5d273d0a7001f226d832",
+   "size": 1025211
+  },
+  "iscrizione.html": {
+   "sha256": "5711b1965af5c6e04846654b0e8f8d32c6a53c9ad8ccc68ce9521eedb3c86646",
+   "size": 5740
+  },
+  "legge.js": {
+   "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
+   "size": 7787
+  },
+  "maglie_index.js": {
+   "sha256": "9c82823d52e3d1b5aefb846230e5827493b4470990547d3a089310a65918ded3",
+   "size": 167086
+  },
+  "mp4enc.js": {
+   "sha256": "da69c25e153c01969a93e44a9112cba9bf28ca72cfa38b482a77bd134a766b21",
+   "size": 13103
+  },
+  "musiche.js": {
+   "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
+   "size": 2424
+  },
+  "overlay.html": {
+   "sha256": "aa7b8afdd9532b45ba329470b8bdd456c96d296847d27964f390747cf4ea0a99",
+   "size": 16276
+  },
+  "regolamenti.js": {
+   "sha256": "4f6040c8aabdbf0e1fe898d5b332d4fdfd62320f87d5dcb3cfdc51221cf31c4a",
+   "size": 436654
+  },
+  "regolamenti_en.js": {
+   "sha256": "ff74f40b8c466389921ad7a45cca63262dbc1694f4a9df39931632e8f5a133df",
+   "size": 390562
+  },
+  "replay.html": {
+   "sha256": "222c09110187ce53845f825cc2bd7cefd61cb0798ae61c27ead00b7a961b19d6",
+   "size": 34789
+  },
+  "stemmi_club.js": {
+   "sha256": "5da4a041bc53a62ebe6dda0a6fa07fd46c25d2716cdb4b30031b01ba216564d6",
+   "size": 14531278
+  },
+  "tornei_reali.js": {
+   "sha256": "02bee0959d6a540cb56a4bdd0466d8ca80975c2d0339ac99ece8b40aee92ec5a",
+   "size": 216403
+  }
+ }
+}
