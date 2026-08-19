@@ -1,7 +1,7 @@
 {
- "content": "6.3.6",
+ "content": "6.4.0",
  "minShell": "6.3.4",
- "notes": "Nuova formula originale: La Rosa dei Venti (8-12 giocatori), con la sua bussola grafica.",
+ "notes": "6.4: stampe A4 con margini garantiti (sinistro 25mm), niente tagli né pagine saltate.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "687b156a686b5a039e705073985b2d88aefaaaff66022791f7a5a0d9cd42deba",
-   "size": 1055659
+   "sha256": "013a35f874d8c7e9ad076d42e4766ecd5429dd347807fb4aad260d2fa7b697ca",
+   "size": 1060642
   },
   "iscrizione.html": {
    "sha256": "5711b1965af5c6e04846654b0e8f8d32c6a53c9ad8ccc68ce9521eedb3c86646",
