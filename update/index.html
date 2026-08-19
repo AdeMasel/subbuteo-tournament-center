@@ -2093,7 +2093,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   <button data-tab="audio" onclick="tabTo('audio')">🎛 Regia</button>
   <button data-tab="pretorneo" onclick="tabTo('pretorneo');renderPre()">📒 Pre-Torneo</button>
   <button data-tab="gironi" onclick="tabTo('gironi')" disabled>Gironi</button>
-  <button data-tab="finale" onclick="tabTo('finale')" disabled>Fase Finale</button>
+  <button data-tab="finale" onclick="tabTo('finale')" disabled id="tab-finale-btn">Fase Successiva</button>
   <button data-tab="live" onclick="tabTo('live')" disabled>Live <span class="dotlive" style="display:none"></span></button>
   <button data-tab="classifica" onclick="tabTo('classifica')" disabled>Classifiche</button>
   <button data-tab="cronache" onclick="tabTo('cronache')" disabled>Cronache</button>
@@ -2322,9 +2322,11 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   <div id="gironi-box" class="grid"></div>
 </section>
 
-<!-- ============ FASE FINALE ============ -->
+<!-- ============ FASE SUCCESSIVA — si autorinomina "Fase Finale" quando lo è
+     davvero (vedi nomeFaseSuccessiva()); il nome prudente di default evita di
+     promettere un traguardo che, in certe formule, non è il prossimo passo. -->
 <section class="tab" id="tab-finale">
-  <h2 class="sect">Fase Finale</h2>
+  <h2 class="sect" id="tab-finale-h2">Fase Successiva</h2>
   <div id="finale-box"></div>
 </section>
 
@@ -3223,7 +3225,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='6.4.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='6.4.2';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -3397,7 +3399,7 @@ const TR={
   "Squadra":"Team",
   // header / nav / tabs
   "Nuovo Torneo":"New Tournament","Torneo Subbuteo":"Subbuteo Tournament",
-  "⚙ Setup":"⚙ Setup","Gironi":"Groups","Fase Finale":"Final Stage","Live":"Live",
+  "⚙ Setup":"⚙ Setup","Gironi":"Groups","Fase Finale":"Final Stage","Fase Successiva":"Next Stage","Passaggio alla fase successiva non gestito per la formula":"Moving to the next stage is not handled for the format","segnalalo.":"please report it.","Live":"Live",
   "Classifiche":"Standings","Cronache":"Match Reports","Opzioni":"Options","📽 Presentazione":"📽 Presentation",
   /* voci che restavano in italiano anche con l'interfaccia inglese */
   "📚 Archivio":"📚 Archive","📚 Archivio Storico":"📚 Historical Archive",
@@ -8565,7 +8567,13 @@ function goToFinal(){
     S.ko=makeKO('Fase a Eliminazione Diretta',seeds,S.cfg.third);
     // con qualificate non "tonde" il 1° turno è lo spareggio (le prime hanno il bye)
     if(Math.pow(2,Math.round(Math.log2(Q)))!==Q)S.ko.rounds[0].name='Spareggi di accesso';
-  }else return;
+  }else{
+    // rete di sicurezza: se un domani si aggiunge una formula a gironi e ci si
+    // dimentica di gestirla qui, il torneo restava bloccato IN SILENZIO — nessun
+    // messaggio, nessun errore, solo il pulsante che non fa nulla. Meglio dirlo.
+    toast('⚠️ '+L('Passaggio alla fase successiva non gestito per la formula')+' «'+L(FMT_LABELS[S.cfg.format]||S.cfg.format)+'» — '+L('segnalalo.'));
+    return;
+  }
   S.phase='final';
   assignReferees(); // completa gli arbitri sulle partite della fase appena creata
   assignFields(); // riassegna i campi ai nuovi gironi di fascia
@@ -8625,10 +8633,23 @@ function tabTo(name){
   document.querySelectorAll('nav#tabs button[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
   S.screen=name;persist();
 }
+/* "Fase Finale" o "Fase Successiva"? Di regola chiudere i gironi porta
+   DIRETTAMENTE all'ultima fase del torneo (tabelloni o gironi di merito che
+   producono il campione), quindi il nome corretto è "Fase Finale". L'unica
+   eccezione oggi è la multifase PRIMA che i gironi della seconda fase siano
+   stati generati: lì il prossimo passo sono altri gironi, non la fine — e
+   chiamarlo "finale" sarebbe una promessa falsa. Nuove formule a più tappe
+   vanno aggiunte qui, non lasciate a "Fase Finale" per default. */
+function inCodaAlTorneo(){
+  if(S.cfg.format==='multifase'&&(S.stage||1)<2)return false;
+  return true;
+}
+function nomeFaseSuccessiva(){ return inCodaAlTorneo()?L('Fase Finale'):L('Fase Successiva'); }
 function updateTabs(){
   const q=t=>document.querySelector(`nav#tabs button[data-tab="${t}"]`);
   q('gironi').disabled=!S.groups.length;
   q('finale').disabled=!(S.ko||S.tiersPhases.length);
+  {const t=nomeFaseSuccessiva();const btn=$('#tab-finale-btn'),h=$('#tab-finale-h2');if(btn)btn.textContent=t;if(h)h.textContent=t;}
   q('live').disabled=!S.started&&!(S.freeMatches&&S.freeMatches.length);
   q('classifica').disabled=!S.started;
   q('cronache').disabled=!S.started;
@@ -8859,9 +8880,14 @@ function renderGironiActions(){
       h+=`<button class="btn" onclick="swissNext()" ${g.matches.some(m=>!m.done)?'disabled':''}>➜ Genera Turno ${g.swissRound+1}/${S.cfg.swissRounds}</button>`;
     else h+=`<span class="chip acc">Tutti i turni generati</span>`;
   }
-  if((f==='gironi-ko'||f==='fasce'||f==='squadre')&&S.phase==='groups'){
+  if((f==='gironi-ko'||f==='fasce'||f==='squadre'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp')&&S.phase==='groups'){
     const primaDiDue=(f==='multifase'&&(S.stage||1)<2);
-    h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ ${primaDiDue?L('Chiudi Prima Fase e genera i Gironi della Seconda'):L('Chiudi Gironi e genera')+' '+(f==='squadre'?L('Tabellone Principale + Consolazione'):L('Fase Finale'))}</button>`;
+    // "Fase Finale" è la parola giusta solo quando quella successiva è
+    // davvero l'ultima: nella multifase, dopo i primi gironi, si va invece
+    // ai gironi della seconda fase, e chiamarla "finale" sarebbe falso.
+    const etichetta=primaDiDue?L('Chiudi Prima Fase e genera i Gironi della Seconda')
+      :L('Chiudi Gironi e genera')+' '+(f==='squadre'?L('Tabellone Principale + Consolazione'):nomeFaseSuccessiva());
+    h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ ${etichetta}</button>`;
   }
   if(f==='playoff'&&S.phase==='groups'){
     h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ Chiudi la stagione e genera Playoff${(S.cfg.poutN||0)>=2?' + Playout':''}</button>`;
