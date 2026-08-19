@@ -1528,6 +1528,16 @@ body.no-anim .board.running{animation:none}
 #inni.on,#iscrizioni.on,#innimgr.on{display:flex}
 #iscrizioni .adv-box{width:min(560px,94vw)}
 #innimgr .adv-box{width:min(620px,95vw);max-height:88vh;display:flex;flex-direction:column}
+/* la modalità grafica della Rosa dei Venti: la bussola a tutto schermo */
+#rosaview{position:fixed;inset:0;z-index:130;display:none;flex-direction:column;
+  background:radial-gradient(circle at 50% 30%,#0b1a30,#05070f 78%)}
+#rosaview.on{display:flex}
+.rosa-wrap{flex:1;display:flex;flex-direction:column;min-height:0}
+.rosa-head{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line)}
+.rosa-head h3{font-family:'Oswald',sans-serif;letter-spacing:.1em}
+.rosa-head .btn{margin-left:auto}
+.rosa-svg{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:6px}
+.rosastar{color:var(--accent);font-weight:700;font-family:'Chakra Petch',monospace}
 #iscrizioni canvas{background:#fff;border-radius:10px;padding:8px;display:block;margin:0 auto}
 #inni .adv-box{width:min(560px,94vw)}
 .inno-riga{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;
@@ -2098,6 +2108,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
               <option value="playoff">Campionato + Playoff (stile Serie B / NBA)</option>
               <option value="champions">Formula Champions (campionato svizzero + KO)</option>
               <option value="doppiaelim">Doppia Eliminazione (vincenti + perdenti)</option>
+              <option value="rosa">🧭 La Rosa dei Venti (formula originale · 8–12)</option>
               <option value="kingofcourt">👑 Re del Tavolo (chi vince resta)</option>
               <option value="squadre">🏟 TORNEO A SQUADRE (CdT)</option>
             </select>
@@ -2377,6 +2388,17 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
       </div>
     </div>
     <audio id="innimgr-audio" style="display:none"></audio>
+  </div>
+</div>
+
+<div id="rosaview">
+  <div class="rosa-wrap">
+    <div class="rosa-head">
+      <h3>🧭 La Rosa dei Venti</h3>
+      <span class="small muted" id="rosa-sub"></span>
+      <button class="btn sec mini" onclick="rosaViewClose()">✕ Chiudi</button>
+    </div>
+    <div id="rosa-svg" class="rosa-svg"></div>
   </div>
 </div>
 
@@ -3142,7 +3164,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
    ========================================================= */
 const BYE='__BYE__', LSKEY='subbuteo_tc_state_v1';
 const TB_LABELS={h2h:'Scontri diretti',dr:'Differenza reti',gf:'Gol fatti',gs:'Gol subiti (meno = meglio)',v:'Numero vittorie'};
-const FMT_LABELS={'gironi-ko':'Gironi + Eliminazione Diretta',fasce:'Gironi + Fasce',speculare:'Formula Speculare',avulsa:'Gironi + Classifica Avulsa',multifase:'Gironi + Seconda Fase a Gironi',duecomp:'Due Competizioni + Finali Incrociate',campionato:'Campionato',ko:'Eliminazione Diretta',svizzero:'Sistema Svizzero',playoff:'Campionato + Playoff',champions:'Formula Champions',doppiaelim:'Doppia Eliminazione',kingofcourt:'Re del Tavolo',squadre:'Torneo a Squadre (CdT)'};
+const FMT_LABELS={'gironi-ko':'Gironi + Eliminazione Diretta',fasce:'Gironi + Fasce',speculare:'Formula Speculare',avulsa:'Gironi + Classifica Avulsa',multifase:'Gironi + Seconda Fase a Gironi',duecomp:'Due Competizioni + Finali Incrociate',campionato:'Campionato',ko:'Eliminazione Diretta',svizzero:'Sistema Svizzero',playoff:'Campionato + Playoff',champions:'Formula Champions',doppiaelim:'Doppia Eliminazione',rosa:'La Rosa dei Venti',kingofcourt:'Re del Tavolo',squadre:'Torneo a Squadre (CdT)'};
 
 let S=defaultState();
 
@@ -3163,7 +3185,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='6.3.5';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='6.3.6';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -3763,6 +3785,16 @@ const TR={
   "File non trovato.":"File not found.",
   "Es. Italia":"e.g. Italy",
   "Es. Il canto degli italiani":"e.g. Il canto degli italiani",
+  "🧭 La Rosa dei Venti (formula originale · 8–12)":"🧭 The Compass Rose (original format · 8–12)",
+  "La Rosa dei Venti":"The Compass Rose",
+  "🧭 La Rosa dei Venti":"🧭 The Compass Rose",
+  "Chiudi le Contrade e vara gli Orizzonti":"Close the Contrade and launch the Horizons",
+  "Chiudi gli Orizzonti e gioca le Finali":"Close the Horizons and play the Finals",
+  "Apri la Rosa (bussola)":"Open the Rose (compass)",
+  "Stelle di contrada: vittorie contro i vicini ±1":"Contrada stars: wins against the ±1 neighbours",
+  "LE CONTRADE":"THE CONTRADE",
+  "GLI ORIZZONTI":"THE HORIZONS",
+  "LE FINALI":"THE FINALS",
   "🖥 Secondo schermo":"🖥 Second screen",
   "🖥 Secondo schermo & Replay Goal":"🖥 Second screen & Goal Replay",
   "🖥 Monitor secondo schermo":"🖥 Second-screen monitor",
@@ -7548,6 +7580,7 @@ function startTournament(){
   const f=S.cfg.format;
   if((f==='svizzero'||f==='champions')&&names.length%2!==0){setupError('Gli abbinamenti svizzeri richiedono un numero pari di giocatori.');return;}
   if(f==='doppiaelim'&&names.length<3){setupError('La doppia eliminazione richiede almeno 3 giocatori.');return;}
+  if(f==='rosa'&&(names.length<8||names.length>12)){setupError('La Rosa dei Venti va da 8 a 12 iscritti.');return;}
   if(f==='playoff'&&(S.cfg.poffN||4)>names.length){setupError('Squadre ai playoff superiori al totale dei partecipanti.');return;}
   if(f==='kingofcourt'&&names.length<2){setupError('Servono almeno 2 giocatori.');return;}
   if((f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp'||f==='squadre')&&S.cfg.perGroup>names.length){setupError('Partecipanti per girone superiori al totale.');return;}
@@ -7630,6 +7663,10 @@ function startTournament(){
   }else if(f==='kingofcourt'){
     S.kohDone=false;
     kohStart(names);
+  }else if(f==='rosa'){
+    // le posizioni sulla rosa = l'ordine (già sorteggiato); poi le Contrade
+    S.rosaPos=names.slice();
+    S.groups=[rosaContradeGroup(names)];
   }else if(f==='ko'){
     S.phase='final';
     // col ripescaggio olimpico i terzi posti sono DUE e li assegna il ripescaggio:
@@ -8098,6 +8135,271 @@ function makeFinaliIncrociate(koA,koB){
   ko.rounds.push(rd);
   return ko;
 }
+/* =========================================================
+   LA ROSA DEI VENTI — formula originale
+   ---------------------------------------------------------
+   I giocatori "abitano" un punto della bussola. Prima difendono la contrada
+   (i vicini ±1 e ±2 sulla rosa), poi navigano verso chi ha la loro stessa
+   altitudine in classifica, in due orizzonti paralleli, e chiudono con due
+   spareggi nobili. Tutti a 6 partite, più una settima per il podio.
+   Le posizioni sulla rosa sono l'ordine di S.rosaPos (0-indexed); la
+   "posizione mostrata" è i+1, e nelle contrade è casa chi ha il numero più
+   basso (più a nord-est). Funziona identica da 8 a 12 iscritti.
+   ========================================================= */
+function rosaPos(nome){return (S.rosaPos||[]).indexOf(nome);}
+function rosaN(){return (S.rosaPos||[]).length;}
+/* i due vicini a ±1 sulla rosa (le "stelle di contrada" pesano su questi) */
+function rosaVicini1(nome){
+  const N=rosaN(),i=rosaPos(nome); if(i<0)return [];
+  return [S.rosaPos[(i-1+N)%N],S.rosaPos[(i+1)%N]];
+}
+/* il gruppo Contrade: grafo circolante C_N(1,2), 4 partite a testa */
+function rosaContradeGroup(names){
+  const N=names.length, matches=[], vis=new Set();
+  for(let i=0;i<N;i++)for(const d of [1,2]){
+    const j=(i+d)%N, lo=Math.min(i,j), hi=Math.max(i,j), k=lo+'-'+hi;
+    if(vis.has(k))continue; vis.add(k);
+    matches.push({id:uid(),home:names[lo],away:names[hi],hs:null,as:null,done:false,live:false,
+      round:d,field:null,ref:null,dist:d});   // dist 1 = derby di contrada
+  }
+  return {name:'Le Contrade',teams:names.slice(),matches,rosa:true};
+}
+/* stelle di contrada di un giocatore: vittorie contro i due vicini ±1 */
+function rosaStelle(nome,matches){
+  const vic=new Set(rosaVicini1(nome)); let s=0;
+  matches.forEach(m=>{
+    if(m.hs==null||m.as==null)return;
+    const altro=m.home===nome?m.away:(m.away===nome?m.home:null);
+    if(!altro||!vic.has(altro))return;
+    if((m.home===nome&&m.hs>m.as)||(m.away===nome&&m.as>m.hs))s++;
+  });
+  return s;
+}
+/* classifica delle Contrade: punti, poi STELLE, poi dr, gf, scontro diretto */
+function rosaRank(g){
+  const st=computeStats(g.teams,g.matches,false);
+  g.teams.forEach(n=>st[n].stelle=rosaStelle(n,g.matches));
+  const h2h=(a,b)=>{ // scontro diretto fra i due
+    const s=computeStats([a,b],g.matches.filter(m=>[a,b].includes(m.home)&&[a,b].includes(m.away)),false);
+    return s;
+  };
+  const order=[...g.teams].sort((a,b)=>{
+    if(st[b].pts!==st[a].pts)return st[b].pts-st[a].pts;
+    if(st[b].stelle!==st[a].stelle)return st[b].stelle-st[a].stelle;
+    if(st[b].dr!==st[a].dr)return st[b].dr-st[a].dr;
+    if(st[b].gf!==st[a].gf)return st[b].gf-st[a].gf;
+    const s=h2h(a,b); if(s[b].pts!==s[a].pts)return s[b].pts-s[a].pts;
+    return a.localeCompare(b,'it');   // "il flipper": criterio stabile finale
+  });
+  return {order,stats:st};
+}
+/* split negli orizzonti Aurora/Tramonto secondo il numero di iscritti */
+function rosaSplit(N){ return (N<=8)?4:(N===9||N===10)?5:6; }
+/* accoppiamenti di un orizzonte: un ciclo 2-regolare (2 partite a testa),
+   scelto per evitare il più possibile i replay delle contrade */
+function rosaOrizzonteMatches(seaRank,forbidden){
+  const m=seaRank.length;
+  if(m<2)return [];
+  const zig=[]; let lo=0,hi=m-1,turn=true;   // 1, ultimo, 2, penultimo, …
+  while(lo<=hi){ if(lo===hi){zig.push(lo);break;} zig.push(turn?lo++:hi--); turn=!turn; }
+  const edgesOf=perm=>{const e=[];for(let i=0;i<perm.length;i++)e.push([seaRank[perm[i]],seaRank[perm[(i+1)%perm.length]]]);return e;};
+  const conf=edges=>edges.filter(([a,b])=>forbidden.has([a,b].sort().join(''))).length;
+  let best=zig,bestC=conf(edgesOf(zig));
+  if(bestC>0){
+    const rest=[];for(let i=1;i<m;i++)rest.push(i);
+    const perms=arr=>{ if(arr.length<=1)return[arr]; const o=[]; arr.forEach((x,i)=>{ for(const p of perms(arr.slice(0,i).concat(arr.slice(i+1))))o.push([x,...p]); }); return o; };
+    for(const p of perms(rest)){ const perm=[0,...p],c=conf(edgesOf(perm)); if(c<bestC){bestC=c;best=perm;if(!c)break;} }
+  }
+  // round 1 = archi "a inseguimento" (rank i vs rank m-1-i), il resto round 2
+  const r1=new Set(); for(let i=0;i<Math.floor(m/2);i++)r1.add([seaRank[i],seaRank[m-1-i]].sort().join(''));
+  return edgesOf(best).map(([a,b])=>({a,b,round:r1.has([a,b].sort().join(''))?1:2}));
+}
+function rosaSeaGroup(nome,seaRank,forbidden,sea){
+  const ms=rosaOrizzonteMatches(seaRank,forbidden);
+  const matches=ms.map(e=>{
+    // casa = chi sta più a nord-est (posizione più bassa), come nelle contrade
+    const home=rosaPos(e.a)<=rosaPos(e.b)?e.a:e.b, away=home===e.a?e.b:e.a;
+    return {id:uid(),home,away,hs:null,as:null,done:false,live:false,round:e.round,field:null,ref:null};
+  });
+  return {name:nome,teams:seaRank.slice(),matches,rosaSea:sea};
+}
+/* classifica cumulativa dentro un orizzonte: punti di TUTTO il torneo finora
+   (contrade + orizzonte), col medesimo spareggio a stelle */
+function rosaCumMatches(){
+  const ms=[];
+  if(S.phase1&&S.phase1.groups)S.phase1.groups.forEach(g=>ms.push(...g.matches));
+  (S.groups||[]).forEach(g=>ms.push(...g.matches));
+  return ms;
+}
+function rosaCumRank(seaTeams){
+  const all=rosaCumMatches();
+  const st=computeStats(seaTeams,all.filter(m=>seaTeams.includes(m.home)||seaTeams.includes(m.away)),false);
+  // computeStats conta solo match fra i teams passati; qui servono i punti veri
+  // di ciascuno su TUTTE le sue gare → ricalcolo per singolo giocatore
+  seaTeams.forEach(n=>{
+    let pts=0,gf=0,ga=0,pl=0,w=0,d=0,l=0;
+    all.forEach(m=>{ if(m.hs==null||m.as==null||m.annullata)return;
+      if(m.home===n){pl++;gf+=m.hs;ga+=m.as;if(m.hs>m.as){w++;pts+=S.cfg.ptsW;}else if(m.hs<m.as){l++;pts+=S.cfg.ptsL;}else{d++;pts+=S.cfg.ptsD;}}
+      else if(m.away===n){pl++;gf+=m.as;ga+=m.hs;if(m.as>m.hs){w++;pts+=S.cfg.ptsW;}else if(m.as<m.hs){l++;pts+=S.cfg.ptsL;}else{d++;pts+=S.cfg.ptsD;}}
+    });
+    st[n]={team:n,pts,pl,w,d,l,gf,ga,dr:gf-ga,mm:0,stelle:rosaStelle(n,S.phase1?S.phase1.groups[0].matches:[])};
+  });
+  const order=[...seaTeams].sort((a,b)=>
+    (st[b].pts-st[a].pts)||(st[b].stelle-st[a].stelle)||(st[b].dr-st[a].dr)||(st[b].gf-st[a].gf)||a.localeCompare(b,'it'));
+  return {order,stats:st};
+}
+/* fase 1 → 2: dalle Contrade ai due Orizzonti */
+function rosaBuildOrizzonti(){
+  if(!groupsComplete()){toast('Ci sono ancora contrade da giocare.');return;}
+  const g=S.groups[0], {order}=rosaRank(g), N=order.length, aur=rosaSplit(N);
+  const forbidden=new Set(g.matches.map(m=>[m.home,m.away].sort().join('')));
+  S.phase1={groups:[{name:g.name,teams:g.teams,matches:g.matches,rosa:true}],order};
+  const A=order.slice(0,aur), T=order.slice(aur);
+  S.groups=[ rosaSeaGroup('Orizzonte Aurora',A,forbidden,'aurora'),
+             rosaSeaGroup('Orizzonte Tramonto',T,forbidden,'tramonto') ];
+  S.stage=2;S.phase='groups';
+  assignFields();assignReferees();updateTabs();renderAll();tabTo('gironi');persist();
+  toast('🧭 Orizzonti varati: Aurora '+A.length+' · Tramonto '+T.length);
+}
+/* fase 2 → finali: i due spareggi nobili con i primi 4 dell'Aurora */
+function rosaBuildFinali(){
+  if(!groupsComplete()){toast('Ci sono ancora partite d’orizzonte da giocare.');return;}
+  const aurora=S.groups.find(g=>g.rosaSea==='aurora');
+  const {order}=rosaCumRank(aurora.teams);
+  if(order.length<4){toast('Servono almeno 4 in Aurora per le finali.');return;}
+  const [p1,p2,p3,p4]=order;
+  const mk=(home,away,flag,piaz)=>({id:uid(),home,away,hs:null,as:null,done:false,live:false,round:1,field:null,ref:null,[flag]:true,piaz});
+  const fin={name:'Le Finali',teams:[p1,p2,p3,p4],rosaFinals:true,
+    matches:[ mk(p1,p2,'rosaCoppa','Coppa (1°/2°)'), mk(p3,p4,'rosaBronzo','Bronzo (3°/4°)') ]};
+  S.tiersPhases=[{name:'Le Finali',type:'rr',group:fin,rosaFinals:true}];
+  S.phase='final';
+  assignFields();assignReferees();updateTabs();renderAll();renderFinale();tabTo('finale');persist();
+  toast('🏆 Finali: '+esc(p1)+' vs '+esc(p2)+' per la Coppa');
+}
+/* classifica finale del torneo, per podio e presentazione */
+function rosaFinalStanding(){
+  if(!S.rosaPos)return [];
+  const fin=(S.tiersPhases||[]).find(t=>t.rosaFinals);
+  const aurora=(S.groups||[]).find(g=>g.rosaSea==='aurora');
+  const tram=(S.groups||[]).find(g=>g.rosaSea==='tramonto');
+  if(!aurora)return (S.phase1?S.phase1.order:[]);
+  let A=rosaCumRank(aurora.teams).order.slice();
+  if(fin){
+    const c=fin.group.matches.find(m=>m.rosaCoppa), b=fin.group.matches.find(m=>m.rosaBronzo);
+    if(c&&c.done){const w=c.hs>c.as?c.home:c.away,l=w===c.home?c.away:c.home;A[0]=w;A[1]=l;}
+    if(b&&b.done){const w=b.hs>b.as?b.home:b.away,l=w===b.home?b.away:b.home;A[2]=w;A[3]=l;}
+  }
+  const T=tram?rosaCumRank(tram.teams).order:[];
+  return A.concat(T);
+}
+
+/* =========================================================
+   LA ROSA DEI VENTI — la modalità grafica (la bussola)
+   Ogni iscritto è un punto della rosa dei venti. In fase Contrade si vede la
+   ragnatela dei vicini (±1 dorato = derby, ±2 tenue). Negli Orizzonti la rosa
+   si tinge nei due mari, Aurora e Tramonto. Nelle Finali si accende il podio.
+   ========================================================= */
+function rosaSeatXY(i,N,R,cx,cy){
+  const a=(-90+i*360/N)*Math.PI/180;   // 0 = Nord (in alto), in senso orario
+  return [cx+R*Math.cos(a), cy+R*Math.sin(a)];
+}
+function rosaCrestSVG(nome,x,y,r){
+  const u=S.logos&&S.logos[nome];
+  if(u)return `<image href="${u}" x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}" style="border-radius:50%" clip-path="circle(${r}px at ${x}px ${y}px)"/>`;
+  const ini=String(nome||'?').trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.28)"/>`
+    +`<text x="${x}" y="${y+r*0.34}" text-anchor="middle" font-size="${r*0.9}" fill="#dfe8ff" font-family="Oswald,sans-serif">${esc(ini)}</text>`;
+}
+function rosaViewOpen(){ $('#rosaview').classList.add('on'); rosaRender(); }
+function rosaViewClose(){ $('#rosaview').classList.remove('on'); }
+function rosaRender(){
+  const host=$('#rosa-svg'); if(!host)return;
+  if(S.cfg.format!=='rosa'||!S.rosaPos||!S.rosaPos.length){host.innerHTML='';return;}
+  const N=S.rosaPos.length, cx=500, cy=520, R=372;
+  const stage=(S.stage||1);
+  const fase=S.phase==='final'?'finali':(stage>=2?'orizzonti':'contrade');
+  const contrade=(S.groups.find(g=>g.rosa))||(S.phase1&&S.phase1.groups&&S.phase1.groups[0])||null;
+  // info per giocatore
+  const info={};
+  S.rosaPos.forEach((n,i)=>info[n]={pos:i,pts:0,stelle:contrade?rosaStelle(n,contrade.matches):0,sea:null,rank:null});
+  if(contrade){const rr=rosaRank(contrade);rr.order.forEach((n,r)=>{info[n].pts=rr.stats[n].pts;info[n].cRank=r;});}
+  if(stage>=2){
+    const aur=S.groups.find(g=>g.rosaSea==='aurora'),tra=S.groups.find(g=>g.rosaSea==='tramonto');
+    if(aur)aur.teams.forEach(n=>info[n].sea='aurora');
+    if(tra)tra.teams.forEach(n=>info[n].sea='tramonto');
+    const fs=rosaFinalStanding();fs.forEach((n,r)=>{if(info[n])info[n].rank=r;});
+  }
+  const finalisti=new Set();
+  const fin=(S.tiersPhases||[]).find(t=>t.rosaFinals);
+  if(fin)fin.group.teams.forEach(n=>finalisti.add(n));
+
+  const COL={aurora:'#f5c451',tramonto:'#5aa0e0'};
+  let edges='', star='', seats='';
+  // --- ragnatela / archi ---
+  if(fase==='contrade'&&contrade){
+    contrade.matches.forEach(m=>{
+      const [x1,y1]=rosaSeatXY(info[m.home].pos,N,R,cx,cy);
+      const [x2,y2]=rosaSeatXY(info[m.away].pos,N,R,cx,cy);
+      const derby=m.dist===1;
+      edges+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${derby?'rgba(245,196,81,.55)':'rgba(255,255,255,.10)'}" stroke-width="${derby?3:1.4}"/>`;
+    });
+  }else{
+    // orizzonti/finali: archi tenui delle contrade sotto
+    if(contrade)contrade.matches.forEach(m=>{
+      const [x1,y1]=rosaSeatXY(info[m.home].pos,N,R,cx,cy);
+      const [x2,y2]=rosaSeatXY(info[m.away].pos,N,R,cx,cy);
+      edges+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,.05)" stroke-width="1"/>`;
+    });
+    // archi degli orizzonti nei colori dei due mari
+    S.groups.forEach(g=>{if(!g.rosaSea)return;g.matches.forEach(m=>{
+      const [x1,y1]=rosaSeatXY(info[m.home].pos,N,R,cx,cy);
+      const [x2,y2]=rosaSeatXY(info[m.away].pos,N,R,cx,cy);
+      const c=COL[g.rosaSea];
+      edges+=`<path d="M${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" fill="none" stroke="${c}" stroke-width="2.4" opacity="${m.done?.85:.4}" stroke-dasharray="${m.done?'':'7 6'}"/>`;
+    });});
+    // finali: le due sfide nobili, in evidenza
+    if(fin)fin.group.matches.forEach(m=>{
+      const [x1,y1]=rosaSeatXY(info[m.home].pos,N,R,cx,cy);
+      const [x2,y2]=rosaSeatXY(info[m.away].pos,N,R,cx,cy);
+      const oro=m.rosaCoppa;
+      edges+=`<path d="M${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}" fill="none" stroke="${oro?'#ffd54a':'#d08a4e'}" stroke-width="5" opacity=".95"/>`;
+      const mx=(x1+x2)/2, my=(y1+y2)/2;
+      edges+=`<text x="${(mx+cx)/2}" y="${(my+cy)/2}" text-anchor="middle" font-size="34">${oro?'🏆':'🥉'}</text>`;
+    });
+  }
+  // --- rosa dei venti al centro ---
+  const rs=132;
+  const pts8=[];
+  for(let k=0;k<8;k++){const a=(-90+k*45)*Math.PI/180;const rr=(k%2?rs*0.42:rs);pts8.push([cx+rr*Math.cos(a),cy+rr*Math.sin(a)]);}
+  star=`<circle cx="${cx}" cy="${cy}" r="${rs+8}" fill="rgba(8,16,34,.55)" stroke="rgba(245,196,81,.25)"/>`
+    +`<polygon points="${pts8.map(p=>p.join(',')).join(' ')}" fill="rgba(245,196,81,.14)" stroke="rgba(245,196,81,.5)" stroke-width="1.5"/>`
+    +`<text x="${cx}" y="${cy-rs-16}" text-anchor="middle" font-size="26" fill="#f5c451" font-family="Oswald,sans-serif">N</text>`
+    +`<text x="${cx}" y="${cy+rs+34}" text-anchor="middle" font-size="26" fill="#8ba0c0" font-family="Oswald,sans-serif">S</text>`
+    +`<text x="${cx+rs+22}" y="${cy+8}" text-anchor="middle" font-size="26" fill="#8ba0c0" font-family="Oswald,sans-serif">E</text>`
+    +`<text x="${cx-rs-22}" y="${cy+8}" text-anchor="middle" font-size="26" fill="#8ba0c0" font-family="Oswald,sans-serif">O</text>`
+    +`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="20" fill="#dfe8ff" font-family="Oswald,sans-serif" style="letter-spacing:.14em">${esc((S.cfg.name||'ROSA DEI VENTI').toUpperCase()).slice(0,22)}</text>`
+    +`<text x="${cx}" y="${cy+24}" text-anchor="middle" font-size="15" fill="#8ba0c0" font-family="Oswald,sans-serif" style="letter-spacing:.2em">${L(fase==='contrade'?'LE CONTRADE':fase==='orizzonti'?'GLI ORIZZONTI':'LE FINALI').toUpperCase()}</text>`;
+  // --- i giocatori sulle posizioni ---
+  S.rosaPos.forEach((n,i)=>{
+    const [x,y]=rosaSeatXY(i,N,R,cx,cy);
+    const it=info[n], sea=it.sea;
+    const bord = fase==='finali'&&finalisti.has(n)?'#ffd54a': sea?COL[sea]:'rgba(255,255,255,.22)';
+    const glow = fase==='finali'&&finalisti.has(n)?'filter:drop-shadow(0 0 10px rgba(255,213,74,.8))':'';
+    const podio = it.rank!=null&&it.rank<3?['🥇','🥈','🥉'][it.rank]:'';
+    seats+=`<g style="${glow}">
+      <circle cx="${x}" cy="${y}" r="46" fill="rgba(10,20,42,.92)" stroke="${bord}" stroke-width="${finalisti.has(n)&&fase==='finali'?4:2.5}"/>
+      ${rosaCrestSVG(n,x,y-8,28)}
+      <circle cx="${x-34}" cy="${y-34}" r="15" fill="${sea?COL[sea]:'#1a2540'}" stroke="rgba(0,0,0,.4)"/>
+      <text x="${x-34}" y="${y-29}" text-anchor="middle" font-size="16" fill="${sea?'#0a1020':'#dfe8ff'}" font-family="Chakra Petch,monospace" font-weight="700">${i+1}</text>
+      <text x="${x}" y="${y+34}" text-anchor="middle" font-size="17" fill="#fff" font-family="Oswald,sans-serif" font-weight="600">${esc(n.length>12?n.slice(0,11)+'…':n)}</text>
+      <text x="${x}" y="${y+52}" text-anchor="middle" font-size="14" fill="#f5c451" font-family="Chakra Petch,monospace">${it.pts} pt · ${'★'.repeat(it.stelle)||'☆'}</text>
+      ${podio?`<text x="${x+34}" y="${y-24}" text-anchor="middle" font-size="26">${podio}</text>`:''}
+    </g>`;
+  });
+  host.innerHTML=`<svg viewBox="0 0 1000 1040" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <defs></defs>${edges}${star}${seats}</svg>`;
+}
+
 function buildPhase2(){
   if(!groupsComplete()){toast('Ci sono ancora partite da giocare nei gironi.');return;}
   const ord=avulsaOrder();
@@ -8141,6 +8443,8 @@ function goToFinal(){
   if(!groupsComplete()){toast('Ci sono ancora partite da giocare nei gironi.');return;}
   // formula a più fasi: la prima chiusura porta ai gironi della seconda fase
   if(S.cfg.format==='multifase'&&(S.stage||1)<2)return buildPhase2();
+  // Rosa dei Venti: Contrade → Orizzonti (fase 1→2) → Finali (fase 2→finali)
+  if(S.cfg.format==='rosa')return (S.stage||1)<2?rosaBuildOrizzonti():rosaBuildFinali();
   if(S.cfg.format==='gironi-ko'){
     const ranks=Array.from({length:S.cfg.qualify},(_,i)=>i+1);
     let seeds=qualifiersByRanks(ranks);
@@ -8250,6 +8554,11 @@ function checkChampion(){
   else if(f==='playoff'&&S.tiersPhases.length){
     const p=S.tiersPhases.find(t=>t.title)||S.tiersPhases[0];
     champ=p&&p.ko?p.ko.champion:null;
+  }
+  else if(f==='rosa'){
+    const fin=(S.tiersPhases||[]).find(t=>t.rosaFinals);
+    const c=fin&&fin.group.matches.find(m=>m.rosaCoppa);
+    if(c&&c.done)champ=c.hs>c.as?c.home:c.away;
   }
   else if(f==='kingofcourt'&&S.groups[0]&&S.groups[0].koh){
     const w=kohWins(),target=S.cfg.kohTarget||0;
@@ -8420,7 +8729,8 @@ function zonesLegendHTML(){
     <span class="zl-down">■ ${L('Retrocede')}</span></div>`;
 }
 function standingsHTML(g,{qual=0}={}){
-  const{order,stats}=rankTeams(g.teams,g.matches);
+  const rosaC=!!g.rosa, rosaS=!!g.rosaSea, rosaStar=rosaC||rosaS;
+  const{order,stats}=rosaC?rosaRank(g):rosaS?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
   const anyLive=g.matches.some(m=>m.live);
   // ripescaggi: evidenzia chi al momento rientra tra le "migliori" della posizione successiva
   let bestExtra=null;
@@ -8430,7 +8740,7 @@ function standingsHTML(g,{qual=0}={}){
   // classifica sembra sbagliata a chi conta le vittorie
   const mm=mmAttivo()&&g.swiss;
   let h=`<table class="standings"><thead><tr>
-    <th>${L('#')}</th><th class="l">${L('Squadra')}</th>${mm?`<th title="${L('Punteggio di partenza secondo la fascia di forza')}">${L('MM')}</th>`:''}<th>${L('Pt')}</th><th>${L('G')}</th><th>${L('V')}</th><th>${L('N')}</th><th>${L('P')}</th><th>${L('GF')}</th><th>${L('GS')}</th><th>${L('DR')}</th>
+    <th>${L('#')}</th><th class="l">${L('Squadra')}</th>${mm?`<th title="${L('Punteggio di partenza secondo la fascia di forza')}">${L('MM')}</th>`:''}<th>${L('Pt')}</th>${rosaStar?`<th title="${L('Stelle di contrada: vittorie contro i vicini ±1')}">★</th>`:''}<th>${L('G')}</th><th>${L('V')}</th><th>${L('N')}</th><th>${L('P')}</th><th>${L('GF')}</th><th>${L('GS')}</th><th>${L('DR')}</th>
   </tr></thead><tbody>`;
   order.forEach((n,i)=>{
     const s=stats[n];
@@ -8440,7 +8750,7 @@ function standingsHTML(g,{qual=0}={}){
     const liveMark=g.matches.some(m=>m.live&&(m.home===n||m.away===n))?'<span class="liveg">● LIVE</span>':'';
     const zsym=(zn&&S.cfg.zoneSym!==false)?`<span class="zsym" title="${esc(L(ZONE_NOME[zn]||''))}">${ZONE_SIMB[zn]||''}</span>`:'';
     h+=`<tr class="${zn?'z-'+zn:''}"><td class="pos">${i+1}${zsym}</td><td class="l">${logoImg(n)}<span class="tn-wrap">${esc(n)}${star}${liveMark}${playersSub(n)}</span></td>
-      ${mm?`<td class="mmp">${s.mm||0}</td>`:''}<td class="pts">${s.pts}</td><td>${s.pl}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
+      ${mm?`<td class="mmp">${s.mm||0}</td>`:''}<td class="pts">${s.pts}</td>${rosaStar?`<td class="rosastar">${s.stelle||0}</td>`:''}<td>${s.pl}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
       <td>${s.gf}</td><td>${s.ga}</td><td>${s.dr>0?'+':''}${s.dr}</td></tr>`;
   });
   h+='</tbody></table>';
@@ -8516,6 +8826,11 @@ function renderGironiActions(){
   if(f==='playoff'&&S.phase==='groups'){
     h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ Chiudi la stagione e genera Playoff${(S.cfg.poutN||0)>=2?' + Playout':''}</button>`;
   }
+  if(f==='rosa'&&S.phase==='groups'){
+    const fase1=(S.stage||1)<2;
+    h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ ${fase1?L('Chiudi le Contrade e vara gli Orizzonti'):L('Chiudi gli Orizzonti e gioca le Finali')}</button>`;
+  }
+  if(f==='rosa')h+=`<button class="btn sec" onclick="rosaViewOpen()">🧭 ${L('Apri la Rosa (bussola)')}</button>`;
   if(f==='champions'&&S.phase==='groups'&&S.swissDone){
     h+=`<button class="btn" onclick="goToFinal()">➜ Genera la Fase a Eliminazione</button>`;
   }
@@ -8540,6 +8855,7 @@ function refreshStandingsEverywhere(){
   });
   renderClassifica();
   renderCronache();
+  if(S.cfg.format==='rosa'&&$('#rosaview')&&$('#rosaview').classList.contains('on'))rosaRender();
   kohMaybeAdvance();
   renderGironiActions();
 }
