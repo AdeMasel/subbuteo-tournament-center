@@ -1523,10 +1523,11 @@ body.no-anim .board.running{animation:none}
   flex-direction:column;align-items:center;justify-content:center;gap:6px}
 #sim-quadro .sim-t{font-family:'Oswald',sans-serif;font-size:1.3rem;letter-spacing:.06em;text-transform:uppercase}
 #sim-quadro .sim-s{font-size:.78rem;color:var(--muted)}
-#inni,#iscrizioni{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;
+#inni,#iscrizioni,#innimgr{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;
   background:rgba(4,7,18,.9);backdrop-filter:blur(8px)}
-#inni.on,#iscrizioni.on{display:flex}
+#inni.on,#iscrizioni.on,#innimgr.on{display:flex}
 #iscrizioni .adv-box{width:min(560px,94vw)}
+#innimgr .adv-box{width:min(620px,95vw);max-height:88vh;display:flex;flex-direction:column}
 #iscrizioni canvas{background:#fff;border-radius:10px;padding:8px;display:block;margin:0 auto}
 #inni .adv-box{width:min(560px,94vw)}
 .inno-riga{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;
@@ -2189,6 +2190,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
           <label class="ck"><input type="checkbox" id="s-refs" onchange="if(!licGate('refs')){this.checked=false;return;}composeChanged()"> Assegna un arbitro a ogni partita</label>
           <label class="ck"><input type="checkbox" id="s-inni" onchange="setupFmtChanged()"> 🎺 Inni nazionali: nelle partite fra nazionali offri di suonarli prima del via</label>
           <label class="ck" id="w-innichiedi" style="display:none"><input type="checkbox" id="s-innichiedi" checked> …e chiedimelo all’avvio di ogni incontro fra nazionali</label>
+          <div style="margin:2px 0 2px 26px"><button type="button" class="btn sec mini" onclick="openInniMgr()">🎺 Gestisci / aggiungi inni</button></div>
           <label class="ck"><input type="checkbox" id="s-showplayers"> Mostra i giocatori sotto il nome squadra</label>
           <label class="ck"><input type="checkbox" id="o-zonesym" checked onchange="S.cfg.zoneSym=this.checked;refreshStandingsEverywhere();persist()" title="Utile a chi non distingue il verde dal rosso"> Simbolo accanto al colore nelle zone di classifica (▲ ◆ ▽ ▼)</label>
         </div>
@@ -2343,6 +2345,38 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
         <button class="btn" id="inni-azione" onclick="inniProssimo()">Avanti</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="innimgr">
+  <div class="adv-box">
+    <div class="adv-head">
+      <h3>🎺 Gestione inni nazionali</h3><span></span>
+      <button class="btn sec mini" onclick="chiudiInniMgr()">✕ Chiudi</button>
+    </div>
+    <div style="padding:14px 20px;overflow:auto">
+      <p class="small muted" style="margin-top:0">Aggiungi gli inni delle nazionali che ti servono — bastano quelle del tuo torneo. Vengono riconosciute dal nome della squadra e suonate prima delle partite fra nazionali. <b>Non serve l’archivio completo.</b></p>
+      <div class="card" style="padding:14px;margin:6px 0 16px">
+        <div class="row" style="gap:10px;align-items:flex-end;flex-wrap:wrap">
+          <div style="flex:1;min-width:150px"><label class="f">Nazionale</label>
+            <input type="text" id="inno-paese" placeholder="Es. Italia" oninput="document.getElementById('inno-add').disabled=!(this.value.trim()&&inniMgrFile)"></div>
+          <div style="flex:1;min-width:150px"><label class="f">Titolo (facoltativo)</label>
+            <input type="text" id="inno-titolo" placeholder="Es. Il canto degli italiani"></div>
+        </div>
+        <div class="row" style="gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap">
+          <button class="btn sec mini" onclick="document.getElementById('inno-in').click()">📂 Scegli file audio…</button>
+          <span class="small muted" id="inno-file">nessun file scelto</span>
+          <button class="btn mini" id="inno-add" onclick="inniMgrAggiungi()" style="margin-left:auto" disabled>➕ Aggiungi</button>
+        </div>
+      </div>
+      <h3 class="subt" style="margin-bottom:8px">I tuoi inni</h3>
+      <div id="innimgr-mie"></div>
+      <div id="innimgr-arc-wrap" style="margin-top:18px">
+        <h3 class="subt" style="margin-bottom:8px">Archivio integrato</h3>
+        <div id="innimgr-arc"></div>
+      </div>
+    </div>
+    <audio id="innimgr-audio" style="display:none"></audio>
   </div>
 </div>
 
@@ -3092,6 +3126,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 <input type="file" id="file-in" accept=".json" style="display:none">
 <input type="file" id="img-in" accept="image/*" style="display:none">
 <input type="file" id="music-in" accept="audio/*" style="display:none">
+<input type="file" id="inno-in" accept="audio/*" style="display:none">
 <div id="miniplayer" style="display:none">
   <button onclick="musicToggle()" id="mp-play" title="Play/Pausa">▶</button>
   <button onclick="musicNext()" title="Traccia successiva">⏭</button>
@@ -3128,7 +3163,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='6.3.4';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='6.3.5';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -3702,6 +3737,32 @@ const TR={
   "C’è una nuova versione completa da scaricare dal sito.":"A new full version is available to download from the site.",
   "Controllo non riuscito (rete?).":"Check failed (network?).",
   "Controllo in corso…":"Checking…",
+  "🎺 Gestisci / aggiungi inni":"🎺 Manage / add anthems",
+  "🎺 Gestione inni nazionali":"🎺 Manage national anthems",
+  "Aggiungi gli inni delle nazionali che ti servono — bastano quelle del tuo torneo. Vengono riconosciute dal nome della squadra e suonate prima delle partite fra nazionali.":"Add the anthems of the national teams you need — just the ones in your tournament. They are matched by team name and played before matches between national teams.",
+  "Non serve l’archivio completo.":"The full archive is not required.",
+  "Nazionale":"National team",
+  "Titolo (facoltativo)":"Title (optional)",
+  "📂 Scegli file audio…":"📂 Choose audio file…",
+  "nessun file scelto":"no file chosen",
+  "➕ Aggiungi":"➕ Add",
+  "I tuoi inni":"Your anthems",
+  "Archivio integrato":"Built-in archive",
+  "Controllo l’archivio…":"Checking the archive…",
+  "Ancora nessun inno aggiunto.":"No anthems added yet.",
+  "Ascolta":"Play",
+  "Rimuovi":"Remove",
+  "Archivio completo non presente. I 153 inni si scaricano a parte dal sito, oppure aggiungi qui sopra solo quelli che ti servono.":"The full archive is not installed. The 153 anthems can be downloaded separately from the site, or just add the ones you need above.",
+  "Cerca una nazionale…":"Search a national team…",
+  "inni disponibili":"anthems available",
+  "…affina la ricerca per vedere gli altri.":"…refine the search to see the rest.",
+  "Scegli prima un file audio.":"Choose an audio file first.",
+  "Scrivi il nome della nazionale.":"Type the national team name.",
+  "Inno aggiunto:":"Anthem added:",
+  "Impossibile salvare l’inno.":"Could not save the anthem.",
+  "File non trovato.":"File not found.",
+  "Es. Italia":"e.g. Italy",
+  "Es. Il canto degli italiani":"e.g. Il canto degli italiani",
   "🖥 Secondo schermo":"🖥 Second screen",
   "🖥 Secondo schermo & Replay Goal":"🖥 Second screen & Goal Replay",
   "🖥 Monitor secondo schermo":"🖥 Second-screen monitor",
@@ -4470,6 +4531,34 @@ function applyMusicPref(){musicHydrateUrls();updateMiniPlayer();}
    ========================================================= */
 let inniStato={caricando:false, audio:null, coda:[], i:0};
 
+/* --- inni personalizzati ---------------------------------------------------
+   Aggiunti dall'utente dentro l'app, uno per nazionale, e tenuti fra un torneo
+   e l'altro (indice in localStorage, file audio in IndexedDB come la musica
+   caricata). Così bastano gli inni che servono davvero: chi ha otto nazionali
+   ne aggiunge otto, senza scaricare l'archivio da centinaia di MB né rinominare
+   file a mano. Un inno personalizzato ha la precedenza su quello d'archivio. */
+const INNI_CUSTOM_KEY='subbuteo_inni_custom_v1';
+let INNI_CUSTOM=[];
+function inniCustomCarica(){
+  try{ INNI_CUSTOM=JSON.parse(localStorage.getItem(INNI_CUSTOM_KEY)||'[]'); }catch(e){ INNI_CUSTOM=[]; }
+  if(!Array.isArray(INNI_CUSTOM)) INNI_CUSTOM=[];
+}
+function inniCustomSalva(){ try{ localStorage.setItem(INNI_CUSTOM_KEY,JSON.stringify(INNI_CUSTOM)); }catch(e){} }
+function innoCustomDi(nome){
+  if(!INNI_CUSTOM.length)return null;
+  const pulito=String(nome||'').replace(/\s*\(\d+\)\s*$/,'').trim();
+  const k=(typeof figNorm==='function')?figNorm(pulito):pulito.toLowerCase();
+  return INNI_CUSTOM.find(x=>x.k===k)||null;
+}
+/** L'indirizzo audio di una traccia: un object URL dal blob in IndexedDB per
+    gli inni personalizzati, il file nella cartella «inni/» per l'archivio. */
+function inniUrl(t){
+  if(!t)return Promise.resolve(null);
+  if(t.id)return idbGet(t.id).then(b=>b?URL.createObjectURL(b):null);
+  return Promise.resolve('inni/'+encodeURIComponent(t.f));
+}
+inniCustomCarica();
+
 function inniDisponibili(){return !!(window.INNI&&window.INNI.tracks&&window.INNI.tracks.length);}
 
 /** Carica il manifest la prima volta che serve. */
@@ -4492,6 +4581,8 @@ function inniCarica(){
     automaticamente alla squadra che porta quel nome. Resta il vecchio abbinamento
     per sigla ISO, per i manifest della 5.5. */
 function innoDi(nome){
+  // un inno personalizzato vince sempre, e funziona anche senza l'archivio
+  const _c=innoCustomDi(nome); if(_c)return _c;
   if(!inniDisponibili())return null;
   const T=window.INNI.tracks;
   const pulito=String(nome||'').replace(/\s*\(\d+\)\s*$/,'').trim();
@@ -4515,25 +4606,29 @@ function fraNazionali(a,b){
 }
 
 function apriInni(a,b){
-  inniCarica().then(ok=>{
-    if(!ok)return;
+  // l'archivio serve solo se ALMENO una delle due non ha un inno personalizzato;
+  // se le hai aggiunte entrambe a mano, funziona anche senza i 393 MB
+  const serveArchivio=!innoCustomDi(a)||!innoCustomDi(b);
+  (serveArchivio?inniCarica():Promise.resolve(true)).then(()=>{
     const ia=innoDi(a),ib=innoDi(b);
     if(!ia||!ib){toast(L('Manca l’inno di una delle due nazionali.'));return;}
     // ospite prima, casa dopo: è l'ordine delle competizioni vere
-    inniStato.coda=[{sq:b,t:ib},{sq:a,t:ia}];
-    inniStato.i=-1;
-    $('#inni-box').innerHTML=inniStato.coda.map((x,k)=>`
-      <div class="inno-riga" id="inno-${k}">
-        <span class="inno-n">${k+1}</span>
-        <div style="flex:1;min-width:0">
-          <div class="inno-sq">${logoImg(x.sq,'inno-logo')}${esc(x.sq)}</div>
-          <div class="inno-tit">${esc(x.t.inno)}</div>
-          <div class="inno-lic">${esc(x.t.lic)}${x.t.by?' · '+esc(x.t.by):''}</div>
-        </div>
-        <span class="inno-stato" id="inno-st-${k}">in attesa</span>
-      </div>`).join('');
-    $('#inni').classList.add('on');
-    inniProssimo();
+    Promise.all([inniUrl(ib),inniUrl(ia)]).then(([ub,ua])=>{
+      inniStato.coda=[{sq:b,t:ib,url:ub},{sq:a,t:ia,url:ua}];
+      inniStato.i=-1;
+      $('#inni-box').innerHTML=inniStato.coda.map((x,k)=>`
+        <div class="inno-riga" id="inno-${k}">
+          <span class="inno-n">${k+1}</span>
+          <div style="flex:1;min-width:0">
+            <div class="inno-sq">${logoImg(x.sq,'inno-logo')}${esc(x.sq)}</div>
+            <div class="inno-tit">${esc(x.t.inno||'')}</div>
+            <div class="inno-lic">${esc(x.t.lic||'')}${x.t.by?' · '+esc(x.t.by):''}</div>
+          </div>
+          <span class="inno-stato" id="inno-st-${k}">in attesa</span>
+        </div>`).join('');
+      $('#inni').classList.add('on');
+      inniProssimo();
+    });
   });
 }
 function inniProssimo(){
@@ -4552,10 +4647,10 @@ function inniProssimo(){
   });
   const st=$('#inno-st-'+inniStato.i);if(st)st.textContent=L('in esecuzione…');
   $('#inni-azione').textContent=inniStato.i<inniStato.coda.length-1?L('Passa al secondo inno'):L('Termina');
-  const au=new Audio('inni/'+encodeURIComponent(x.t.f));
+  const au=new Audio(x.url||('inni/'+encodeURIComponent(x.t.f)));
   au.volume=1;
   au.onended=()=>inniProssimo();
-  au.onerror=()=>{toast(L('File dell’inno non leggibile: ')+x.t.f);inniProssimo();};
+  au.onerror=()=>{toast(L('File dell’inno non leggibile: ')+(x.sq||x.t.f||''));inniProssimo();};
   au.play().catch(()=>toast(L('Il browser ha bloccato la riproduzione: tocca di nuovo il pulsante.')));
   inniStato.audio=au;
   // la musica di sottofondo si abbassa quasi a zero: un inno sopra una base
@@ -4571,6 +4666,102 @@ function chiudiInni(){
   $('#inni').classList.remove('on');
   MUSIC.duck=1;musicApplyVol();
 }
+
+/* --- gestore degli inni: aggiungere, ascoltare, rimuovere -------------------
+   Aggiungere un inno è come aggiungere un brano: si sceglie un file e si scrive
+   la nazionale. Niente nomi di file da rispettare, nessun manifesto da toccare.
+   L'archivio integrato (se presente) resta consultabile qui sotto. */
+let inniMgrFile=null;
+function openInniMgr(){
+  $('#innimgr').classList.add('on');
+  renderInniMgrMie();
+  const wrap=$('#innimgr-arc-wrap'); if(wrap)wrap.querySelector('#innimgr-arc').innerHTML='<p class="small muted">'+L('Controllo l’archivio…')+'</p>';
+  inniCarica().then(()=>renderInniMgrArc()).catch(()=>renderInniMgrArc());
+}
+function chiudiInniMgr(){
+  const a=$('#innimgr-audio'); if(a){try{a.pause();}catch(e){}}
+  $('#innimgr').classList.remove('on');
+}
+function renderInniMgrMie(){
+  const box=$('#innimgr-mie'); if(!box)return;
+  if(!INNI_CUSTOM.length){ box.innerHTML='<p class="small muted">'+L('Ancora nessun inno aggiunto.')+'</p>'; return; }
+  box.innerHTML=INNI_CUSTOM.map(x=>`
+    <div class="inno-riga">
+      <div style="flex:1;min-width:0">
+        <div class="inno-sq">${logoImg(x.paese,'inno-logo')}${esc(x.paese)}</div>
+        ${x.inno?`<div class="inno-tit">${esc(x.inno)}</div>`:''}
+      </div>
+      <button class="btn-inno" onclick="inniMgrAscolta('${x.id}')" title="${L('Ascolta')}">▶</button>
+      <button class="btn-inno" onclick="inniMgrRimuovi('${x.id}')" title="${L('Rimuovi')}">✕</button>
+    </div>`).join('');
+}
+function renderInniMgrArc(){
+  const wrap=$('#innimgr-arc-wrap'); if(!wrap)return;
+  const box=$('#innimgr-arc');
+  if(!inniDisponibili()){
+    box.innerHTML='<p class="small muted">'+L('Archivio completo non presente. I 153 inni si scaricano a parte dal sito, oppure aggiungi qui sopra solo quelli che ti servono.')+'</p>';
+    return;
+  }
+  box.innerHTML='<input type="text" id="innimgr-cerca" placeholder="'+L('Cerca una nazionale…')+'" oninput="renderInniMgrArcLista()" style="margin-bottom:8px">'
+    +'<div id="innimgr-arc-lista"></div>';
+  renderInniMgrArcLista();
+}
+function renderInniMgrArcLista(){
+  const box=$('#innimgr-arc-lista'); if(!box)return;
+  const q=($('#innimgr-cerca')||{}).value||'';
+  const T=window.INNI.tracks;
+  const filt=!q?T:T.filter(t=>String(t.paese||'').toLowerCase().includes(q.toLowerCase())||(t.k||'').includes(figNorm(q)));
+  box.innerHTML='<p class="small muted" style="margin:2px 0 8px">'+T.length+' '+L('inni disponibili')+'</p>'
+    +filt.slice(0,60).map(t=>`
+      <div class="inno-riga">
+        <div style="flex:1;min-width:0"><div class="inno-sq">${logoImg(t.paese,'inno-logo')}${esc(t.paese)}</div>
+          <div class="inno-tit">${esc(t.inno||'')}</div></div>
+        <button class="btn-inno" onclick="inniMgrAscoltaArc('${encodeURIComponent(t.f)}')" title="${L('Ascolta')}">▶</button>
+      </div>`).join('')
+    +(filt.length>60?'<p class="small muted">'+L('…affina la ricerca per vedere gli altri.')+'</p>':'');
+}
+function inniMgrAggiungi(){
+  const paese=($('#inno-paese').value||'').trim();
+  const titolo=($('#inno-titolo').value||'').trim();
+  if(!inniMgrFile){ toast(L('Scegli prima un file audio.')); return; }
+  if(!paese){ toast(L('Scrivi il nome della nazionale.')); return; }
+  const k=figNorm(paese), id='inno_'+uid(), file=inniMgrFile;
+  idbPut(id,file).then(()=>{
+    // se c'era già un inno per quella nazionale, lo sostituisce
+    const vecchio=INNI_CUSTOM.find(x=>x.k===k);
+    if(vecchio){ idbDel(vecchio.id); INNI_CUSTOM=INNI_CUSTOM.filter(x=>x!==vecchio); }
+    INNI_CUSTOM.push({id,paese,inno:titolo,k});
+    INNI_CUSTOM.sort((a,b)=>String(a.paese).localeCompare(String(b.paese)));
+    inniCustomSalva();
+    inniMgrFile=null;
+    $('#inno-file').textContent=L('nessun file scelto');
+    $('#inno-paese').value=''; $('#inno-titolo').value=''; $('#inno-add').disabled=true;
+    renderInniMgrMie();
+    toast('🎺 '+L('Inno aggiunto:')+' '+paese);
+  }).catch(()=>toast(L('Impossibile salvare l’inno.')));
+}
+function inniMgrRimuovi(id){
+  const x=INNI_CUSTOM.find(y=>y.id===id); if(!x)return;
+  idbDel(id); INNI_CUSTOM=INNI_CUSTOM.filter(y=>y.id!==id); inniCustomSalva(); renderInniMgrMie();
+}
+function inniMgrAscolta(id){
+  const a=$('#innimgr-audio'); if(!a)return;
+  idbGet(id).then(b=>{ if(!b){toast(L('File non trovato.'));return;} a.src=URL.createObjectURL(b); a.play().catch(()=>{}); });
+}
+function inniMgrAscoltaArc(fenc){
+  const a=$('#innimgr-audio'); if(!a)return;
+  a.src='inni/'+fenc; a.play().catch(()=>toast(L('File dell’inno non leggibile: ')+decodeURIComponent(fenc)));
+}
+if(document.getElementById('inno-in')) document.getElementById('inno-in').addEventListener('change',e=>{
+  const f=e.target.files[0]; e.target.value='';
+  if(!f)return;
+  inniMgrFile=f;
+  $('#inno-file').textContent=f.name;
+  const base=f.name.replace(/\.[^.]+$/,''), parti=base.split('-');
+  const p=$('#inno-paese'); if(p&&!p.value.trim())p.value=parti[0].trim();
+  const t=$('#inno-titolo'); if(t&&!t.value.trim()&&parti.length>1)t.value=parti.slice(1).join(' ').trim();
+  $('#inno-add').disabled=!($('#inno-paese').value.trim());
+});
 
 /* --- libreria musicale integrata (manifest musiche.js + cartella musica/) --- */
 let musicLibLoading=false,mlPreview=null;

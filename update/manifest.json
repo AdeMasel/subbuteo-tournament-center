@@ -1,7 +1,7 @@
 {
- "content": "6.3.4",
+ "content": "6.3.5",
  "minShell": "6.3.4",
- "notes": "Prima versione con aggiornamento automatico del contenuto.",
+ "notes": "Gestione inni nazionali: aggiungi gli inni dall'app, senza l'archivio completo.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "cc4382ef5dc9484895893799ffc94e4f1d4f7b880a4f5d273d0a7001f226d832",
-   "size": 1025211
+   "sha256": "a96e3cc393587b1a41b834bdc429005bea0431a39ae3fe990340406c300c4e1d",
+   "size": 1036373
   },
   "iscrizione.html": {
    "sha256": "5711b1965af5c6e04846654b0e8f8d32c6a53c9ad8ccc68ce9521eedb3c86646",
