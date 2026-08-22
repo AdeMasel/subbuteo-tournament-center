@@ -1464,6 +1464,25 @@ body.no-anim .board.running{animation:none}
 .pdfdoc .sheet-ros{font-size:8pt;color:#555;margin-top:6px}
 .pdfdoc .sheet-sign{font-size:8.5pt;color:#333;border-top:1px dashed #999;padding-top:6px;margin-top:8px}
 
+/* ---------- griglie dei gironi (composizione manuale) ---------- */
+#compose-grid{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.cg-head{font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  font-size:.95rem;color:var(--accent);margin-bottom:10px;display:flex;align-items:baseline;
+  gap:12px;flex-wrap:wrap}
+.cg-head .muted{text-transform:none;letter-spacing:0;font-family:var(--fb,inherit)}
+.cg-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.cg-card{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.cg-t{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.1em;
+  font-size:.9rem;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cg-t .cg-n{margin-left:auto;font-family:'Chakra Petch',monospace;font-size:.78rem;
+  color:var(--accent);background:rgba(255,255,255,.06);border-radius:999px;padding:1px 8px}
+.cg-row{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.cg-row .cg-k{font-family:'Chakra Petch',monospace;font-size:.72rem;color:var(--muted);
+  min-width:14px;text-align:right}
+.cg-row input{flex:1;min-width:0;padding:6px 8px;font-size:.88rem}
+.cg-mv{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;
+  cursor:pointer;padding:3px 6px;font-size:.72rem;line-height:1;transition:color .2s,border-color .2s}
+.cg-mv:hover{color:var(--accent);border-color:var(--accent)}
 /* ---------- QR capitani (griglia) ---------- */
 #capqr{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;background:rgba(4,7,18,.85);backdrop-filter:blur(6px)}
 #capqr.on{display:flex}
@@ -2171,7 +2190,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
               <option value="pots">Sorteggio per fasce (teste di serie)</option>
             </select>
           </div>
-          <div id="w-ngroups"><label class="f">Numero gironi</label><input type="number" id="s-ngroups" value="2" min="1" max="16" onchange="renderTeamInputs()"></div>
+          <div id="w-ngroups"><label class="f">Numero gironi</label><input type="number" id="s-ngroups" value="2" min="1" max="16" onchange="composeNGroupsChanged()"></div>
           <div id="w-npots"><label class="f">Numero fasce</label><input type="number" id="s-npots" value="2" min="2" max="8" onchange="renderTeamInputs()"></div>
         </div>
         <div class="grid g3" style="gap:10px">
@@ -2303,6 +2322,8 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
     </div>
     <textarea id="bulk-names" rows="5" style="display:none;margin-top:10px" placeholder="Un nome per riga — poi premi «Applica elenco»"></textarea>
     <div id="team-inputs"></div>
+    <!-- griglie dei gironi, compilabili a mano (solo in composizione manuale) -->
+    <div id="compose-grid" style="display:none"></div>
   </div>
 
   <div id="setup-error"></div>
@@ -3788,6 +3809,14 @@ const TR={
   "Quanto in fretta scorrono i risultati sul rullo in alto":"How fast the results scroll on the ticker at the top",
   "Velocità del rullo":"Ticker speed",
   "Aggiornamenti":"Updates",
+  "Girone":"Group",
+  "Fascia":"Pot",
+  "Fascia (teste di serie)":"Pot (seeding)",
+  "Griglie dei gironi":"Group grids",
+  "Scrivi qui dentro: i nomi sono gli stessi dell’elenco qui sopra. Le frecce spostano di girone.":"Type here: these are the same names as the list above. The arrows move a player between groups.",
+  "Vuoto":"Empty",
+  "Girone precedente":"Previous group",
+  "Girone successivo":"Next group",
   "Le correzioni e le nuove funzioni si scaricano da sole, in pochi secondi.":"Fixes and new features download on their own, in seconds.",
   "Viene preso solo ciò che è cambiato — di solito un megabyte — non l’intero programma. Musica e maglie restano dove sono.":"Only what changed is fetched — usually a megabyte — not the whole program. Music and kits stay where they are.",
   "pacchetto":"package",
@@ -6616,17 +6645,82 @@ function assignSelect(i){
     const nG=composeGroupsN();
     if(setupGroupOf[i]==null||setupGroupOf[i]>=nG)setupGroupOf[i]=i%nG; // memorizza il default mostrato
     const cur=setupGroupOf[i];
-    let o='';for(let k=0;k<nG;k++)o+=`<option value="${k}"${k===cur?' selected':''}>Girone ${groupLetter(k)}</option>`;
-    return `<select class="asel" title="Girone" onchange="setupGroupOf[${i}]=+this.value">${o}</select>`;
+    let o='';for(let k=0;k<nG;k++)o+=`<option value="${k}"${k===cur?' selected':''}>${L('Girone')} ${groupLetter(k)}</option>`;
+    return `<select class="asel" title="${L('Girone')}" onchange="setupGroupOf[${i}]=+this.value;renderComposeGrid()">${o}</select>`;
   }
   if(mode==='pots'){
     const nP=composePotsN();
     if(setupPotOf[i]==null||setupPotOf[i]>=nP)setupPotOf[i]=i%nP; // memorizza il default mostrato
     const cur=setupPotOf[i];
-    let o='';for(let k=0;k<nP;k++)o+=`<option value="${k}"${k===cur?' selected':''}>Fascia ${k+1}</option>`;
-    return `<select class="asel" title="Fascia (teste di serie)" onchange="setupPotOf[${i}]=+this.value">${o}</select>`;
+    let o='';for(let k=0;k<nP;k++)o+=`<option value="${k}"${k===cur?' selected':''}>${L('Fascia')} ${k+1}</option>`;
+    return `<select class="asel" title="${L('Fascia (teste di serie)')}" onchange="setupPotOf[${i}]=+this.value">${o}</select>`;
   }
   return '';
+}
+/* =========================================================
+   GRIGLIE DEI GIRONI — compilabili a mano
+   ---------------------------------------------------------
+   In composizione manuale non basta un menù a tendina accanto a ogni nome:
+   per preparare il tabellone si ragiona per girone, non per partecipante.
+   Qui si vedono i gironi uno accanto all'altro, ciascuno con le sue caselle,
+   e si scrive direttamente dentro. Il nome digitato nella griglia È lo stesso
+   dell'elenco sopra (una sola fonte, nessuna copia da tenere allineata), e le
+   frecce spostano un partecipante da un girone all'altro.
+   ========================================================= */
+function composeNomi(){
+  return [...$('#team-inputs').querySelectorAll('input.tmain')].map(i=>i.value);
+}
+/** Scrive un nome nell'elenco principale a partire dalla griglia. */
+function composeSetNome(i,v){
+  const inp=$('#team-inputs').querySelectorAll('input.tmain')[i];
+  if(inp)inp.value=v;
+}
+/** Sposta un partecipante in un altro girone e ridisegna le griglie. */
+function composeSposta(i,d){
+  const nG=composeGroupsN();
+  const cur=setupGroupOf[i]??0;
+  setupGroupOf[i]=(cur+d+nG)%nG;
+  renderComposeGrid();
+}
+/* Cambiando il NUMERO di gironi si ridistribuisce da capo in parti uguali:
+   tenere le assegnazioni vecchie lasciava i gironi nuovi vuoti (si chiedevano
+   tre gironi e si otteneva 6/6/0). Gli spostamenti fatti a mano nella griglia
+   restano finché non si cambia di nuovo il numero. */
+function composeNGroupsChanged(){
+  const nG=composeGroupsN();
+  const n=composeNomi().length;
+  for(let i=0;i<n;i++) setupGroupOf[i]=i%nG;
+  renderTeamInputs();
+}
+function renderComposeGrid(){
+  const box=$('#compose-grid'); if(!box)return;
+  const attivo=$('#w-compose')&&$('#w-compose').style.display!=='none'&&composeMode()==='manual';
+  if(!attivo){ box.style.display='none'; box.innerHTML=''; return; }
+  const nomi=composeNomi(), n=nomi.length, nG=composeGroupsN();
+  // ogni partecipante ha un girone; se manca, distribuzione equa di partenza
+  for(let i=0;i<n;i++) if(setupGroupOf[i]==null||setupGroupOf[i]>=nG) setupGroupOf[i]=i%nG;
+  const perG=Array.from({length:nG},()=>[]);
+  for(let i=0;i<n;i++) perG[setupGroupOf[i]].push(i);
+  let h=`<div class="cg-head">🗂 ${L('Griglie dei gironi')}
+    <span class="small muted">${L('Scrivi qui dentro: i nomi sono gli stessi dell’elenco qui sopra. Le frecce spostano di girone.')}</span></div>
+    <div class="cg-wrap">`;
+  perG.forEach((idxs,g)=>{
+    h+=`<div class="cg-card"><div class="cg-t">${L('Girone')} ${groupLetter(g)}
+      <span class="cg-n">${idxs.length}</span></div>`;
+    if(!idxs.length) h+=`<p class="small muted" style="margin:6px 0">${L('Vuoto')}</p>`;
+    idxs.forEach((i,k)=>{
+      h+=`<div class="cg-row">
+        <span class="cg-k">${k+1}</span>
+        <input type="text" value="${esc(nomi[i]||'')}" placeholder="${L('Partecipante')} ${i+1}"
+               oninput="composeSetNome(${i},this.value)">
+        <button class="cg-mv" onclick="composeSposta(${i},-1)" title="${L('Girone precedente')}">◀</button>
+        <button class="cg-mv" onclick="composeSposta(${i},1)" title="${L('Girone successivo')}">▶</button>
+      </div>`;
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+  box.innerHTML=h; box.style.display='';
 }
 function isTeamModeSetup(){return $('#s-format')&&$('#s-format').value==='squadre';}
 function setCaptain(i,k){setupCaptains[i]=k;renderTeamInputs();}
@@ -6675,6 +6769,7 @@ function renderTeamInputs(){
     }
     box.appendChild(d);
   }
+  renderComposeGrid();
 }
 
 /* --- caricamento immagini (logo torneo e loghi squadre) --- */
@@ -7653,8 +7748,14 @@ function startTournament(){
       all.add(r);
     }
   }
-  // composizione con gironi: manuale/sorteggio/fasce (solo per formule con gironi)
-  const groupFmt=(f==='gironi-ko'||f==='fasce'||f==='squadre');
+  /* Composizione con gironi: manuale / sorteggio / fasce.
+     L'elenco DEVE combaciare con quello che decide la visibilità del pannello
+     (setupFmtChanged): prima erano diversi, e in Formula Speculare, Classifica
+     Avulsa, Multifase e Due Competizioni il programma mostrava la composizione
+     manuale ma poi la buttava via, ricadendo nella distribuzione automatica
+     senza dire nulla. */
+  const groupFmt=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'
+                 ||f==='multifase'||f==='duecomp'||f==='squadre');
   const composed=groupFmt?composeGroupsList(names.map((n,i)=>({n,grp:setupGroupOf[i],pot:setupPotOf[i]}))):null;
   // giocatori reali per squadra (torneo individuale) → usati come arbitri.
   // leggo i valori CORRENTI dal DOM (l'utente può aver digitato senza re-render)
@@ -11959,21 +12060,40 @@ function nextWaveByField(){
     return tt?{field:b.field,home:tt.t1,away:tt.t2,ref:(f.m&&f.m.ref)||null,games:sq?encounterPairings(f.m,tt.t1,tt.t2):null}:null;
   }).filter(Boolean).sort((a,b)=>a.field-b.field);
   if(assigned.length)return assigned;
-  // altrimenti calcola l'ondata imminente (senza ripetere giocatori/squadre)
+  /* Altrimenti si calcola l'ondata imminente. Questo blocco DEVE ragionare
+     esattamente come assignFields(), altrimenti lo speaker annuncia gare che
+     poi non finiscono su nessun campo: con «resta nel turno» acceso il
+     programma assegnava due campi e la voce ne annunciava quattro, mandando in
+     campo giocatori che non dovevano giocare. */
   const rem=[];
   allGroups().forEach((g,gi)=>g.matches.forEach(m=>{if(!m.done&&!m.live&&!isOnBoard(m.id))rem.push({r:m.round||1,gi,home:m.home,away:m.away,m});}));
   allKOs().forEach((ko,ki)=>ko.rounds.forEach((rd,ri)=>rd.matches.forEach(m=>{
     if(m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&!koWinner(m)&&!m.live&&!isOnBoard(m.id))rem.push({r:1000+ri,gi:100+ki,home:m.t1,away:m.t2,m});
   })));
   rem.sort((a,b)=>a.r-b.r||a.gi-b.gi);
-  const busy=new Set(),wave=[];
+  // «resta nel turno»: l'ondata prende SOLO gare della giornata più arretrata
+  // ancora da giocare, come fa l'assegnazione dei campi
+  const soloTurno=!!S.cfg.noAnticipo;
+  const turnoBase=(soloTurno&&rem.length)?rem[0].r:null;
+  const busy=new Set(),wave=[],presi=new Set();
   for(const p of rem){
     if(wave.length>=cap)break;
+    if(soloTurno&&turnoBase!=null&&p.r!==turnoBase)break;
     if(busy.has(p.home)||busy.has(p.away))continue;
-    wave.push({field:off+wave.length*span+1,home:p.home,away:p.away,ref:(p.m&&p.m.ref)||null,
+    /* Il campo VERO è quello che assignFields ha già scritto sulla gara: si
+       annuncia quello, non una posizione ricalcolata, così la voce e i
+       tabelloni dicono lo stesso numero. Il ripiego posizionale serve alle
+       gare di tabellone, che un campo assegnato non ce l'hanno. */
+    let campo=(p.m&&p.m.field)||0;
+    if(!campo||presi.has(campo)){
+      campo=off+1; while(presi.has(campo))campo+=span;
+    }
+    presi.add(campo);
+    wave.push({field:campo,home:p.home,away:p.away,ref:(p.m&&p.m.ref)||null,
       games:sq?encounterPairings(p.m,p.home,p.away):null});
     busy.add(p.home);busy.add(p.away);
   }
+  wave.sort((a,b)=>a.field-b.field);
   return wave;
 }
 function announceNextRound(){

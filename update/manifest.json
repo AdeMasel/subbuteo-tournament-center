@@ -1,7 +1,7 @@
 {
  "content": "6.4.2",
  "minShell": "6.3.4",
- "notes": "Correzione urgente: alcune formule (Speculare, Avulsa, Due Competizioni, Multifase) restavano bloccate dopo i gironi, senza alcun pulsante per proseguire. Rinominata anche la sezione: si chiama Fase Successiva finché non è davvero l'ultima, poi diventa Fase Finale da sola.",
+ "notes": "Griglie dei gironi compilabili, composizione manuale su tutte le formule, annunci allineati ai campi.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "68d3f2d24c2e40edf03e5b00b8c3705558a35d8e473629a572fb9c081529242c",
-   "size": 1063263
+   "sha256": "4830ece016530e8a33cd9283611f36be3711eaa4d222db35677ac390a81194d1",
+   "size": 1070145
   },
   "iscrizione.html": {
    "sha256": "5711b1965af5c6e04846654b0e8f8d32c6a53c9ad8ccc68ce9521eedb3c86646",
