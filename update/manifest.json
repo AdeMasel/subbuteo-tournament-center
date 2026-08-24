@@ -1,7 +1,7 @@
 {
- "content": "7.1.0",
+ "content": "7.1.1",
  "minShell": "6.3.4",
- "notes": "Quadro completo in Presentazione, invio su WhatsApp di risultati e classifiche, codici QR da tavolo stampabili in anticipo, metalli del podio in classifica.",
+ "notes": "Presentazione: tolto il pulsante schermo intero, la X di chiusura resta discreta. Numeri corretti di stemmi e formule nella documentazione.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "16165e31a3baac0006ce55125d51d43c4f00fb421dd5afc1d9768db281df1abb",
-   "size": 1089749
+   "sha256": "57a8b719dd23eb2f4cbd6f7dd6b4a87042b31317a9b93e3479d9499f02c22ba0",
+   "size": 1089824
   },
   "legge.js": {
    "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",

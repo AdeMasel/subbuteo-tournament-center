@@ -910,7 +910,7 @@ body.no-anim #tv::before{animation:none}
 #tv .tv-field{font-family:'Oswald',sans-serif;letter-spacing:.35em;color:var(--accent);font-size:clamp(.8rem,1.3vw,1.5rem);text-transform:uppercase}
 #tv-close{position:absolute;top:20px;right:26px;font-size:2.2rem;background:none;border:none;color:var(--muted);cursor:pointer;z-index:2}
 #tv-fs{position:absolute;top:24px;right:76px;font-size:1.7rem;background:none;border:none;color:var(--muted);cursor:pointer;z-index:2;line-height:1}
-#tv-fs:hover,#present-fs:hover{color:var(--gold)}
+#tv-fs:hover{color:var(--gold)}
 #tv-close:hover{color:#fff}
 
 /* ---------- presentazione (sala / proiettore) ---------- */
@@ -1115,9 +1115,14 @@ body.no-anim #present .prow,body.no-anim #present .pcard{animation:none}
 #present .tclass .qleg .qg{font-weight:700;background-image:linear-gradient(105deg,#0b5a2a,#3ddc84,#c8ffdd,#3ddc84,#0b5a2a);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:goldshine 5.5s linear infinite}
 #present .tclass .qleg .qe{font-weight:700;background-image:linear-gradient(105deg,#5a1e0a,#e0642e,#ffd9c6,#e0642e,#5a1e0a);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:goldshine 5.5s linear infinite}
 body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass .qleg .qg,body.no-anim #present .tclass .qleg .qe{animation:none}
-#present-close{position:absolute;top:20px;right:26px;font-size:2.2rem;background:none;border:none;color:var(--muted);cursor:pointer;z-index:5}
-#present-fs{position:absolute;top:24px;right:70px;font-size:1.5rem;background:none;border:none;color:var(--muted);cursor:pointer;z-index:5}
-#present-fs:hover,#present-close:hover{color:var(--accent)}
+/* La X di chiusura deve esserci senza farsi notare: sul proiettore, in
+   sala, è l'unico elemento che non fa parte dello spettacolo. Resta quindi
+   appena accennata e torna piena solo quando ci si passa sopra col mouse —
+   chi la cerca la trova, chi guarda il tabellone non la vede. */
+#present-close{position:absolute;top:20px;right:26px;font-size:2.2rem;background:none;border:none;
+  color:var(--muted);cursor:pointer;z-index:5;opacity:.12;transition:opacity .25s ease,color .25s ease}
+#present-close:hover,#present-close:focus-visible{opacity:1}
+#present-close:hover{color:var(--accent)}
 #tv .tv-panel{transition:opacity .5s ease}
 #tv.tvfading .tv-panel,#tv.tvfading .tv-field{opacity:0}
 #tv .tv-field{transition:opacity .5s ease}
@@ -3131,7 +3136,6 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
     <div class="beam b1"></div><div class="beam b2"></div>
     <span class="fball f1">⚽</span><span class="fball f2">⚽</span><span class="fball f3">⚽</span>
   </div>
-  <button id="present-fs" onclick="presentFullscreen()" title="Schermo intero">⛶</button>
   <button id="present-close" onclick="closePresent()">✕</button>
   <div style="display:flex;align-items:center;justify-content:center;gap:18px">
     <img id="present-logo" style="display:none" alt="">
@@ -3422,7 +3426,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.1.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.1.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -12266,8 +12270,7 @@ function presentFullscreen(){
 /** Tiene il pulsante coerente con lo stato reale, anche quando si esce con Esc. */
 function fsIconeAggiorna(){
   const on=!!document.fullscreenElement;
-  [['#present-fs',L('Schermo intero'),L('Esci dallo schermo intero')],
-   ['#tv-fs',L('Schermo intero'),L('Esci dallo schermo intero')]].forEach(([sel,t1,t2])=>{
+  [['#tv-fs',L('Schermo intero'),L('Esci dallo schermo intero')]].forEach(([sel,t1,t2])=>{
     const b=document.querySelector(sel); if(!b)return;
     b.title=on?t2:t1; b.classList.toggle('on',on);
   });
