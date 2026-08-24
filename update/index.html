@@ -786,6 +786,17 @@ table.standings tr.z-down td:first-child{border-left:3px solid #ff6b6b}
 table.standings tr.z-down{background:rgba(255,107,107,.07)}
 table.standings tr.z-down .tn-wrap,table.standings tr.z-down td.pos{font-weight:800;color:transparent;
   background-image:linear-gradient(180deg,#ffefef,#ff8080 46%,#a11212)!important;-webkit-background-clip:text;background-clip:text}
+/* --- I METALLI DEL PODIO -------------------------------------------------
+   Oro, argento e bronzo sul NOME delle prime tre. Vengono dopo le zone e con
+   !important perché la zona "retrocede" usa a sua volta !important: il podio
+   deve poter vincere sul nome. Tutto il resto della zona — bordo a sinistra,
+   fascia, simbolo, numero di posizione — resta com'è, così il colore del
+   podio non toglie l'informazione di chi avanza e chi esce. */
+table.standings tr.pod1 .tn-wrap,table.standings tr.pod2 .tn-wrap,table.standings tr.pod3 .tn-wrap{
+  font-weight:800;color:transparent;-webkit-background-clip:text;background-clip:text}
+table.standings tr.pod1 .tn-wrap{background-image:linear-gradient(180deg,#fff6d8,#f5c542 46%,#8a5f0a)!important}
+table.standings tr.pod2 .tn-wrap{background-image:linear-gradient(180deg,#ffffff,#cfd8e6 46%,#6d7a8c)!important}
+table.standings tr.pod3 .tn-wrap{background-image:linear-gradient(180deg,#ffe3cd,#d08a4e 46%,#7a4212)!important}
 .zleg{display:flex;gap:16px;flex-wrap:wrap;font-size:.72rem;letter-spacing:.06em;margin-top:6px}
 .zleg .zl-up{color:#57e88f}.zleg .zl-po{color:#6fd2ff}.zleg .zl-pout{color:#ffb056}.zleg .zl-down{color:#ff6b6b}
 table.standings td.pos{font-family:'Chakra Petch',monospace;color:var(--accent);font-weight:700}
@@ -935,6 +946,50 @@ body.no-anim #present .pbg .beam,body.no-anim #present .pbg .fball,body.no-anim 
 #present .pstage>.pgrid{width:100%}
 #present #present-xfade{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease;overflow:hidden}
 #present #present-xfade.on{opacity:1}
+/* ---------- QUADRO COMPLETO ------------------------------------------
+   Una sola videata con tutto quanto: a sinistra i risultati dell'ultima
+   tornata giocata, a destra le classifiche complete di ogni girone. Serve
+   in sala quando il proiettore è uno solo e passare da una schermata
+   all'altra fa perdere il filo: si guarda una volta e si è visto tutto.
+   Le due colonne scorrono insieme come un blocco unico, e ci pensa
+   presentFit a rimpicciolire finché tutto entra nello schermo. */
+#present .pquadro{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,2.1fr);
+  gap:clamp(16px,2.2vw,40px);width:100%;max-width:2200px;margin:0 auto;align-items:start}
+#present .pq-col{min-width:0;display:flex;flex-direction:column;gap:10px}
+#present .pq-tit{font-family:'Oswald',sans-serif;letter-spacing:.24em;text-transform:uppercase;
+  font-size:clamp(.8rem,1.25vw,1.15rem);color:var(--accent2);
+  border-bottom:2px solid color-mix(in srgb,var(--accent) 40%,transparent);
+  padding-bottom:6px;margin-bottom:2px}
+#present .pq-corpo{display:flex;flex-direction:column;gap:14px}
+#present .pq-blocco .pq-ctx{font-family:'Chakra Petch',monospace;letter-spacing:.14em;
+  text-transform:uppercase;font-size:clamp(.62rem,.95vw,.85rem);color:var(--muted);
+  margin:6px 0 4px}
+#present .pq-blocco:first-child .pq-ctx{margin-top:0}
+/* Dentro il quadro le classifiche si dispongono su più colonne, non in fila
+   indiana: incolonnate una sotto l'altra facevano una striscia altissima e
+   stretta, e presentFit — che scala sull'altezza — rimpiccioliva tutto al 40%
+   lasciando mezzo schermo vuoto ai lati. Larghe e basse, invece, riempiono
+   la videata e restano leggibili. */
+#present .pquadro .pgrid{grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;max-width:none}
+#present .pquadro .pcard{padding:14px 16px;overflow:hidden}
+/* la tabella deve entrare nel riquadro: nel quadro completo le colonne
+   numeriche si stringono e il corpo cala, altrimenti GF, GS, DR e la forma
+   finiscono tagliate fuori dal bordo destro */
+#present .pquadro table.standings{font-size:.82rem;width:100%;table-layout:auto}
+#present .pquadro table.standings td,#present .pquadro table.standings th{padding:5px 3px}
+#present .pquadro table.standings td.l{font-size:.95rem}
+#present .pquadro .qleg,#present .pquadro .zleg{font-size:.6rem;gap:8px;margin-top:4px}
+/* Le righe dei risultati: dentro una colonna stretta il nome della squadra,
+   che è "flex:1 1 auto" con overflow nascosto, veniva schiacciato a zero e
+   restava solo lo stemma. Qui gli stemmi rimpiccioliscono e il nome ha una
+   larghezza minima sotto la quale non scende. */
+#present .pquadro .prow{padding:6px 10px;gap:8px}
+#present .pquadro .prow .pcrest{width:clamp(26px,2vw,34px);height:clamp(26px,2vw,34px)}
+#present .pquadro .prow .pteam{gap:7px}
+#present .pquadro .prow .pn{font-size:clamp(.8rem,1.05vw,1.15rem);min-width:4.5em}
+#present .pquadro .prow .psc{font-size:clamp(1.1rem,1.7vw,1.8rem)}
+#present .pquadro .prow .pevs{font-size:.62rem}
+@media(max-width:900px){#present .pquadro{grid-template-columns:minmax(0,1fr)}}
 #present.xfading #present-grid{animation:pxin .9s ease both}
 @keyframes pxin{from{opacity:0}to{opacity:1}}
 /* --- striscia delle foto della giornata (solo in Presentazione) ---------
@@ -963,6 +1018,26 @@ body.no-anim #present .pfoto-run{animation:none}
   padding:.25vh .5vw;border-radius:99px;background:rgba(4,8,18,.78);color:var(--accent2);
   border:1px solid color-mix(in srgb,var(--accent2) 45%,transparent)}
 #present .pfoto-it .mom.dopo{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+/* --- ornamenti delle foto -------------------------------------------------
+   Le polaroid non stanno perfettamente allineate: una leggerissima
+   inclinazione alternata (mezzo grado) toglie l'aria da foglio Excel senza
+   che si noti il trucco. La cornice prende il colore d'accento del tema, così
+   Hirpus e Professional restano riconoscibili anche qui. */
+#present .pfoto-it:nth-child(odd){transform:rotate(-.5deg)}
+#present .pfoto-it:nth-child(even){transform:rotate(.45deg)}
+#present .pfoto-it{border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);
+  box-shadow:0 .6vh 1.6vh rgba(0,0,0,.45)}
+/* Ken Burns: la foto respira piano invece di stare ferma. Otto secondi, un
+   filo di zoom e una panoramica appena percettibile: dà vita senza distrarre
+   chi sta leggendo un risultato. */
+#present .pfoto-it img{animation:kenburns 8s ease-in-out infinite alternate;
+  transform-origin:52% 46%}
+#present .pfoto-it:nth-child(3n) img{animation-duration:10s;animation-delay:-3s}
+#present .pfoto-it:nth-child(3n+1) img{animation-duration:9s;animation-delay:-6s}
+@keyframes kenburns{from{transform:scale(1) translate(0,0)}
+                    to{transform:scale(1.06) translate(-1.2%,-1%)}}
+body.no-anim #present .pfoto-it img{animation:none}
+@media (prefers-reduced-motion:reduce){#present .pfoto-it img{animation:none}}
 #present .pfoto-it .cap{padding:.7vh .7vw .9vh;text-align:center;line-height:1.25}
 /* i nomi lunghi vanno a capo invece di sparire dietro i puntini: con due
    righe ci sta anche «Giocatore 8 3–1 Giocatore 3» per intero */
@@ -1014,6 +1089,24 @@ body.no-anim #present .prow,body.no-anim #present .pcard{animation:none}
 #present .tclass table.standings tr.z-po td.l,#present .tclass table.standings tr.z-po td.l .tn-wrap{background-image:linear-gradient(105deg,#0d3f6b,#4fb6f0 16%,#e2f5ff 30%,#4fb6f0 44%,#155a94 58%,#7fd0ff 74%,#d0efff 90%,#0d3f6b);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 #present .tclass table.standings tr.z-pout td.l,#present .tclass table.standings tr.z-pout td.l .tn-wrap{background-image:linear-gradient(105deg,#6b3a05,#f0932e 16%,#ffe9cc 30%,#f0932e 44%,#94550f 58%,#ffb45c 74%,#ffe4c2 90%,#6b3a05);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 #present .tclass table.standings tr.z-down td.l,#present .tclass table.standings tr.z-down td.l .tn-wrap{background-image:linear-gradient(105deg,#6b0d0d,#f04f4f 16%,#ffd6d6 30%,#f04f4f 44%,#941515 58%,#ff7a7a 74%,#ffc9c9 90%,#6b0d0d);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+/* podio in presentazione: stessi metalli, ma col luccichio che scorre come
+   l'oro delle posizioni neutre. Qui la zona resta leggibile dal numero di
+   posizione e dal suo simbolo, che non vengono toccati. */
+#present .tclass table.standings tr.pod1 td.l,#present .tclass table.standings tr.pod1 td.l .tn-wrap,
+#present .tclass table.standings tr.pod2 td.l,#present .tclass table.standings tr.pod2 td.l .tn-wrap,
+#present .tclass table.standings tr.pod3 td.l,#present .tclass table.standings tr.pod3 td.l .tn-wrap{
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#present .tclass table.standings tr.pod1 td.l,#present .tclass table.standings tr.pod1 td.l .tn-wrap{
+  background-image:linear-gradient(105deg,#7a4f08,#f5b942 16%,#fff3c4 30%,#f5b942 44%,#96690f 58%,#f5b942 74%,#ffe9a8 90%,#b07f19)!important}
+#present .tclass table.standings tr.pod2 td.l,#present .tclass table.standings tr.pod2 td.l .tn-wrap{
+  background-image:linear-gradient(105deg,#5c6675,#c8d2e0 16%,#ffffff 30%,#c8d2e0 44%,#727d8d 58%,#dfe6f0 74%,#ffffff 90%,#68727f)!important}
+#present .tclass table.standings tr.pod3 td.l,#present .tclass table.standings tr.pod3 td.l .tn-wrap{
+  background-image:linear-gradient(105deg,#6b3a12,#d08a4e 16%,#ffe0c4 30%,#d08a4e 44%,#8a4f19 58%,#e6a86a 74%,#ffd9bb 90%,#7a4212)!important}
+/* la zona torna a farsi vedere sul numero di posizione, che il podio non tocca */
+#present .tclass table.standings tr.z-up td.pos{color:#57e88f}
+#present .tclass table.standings tr.z-po td.pos{color:#6fd2ff}
+#present .tclass table.standings tr.z-pout td.pos{color:#ffb056}
+#present .tclass table.standings tr.z-down td.pos{color:#ff6b6b}
 #present .tclass table.standings td.l .tlogo{width:26px;height:26px;-webkit-text-fill-color:initial}
 /* niente fasce colorate nelle classifiche di presentazione: solo le scritte */
 #present .tclass table.standings tr{background:transparent!important}
@@ -1498,6 +1591,37 @@ body.no-anim .board.running{animation:none}
 #advisor,#realpick,#estim,#ritiro,#arcfoto,#annulla{position:fixed;inset:0;z-index:126;display:none;align-items:center;justify-content:center;background:rgba(4,7,18,.82);backdrop-filter:blur(6px)}
 #advisor.on,#realpick.on,#estim.on,#ritiro.on,#arcfoto.on,#annulla.on{display:flex}
 #annulla .adv-box{width:min(560px,94vw)}
+/* ================= ORNAMENTI DA TABELLONE =================
+   Tutti pensati per essere letti da lontano: nessuno di questi elementi
+   ruba spazio ai numeri, che restano la cosa importante. */
+/* forma recente: cinque pallini, dal più vecchio al più recente */
+.forma{display:inline-flex;gap:.18em;white-space:nowrap;line-height:1}
+.forma i{font-style:normal;font-size:.72em;opacity:.95}
+.forma .f-v{color:var(--ok,#3ddc84)}
+.forma .f-p{color:var(--muted,#93a0c4)}
+.forma .f-s{color:var(--danger,#ff4d6d);opacity:.8}
+th.c-forma,td.c-forma{text-align:center;white-space:nowrap}
+/* movimento rispetto al giro precedente */
+.mov{margin-left:.35em;font-family:'Chakra Petch',monospace;font-size:.7em;font-weight:700;letter-spacing:0}
+.mov.su{color:var(--ok,#3ddc84)}
+.mov.giu{color:var(--danger,#ff4d6d)}
+/* nastro d'angolo per chi guida la classifica */
+tr.r-capo .pos{position:relative}
+.nastro{position:absolute;left:-1px;top:-1px;width:14px;height:14px;pointer-events:none;
+  background:linear-gradient(135deg,var(--gold,#f5b942) 0 50%,transparent 50%);
+  border-top-left-radius:4px}
+/* il lampo del sorpasso: mezzo secondo d'oro, poi torna com'era */
+@keyframes sorpassoLampo{
+  0%{background:color-mix(in srgb,var(--gold,#f5b942) 40%,transparent)}
+  60%{background:color-mix(in srgb,var(--gold,#f5b942) 18%,transparent)}
+  100%{background:transparent}}
+tr.sorpasso td{animation:sorpassoLampo 1.35s ease-out both}
+/* stemma di chi guida, gigante e quasi invisibile, dietro la tabella */
+#present .tclass{position:relative;overflow:hidden}
+#present .filigrana{position:absolute;right:-6%;top:50%;transform:translateY(-50%);
+  width:46%;max-width:340px;opacity:.06;filter:blur(1.5px) saturate(.6);
+  pointer-events:none;z-index:0}
+#present .tclass>*:not(.filigrana){position:relative;z-index:1}
 /* --- REPLAY GOAL a tutto schermo (proiettore e monitor di prova) ---
    La moviola non compare e sparisce di colpo: entra ed esce in dissolvenza
    sopra la Presentazione, che resta viva sotto. Perché la dissolvenza ci sia
@@ -1554,6 +1678,34 @@ body.no-anim .board.running{animation:none}
   text-shadow:0 .3vh .8vh rgba(0,0,0,.6)}
 .rg-sc i{font-style:normal;opacity:.5;margin:0 .3vw}
 /* una sola riga, quando non si sa chi gioca */
+/* --- ornamenti della moviola ---------------------------------------------
+   Il rallentatore, la vignettatura che stringe alla seconda visione, il
+   cartiglio del marcatore e i due trattini che contano le riproduzioni. */
+.rg-wrap.slow .rg-in video{filter:saturate(1.12) contrast(1.05)}
+.rg-wrap .rg-in{transition:transform .8s ease, filter .8s ease}
+.rg-wrap.stretta .rg-in{transform:scale(1.045)}
+.rg-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse at 50% 48%,transparent 46%,rgba(0,0,0,.55) 100%);
+  opacity:0;transition:opacity .9s ease}
+.rg-wrap.stretta::after{opacity:1}
+/* i due trattini del conto: pieni = visioni già fatte */
+.rg-giro{display:inline-flex;gap:.5vw;align-items:center}
+.rg-giro .rg-p0,.rg-giro .rg-p1{display:inline-block;width:2.2vw;max-width:34px;height:.5vh;
+  min-height:3px;border-radius:2px;background:rgba(255,255,255,.22)}
+.rg-giro .on{background:var(--gold,#f5c451);box-shadow:0 0 8px rgba(245,196,81,.8)}
+/* cartiglio del marcatore: entra da sinistra, come le grafiche televisive */
+.rg-gol{position:absolute;left:0;bottom:12vh;z-index:4;pointer-events:none;
+  transform:translateX(-102%);transition:transform .55s cubic-bezier(.2,1,.3,1)}
+.rg-gol.on{transform:translateX(0)}
+.rg-gol-in{display:inline-block;padding:.9vh 2vw .9vh 3vw;
+  background:linear-gradient(100deg,var(--danger,#e24848),rgba(226,72,72,.86));
+  color:#fff;font-family:'Oswald',sans-serif;text-transform:uppercase;
+  letter-spacing:.06em;font-size:clamp(.9rem,1.9vw,2rem);
+  border-radius:0 .8vh .8vh 0;box-shadow:0 1vh 3vh rgba(0,0,0,.6)}
+.rg-gol-in b{font-family:'Chakra Petch',monospace;color:#ffe08a;margin-right:.4vw}
+@media (prefers-reduced-motion:reduce){
+  .rg-wrap .rg-in,.rg-gol{transition:none}
+  .rg-wrap.stretta .rg-in{transform:none}}
 .rg-solo{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;
   color:var(--gold,#f5c451);font-size:clamp(.85rem,1.75vw,2rem);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
@@ -1564,10 +1716,9 @@ body.no-anim .board.running{animation:none}
   flex-direction:column;align-items:center;justify-content:center;gap:6px}
 #sim-quadro .sim-t{font-family:'Oswald',sans-serif;font-size:1.3rem;letter-spacing:.06em;text-transform:uppercase}
 #sim-quadro .sim-s{font-size:.78rem;color:var(--muted)}
-#inni,#iscrizioni,#innimgr{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;
+#inni,#innimgr{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;
   background:rgba(4,7,18,.9);backdrop-filter:blur(8px)}
-#inni.on,#iscrizioni.on,#innimgr.on{display:flex}
-#iscrizioni .adv-box{width:min(560px,94vw)}
+#inni.on,#innimgr.on{display:flex}
 #innimgr .adv-box{width:min(620px,95vw);max-height:88vh;display:flex;flex-direction:column}
 /* la modalità grafica della Rosa dei Venti: la bussola a tutto schermo */
 #rosaview{position:fixed;inset:0;z-index:130;display:none;flex-direction:column;
@@ -1579,7 +1730,6 @@ body.no-anim .board.running{animation:none}
 .rosa-head .btn{margin-left:auto}
 .rosa-svg{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:6px}
 .rosastar{color:var(--accent);font-weight:700;font-family:'Chakra Petch',monospace}
-#iscrizioni canvas{background:#fff;border-radius:10px;padding:8px;display:block;margin:0 auto}
 #inni .adv-box{width:min(560px,94vw)}
 .inno-riga{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;
   border:1px solid var(--line);margin-bottom:10px;transition:border-color .3s,background .3s}
@@ -1602,98 +1752,6 @@ body.solo-tabellone header.topbar,body.solo-tabellone nav#tabs,body.solo-tabello
 body.solo-tabellone footer,body.solo-tabellone #demo-ban,body.solo-tabellone section.tab{display:none!important}
 body.solo-tabellone #present{position:fixed;inset:0}
 body.solo-tabellone #present .pclose,body.solo-tabellone #present-modes{display:none!important}
-/* --- FIGURINE --- */
-.fig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.fig-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:12px}
-.fig-anteprima{flex:0 0 auto;width:120px}
-.fig-canvas-wrap{width:120px;height:168px;border-radius:8px;overflow:hidden;background:#0c1220;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-.fig-canvas-wrap img{width:100%;height:100%;object-fit:contain}
-.fig-canvas-wrap .vuoto{color:var(--muted);font-size:.72rem;text-align:center;padding:8px}
-.fig-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-.fig-body input,.fig-body select{width:100%;background:#1a2338;color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-size:.82rem}
-.fig-row{display:flex;gap:6px;align-items:center}
-.fig-crest{width:26px;height:26px;object-fit:contain;flex:0 0 auto}
-.fig-mini{background:#1c2740;color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-size:.76rem;cursor:pointer;flex:1}
-.fig-mini:hover{border-color:var(--accent)}
-.fig-actions{display:flex;gap:6px;margin-top:auto}
-.fig-actions .btn{padding:7px 10px;font-size:.8rem;flex:1}
-.fig-star{background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);cursor:pointer;padding:0 9px;font-size:1rem}
-.fig-star.on{color:var(--gold);border-color:var(--gold)}
-.fig-reg{display:flex;gap:6px;align-items:center}
-.fig-reg label{display:flex;align-items:center;gap:3px;flex:1;font-size:.68rem;color:var(--muted)}
-.fig-reg input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:14px}
-.fig-thumb-ph{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--line);flex:0 0 auto;background:#0c1220}
-/* elenco di ciò che l'annullamento cancella: si vede PRIMA di confermare */
-.ann-perde{list-style:none;margin:12px 0 0;padding:12px 14px;background:rgba(240,166,64,.09);
-  border:1px solid rgba(240,166,64,.34);border-radius:10px;font-size:.86rem;line-height:1.7}
-.ann-perde li::before{content:'•';color:var(--warn,#f0a640);margin-right:8px}
-.ann-blocco{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.86rem;line-height:1.6;
-  background:rgba(226,72,72,.12);border:1px solid rgba(226,72,72,.42)}
-.ann-gara{font-size:1.06rem;font-weight:600;text-align:center;margin:2px 0 4px}
-.ann-gara b{color:var(--accent2,#f0c465);margin:0 10px}
-/* il comando sulla riga della partita: discreto finché non serve */
-/* doppio confronto: le due gare vanno lette come due, non come una riga lunga */
-.kleg{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted,#8ba0c0);
-  margin:6px 0 2px;display:flex;align-items:center;gap:7px}
-.kleg::after{content:'';flex:1;height:1px;background:currentColor;opacity:.28}
-.kinv{letter-spacing:.04em;text-transform:none;opacity:.72;font-size:.66rem}
-.ktot{margin-top:6px;padding-top:5px;border-top:1px dashed rgba(255,255,255,.16);
-  text-align:right;font-size:.78rem;color:var(--muted,#8ba0c0)}
-.ktot b{color:var(--accent2,#f0c465);font-size:.95rem;margin-left:5px}
-.standings td.mmp{color:var(--muted,#8ba0c0);font-variant-numeric:tabular-nums}
-.btn-ann{background:none;border:0;color:var(--muted,#8ba0c0);cursor:pointer;font-size:.92rem;
-  padding:2px 5px;border-radius:6px;line-height:1}
-.btn-ann:hover{color:#e24848;background:rgba(226,72,72,.14)}
-#estim .adv-box{width:min(760px,94vw)}
-#ritiro .adv-box{width:min(520px,94vw)}
-#arcfoto .adv-box{width:min(920px,94vw)}
-.est-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:16px}
-.est-f{display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted)}
-.est-f b{color:var(--accent)}
-.est-f input[type=time]{width:auto}
-.est-f input[type=range]{accent-color:var(--accent)}
-.est-out{background:linear-gradient(135deg,rgba(245,197,66,.16),rgba(245,197,66,.05));border:1px solid var(--accent);
-  border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
-.est-end{font-family:'Oswald',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:.8rem}
-.est-end b{display:block;font-size:3rem;letter-spacing:.04em;color:var(--accent);font-family:'Chakra Petch',monospace;line-height:1.1}
-.est-end i{font-style:normal;font-size:.7rem;color:var(--danger);letter-spacing:.1em}
-.est-dur{font-size:.84rem;color:var(--muted);margin-top:4px}
-.est-tab{width:100%;border-collapse:collapse;font-size:.82rem}
-.est-tab th{text-align:left;font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
-  font-size:.7rem;color:var(--accent2);border-bottom:1px solid var(--line);padding:6px 8px}
-.est-tab td{padding:6px 8px;border-bottom:1px solid color-mix(in srgb,var(--line) 50%,transparent)}
-.est-tab td:last-child{text-align:right;font-family:'Chakra Petch',monospace;color:var(--text)}
-#real-list{overflow-y:auto;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.real-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:7px;transition:transform .18s ease,box-shadow .18s ease}
-.real-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
-.real-hd{display:flex;align-items:center;gap:12px}
-.real-hd .lg{width:56px;height:56px;flex:0 0 56px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:5px}
-.real-hd .lg img{max-width:100%;max-height:100%;object-fit:contain}
-.real-hd .t{font-family:'Oswald',sans-serif;font-size:1.05rem;letter-spacing:.03em;color:var(--text)}
-.real-hd .e{font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.real-desc{font-size:.8rem;color:var(--muted)}
-.real-z{display:flex;gap:8px;flex-wrap:wrap;font-size:.68rem;letter-spacing:.04em}
-.real-z span{border-radius:12px;padding:1px 9px;font-weight:700}
-.real-z .zu{background:rgba(46,224,107,.15);color:#57e88f}
-.real-z .zp{background:rgba(111,210,255,.15);color:#6fd2ff}
-.real-z .zo{background:rgba(255,176,86,.15);color:#ffb056}
-.real-z .zd{background:rgba(255,107,107,.15);color:#ff6b6b}
-.real-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:4px}
-.real-foot .nn{font-family:'Chakra Petch',monospace;font-size:.78rem;color:var(--accent2)}
-.adv-box{width:min(1060px,94vw);max-height:88vh;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.6);overflow:hidden}
-.adv-head{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line)}
-.adv-head h3{margin:0;font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-.adv-head span{flex:1;color:var(--muted);font-family:'Chakra Petch',monospace}
-#adv-list{overflow-y:auto;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
-.adv-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:6px;transition:transform .18s ease,box-shadow .18s ease}
-.adv-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
-.adv-card.star{border-color:var(--accent);box-shadow:0 0 16px rgba(245,197,66,.18)}
-.adv-t{font-family:'Oswald',sans-serif;font-size:1.02rem;letter-spacing:.03em;color:var(--text)}
-.adv-tag{font-size:.8rem;color:var(--muted);font-style:italic}
-.adv-ph{margin:2px 0 0;padding-left:18px;font-size:.8rem;color:var(--muted)}
-.adv-ph li{margin:2px 0}
-.adv-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px}
-.adv-tot{font-family:'Chakra Petch',monospace;font-size:.78rem;color:var(--accent2)}
 /* ---------- cerimonia di sorteggio ---------- */
 #ceremony{position:fixed;inset:0;z-index:127;display:none;background:radial-gradient(1100px 600px at 50% -10%,rgba(84,52,150,.5),transparent),linear-gradient(180deg,#070d1f 0%,#0b0f26 60%,#070a18 100%)}
 #ceremony.on{display:block}
@@ -1822,8 +1880,11 @@ body.solo-tabellone #present .pclose,body.solo-tabellone #present-modes{display:
 body.no-anim #cer-confetti i{animation:none;opacity:0}
 
 /* ---------- regia audio: pulsante speaker "retroilluminato" ---------- */
-.spk-wrap{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-top:6px}
-#spk-btn{font-family:'Oswald',sans-serif;font-size:1.45rem;letter-spacing:.16em;padding:26px 38px;border-radius:16px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;
+.spk-wrap{display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-top:6px;min-width:0}
+#spk-btn{font-family:'Oswald',sans-serif;font-size:clamp(1.1rem,1.1vw + .55rem,1.45rem);
+  letter-spacing:.16em;padding:clamp(17px,2.2vh,26px) clamp(20px,2.4vw,38px);
+  max-width:100%;flex:0 1 auto;white-space:nowrap;
+  border-radius:16px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;
   border:2px solid #8a2222;color:#ff9d9d;text-shadow:0 0 14px rgba(255,70,70,.85);
   background:radial-gradient(circle at 50% 26%,#601717,#2a0808 74%);
   box-shadow:0 0 26px rgba(255,45,45,.35),inset 0 0 20px rgba(255,70,70,.28),inset 0 -3px 8px rgba(0,0,0,.6);
@@ -1834,7 +1895,64 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   box-shadow:0 0 36px rgba(70,255,120,.55),inset 0 0 24px rgba(90,255,130,.32),inset 0 -3px 8px rgba(0,0,0,.6);
   animation:spkpulse 1.5s ease-in-out infinite}
 @keyframes spkpulse{50%{box-shadow:0 0 52px rgba(70,255,120,.8),inset 0 0 30px rgba(90,255,130,.45),inset 0 -3px 8px rgba(0,0,0,.6)}}
+/* il pulsante e il rack viaggiano insieme, affiancati: è la "testata"
+   della regia, e separarli su due righe toglieva il colpo d'occhio.
+   Restano però liberi di andare a capo fra loro: con "flex:0 0 auto" la
+   testata teneva la sua larghezza intera anche quando la colonna della
+   griglia scendeva sotto i 350px, e sbordava dalla scheda finendo sopra
+   "Effetti e Segnali di Gara". Ora si restringe e, se proprio non ci sta,
+   il rack scende sotto il pulsante invece di invadere la scheda accanto. */
+.spk-testa{display:flex;gap:18px;align-items:center;flex:1 1 auto;
+  flex-wrap:wrap;min-width:0;max-width:100%}
 .spk-side{flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px}
+/* ---------- RACK DEI LIVELLI ----------------------------------------------
+   Un pannello da rack accanto al pulsante dello speaker: alluminio spazzolato
+   (le striature sono un gradiente ripetuto), viti agli angoli, due colonne di
+   LED e i cursori dei volumi. La scala è quella dei mixer veri: verde fino a
+   -6 dB, ambra da -6 a -1, rosso oltre, con la tacca di picco che resta
+   sospesa un attimo prima di ricadere. */
+.rack{position:relative;display:flex;gap:18px;padding:16px 20px;border-radius:8px;flex:0 0 auto;
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.055) 0 1px,rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(160deg,#8f949b 0%,#6c7076 18%,#babfc6 42%,#70747a 62%,#9aa0a7 82%,#5f6368 100%);
+  border:1px solid #4c5055;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -2px 5px rgba(0,0,0,.45),
+             0 10px 26px -10px rgba(0,0,0,.75)}
+.rack-vite{position:absolute;width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#e9ecef,#9aa0a7 55%,#5c6065);
+  box-shadow:inset 0 -1px 2px rgba(0,0,0,.5),0 1px 1px rgba(255,255,255,.35)}
+.rack-vite::after{content:"";position:absolute;inset:4px 2px;background:rgba(0,0,0,.45);border-radius:1px}
+.rack-vite.tl{top:5px;left:5px}.rack-vite.tr{top:5px;right:5px}
+.rack-vite.bl{bottom:5px;left:5px}.rack-vite.br{bottom:5px;right:5px}
+.rack-canale{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rack-t{font-family:'Chakra Petch',monospace;font-size:.62rem;letter-spacing:.18em;color:#20242a;
+  text-shadow:0 1px 0 rgba(255,255,255,.5);display:flex;flex-direction:column;align-items:center;gap:1px}
+.rack-db{font-size:.58rem;letter-spacing:.04em;color:#3a4048;min-height:.7em}
+/* la colonna di LED: 14 segmenti disegnati con un gradiente, accesi via CSS */
+.rack-led{--n:0;position:relative;width:19px;height:132px;border-radius:3px;
+  background:linear-gradient(#0a0c0f,#15181d);border:1px solid #33373d;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.9);overflow:hidden}
+.rack-led i{position:absolute;left:2px;right:2px;height:7px;border-radius:1px;background:#1d2228;
+  box-shadow:inset 0 0 2px rgba(0,0,0,.8);transition:background .06s linear,box-shadow .06s linear}
+.rack-led i.on.v{background:#38e06a;box-shadow:0 0 7px rgba(56,224,106,.85),inset 0 0 3px rgba(255,255,255,.4)}
+.rack-led i.on.g{background:#ffc63d;box-shadow:0 0 7px rgba(255,198,61,.85),inset 0 0 3px rgba(255,255,255,.4)}
+.rack-led i.on.r{background:#ff4436;box-shadow:0 0 9px rgba(255,68,54,.95),inset 0 0 3px rgba(255,255,255,.4)}
+.rack-led i.pk{background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9)}
+/* cursore verticale, con cappuccio come le slitte dei mixer */
+.rack-sl{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;
+  width:22px;height:96px;background:transparent;cursor:pointer}
+.rack-sl::-webkit-slider-runnable-track{width:5px;border-radius:3px;
+  background:linear-gradient(#2b2f35,#14171b);box-shadow:inset 0 0 3px rgba(0,0,0,.9)}
+.rack-sl::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:13px;border-radius:2px;
+  background:linear-gradient(#f2f4f6,#a9aeb5 45%,#6e7278);border:1px solid #4a4e53;
+  box-shadow:0 1px 2px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.8)}
+.rack-sl::-moz-range-track{width:5px;border-radius:3px;background:#20242a}
+.rack-sl::-moz-range-thumb{width:20px;height:13px;border-radius:2px;border:1px solid #4a4e53;
+  background:linear-gradient(#f2f4f6,#6e7278)}
+@media(max-width:640px){.rack{width:100%;justify-content:center}}
+/* rete di sicurezza: qualunque cosa succeda dentro, la scheda della
+   Regia audio non deborda sulla colonna vicina. */
+.card:has(.spk-wrap){min-width:0;overflow-x:clip}
 /* LED "in onda" accanto all'orologio fisso */
 #hdr-mic{display:none;align-items:center;gap:6px;font-size:1.05rem;color:#79ffa0;margin-right:2px}
 #hdr-mic.on{display:flex}
@@ -1861,6 +1979,22 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 #hdr-tun.err i{background:radial-gradient(circle at 35% 30%,#ffc9d4,#ff4d6d 60%,#8a1226);box-shadow:0 0 8px #ff4d6d}
 @media(max-width:900px){#hdr-tun .tl{display:none}}
 /* ---------- sezione REGIA: banda di gruppo e riquadri ---------- */
+.sala-box{margin-top:14px;padding:12px 14px;border-radius:12px;
+  border:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);
+  background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.sala-box input{font-family:'Chakra Petch',monospace;font-size:.82rem;padding:6px 9px}
+.sala-esito{margin-top:8px;font-family:'Chakra Petch',monospace;font-size:.76rem;line-height:1.5}
+.sala-esito.ok{color:var(--ok,#3ddc84)}
+.sala-esito.male{color:var(--danger,#ff6b6b)}
+.sala-esito.attesa{color:var(--muted)}
+.wa-rubrica{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow:auto;padding-right:4px}
+.wa-riga{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,1.15fr) 18px;
+  align-items:center;gap:10px;margin:0}
+.wa-nome{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;
+  font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wa-riga input{width:100%;font-family:'Chakra Petch',monospace;font-size:.8rem;padding:5px 8px}
+.wa-spia{font-family:'Chakra Petch',monospace;color:var(--muted);text-align:center;font-size:.85rem}
+.wa-spia.ok{color:var(--ok,#3ddc84)}
 .rgband{display:flex;align-items:center;gap:14px;font-family:'Oswald',sans-serif;font-size:.95rem;
   letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 14px;font-weight:600}
 .rgband::after{content:'';flex:1;height:1px;
@@ -1956,6 +2090,14 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   #pdfview{display:none!important}
   .bg-fx,header.topbar,nav#tabs,#ticker-wrap,footer,.btn,.bctrl,.bcfg,#gironi-actions,#miniplayer{display:none!important}
   body{background:#fff;color:#000}
+  /* I metalli — zone di classifica e podio — sono testo trasparente riempito
+     da un gradiente di sfondo. In stampa il browser disegna gli sfondi solo
+     se l'utente lascia acceso "Grafica di sfondo": senza, il nome sparirebbe
+     dal foglio. Sulla carta si torna quindi a inchiostro nero pieno. */
+  table.standings tr[class] .tn-wrap,table.standings tr[class] td.pos,table.standings tr[class] td.l,
+  table.standings tr .tn-wrap,table.standings tr td.pos,table.standings tr td.l{
+    background-image:none!important;color:#000!important;
+    -webkit-text-fill-color:#000!important;animation:none!important}
   /* la scheda PUÒ spezzarsi fra una pagina e l'altra (una classifica lunga o
      un girone numeroso superano il foglio): a restare interi sono i singoli
      mattoni — righe, incontri, tabelloni — non l'intero blocco, che altrimenti
@@ -2116,7 +2258,6 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   <button data-tab="live" onclick="tabTo('live')" disabled>Live <span class="dotlive" style="display:none"></span></button>
   <button data-tab="classifica" onclick="tabTo('classifica')" disabled>Classifiche</button>
   <button data-tab="cronache" onclick="tabTo('cronache')" disabled>Cronache</button>
-  <button data-tab="figurine" onclick="openFigurine()" id="fig-btn">🃏 Figurine</button>
   <button data-tab="archivio" onclick="openArchivio()" id="arc-btn">📚 Archivio</button>
   <button onclick="openPresent()" id="present-btn" disabled>📽 Presentazione</button>
   <button onclick="apriSecondoSchermo()" id="schermo-btn" title="Apre il tabellone in una seconda finestra da mettere sul proiettore">🖥 Secondo schermo</button>
@@ -2462,23 +2603,6 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   </div>
 </div>
 
-<div id="iscrizioni">
-  <div class="adv-box">
-    <div class="adv-head">
-      <h3>📱 Iscrizioni via QR</h3><span></span>
-      <button class="btn sec mini" onclick="closeIscrizioni()">✕ Chiudi</button>
-    </div>
-    <div style="padding:16px 20px">
-      <p class="small muted" style="margin-top:0">I partecipanti inquadrano questo codice col telefono, inseriscono <b>cognome</b>, <b>squadra</b> e la <b>foto del volto</b>. Le iscrizioni arrivano qui e diventano figurine.</p>
-      <canvas id="isc-qr"></canvas>
-      <p class="small" id="isc-link" style="text-align:center;word-break:break-all;color:var(--muted);margin:10px 0"></p>
-      <div class="row" style="justify-content:center;gap:8px">
-        <button class="btn" onclick="iscrScarica()">📥 Scarica le iscrizioni</button>
-      </div>
-      <p class="small muted" id="isc-conta" style="text-align:center;margin-top:10px"></p>
-    </div>
-  </div>
-</div>
 
 <div id="annulla">
   <div class="adv-box">
@@ -2547,21 +2671,6 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 
 <div id="fotolb" onclick="fotoZoomClose()"><img id="fotolb-img" alt=""></div>
 
-<!-- ============ FIGURINE ============ -->
-<section class="tab" id="tab-figurine">
-  <div class="row spread">
-    <h2 class="sect" style="flex:1">🃏 Figurine dei partecipanti</h2>
-    <button class="btn sec" onclick="figAddManual()">＋ Aggiungi partecipante</button>
-    <button class="btn sec" onclick="figGenAll()">⚙ Genera tutte</button>
-    <button class="btn sec" onclick="figGenSquadre()">🏳 Figurine squadra</button>
-    <button class="btn sec" onclick="openIscrizioni()">📱 Iscrizioni via QR</button>
-    <button class="btn sec" onclick="figAlbum()">🖨 Album A4</button>
-    <button class="btn" onclick="figToBook()">📖 Al libro dei ricordi</button>
-  </div>
-  <p class="muted small" style="margin:-8px 0 14px">Per ogni partecipante: <b>foto del volto</b>, nome del giocatore e squadra (con stemma e maglia presi dal catalogo). Premi <b>Genera</b> e la figurina viene composta come quelle vere — nome, stemma, nome della squadra — e conservata nel torneo. Tutto <b>offline</b>. Le figurine contrassegnate con ★ finiscono nel libro dei ricordi.</p>
-  <div id="fig-empty" class="card" style="display:none"><p class="muted">Nessun partecipante. Avvia un torneo (i partecipanti compaiono qui) oppure usa «＋ Aggiungi partecipante» per prepararli in vista di un torneo da creare.</p></div>
-  <div id="fig-grid" class="fig-grid"></div>
-</section>
 
 <!-- ============ OPZIONI ============ -->
 <section class="tab" id="tab-opzioni">
@@ -2720,6 +2829,20 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
       </div>
       <p class="small muted" id="sy-qrhint" style="margin-top:12px">Il QR contiene indirizzo e chiave: il telefono è collegato al volo. Scegli un campo per legare quel telefono solo alle sue partite.</p>
       <div id="sy-devices" class="small" style="margin-top:10px"></div>
+
+      <!-- ---------- indirizzo di sala: i QR stampati giorni prima ---------- -->
+      <div class="sala-box">
+        <label class="f" style="margin:0">🏟 Indirizzo di sala — per stampare i QR in anticipo</label>
+        <p class="small muted" style="margin:4px 0 8px">Fissa qui l'indirizzo che avrà il computer il giorno del torneo: i codici da tavolo si possono così stampare e attaccare ai campi <b>giorni prima</b>, senza che il collegamento sia acceso. Perché funzionino, quel giorno il computer deve ritrovarsi lo stesso indirizzo.</p>
+        <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
+          <input type="text" id="sy-sala" placeholder="http://192.168.1.50:8765" style="flex:1;min-width:200px"
+                 oninput="salaImposta(this.value)">
+          <button class="btn sec mini" onclick="salaPrendiAttuale()">📍 Usa quello attuale</button>
+          <button class="btn sec mini" onclick="salaAzzera()">✕ Togli</button>
+        </div>
+        <div id="sy-sala-esito" class="sala-esito small"></div>
+        <button class="btn mini" style="margin-top:10px" onclick="printQrCampi()">🖨 Stampa i codici da tavolo</button>
+      </div>
     </div>
 
     <div class="card rgcard rgspan">
@@ -2761,10 +2884,29 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
       <h3 class="subt">🎙 Speaker della Regia</h3>
       <p class="small muted" style="margin-top:0">Usa un microfono collegato alla scheda audio del computer (o quello interno) per parlare al pubblico dalle casse: annunci, chiamate ai campi, premiazioni — una vera regia umana senza attrezzature esterne.</p>
       <div class="spk-wrap">
+        <div class="spk-testa">
         <button id="spk-btn"
           onclick="spkToggle()"
           onmousedown="spkHold(true)" onmouseup="spkHold(false)" onmouseleave="spkHold(false)"
           ontouchstart="spkHold(true)" ontouchend="spkHold(false)">🎙 SPEAKER</button>
+        <!-- rack dei livelli: due meter a LED con i rispettivi cursori -->
+        <div class="rack" id="rack">
+          <div class="rack-vite tl"></div><div class="rack-vite tr"></div>
+          <div class="rack-vite bl"></div><div class="rack-vite br"></div>
+          <div class="rack-canale">
+            <div class="rack-t">MIC<span class="rack-db" id="rk-mic-db">—</span></div>
+            <div class="rack-led" id="rk-mic"></div>
+            <input type="range" class="rack-sl" id="rk-mic-vol" min="0" max="200" value="100"
+                   oninput="rackVolMic(this.value)" title="Guadagno microfono">
+          </div>
+          <div class="rack-canale">
+            <div class="rack-t">OUT<span class="rack-db" id="rk-out-db">—</span></div>
+            <div class="rack-led" id="rk-out"></div>
+            <input type="range" class="rack-sl" id="rk-out-vol" min="0" max="100" value="55"
+                   oninput="rackVolOut(this.value)" title="Volume delle uscite audio">
+          </div>
+        </div>
+        </div>
         <div class="spk-side">
           <label class="f" style="margin:0">Modalità di utilizzo</label>
           <label class="ck small"><input type="radio" name="spk-mode" value="hold" onchange="spkMode('hold')"> Premi e parla (il microfono resta aperto finché tieni premuto)</label>
@@ -2823,6 +2965,40 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
         <input type="range" id="music-vol" min="0" max="100" value="55" style="flex:1;max-width:220px;accent-color:var(--accent)" oninput="musicVol(this.value)">
       </div>
       <p class="small muted" style="margin-top:4px">La musica si mette in pausa da sola quando parte un timer, sfuma all’avvio del countdown e riprende a fine partita.</p>
+    </div>
+  </div>
+
+  <!-- ---------- WhatsApp: risultati e classifiche fuori dalla sala ---------- -->
+  <h3 class="rgband" style="margin-top:26px">📲 WhatsApp — risultati e classifiche</h3>
+  <div class="rggrid">
+    <div class="card rgcard">
+      <h3 class="subt">✉️ Il messaggio</h3>
+      <p class="small muted" style="margin-top:0">Prende l'ultima tornata giocata e le classifiche aggiornate e ne fa un messaggio già formattato, pronto da mandare al gruppo del torneo o ai singoli partecipanti.</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
+        <label class="f" style="margin:0">Contenuto</label>
+        <select id="wa-tipo" style="width:auto" onchange="waTipo(this.value)">
+          <option value="tutto">Risultati + classifiche</option>
+          <option value="risultati">Solo i risultati dell'ultima tornata</option>
+          <option value="classifiche">Solo le classifiche aggiornate</option>
+        </select>
+        <button class="btn sec mini" onclick="waAggiorna()">🔄 Aggiorna anteprima</button>
+      </div>
+      <textarea id="wa-testo" readonly rows="12" spellcheck="false"
+        style="width:100%;margin-top:10px;font-family:'Inter',monospace;font-size:.78rem;line-height:1.45;resize:vertical"></textarea>
+      <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn" onclick="waInviaGruppo()">📤 Manda al gruppo del torneo</button>
+        <button class="btn sec" onclick="waInviaSingoli()">👤 Manda ai partecipanti</button>
+        <button class="btn sec" onclick="waCopia()">📋 Copia</button>
+      </div>
+      <p class="small muted" style="margin-top:8px" id="wa-nota"></p>
+    </div>
+
+    <div class="card rgcard">
+      <h3 class="subt">📇 Numeri dei partecipanti</h3>
+      <p class="small muted" style="margin-top:0">Servono solo per l'invio ai singoli. Col prefisso internazionale — <b>+39 333 1234567</b>. Chi resta senza numero viene semplicemente saltato.</p>
+      <div id="wa-rubrica" class="wa-rubrica"></div>
+      <label class="ck small" style="margin-top:12px"><input type="checkbox" id="wa-auto" onchange="waAuto(this.checked)"> Preparami il messaggio appena si chiude una tornata</label>
+      <p class="small muted" style="margin:4px 0 0">A tornata completa compare l'avviso con il messaggio già pronto: l'invio resta un tuo gesto, WhatsApp non consente a un programma di spedire da solo al posto tuo.</p>
     </div>
   </div>
 </section>
@@ -3232,7 +3408,7 @@ let S=defaultState();
 function defaultState(){return{
   started:false, screen:'setup', theme:'notte', anim:true, sound:true,
   celebrated:false, champion:null, phase:'groups',
-  cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,
+  cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,qrAddr:'',
        ritorno:false,third:true,swissRounds:5,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
        refSource:'players',refPool:[],showPlayers:false,showRefBoard:true,fotoConsenso:true,
        poffN:4,poutN:0,poffFmt:'ko',chQ:8,kohTarget:5,consB:false,oneHalf:false,noAnticipo:false,
@@ -3240,20 +3416,19 @@ function defaultState(){return{
        tb:['h2h','dr','gf','v','gs'],
        tiers:[{name:'Tabellone Gold',ranks:'1,2',fmt:'ko'},{name:'Tabellone Silver',ranks:'3,4',fmt:'ko'}]},
   teams:[], logos:{}, rosters:{}, captains:{}, players:{}, groups:[], ko:null, tiersPhases:[], swissDone:false, freeMatches:[],
+  tel:{}, wa:{tipo:'tutto',auto:false},   // rubrica e impostazioni dell'invio su WhatsApp
   results:[], boards:[], music:[], musicOn:false, musicEndLive:false, musicVol:55, ttsVoice:'F', soundGoal:true, arbSound:'whistle', autoLive:false,
-  pre:{quota:10,services:[],pays:{},nextRc:1},
-  cards:{}   /* figurine: chiave partecipante -> {player,team,photo,kit,card,inBook} */
+  pre:{quota:10,services:[],pays:{},nextRc:1}
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='6.4.2';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.1.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
 const MINIATURE_ON=false;
 /* Figurine: sezione sospesa in attesa di revisione (v6.2). Messo a true
    ricompare senza altre modifiche — il codice resta tutto al suo posto. */
-const FIGURINE_ON=false;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>'m'+Math.random().toString(36).slice(2,10);
 const pad=n=>String(n).padStart(2,'0');
@@ -3522,6 +3697,49 @@ const TR={
   "Aggiungi tutti":"Add all",
   // standings columns + labels (dinamici, via L())
   "Squadra":"Team","Pt":"Pts","G":"P","V":"W","N":"D","P":"L","GF":"GF","GS":"GA","DR":"GD","#":"#",
+  "Messaggio lungo":"Long message","caratteri":"characters",
+  "su alcuni telefoni WhatsApp lo tronca. Conviene mandare separatamente risultati e classifiche.":"WhatsApp truncates it on some phones. Better to send results and standings separately.",
+  "partecipanti con numero":"entrants with a number","Messaggio copiato":"Message copied",
+  "WhatsApp aperto: scegli il gruppo del torneo e invia":"WhatsApp is open: pick the tournament group and send",
+  "Nessun partecipante ha un numero: compila la rubrica qui accanto.":"No entrant has a number: fill in the address book next to this.",
+  "Elenco completato":"List finished","Aperta la chat di":"Opened the chat with","ancora in coda":"still queued",
+  "Prossimo":"Next","era l'ultimo":"that was the last one","Nessun partecipante iscritto.":"No entrant registered.",
+  "Tornata completata: il messaggio WhatsApp è pronto":"Matchday complete: the WhatsApp message is ready",
+  "Apri WhatsApp":"Open WhatsApp","Campione":"Champion",
+  "🏟 Indirizzo di sala — per stampare i QR in anticipo":"🏟 Venue address — to print the QR codes in advance",
+  "Fissa qui l'indirizzo che avrà il computer il giorno del torneo: i codici da tavolo si possono così stampare e attaccare ai campi giorni prima, senza che il collegamento sia acceso. Perché funzionino, quel giorno il computer deve ritrovarsi lo stesso indirizzo.":"Fix here the address the computer will have on tournament day: the table codes can then be printed and taped to the pitches days ahead, with the link switched off. For them to work, on the day the computer must find itself on that same address.",
+  "📍 Usa quello attuale":"📍 Use the current one",
+  "✕ Togli":"✕ Remove",
+  "🖨 Stampa i codici da tavolo":"🖨 Print the table codes",
+  "Nessun indirizzo fisso: i codici da tavolo useranno quello del momento e andranno ristampati se cambia.":"No fixed address: the table codes will use whatever address is current, and will need reprinting if it changes.",
+  "I codici da tavolo porteranno a":"The table codes will point to",
+  "Accendi il collegamento telefoni per verificare che il computer ci si ritrovi.":"Switch on the phone link to check the computer finds itself there.",
+  "Il computer risponde proprio a":"The computer answers exactly at",
+  "i codici già stampati funzionano.":"the codes already printed work.",
+  "I codici stampati portano a":"The printed codes point to",
+  "ma adesso questo computer risponde a":"but right now this computer answers at",
+  "Da correggere prima del via: assegna al computer quell'indirizzo (prenotazione nel router o IP manuale), oppure ristampa i codici con il nuovo.":"Fix before kick-off: give the computer that address (a router reservation or a manual IP), or reprint the codes with the new one.",
+  "Il collegamento telefoni non è ancora acceso: non c'è un indirizzo da copiare.":"The phone link is not on yet: there is no address to copy.",
+  "Serve un indirizzo: accendi il collegamento telefoni, oppure fissa l'indirizzo di sala.":"An address is needed: switch on the phone link, or fix the venue address.",
+  "Indirizzo dei codici":"Address in the codes",
+  "Il giorno del torneo il computer deve rispondere a questo stesso indirizzo: la Regia lo verifica e avvisa se non combacia.":"On tournament day the computer must answer at this same address: the Control Room checks it and warns if it does not match.",
+  "📲 WhatsApp — risultati e classifiche":"📲 WhatsApp — results and standings",
+  "✉️ Il messaggio":"✉️ The message",
+  "Prende l'ultima tornata giocata e le classifiche aggiornate e ne fa un messaggio già formattato, pronto da mandare al gruppo del torneo o ai singoli partecipanti.":"Takes the last matchday played and the updated standings and turns them into a ready-formatted message, set to go to the tournament group or to individual entrants.",
+  "Contenuto":"Content",
+  "Risultati + classifiche":"Results + standings",
+  "Solo i risultati dell'ultima tornata":"Only the last matchday results",
+  "Solo le classifiche aggiornate":"Only the updated standings",
+  "🔄 Aggiorna anteprima":"🔄 Refresh preview",
+  "📤 Manda al gruppo del torneo":"📤 Send to the tournament group",
+  "👤 Manda ai partecipanti":"👤 Send to the entrants",
+  "📋 Copia":"📋 Copy",
+  "📇 Numeri dei partecipanti":"📇 Entrants' numbers",
+  "Servono solo per l'invio ai singoli. Col prefisso internazionale — +39 333 1234567. Chi resta senza numero viene semplicemente saltato.":"Needed only for sending to individuals. With the international prefix — +44 7700 900123. Anyone left without a number is simply skipped.",
+  "Preparami il messaggio appena si chiude una tornata":"Get the message ready as soon as a matchday closes",
+  "A tornata completa compare l'avviso con il messaggio già pronto: l'invio resta un tuo gesto, WhatsApp non consente a un programma di spedire da solo al posto tuo.":"When the matchday is complete a notice appears with the message ready: sending stays your own action — WhatsApp does not let a program send on your behalf.",
+  "Quadro completo":"Full board","Ultima tornata":"Latest matchday",
+  "Classifiche complete":"Full standings","Nessuna gara con punteggio.":"No match with a score.",
   "Girone ":"Group ","Giornata":"Matchday","Turno":"Round","da definire":"to be defined","da definire.":"to be defined.",
   "Finale:":"Final:","3° posto:":"3rd place:","Campione del torneo:":"Tournament champion:",
   "Gironi + Fasce":"Groups + Tiers","Campionato":"League","Torneo a Squadre (CdT)":"Team Tournament (CdT)",
@@ -3809,6 +4027,20 @@ const TR={
   "Quanto in fretta scorrono i risultati sul rullo in alto":"How fast the results scroll on the ticker at the top",
   "Velocità del rullo":"Ticker speed",
   "Aggiornamenti":"Updates",
+  "Forma":"Form",
+  "Ultime gare":"Recent games",
+  "in salita":"moving up",
+  "in discesa":"moving down",
+  "campo invertito":"reversed venue",
+  "da definire":"to be decided",
+  "Riposo":"Bye",
+  "Finale 3° posto":"Third-place final",
+  "Andata":"First leg",
+  "Ritorno":"Second leg",
+  "Sedicesimi di finale":"Round of 32",
+  "Finali di piazzamento":"Placement finals",
+  "Tabellone Principale":"Main Bracket",
+  "Main Bracket":"Main Bracket",
   "Girone":"Group",
   "Fascia":"Pot",
   "Fascia (teste di serie)":"Pot (seeding)",
@@ -3923,7 +4155,7 @@ const TR={
   "su un host pubblico.":"on a public host.",
 };
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
-const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint';
+const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint,#wa-rubrica,#wa-testo,#wa-nota,#sy-sala-esito';
 function translateNodeText(node){
   const orig=node.__it!=null?node.__it:(node.__it=node.nodeValue);
   if(LANG!=='en'){node.nodeValue=orig;return;}
@@ -4330,7 +4562,7 @@ function musicToggle(){
   }
   updateMiniPlayer();
 }
-function musicVol(v){S.musicVol=parseInt(v)||0;musicApplyVol();const mv=$('#music-vol');if(mv)mv.value=S.musicVol;const mpv=$('#mp-vol');if(mpv)mpv.value=S.musicVol;persist();}
+function musicVol(v){S.musicVol=parseInt(v)||0;musicApplyVol();const mv=$('#music-vol');if(mv)mv.value=S.musicVol;const mpv=$('#mp-vol');if(mpv)mpv.value=S.musicVol;const rk=document.getElementById('rk-out-vol');if(rk&&rk.value!=S.musicVol)rk.value=S.musicVol;persist();}
 
 /* =========================================================
    REGIA AUDIO — SPEAKER: microfono del computer in uscita
@@ -4360,6 +4592,7 @@ async function spkStart(){
     SPK.gain.gain.value=((+($('#spk-vol')?.value??100))||100)/100*2;
     SPK.src.connect(SPK.gain);SPK.gain.connect(SPK.ctx.destination);
     SPK.on=true;
+    rackMicCollega();                 // derivazione per il meter dei livelli
     // "ducking": mentre si parla la musica scende, alla chiusura risale
     MUSIC.duck=.18;musicApplyVol();   // la musica si abbassa mentre lo speaker è in onda
   }catch(e){
@@ -4370,10 +4603,114 @@ async function spkStart(){
   }
   SPK.busy=false;spkUI();return SPK.on;
 }
+/* =========================================================
+   RACK DEI LIVELLI — i due meter a LED accanto allo Speaker
+   ---------------------------------------------------------
+   MIC: misura VERA. Il microfono passa già da Web Audio (SPK.gain), quindi
+   ci si aggancia un analizzatore e si legge il picco del segnale.
+
+   OUT: qui la misura del segnale NON è possibile, e vale la pena dire perché.
+   Musica, inni ed effetti sono elementi <audio> che leggono file locali; per
+   analizzarli servirebbe createMediaElementSource (o captureStream), ma con
+   la pagina aperta da file:// il browser considera quei file di altra origine
+   e la catena Web Audio restituisce silenzio — anzi, collegandola la musica
+   si ammutolirebbe del tutto. Verificato: la riproduzione prosegue ma il
+   segnale letto è zero, e captureStream rifiuta con un errore di sicurezza.
+   Quindi la colonna OUT mostra il livello di uscita REALE (il volume
+   effettivamente applicato agli elementi che stanno suonando, abbassamento
+   per lo speaker compreso) con l'inviluppo di un VU: sale di scatto e
+   ricade piano. È una misura del livello, non della forma d'onda.
+   ========================================================= */
+const RACK={mic:{an:null,dati:null,pk:0,val:0},out:{pk:0,val:0},t:null,seg:14};
+function rackCostruisci(){
+  ['rk-mic','rk-out'].forEach(id=>{
+    const el=document.getElementById(id); if(!el||el.children.length)return;
+    for(let k=0;k<RACK.seg;k++){
+      const i=document.createElement('i');
+      // dal basso verso l'alto: verde, poi ambra, poi rosso in cima
+      i.className = k>=RACK.seg-2 ? 'r' : (k>=RACK.seg-5 ? 'g' : 'v');
+      i.style.bottom=(2+k*9.2)+'px';
+      el.appendChild(i);
+    }
+  });
+}
+/** Aggancia l'analizzatore alla catena del microfono (chiamata all'accensione). */
+function rackMicCollega(){
+  try{
+    if(!SPK.ctx||!SPK.gain)return;
+    const an=SPK.ctx.createAnalyser(); an.fftSize=1024; an.smoothingTimeConstant=.25;
+    SPK.gain.connect(an);            // derivazione: non tocca il percorso verso le casse
+    RACK.mic.an=an; RACK.mic.dati=new Uint8Array(an.fftSize);
+  }catch(e){ RACK.mic.an=null; }
+}
+function rackMicStacca(){ try{RACK.mic.an&&RACK.mic.an.disconnect();}catch(e){} RACK.mic.an=null; }
+/** Livello reale in uscita: volume applicato agli elementi che stanno suonando. */
+function rackLivelloOut(){
+  let v=0;
+  (MUSIC.els||[]).forEach(a=>{ if(a&&!a.paused&&!a.ended&&a.readyState>2) v=Math.max(v,a.volume||0); });
+  if(typeof inniStato!=='undefined'&&inniStato&&inniStato.audio&&!inniStato.audio.paused)
+    v=Math.max(v,inniStato.audio.volume||0);
+  if(typeof champAudio!=='undefined'&&champAudio&&!champAudio.paused)
+    v=Math.max(v,champAudio.volume||0);
+  return Math.min(1,v);
+}
+function rackDipingi(id,val,pk,dbEl){
+  const el=document.getElementById(id); if(!el)return;
+  const acc=Math.round(val*RACK.seg), ipk=Math.min(RACK.seg-1,Math.round(pk*RACK.seg)-1);
+  [...el.children].forEach((seg,k)=>{
+    seg.classList.toggle('on',k<acc);
+    seg.classList.toggle('pk',k===ipk&&pk>0.02);
+  });
+  if(dbEl){
+    const e=document.getElementById(dbEl);
+    if(e)e.textContent = pk<=0.001 ? '—' : (pk>=1?'0':(20*Math.log10(pk)).toFixed(0))+' dB';
+  }
+}
+function rackGiro(){
+  // MIC — picco vero del segnale
+  let m=0;
+  if(RACK.mic.an&&SPK.on){
+    RACK.mic.an.getByteTimeDomainData(RACK.mic.dati);
+    for(let k=0;k<RACK.mic.dati.length;k+=2){
+      const d=Math.abs(RACK.mic.dati[k]-128)/128; if(d>m)m=d;
+    }
+  }
+  // OUT — livello effettivo
+  const o=rackLivelloOut();
+  // inviluppo da VU: attacco rapido, rilascio lento; il picco resta sospeso
+  const env=(c,t)=>t>c.val?t:c.val*0.86+t*0.14;
+  RACK.mic.val=env(RACK.mic,m); RACK.out.val=env(RACK.out,o);
+  RACK.mic.pk = m>RACK.mic.pk ? m : RACK.mic.pk*0.965;
+  RACK.out.pk = o>RACK.out.pk ? o : RACK.out.pk*0.965;
+  rackDipingi('rk-mic',RACK.mic.val,RACK.mic.pk,'rk-mic-db');
+  rackDipingi('rk-out',RACK.out.val,RACK.out.pk,'rk-out-db');
+}
+function rackAvvia(){
+  rackCostruisci();
+  if(RACK.t)return;
+  RACK.t=setInterval(rackGiro,60);      // ~16 letture al secondo: fluido senza pesare
+}
+/* i cursori del rack e quelli già presenti comandano le stesse cose:
+   si aggiornano a vicenda, così non esistono due volumi diversi */
+function rackVolMic(v){
+  spkVol(v);
+  const a=document.getElementById('spk-vol'); if(a)a.value=v;
+}
+function rackVolOut(v){
+  musicVol(v);
+  const a=document.getElementById('rk-out-vol'); if(a)a.value=v;
+}
+function rackSincronizza(){
+  const m=document.getElementById('rk-mic-vol'), o=document.getElementById('rk-out-vol');
+  const sv=document.getElementById('spk-vol');
+  if(m&&sv)m.value=sv.value;
+  if(o)o.value=S.musicVol??55;
+}
 function spkStop(){
   if(SPK.stream){try{SPK.stream.getTracks().forEach(t=>t.stop());}catch(e){}SPK.stream=null;}
   try{SPK.src&&SPK.src.disconnect();}catch(e){}
   try{SPK.gain&&SPK.gain.disconnect();}catch(e){}
+  rackMicStacca();
   SPK.src=SPK.gain=null;
   MUSIC.duck=1;musicApplyVol();      // torna al volume pieno alla chiusura del microfono
   SPK.on=false;spkUI();
@@ -4385,7 +4722,8 @@ function spkMode(m){
   localStorage.setItem('subbuteo_spk_mode',SPK.mode);
   if(SPK.on)spkStop();else spkUI();
 }
-function spkVol(v){if(SPK.gain)SPK.gain.gain.value=((+v)||0)/100*2;}
+function spkVol(v){if(SPK.gain)SPK.gain.gain.value=((+v)||0)/100*2;
+  const r=document.getElementById('rk-mic-vol'); if(r&&r.value!=v)r.value=v;}
 function spkFiltri(on){
   S.spkFiltri=!!on;persist();
   toast(on?L('Filtri anti-rumore attivi alla prossima accensione dello speaker.')
@@ -5269,10 +5607,6 @@ function applyFeatureFlags(){
   if(!MINIATURE_ON){
     const b=$('#mini-btn');if(b)b.remove();
     const t=$('#tab-miniature');if(t)t.remove();
-  }
-  if(!FIGURINE_ON){
-    const b=$('#fig-btn');if(b)b.remove();
-    const t=$('#tab-figurine');if(t)t.remove();
   }
 }
 function applyLicenseUI(){
@@ -6202,7 +6536,12 @@ function assignReferees(reset){
   });
 }
 function seedOrder(n){let r=[1,2];while(r.length<n){const m=r.length*2+1;r=r.flatMap(x=>[x,m-x]);}return r;}
-function roundName(c){return c===1?'Finale':c===2?'Semifinali':c===4?'Quarti di Finale':c===8?'Ottavi di Finale':c===16?'Sedicesimi di Finale':`Turno dei ${c*2}`;}
+/* I nomi dei turni finiscono DENTRO i dati del tabellone, quindi restano
+   quelli di quando è stato creato. Si scrivono con la grafia esatta delle
+   voci di dizionario e si traducono al momento di mostrarli (vedi L(...)
+   sui punti di stampa): così un torneo salvato in italiano si legge in
+   inglese, e viceversa, senza toccare i dati. */
+function roundName(c){return c===1?'Finale':c===2?'Semifinali':c===4?'Quarti di finale':c===8?'Ottavi di finale':c===16?'Sedicesimi di finale':`Turno dei ${c*2}`;}
 function makeKO(title,seeds,withThird){
   const n=Math.max(2,seeds.length);
   const size=Math.pow(2,Math.ceil(Math.log2(n)));
@@ -6787,149 +7126,21 @@ function applyTournLogo(){
 }
 function logoImg(name,cls='tlogo'){const u=S.logos&&S.logos[name];return u?`<img class="${cls}" src="${u}" alt="">`:'';}
 
-/* =========================================================
-   FIGURINE — album dei partecipanti in stile Panini
-   ---------------------------------------------------------
-   Per ogni partecipante compone una figurina: il VOLTO fotografato montato
-   sul mezzobusto con la MAGLIA della squadra, più nome del giocatore, stemma
-   e nome della squadra — come le figurine vere. Funziona interamente offline:
-   la composizione avviene su un <canvas>, senza rete e senza librerie. Con il
-   tasto «Genera» la figurina viene costruita e conservata nel torneo; quelle
-   contrassegnate con ★ vanno nel libro dei ricordi.
-
-   Le maglie del catalogo vengono da footballkitarchive.com. L'autorizzazione
-   ottenuta a suo tempo era legata alla citazione nei crediti del software:
-   la citazione è stata rimossa su decisione dell'autore (18/08/2026), mentre
-   il pacchetto maglie continua a essere distribuito con l'app.
-   ========================================================= */
-function openFigurine(){
-  if(!FIGURINE_ON){ toast(L('La sezione Figurine è temporaneamente sospesa.')); return; }
-  tabTo('figurine'); document.querySelector('nav#tabs button[data-tab="figurine"]').classList.add('on');
-  // carica una volta l'indice delle maglie (abbinamento automatico); se manca,
-  // le figurine funzionano comunque con la maglia caricata a mano
-  if(!window.MAGLIE_INDEX && !figIdxTry){ figIdxTry=true; loadScriptOnce('maglie_index.js').then(()=>renderFigurine()).catch(()=>{}); }
-  renderFigurine();
-}
-let figIdxTry=false;
+/* Normalizzazione dei nomi (accenti, sigle societarie, punteggiatura).
+   Nata per le figurine, ma è l'aggancio con cui INNI e stemmi riconoscono
+   una squadra dal nome: resta anche ora che le figurine non ci sono più. */
 const FIG_SIG=/\b(fc|cf|sc|ac|as|ss|us|ad|cd|sv|fk|nk|hk|bk|if|ik|sk|kf|ks|cs|rc|afc|cfc|bc|ca|club|calcio|futbol|football|de|the)\b/g;
 function figNorm(s){
   s=(s||'').normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\.jpg$/,'');
   s=s.replace(/-/g,' ').replace(/[^a-z0-9 ]+/g,' ').replace(FIG_SIG,' ');
   return s.replace(/\s+/g,' ').trim();
 }
-/** Trova e carica (solo il pacchetto giusto) la maglia di una squadra. */
-async function figAutoKit(team,tipo){
-  const idx=window.MAGLIE_INDEX; if(!idx)return null;
-  const tab=(tipo==='away'?idx.away:idx.home)||{};
-  const rel=tab[figNorm(team)]; if(!rel)return null;         // rel = "lega/slug.jpg"
-  const i=rel.lastIndexOf('/'), lega=rel.slice(0,i), slug=rel.slice(i+1,-4);
-  const chiave=lega, file=(lega.startsWith('away/')?'away__'+lega.slice(5):lega)+'.js';
-  try{
-    if(!(window.MPK&&window.MPK[chiave])) await loadScriptOnce('maglie/pkg/'+file);
-    return (window.MPK&&window.MPK[chiave]&&window.MPK[chiave][slug])||null;
-  }catch(e){ return null; }
-}
-function figHaMaglia(team){ const idx=window.MAGLIE_INDEX; return !!(idx&&idx.home&&idx.home[figNorm(team)]); }
-/** Stemma automatico dal catalogo (quando la squadra non ha già un logo). */
-let figCrestIdx=null;
-async function figAutoCrest(team){
-  if(!window.STEMMI){ try{ await loadScriptOnce('stemmi_club.js'); }catch(e){ return null; } }
-  if(!window.STEMMI) return null;
-  if(!figCrestIdx){ figCrestIdx={}; (window.STEMMI.teams||[]).forEach(t=>{ const k=figNorm(t[0]); if(k&&!figCrestIdx[k])figCrestIdx[k]=t[4]; }); }
-  const b=figCrestIdx[figNorm(team)];
-  return b?('data:image/webp;base64,'+b):null;
-}
-
-const figKey = n => 'k_' + String(n).replace(/[^a-zA-Z0-9]/g,'_');
-
-/* Le righe da mostrare: i partecipanti del torneo in corso PIÙ quelli aggiunti
-   a mano o arrivati dalle iscrizioni. Si restituiscono le CHIAVI, non i nomi:
-   una riga appena aggiunta ha il cognome ancora vuoto e con i soli nomi
-   sparirebbe dall'elenco. */
-function figRighe(){
-  const out=[], visti={};
-  (S.teams||[]).forEach(nome=>{ const k=figKey(nome); figData(nome); out.push(k); visti[k]=1; });
-  Object.keys(S.cards||{}).forEach(k=>{
-    const c=S.cards[k];
-    if(visti[k] || !c || c.tipo==='squadra' || c.iscr) return;   // squadre e marcatori a parte
-    if(c.manual) { out.push(k); visti[k]=1; }
-  });
-  return out;
-}
-function figPartecipanti(){ return figRighe().map(k=>(S.cards[k]||{}).player||''); }
-function figData(nome){
-  const k = figKey(nome);
-  if(!S.cards[k]) S.cards[k] = {player:nome, team:nome, photo:null, kit:null, card:null,
-                                inBook:false, manual:false, zoom:1, dx:0, dy:0};
-  return S.cards[k];
-}
-
-function renderFigurine(){
-  const box = $('#fig-grid'); if(!box) return;
-  const righe = figRighe();
-  $('#fig-empty').style.display = righe.length ? 'none' : '';
-  box.innerHTML = righe.map(k=>{
-    const c = S.cards[k]; if(!c) return '';
-    const crest = (S.logos && S.logos[c.team]) || c.crest || '';
-    return `<div class="fig-card" id="fig-${k}">
-      <div class="fig-anteprima">
-        <div class="fig-canvas-wrap" id="figprev-${k}">
-          ${c.card?`<img src="${c.card}" alt="">`:'<span class="vuoto">premi «Genera»<br>per comporre</span>'}
-        </div>
-      </div>
-      <div class="fig-body">
-        <div class="fig-row">
-          ${c.photo?`<img class="fig-thumb-ph" src="${c.photo}">`:'<span class="fig-thumb-ph"></span>'}
-          <button class="fig-mini" onclick="figPickPhoto('${k}')">📷 ${c.photo?'cambia foto':'carica foto volto'}</button>
-        </div>
-        <input type="text" data-campo="player" value="${esc(c.player||'')}" placeholder="Cognome (scritta grande)" oninput="figSet('${k}','player',this.value)">
-        <div class="fig-row">
-          ${crest?`<img class="fig-crest" src="${crest}">`:'<span class="fig-crest"></span>'}
-          <input type="text" data-campo="team" value="${esc(c.team||'')}" placeholder="Squadra" oninput="figSet('${k}','team',this.value)">
-        </div>
-        ${c.photo?`<div class="fig-reg">
-          <label>Zoom<input type="range" min="60" max="260" value="${Math.round((c.zoom||1)*100)}" oninput="figReg('${k}','zoom',this.value/100)"></label>
-          <label>↔<input type="range" min="-70" max="70" value="${c.dx||0}" oninput="figReg('${k}','dx',+this.value)"></label>
-          <label>↕<input type="range" min="-70" max="70" value="${c.dy||0}" oninput="figReg('${k}','dy',+this.value)"></label>
-          <button class="fig-mini" style="flex:0 0 auto;padding:3px 8px" onclick="figReset('${k}')">↺</button>
-        </div>`:''}
-        <div class="fig-row">
-          <button class="fig-mini" onclick="figPickKit('${k}')">👕 ${c.kit?'maglia: manuale':(figHaMaglia(c.team)?'maglia: auto ✓':'carica maglia')}</button>
-          ${crest?'':`<button class="fig-mini" onclick="figPickCrest('${k}')">🛡 stemma</button>`}
-        </div>
-        <div class="fig-actions">
-          <button class="btn" onclick="figGen('${k}')">⚙ Genera</button>
-          <button class="fig-star ${c.inBook?'on':''}" title="Metti nel libro dei ricordi" onclick="figStar('${k}')">★</button>
-          <button class="btn sec" onclick="figDownload('${k}')" ${c.card?'':'disabled'}>⬇</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-  // figurine SQUADRA (generate con «Figurine squadra»)
-  const sq=Object.entries(S.cards||{}).filter(([k,c])=>c.tipo==='squadra'&&c.card);
-  if(sq.length){
-    box.innerHTML += `<div style="grid-column:1/-1;margin-top:10px;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">🏳 Figurine squadra</div>` +
-      sq.map(([k,c])=>`<div class="fig-card">
-        <div class="fig-anteprima"><div class="fig-canvas-wrap"><img src="${c.card}" alt=""></div></div>
-        <div class="fig-body">
-          <div style="font-weight:700">${esc(c.team)}</div>
-          <div class="fig-actions" style="margin-top:auto">
-            <button class="fig-star ${c.inBook?'on':''}" onclick="figStar('${k}')">★</button>
-            <button class="btn sec" onclick="figDownload('${k}')">⬇</button>
-            <button class="btn sec" onclick="figDel('${k}')">🗑</button>
-          </div>
-        </div></div>`).join('');
-  }
-}
-
-function figDel(k){ delete S.cards[k]; renderFigurine(); persist(); }
 
 /* =========================================================
-   ESPORTAZIONE CSV — classifiche, marcatori, calendario
-   ---------------------------------------------------------
-   File di testo apribili in Excel/Numbers/Fogli Google. Separatore «;»
-   (l'Excel italiano lo usa di default) e BOM UTF-8 perché gli accenti
-   restino leggibili.
+   ESPORTAZIONI CSV E CODICI QR DA TAVOLO
+   Stavano nello stesso tratto di file delle figurine e sono state
+   riportate qui: non c'entrano nulla con quelle: servono i pulsanti
+   «Classifiche/Calendario/Marcatori CSV» e «Codici QR da tavolo».
    ========================================================= */
 function csvScarica(nome,righe){
   const esc=v=>{ v=(v==null?'':String(v)); return /[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
@@ -6970,144 +7181,90 @@ function exportCalendarioCSV(){
   if(R.length<2){ toast(L('Nessuna partita da esportare.')); return; }
   csvScarica('calendario',R);
 }
-
 /* =========================================================
-   ISCRIZIONI VIA QR — i partecipanti si registrano dal telefono
-   ---------------------------------------------------------
-   Cognome, squadra e foto del volto arrivano dal telefono al server sync
-   (già usato per l'App Campo) e diventano figurine con un clic. Serve la
-   Regia in rete accesa (sezione Regia → collegamento telefoni).
-   ========================================================= */
-function iscrLink(){
-  const base=(typeof syncPhoneUrls==='function'?syncPhoneUrls()[0]:null);
-  if(!base||!SYNC.key)return null;
-  return base+'/iscrizione?key='+encodeURIComponent(SYNC.key);
+   INDIRIZZO DI SALA — i codici da tavolo stampati in anticipo
+   =========================================================
+   I codici da tavolo servono ad attaccare un QR fisso su ogni campo: chi
+   gioca lo inquadra e aggiorna da sé il punteggio, senza arbitro. Il
+   problema di stamparli giorni prima è che dentro il QR c'è l'indirizzo del
+   computer, e fra oggi e il giorno del torneo possono cambiargli sotto i
+   piedi TRE cose:
+
+     · l'indirizzo IP, che il router riassegna a ogni accensione;
+     · la porta, perché il server prende la prima libera fra 8765 e 8770;
+     · l'indirizzo del tunnel Internet, che è nuovo a ogni avvio.
+
+   Fissando qui l'indirizzo di sala, la stampa non dipende più da nessuna di
+   queste: i QR nascono con quell'indirizzo dentro e restano validi. Il
+   giorno del torneo l'app confronta e dice a chiare lettere se il computer
+   si è ritrovato o no l'indirizzo promesso — perché un QR sbagliato non dà
+   errore, semplicemente non apre niente, e accorgersene a torneo iniziato
+   con dieci telefoni che non si collegano è il momento peggiore. */
+function salaIndirizzo(){return (S.cfg&&S.cfg.qrAddr)||'';}
+/* normalizza quello che l'organizzatore digita: senza http:// il QR
+   porterebbe a un indirizzo relativo e il telefono non aprirebbe nulla */
+function salaNormalizza(t){
+  let v=String(t||'').trim();
+  if(!v)return '';
+  if(!/^https?:\/\//i.test(v))v='http://'+v;
+  return v.replace(/\/+$/,'');
 }
-function openIscrizioni(){
-  if(!SYNC.on||!SYNC.lan){
-    toast(L('Prima accendi il collegamento telefoni nella sezione Regia.'));
+function salaImposta(v){
+  S.cfg.qrAddr=String(v||'').trim();
+  persist();
+  salaVerifica();
+}
+function salaPrendiAttuale(){
+  const u=syncPhoneUrls()[0];
+  if(!u){toast(L('Il collegamento telefoni non è ancora acceso: non c\'è un indirizzo da copiare.'));return;}
+  S.cfg.qrAddr=u;persist();
+  const i=$('#sy-sala'); if(i)i.value=u;
+  salaVerifica();
+}
+function salaAzzera(){
+  S.cfg.qrAddr='';persist();
+  const i=$('#sy-sala'); if(i)i.value='';
+  salaVerifica();
+}
+/* il confronto fra l'indirizzo promesso ai QR e quelli che il computer ha
+   davvero adesso: è questo che salva il torneo la mattina stessa */
+function salaVerifica(){
+  const el=$('#sy-sala-esito'); if(!el)return;
+  const promesso=salaNormalizza(salaIndirizzo());
+  el.classList.remove('ok','male','attesa');
+  if(!promesso){
+    el.classList.add('attesa');
+    el.innerHTML=L('Nessun indirizzo fisso: i codici da tavolo useranno quello del momento e andranno ristampati se cambia.');
+    return;
+  }
+  const attuali=syncPhoneUrls().map(salaNormalizza);
+  if(!attuali.length){
+    el.classList.add('attesa');
+    el.innerHTML=`${L('I codici da tavolo porteranno a')} <b>${esc(promesso)}</b>. ${L('Accendi il collegamento telefoni per verificare che il computer ci si ritrovi.')}`;
+    return;
+  }
+  if(attuali.includes(promesso)){
+    el.classList.add('ok');
+    el.innerHTML=`✓ ${L('Il computer risponde proprio a')} <b>${esc(promesso)}</b>: ${L('i codici già stampati funzionano.')}`;
+    return;
+  }
+  el.classList.add('male');
+  el.innerHTML=`⚠ ${L('I codici stampati portano a')} <b>${esc(promesso)}</b>, ${L('ma adesso questo computer risponde a')} <b>${esc(attuali.join(' · '))}</b>.<br>`
+    +L('Da correggere prima del via: assegna al computer quell\'indirizzo (prenotazione nel router o IP manuale), oppure ristampa i codici con il nuovo.');
+}
+/* l'indirizzo che finisce dentro i codici da tavolo */
+function salaPannelloUI(){
+  const i=$('#sy-sala'); if(i)i.value=salaIndirizzo();
+  salaVerifica();
+}
+function salaBase(){return salaNormalizza(salaIndirizzo())||syncPhoneUrls()[0]||'';}
+function printQrCampi(){
+  const base=salaBase();
+  if(!base){
+    // senza indirizzo di sala servono per forza quelli veri del momento
+    toast(L('Serve un indirizzo: accendi il collegamento telefoni, oppure fissa l\'indirizzo di sala.'));
     tabTo('audio'); return;
   }
-  const link=iscrLink();
-  $('#iscrizioni').classList.add('on');
-  if(link){
-    setTimeout(()=>{ const cv=$('#isc-qr'); if(cv)qrDraw(cv,link,300); },30);
-    $('#isc-link').textContent=link;
-  }else{
-    $('#isc-link').textContent=L('Indirizzo non disponibile: controlla la Regia.');
-  }
-  iscrRenderCount();
-}
-function closeIscrizioni(){ $('#iscrizioni').classList.remove('on'); }
-function iscrRenderCount(){
-  const n=Object.keys(S.cards||{}).filter(k=>k.startsWith('__isc_')).length;
-  const e=$('#isc-conta'); if(e)e.textContent = n? (n+' '+L('iscrizioni già scaricate in questo torneo')) : '';
-}
-function iscrScarica(){
-  if(!SYNC.on){ toast(L('Collegamento telefoni spento.')); return; }
-  fetch(syncBase()+'/api/iscrizione?key='+encodeURIComponent(SYNC.key))
-    .then(r=>r.json()).then(d=>{
-      const list=(d&&d.list)||[]; let n=0;
-      list.forEach(x=>{
-        const marker='__isc_'+x.id;
-        if(S.cards[marker])return;                 // già scaricata
-        const nome=x.cognome, k=figKey(nome);
-        const c=S.cards[k]||{player:nome,team:'',photo:null,kit:null,card:null,inBook:false,manual:true};
-        c.player=nome; if(x.team)c.team=x.team; if(x.img)c.photo=x.img; c.manual=true;
-        S.cards[k]=c; S.cards[marker]={iscr:true}; n++;
-      });
-      persist(); renderFigurine(); iscrRenderCount();
-      toast(n? ('📥 '+n+' '+L('nuove iscrizioni scaricate: premi «Genera tutte».')) : L('Nessuna nuova iscrizione.'));
-    })
-    .catch(()=>toast(L('Non riesco a contattare la Regia.')));
-}
-function figSet(k,campo,val){ if(!S.cards[k])return; S.cards[k][campo]=val; if(campo==='team')renderFigurine(); persist(); }
-function figPickPhoto(k){ pickImage(u=>{ S.cards[k].photo=u; renderFigurine(); persist(); }); }
-function figPickKit(k){ pickImage(u=>{ S.cards[k].kit=u; toast(L('Maglia caricata: premi Genera.')); persist(); }); }
-function figPickCrest(k){ pickImage(u=>{ S.cards[k].crest=u; renderFigurine(); persist(); }); }
-function figStar(k){ S.cards[k].inBook=!S.cards[k].inBook; renderFigurine(); persist(); }
-
-/* Regolazione della foto: zoom e spostamento. Si rigenera SOLO quella figurina
-   e si aggiorna la sua anteprima, senza ridisegnare tutto l'elenco — così i
-   cursori non perdono il fuoco mentre li si trascina. */
-let figRegT=null;
-function figReg(k,campo,val){
-  const c=S.cards[k]; if(!c)return;
-  c[campo]=val;
-  clearTimeout(figRegT);
-  figRegT=setTimeout(async()=>{
-    await figGen(k,true);
-    const box=document.getElementById('figprev-'+k);
-    if(box&&c.card)box.innerHTML='<img src="'+c.card+'" alt="">';
-  },160);
-}
-function figReset(k){
-  const c=S.cards[k]; if(!c)return;
-  c.zoom=1; c.dx=0; c.dy=0; persist(); renderFigurine(); figGen(k);
-}
-
-/* Aggiunta di un partecipante a mano.
-   NON si usa prompt(): Electron non lo implementa e nel programma installato
-   il pulsante sembrava non fare nulla. Si aggiunge invece una riga vuota,
-   pronta da compilare nei campi che ci sono già. */
-function figAddManual(){
-  let n=1, k;
-  do { k = figKey('Nuovo partecipante ' + n); n++; } while(S.cards[k]);
-  S.cards[k] = {player:'', team:'', photo:null, kit:null, card:null, inBook:false,
-                manual:true, nuovo:'Nuovo partecipante '+(n-1),
-                zoom:1, dx:0, dy:0};
-  persist(); renderFigurine();
-  // il cursore va subito nel campo del cognome della riga appena creata
-  setTimeout(()=>{ const el=document.querySelector('#fig-'+k+' input[data-campo="player"]'); if(el){el.focus();el.scrollIntoView({block:'center'});} },50);
-  toast(L('Riga aggiunta: scrivi cognome e squadra.'));
-}
-
-function figDownload(k){
-  const c=S.cards[k]; if(!c||!c.card)return;
-  const a=document.createElement('a'); a.href=c.card;
-  a.download='figurina-'+String(c.player||'giocatore').replace(/[^a-zA-Z0-9]+/g,'_')+'.png';
-  a.click();
-}
-
-async function figGen(k,silenzioso){
-  const c=S.cards[k]; if(!c)return;
-  // stemma: logo del torneo se assegnato, poi crest caricato, poi auto dal catalogo
-  let crest=(S.logos&&S.logos[c.team])||c.crest||null;
-  if(!crest) crest=await figAutoCrest(c.team);
-  // maglia: quella caricata a mano ha la precedenza; altrimenti abbinamento automatico
-  let kit=c.kit; if(!kit) kit=await figAutoKit(c.team,'home');
-  try{
-    c.card = await figurinaGen({player:c.player, team:c.team, photo:c.photo, kit, crest,
-      logo:S.cfg.logo, torneo:S.cfg.name, zoom:c.zoom||1, dx:c.dx||0, dy:c.dy||0});
-    persist();
-    if(!silenzioso) renderFigurine();
-  }catch(e){ if(!silenzioso) toast(L('Impossibile generare la figurina.')); }
-}
-async function figGenAll(){
-  const nomi=figPartecipanti(); let n=0;
-  for(const nome of nomi){ await figGen(figKey(nome)); n++; }
-  toast('🃏 '+n+' '+L('figurine generate.'));
-}
-function figToBook(){
-  const n=Object.values(S.cards||{}).filter(c=>c.inBook&&c.card).length;
-  if(!n){ toast(L('Contrassegna con ★ le figurine da mettere nel libro dei ricordi.')); return; }
-  toast('📖 '+n+' '+L('figurine pronte per il libro dei ricordi.'));
-  tabTo('cronache');
-}
-
-/* =========================================================
-   QR DA TAVOLO — un codice per ogni campo
-   ---------------------------------------------------------
-   Nei tornei senza arbitri sono i giocatori stessi, seduti a quel tavolo, a
-   registrare il punteggio: inquadrano il QR del loro campo e l'App Campo si
-   apre già puntata su quel tavolo, mostrando la partita in corso lì. Il foglio
-   si stampa una volta e resta sul tavolo per tutto il torneo: vale per TUTTE
-   le partite che vi si disputeranno, perché il codice indica il campo, non
-   l'incontro.
-   ========================================================= */
-function printQrCampi(){
-  const base=syncPhoneUrls()[0];
-  if(!base){ toast(L('Prima accendi il collegamento telefoni nella sezione Regia.')); tabTo('audio'); return; }
   const F=Math.max(1,S.cfg.fields||1), off=S.cfg.fieldOffset||0;
   const sq=S.cfg.format==='squadre';
   const cv=document.createElement('canvas');
@@ -7144,190 +7301,10 @@ function printQrCampi(){
       <div class="url">${esc(c.link)}</div>
     </div>`;
   });
-  h+='</div><div class="nota">'+L('Il codice vale per tutte le partite che si disputeranno su questo tavolo: si stampa una volta e resta lì. Serve che il collegamento telefoni della Regia resti acceso.')+'</div></div>';
+  h+='</div><div class="nota">'+L('Il codice vale per tutte le partite che si disputeranno su questo tavolo: si stampa una volta e resta lì. Serve che il collegamento telefoni della Regia resti acceso.')+' '+L('Indirizzo dei codici')+': '+esc(base)+'. '+L('Il giorno del torneo il computer deve rispondere a questo stesso indirizzo: la Regia lo verifica e avvisa se non combacia.')+'</div></div>';
   openPdfPreview(h, L('Codici QR da tavolo'));
 }
 
-/* --- ALBUM: tutte le figurine su A4, 9 per pagina, con spazi da ritagliare --- */
-function figAlbum(){
-  const cards=Object.values(S.cards||{}).filter(c=>c.card);
-  if(!cards.length){ toast(L('Genera prima qualche figurina.')); return; }
-  const css=`<style>
-    .alb{padding:8mm}
-    .alb h1{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:16pt;
-      color:#111;text-align:center;margin:0 0 5mm}
-    .alb .pag{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;page-break-after:always}
-    .alb .pag:last-child{page-break-after:auto}
-    .alb .fg{border:1px dashed #bbb;border-radius:2mm;padding:2mm;text-align:center;break-inside:avoid}
-    .alb .fg img{width:100%;display:block;border-radius:1.5mm}
-  </style>`;
-  let h=css+'<div class="pdfdoc alb"><h1>'+esc(S.cfg.name||L('Album delle figurine'))+'</h1>';
-  for(let i=0;i<cards.length;i+=9){
-    h+='<div class="pag">'+cards.slice(i,i+9).map(c=>`<div class="fg"><img src="${c.card}"></div>`).join('')+'</div>';
-  }
-  h+='</div>';
-  openPdfPreview(h,L('Album delle figurine'));
-}
-
-/* --- FIGURINE SQUADRA: stemma grande, maglia, rosa dei giocatori --- */
-async function figGenSquadre(){
-  const teams=[...new Set([...(S.teams||[])])];
-  if(!teams.length){ toast(L('Nessuna squadra nel torneo.')); return; }
-  let n=0;
-  for(const team of teams){
-    const k='sq_'+figKey(team);
-    let crest=(S.logos&&S.logos[team])||null; if(!crest) crest=await figAutoCrest(team);
-    const kit=await figAutoKit(team,'home');
-    const players=(S.players&&S.players[team]&&S.players[team].length)?S.players[team]:[];
-    const card=await figurinaSquadraGen({team, crest, kit, players, logo:S.cfg.logo, torneo:S.cfg.name});
-    S.cards[k]={tipo:'squadra', player:team, team, card, inBook:false};
-    n++;
-  }
-  persist(); renderFigurine();
-  toast('🏳 '+n+' '+L('figurine squadra generate.'));
-}
-
-async function figurinaSquadraGen(o){
-  const W=600,H=840,cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d');
-  const [crest,kit,logo]=await Promise.all([figLoad(o.crest),figLoad(o.kit),figLoad(o.logo)]);
-  const col=figColore(crest), scuro=figScuro(col,.40), chiaro=col.map(v=>Math.min(255,Math.round(v*.6+150)));
-  const bg=g.createLinearGradient(0,0,0,H); bg.addColorStop(0,figRgb(chiaro)); bg.addColorStop(1,figRgb(scuro));
-  g.fillStyle=figRgb(scuro); g.fillRect(0,0,W,H); g.fillStyle=bg; g.fillRect(0,0,W,H);
-  g.strokeStyle='rgba(245,196,81,.9)'; g.lineWidth=10; g.strokeRect(14,14,W-28,H-28);
-  g.strokeStyle='rgba(255,255,255,.15)'; g.lineWidth=2; g.strokeRect(26,26,W-52,H-52);
-  // maglia in filigrana sullo sfondo
-  if(kit){ const kw=460, kh=kit.height*(kw/kit.width);
-    const tmp=document.createElement('canvas'); tmp.width=kit.width; tmp.height=kit.height;
-    const tx=tmp.getContext('2d'); tx.drawImage(kit,0,0);
-    try{ const id=tx.getImageData(0,0,kit.width,kit.height),d=id.data; for(let i=0;i<d.length;i+=4){ if(d[i]>244&&d[i+1]>244&&d[i+2]>244)d[i+3]=0; } tx.putImageData(id,0,0);}catch(e){}
-    g.globalAlpha=.16; g.drawImage(tmp,(W-kw)/2,300,kw,kh); g.globalAlpha=1;
-  }
-  // stemma grande in alto
-  if(crest){ const cs=230, cr=cs*(crest.height/crest.width); g.drawImage(crest,(W-cs)/2,70,cs,cr); }
-  // nome squadra
-  g.textAlign='center'; g.fillStyle='#fff';
-  let nome=(o.team||'').toUpperCase(), fs=46; g.font='700 '+fs+'px "Oswald",system-ui,sans-serif';
-  while(g.measureText(nome).width>W-90 && fs>20){ fs-=2; g.font='700 '+fs+'px "Oswald",system-ui,sans-serif'; }
-  g.fillText(nome,W/2,360);
-  g.strokeStyle='rgba(245,196,81,.9)'; g.lineWidth=3; g.beginPath(); g.moveTo(W/2-90,378); g.lineTo(W/2+90,378); g.stroke();
-  // rosa
-  if(o.players&&o.players.length){
-    g.font='700 15px system-ui'; g.fillStyle='rgba(245,196,81,.95)'; g.fillText(L('LA ROSA'),W/2,420);
-    g.font='400 20px system-ui'; g.fillStyle='#fff';
-    o.players.slice(0,14).forEach((p,i)=>g.fillText(p,W/2,455+i*26));
-  }
-  if(logo){ const ls=76; g.drawImage(logo,W-40-ls,40,ls,ls*(logo.height/logo.width)); }
-  if(o.torneo){ g.font='12px system-ui'; g.fillStyle='rgba(255,255,255,.55)';
-    g.fillText(o.torneo, W/2, H-40); }
-  return cv.toDataURL('image/png');
-}
-
-/* --- il compositore: tutto su canvas, offline --- */
-function figLoad(src){ return new Promise((res,rej)=>{ if(!src)return res(null); const im=new Image(); im.crossOrigin='anonymous'; im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
-
-function figColore(img){
-  // colore dominante dello stemma, per la fascia e lo sfondo della figurina
-  if(!img) return [22,38,74];
-  try{
-    const s=48, cv=document.createElement('canvas'); cv.width=s; cv.height=s;
-    const x=cv.getContext('2d'); x.drawImage(img,0,0,s,s);
-    const d=x.getImageData(0,0,s,s).data; let r=0,g=0,b=0,n=0;
-    for(let i=0;i<d.length;i+=4){ const a=d[i+3]; if(a<128)continue; const R=d[i],G=d[i+1],B=d[i+2];
-      if(R>238&&G>238&&B>238)continue;           // scarta il bianco di sfondo
-      r+=R;g+=G;b+=B;n++; }
-    if(!n) return [22,38,74];
-    return [Math.round(r/n),Math.round(g/n),Math.round(b/n)];
-  }catch(e){ return [22,38,74]; }
-}
-const figScuro=(c,k=.5)=>c.map(v=>Math.round(v*k));
-const figRgb=c=>'rgb('+c[0]+','+c[1]+','+c[2]+')';
-
-async function figurinaGen(o){
-  const W=600,H=840,cv=document.createElement('canvas'); cv.width=W; cv.height=H;
-  const g=cv.getContext('2d');
-  const [crest,photo,kit,logo]=await Promise.all([figLoad(o.crest),figLoad(o.photo),figLoad(o.kit),figLoad(o.logo)]);
-  const col=figColore(crest), scuro=figScuro(col,.42), chiaro=col.map(v=>Math.min(255,Math.round(v*.6+150)));
-
-  // sfondo a gradiente nei colori della squadra
-  const bg=g.createLinearGradient(0,0,0,H); bg.addColorStop(0,figRgb(chiaro)); bg.addColorStop(1,figRgb(scuro));
-  g.fillStyle=figRgb(scuro); g.fillRect(0,0,W,H);
-  g.fillStyle=bg; g.fillRect(0,0,W,H);
-  // cornice dorata
-  g.strokeStyle='rgba(245,196,81,.9)'; g.lineWidth=10; g.strokeRect(14,14,W-28,H-28);
-  g.strokeStyle='rgba(255,255,255,.15)'; g.lineWidth=2; g.strokeRect(26,26,W-52,H-52);
-
-  // maglia (il mezzobusto) al centro; il fondo bianco del jpeg viene reso
-  // trasparente così la maglia galleggia sui colori della squadra
-  const by=H-172;                          // altezza della fascia inferiore
-  let faceCx=W/2, faceCy=250, faceD=190, collarY=300, kitP=null;
-  if(kit){
-    // fondo bianco del jpeg -> trasparente
-    const tmp=document.createElement('canvas'); tmp.width=kit.width; tmp.height=kit.height;
-    const tx=tmp.getContext('2d'); tx.drawImage(kit,0,0);
-    try{ const id=tx.getImageData(0,0,kit.width,kit.height),d=id.data;
-      for(let i=0;i<d.length;i+=4){ if(d[i]>244&&d[i+1]>244&&d[i+2]>244) d[i+3]=0; }
-      tx.putImageData(id,0,0);
-    }catch(e){}
-    // ZOOM forte + RITAGLIO: la maglia è ingrandita e tagliata dentro la cornice;
-    // le spalle escono dai bordi (tagliate un po'), si vede solo il mezzobusto
-    // busto ridotto del 20% rispetto allo zoom massimo: così la testa entra
-    // tutta nella figurina invece di uscire dal bordo superiore
-    const kw=W*1.14, kh=kit.height*(kw/kit.width);
-    const collarFrac=0.15;                  // dove cade il colletto nell'immagine
-    const ktop=collarY-kh*collarFrac, kx=(W-kw)/2;
-    kitP={img:tmp,x:kx,y:ktop,w:kw,h:kh};    // servirà per far avvolgere il colletto
-    g.save(); g.beginPath(); g.rect(24,24,W-48,by-24); g.clip();
-    g.drawImage(tmp,kx,ktop,kw,kh);
-    g.restore();
-    // la testa si attacca al colletto: metà collo sopra il colletto, metà sotto
-    faceD=196; faceCx=W/2; faceCy=collarY-faceD*0.30;   // il fondo scende sotto il colletto
-  } else { g.fillStyle='rgba(255,255,255,.5)'; g.font='16px system-ui'; g.textAlign='center'; g.fillText(L('(maglia non assegnata)'),W/2,by-40); }
-
-  // volto ritagliato (ovale, più naturale di un cerchio), col collo che scende
-  // verso il colletto
-  const D=faceD, cx=faceCx, cy=faceCy, Rh=D/2, Rv=D*0.60;
-  if(photo){
-    g.save(); g.beginPath(); g.ellipse(cx,cy,Rh,Rv,0,0,Math.PI*2); g.closePath(); g.clip();
-    // zoom e spostamento scelti dall'organizzatore: una foto non è mai
-    // inquadrata come serve, e il volto va centrato nell'ovale
-    const z=o.zoom||1, sx=o.dx||0, sy=o.dy||0;
-    const ar=Math.max((D)/photo.width,(2*Rv)/photo.height)*z;
-    const pw=photo.width*ar, ph=photo.height*ar;
-    g.drawImage(photo,cx-pw/2+sx,cy-ph/2+sy,pw,ph); g.restore();
-  } else {
-    g.beginPath(); g.ellipse(cx,cy,Rh,Rv,0,0,Math.PI*2); g.fillStyle='rgba(0,0,0,.22)'; g.fill();
-    g.lineWidth=2; g.strokeStyle='rgba(255,255,255,.25)'; g.stroke();
-    g.fillStyle='rgba(255,255,255,.5)'; g.font='16px system-ui'; g.textAlign='center'; g.fillText(L('foto volto'),cx,cy-6);
-  }
-  // IL COLLETTO AVVOLGE IL COLLO: si ridisegna la maglia dal colletto in giù,
-  // sopra la metà inferiore della testa — così il collo entra dentro la maglia
-  if(kitP){
-    g.save(); g.beginPath(); g.rect(24,collarY,W-48,by-collarY); g.clip();
-    g.drawImage(kitP.img,kitP.x,kitP.y,kitP.w,kitP.h);
-    g.restore();
-  }
-
-  // stemma in alto a sinistra
-  if(crest){ const cs=96; g.drawImage(crest,40,40,cs,cs*(crest.height/crest.width)); }
-  // logo del torneo in alto a destra
-  if(logo){ const ls=84; g.drawImage(logo,W-40-ls,40,ls,ls*(logo.height/logo.width)); }
-
-  // fascia col nome del giocatore — arriva fino alla cornice, così copre
-  // l'eventuale bordo della maglia
-  g.fillStyle=figRgb(figScuro(col,.24)); g.fillRect(26,by,W-52,H-26-by);
-  g.fillStyle='rgba(245,196,81,.95)'; g.fillRect(26,by,W-52,6);
-  g.textAlign='center'; g.fillStyle='#fff';
-  let nome=(o.player||'').toUpperCase(), fs=44; g.font='700 '+fs+'px "Oswald",system-ui,sans-serif';
-  while(g.measureText(nome).width>W-100 && fs>20){ fs-=2; g.font='700 '+fs+'px "Oswald",system-ui,sans-serif'; }
-  g.fillText(nome,W/2,by+56);
-  g.font='600 23px system-ui'; g.fillStyle='rgba(255,255,255,.9)';
-  g.fillText((o.team||'').toUpperCase(),W/2,by+90);
-  // piè di pagina: il nome del torneo sulla fascia scura (leggibile)
-  if(o.torneo){ g.font='12px system-ui'; g.fillStyle='rgba(255,255,255,.6)';
-    g.fillText(o.torneo, W/2, by+120); }
-
-  return cv.toDataURL('image/png');
-}
 /* =========================================================
    CATALOGO STEMMI — club internazionali dallo Stemmario
    (file stemmi_club.js accanto all'app, caricato al primo uso;
@@ -7779,7 +7756,7 @@ function startTournament(){
   S.captains={};entries.forEach(e=>{if(e.capt)S.captains[e.n]=e.capt;});
   S.players={};entries.forEach(e=>{if(e.players&&e.players.length)S.players[e.n]=e.players;});
   S.teams=names;S.started=true;S.phase='groups';S.champion=null;S.celebrated=false;
-  S.results=[];S.ko=null;S.tiersPhases=[];S.groups=[];S.swissDone=false;S.boards=[];S.koh=null;S.kohDone=false;S.cards={};
+  S.results=[];S.ko=null;S.tiersPhases=[];S.groups=[];S.swissDone=false;S.boards=[];S.koh=null;S.kohDone=false;
   // Si riparte SEMPRE dalla prima fase: senza questo, dopo un torneo a più fasi
   // il successivo si troverebbe S.stage=2 e salterebbe la seconda fase a gironi
   // senza dire niente, mandando i gironi di partenza diritti alle finali.
@@ -8098,6 +8075,7 @@ function checkGroupsComplete(){
   }
   kohMaybeAdvance();
   renderGironiActions();
+  try{waControllaTornata();}catch(e){}   // avviso WhatsApp a tornata chiusa
 }
 function qualifiersByRanks(ranks){
   // ordine di seed: prima tutti i 1° (per girone), poi tutti i 2°, ecc.
@@ -8732,6 +8710,7 @@ function tabTo(name){
   const sec=document.getElementById('tab-'+name);
   if(sec)sec.classList.add('on');
   document.querySelectorAll('nav#tabs button[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+  if(name==='audio'){waPannelloUI();salaPannelloUI();}   // rubrica, anteprima e indirizzo di sala
   S.screen=name;persist();
 }
 /* "Fase Finale" o "Fase Successiva"? Di regola chiudere i gironi porta
@@ -8798,7 +8777,7 @@ function currentRoundItems(){
     });
     const t=ko.third;
     if(t&&t.t1&&t.t2&&t.s1!=null&&t.s2!=null)
-      items.push({ctx:`${ko.title} · Finale 3° posto`,a:t.t1,b:t.t2,sa:t.s1,sb:t.s2,live:t.live,done:!!koWinner(t),events:t.events||[]});
+      items.push({ctx:`${L(ko.title)} · ${L('Finale 3° posto')}`,a:t.t1,b:t.t2,sa:t.s1,sb:t.s2,live:t.live,done:!!koWinner(t),events:t.events||[]});
   });
   return items;
 }
@@ -8823,11 +8802,22 @@ function tickerFlash(html){
   clearTimeout(tickerFlashTimer);
   tickerFlashTimer=setTimeout(()=>el.classList.remove('on'),5000);
 }
-function toast(msg){
+/* Il secondo argomento è facoltativo: con {azione,onAzione} l'avviso porta
+   anche un pulsante e resta a schermo più a lungo, il tempo di cliccarlo.
+   Senza, si comporta esattamente come prima. */
+function toast(msg,opt){
   const d=document.createElement('div');
-  d.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:12px 24px;z-index:130;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:.9rem;backdrop-filter:blur(8px)';
-  d.textContent=msg;document.body.appendChild(d);
-  setTimeout(()=>{d.style.transition='opacity .5s';d.style.opacity='0';setTimeout(()=>d.remove(),500);},2600);
+  d.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:12px 24px;z-index:130;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:.9rem;backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px';
+  const t=document.createElement('span');t.textContent=msg;d.appendChild(t);
+  let durata=2600;
+  if(opt&&opt.azione&&typeof opt.onAzione==='function'){
+    const b=document.createElement('button');
+    b.className='btn mini';b.textContent=opt.azione;
+    b.onclick=()=>{d.remove();opt.onAzione();};
+    d.appendChild(b);durata=11000;
+  }
+  document.body.appendChild(d);
+  setTimeout(()=>{d.style.transition='opacity .5s';d.style.opacity='0';setTimeout(()=>d.remove(),500);},durata);
 }
 
 /* =========================================================
@@ -8890,6 +8880,56 @@ function zonesLegendHTML(){
     <span class="zl-pout">■ ${L('Playout')}</span>
     <span class="zl-down">■ ${L('Retrocede')}</span></div>`;
 }
+/* =========================================================
+   ORNAMENTI DA TABELLONE — forma, movimento, filigrana
+   ---------------------------------------------------------
+   Aggiunte pensate per il proiettore: devono dire qualcosa da dieci metri
+   e non rubare leggibilità ai numeri. La forma racconta il momento del
+   giocatore, la freccia racconta il sorpasso, la filigrana riempie il vuoto.
+   ========================================================= */
+/* Le ultime cinque gare di un giocatore: ●=vinta ◐=pari ○=persa, dalla più
+   vecchia alla più recente (come le "form guide" televisive). */
+function formaRecente(nome,matches,quante){
+  const g=matches.filter(m=>m.hs!=null&&m.as!=null&&!m.annullata&&(m.home===nome||m.away===nome));
+  return g.slice(-(quante||5)).map(m=>{
+    const mio=m.home===nome?m.hs:m.as, suo=m.home===nome?m.as:m.hs;
+    return mio>suo?'v':(mio===suo?'p':'s');
+  });
+}
+function formaHTML(nome,matches){
+  const f=formaRecente(nome,matches);
+  if(!f.length)return '';
+  const seg={v:'●',p:'◐',s:'○'};
+  return '<span class="forma" title="'+L('Ultime gare')+'">'
+    + f.map(x=>`<i class="f-${x}">${seg[x]}</i>`).join('') + '</span>';
+}
+/* Posizioni del giro precedente, per la freccia del movimento. La memoria è
+   per girone e vive nella sessione: al primo passaggio non c'è freccia,
+   perché non esiste ancora un "prima". */
+const POSPREC={};
+function movimentoHTML(gKey,nome,pos){
+  const prec=POSPREC[gKey]&&POSPREC[gKey][nome];
+  if(prec==null||prec===pos)return '';
+  const d=prec-pos;                       // positivo = è salito
+  return `<span class="mov ${d>0?'su':'giu'}" title="${L(d>0?'in salita':'in discesa')}">${d>0?'▲':'▼'}${Math.abs(d)}</span>`;
+}
+/* Il lampo del sorpasso: dopo aver ridisegnato una classifica si accendono
+   per un attimo le righe che hanno cambiato posizione. È il momento che il
+   pubblico deve cogliere, e altrimenti passerebbe inosservato. */
+function lampoSorpassi(root){
+  (root||document).querySelectorAll('.tclass tr[data-tn]').forEach(tr=>{
+    const n=tr.getAttribute('data-tn');
+    if(tr.querySelector('.mov')){
+      tr.classList.remove('sorpasso'); void tr.offsetWidth; tr.classList.add('sorpasso');
+      setTimeout(()=>tr.classList.remove('sorpasso'),1400);
+    }
+  });
+}
+function movimentoRegistra(gKey,ordine){
+  POSPREC[gKey]=POSPREC[gKey]||{};
+  const nuovo={}; ordine.forEach((n,i)=>nuovo[n]=i+1);
+  POSPREC[gKey]=nuovo;
+}
 function standingsHTML(g,{qual=0}={}){
   const rosaC=!!g.rosa, rosaS=!!g.rosaSea, rosaStar=rosaC||rosaS;
   const{order,stats}=rosaC?rosaRank(g):rosaS?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
@@ -8902,8 +8942,15 @@ function standingsHTML(g,{qual=0}={}){
   // classifica sembra sbagliata a chi conta le vittorie
   const mm=mmAttivo()&&g.swiss;
   let h=`<table class="standings"><thead><tr>
-    <th>${L('#')}</th><th class="l">${L('Squadra')}</th>${mm?`<th title="${L('Punteggio di partenza secondo la fascia di forza')}">${L('MM')}</th>`:''}<th>${L('Pt')}</th>${rosaStar?`<th title="${L('Stelle di contrada: vittorie contro i vicini ±1')}">★</th>`:''}<th>${L('G')}</th><th>${L('V')}</th><th>${L('N')}</th><th>${L('P')}</th><th>${L('GF')}</th><th>${L('GS')}</th><th>${L('DR')}</th>
+    <th>${L('#')}</th><th class="l">${L('Squadra')}</th>${mm?`<th title="${L('Punteggio di partenza secondo la fascia di forza')}">${L('MM')}</th>`:''}<th>${L('Pt')}</th>${rosaStar?`<th title="${L('Stelle di contrada: vittorie contro i vicini ±1')}">★</th>`:''}<th>${L('G')}</th><th>${L('V')}</th><th>${L('N')}</th><th>${L('P')}</th><th>${L('GF')}</th><th>${L('GS')}</th><th>${L('DR')}</th><th class="c-forma" title="${L('Ultime gare')}">${L('Forma')}</th>
   </tr></thead><tbody>`;
+  const gKey=(g.name||'')+'|'+order.length;
+  // I METALLI DEL PODIO: oro, argento, bronzo alle prime tre. Solo a torneo
+  // avviato — a tabellone vergine l'ordine è quello del sorteggio e premiare
+  // un podio che non esiste ancora sarebbe una bugia. Il colore della zona
+  // (avanza/playoff/playout/retrocede) non si perde: resta sul bordo, sulla
+  // fascia della riga, sul simbolo e sul numero di posizione.
+  const podioVivo=order.length>=3&&g.matches.some(m=>m.done||m.live);
   order.forEach((n,i)=>{
     const s=stats[n];
     let star='';
@@ -8911,11 +8958,15 @@ function standingsHTML(g,{qual=0}={}){
     if(bestExtra&&i===S.cfg.qualify&&bestExtra.has(n))star='<span class="bestx" title="Attualmente qualificata come ripescaggio">★</span>';
     const liveMark=g.matches.some(m=>m.live&&(m.home===n||m.away===n))?'<span class="liveg">● LIVE</span>':'';
     const zsym=(zn&&S.cfg.zoneSym!==false)?`<span class="zsym" title="${esc(L(ZONE_NOME[zn]||''))}">${ZONE_SIMB[zn]||''}</span>`:'';
-    h+=`<tr class="${zn?'z-'+zn:''}"><td class="pos">${i+1}${zsym}</td><td class="l">${logoImg(n)}<span class="tn-wrap">${esc(n)}${star}${liveMark}${playersSub(n)}</span></td>
+    const mov=movimentoHTML(gKey,n,i+1);
+    const capo=(i===0&&s.pl>0)?'<span class="nastro" aria-hidden="true"></span>':'';
+    const pod=(podioVivo&&i<3)?' pod'+(i+1):'';
+    h+=`<tr class="${zn?'z-'+zn:''}${pod}${i===0&&s.pl>0?' r-capo':''}" data-tn="${esc(n)}"><td class="pos">${capo}${i+1}${zsym}${mov}</td><td class="l">${logoImg(n)}<span class="tn-wrap">${esc(n)}${star}${liveMark}${playersSub(n)}</span></td>
       ${mm?`<td class="mmp">${s.mm||0}</td>`:''}<td class="pts">${s.pts}</td>${rosaStar?`<td class="rosastar">${s.stelle||0}</td>`:''}<td>${s.pl}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
-      <td>${s.gf}</td><td>${s.ga}</td><td>${s.dr>0?'+':''}${s.dr}</td></tr>`;
+      <td>${s.gf}</td><td>${s.ga}</td><td>${s.dr>0?'+':''}${s.dr}</td><td class="c-forma">${formaHTML(n,g.matches)}</td></tr>`;
   });
   h+='</tbody></table>';
+  movimentoRegistra(gKey,order);      // base di confronto per la prossima freccia
   if(anyLive)h+='<p class="small muted" style="margin-top:6px">Classifica aggiornata in tempo reale, incluse le gare in corso.</p>';
   return h;
 }
@@ -9658,7 +9709,7 @@ function swDeclare(none){
 }
 function koMatchHTML(ko,m,tag){
   const w=koWinner(m);
-  const tbd=n=>n==null?'<span class="tbd">— da definire —</span>':n===BYE?'<span class="tbd">Riposo</span>':logoImg(n)+esc(n);
+  const tbd=n=>n==null?`<span class="tbd">— ${L('da definire')} —</span>`:n===BYE?`<span class="tbd">${L('Riposo')}</span>`:logoImg(n)+esc(n);
   const canEdit=m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE;
   const onBoard=isOnBoard(m.id);
   const dis=(!canEdit||onBoard)?'disabled':'';
@@ -9693,15 +9744,15 @@ function koMatchHTML(ko,m,tag){
 }
 function koHTML(ko){
   let h=`<div class="card" style="margin-bottom:18px"><div class="row spread" style="margin-bottom:10px">
-    <h3 class="subt" style="margin:0">${esc(ko.title)}</h3>
+    <h3 class="subt" style="margin:0">${esc(L(ko.title))}</h3>
     ${ko.champion?`<span class="chip acc">🏆 ${esc(ko.champion)}</span>`:''}
   </div><div class="bracket">`;
   ko.rounds.forEach(rd=>{
-    h+=`<div class="kround"><h4>${rd.name}</h4><div class="kmatches">`;
+    h+=`<div class="kround"><h4>${esc(L(rd.name))}</h4><div class="kmatches">`;
     rd.matches.forEach(m=>h+=koMatchHTML(ko,m,m.piaz||''));
     h+='</div></div>';
   });
-  if(ko.third)h+=`<div class="kround"><h4>Finale 3° Posto</h4><div class="kmatches">${koMatchHTML(ko,ko.third,'3°/4°')}</div></div>`;
+  if(ko.third)h+=`<div class="kround"><h4>${L('Finale 3° posto')}</h4><div class="kmatches">${koMatchHTML(ko,ko.third,'3°/4°')}</div></div>`;
   h+='</div>';
   // nel piazzamento integrale ogni posto è deciso sul campo: si mostra l'ordine
   if(ko.piaz){
@@ -9751,7 +9802,7 @@ function renderClassifica(){
   allKOs().forEach(ko=>{
     const fin=ko.rounds[ko.rounds.length-1].matches[0];
     const finTxt=fin.t1&&fin.t2?`${fin.t1} ${fin.s1??'–'} : ${fin.s2??'–'} ${fin.t2}`:L('da definire');
-    h+=`<div class="card" style="margin-top:16px"><h3 class="subt">${esc(ko.title)}</h3>
+    h+=`<div class="card" style="margin-top:16px"><h3 class="subt">${esc(L(ko.title))}</h3>
       <p><b>${L('Finale:')}</b> ${esc(finTxt)} ${ko.champion?` — 🏆 <b style="color:var(--gold)">${esc(ko.champion)}</b>`:''}</p>
       ${ko.third&&ko.third.t1&&ko.third.t2?`<p class="small muted"><b>${L('3° posto:')}</b> ${esc(ko.third.t1)} ${ko.third.s1??'–'} : ${ko.third.s2??'–'} ${esc(ko.third.t2)}</p>`:''}
     </div>`;
@@ -9810,7 +9861,7 @@ function collectCronache(){
     }));
     const t=ko.third;
     if(t&&t.t1&&t.t2&&t.s1!=null&&t.s2!=null)
-      out.push({ctx:`${ko.title} · Finale 3° posto`,a:t.t1,b:t.t2,sa:t.s1,sb:t.s2,
+      out.push({ctx:`${L(ko.title)} · ${L('Finale 3° posto')}`,a:t.t1,b:t.t2,sa:t.s1,sb:t.s2,
         done:!!koWinner(t),live:t.live,events:t.events||[],
         sub:t.sub||null,subsLog:t.subsLog||null,pen:t.p1!=null&&t.p2!=null?[t.p1,t.p2]:null});
   });
@@ -9935,13 +9986,13 @@ function buildReportHTML(){
     ko.rounds.forEach(rd=>{
       const ms=rd.matches.filter(m=>m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&m.s1!=null&&m.s2!=null);
       if(!ms.length)return;
-      h+=`<div class="rsub">${esc(ko.title)} — ${esc(rd.name)}</div>`;
+      h+=`<div class="rsub">${esc(L(ko.title))} — ${esc(L(rd.name))}</div>`;
       ms.forEach(m=>h+=rMatchLine(m.t1,m.t2,m.s1,m.s2,m.events,m.p1!=null&&m.p2!=null?[m.p1,m.p2]:null));
       any=true;
     });
     const t=ko.third;
     if(t&&t.t1&&t.t2&&t.s1!=null&&t.s2!=null){
-      h+=`<div class="rsub">${esc(ko.title)} — Finale 3° posto</div>`;
+      h+=`<div class="rsub">${esc(L(ko.title))} — ${L('Finale 3° posto')}</div>`;
       h+=rMatchLine(t.t1,t.t2,t.s1,t.s2,t.events,t.p1!=null&&t.p2!=null?[t.p1,t.p2]:null);any=true;
     }
   });
@@ -10283,14 +10334,6 @@ function buildBookHTML(modo){
       <div style="font-size:9pt;color:#777">${esc(S.cfg.name||'')} · ${esc(data)}</div>
       ${sua?`<img class="foto" src="${fotoSrc(sua.f.dopo)}">`:''}</div>`;
   }
-  // l'album delle figurine (solo quelle contrassegnate con ★)
-  const figs=Object.values(S.cards||{}).filter(c=>c.card&&c.inBook);
-  if(figs.length){
-    h+=`<h2 class="bk-sec" style="page-break-before:always">${L('L’album delle figurine')}<span>${figs.length}</span></h2>`;
-    h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6mm">'+
-       figs.map(c=>`<div style="break-inside:avoid;text-align:center"><img src="${c.card}" style="width:100%;border-radius:3mm"></div>`).join('')+
-       '</div>';
-  }
   h+='</div>';
   return h;
 }
@@ -10365,7 +10408,7 @@ function pendingMatches(){
     ko.rounds.forEach(rd=>rd.matches.forEach(m=>{
       if(m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&!koWinner(m)&&!isOnBoard(m.id))out.push({id:m.id,label:`${ko.title} · ${rd.name} — ${m.t1} vs ${m.t2}`});
     }));
-    if(ko.third&&ko.third.t1&&ko.third.t2&&!koWinner(ko.third)&&!isOnBoard(ko.third.id))out.push({id:ko.third.id,label:`${ko.title} · Finale 3° posto — ${ko.third.t1} vs ${ko.third.t2}`});
+    if(ko.third&&ko.third.t1&&ko.third.t2&&!koWinner(ko.third)&&!isOnBoard(ko.third.id))out.push({id:ko.third.id,label:`${L(ko.title)} · ${L('Finale 3° posto')} — ${ko.third.t1} vs ${ko.third.t2}`});
   });
   (S.freeMatches||[]).forEach(m=>{if(!m.done&&!isOnBoard(m.id))out.push({id:m.id,label:`⚡ Partita libera — ${m.home} vs ${m.away}`});});
   return out;
@@ -11167,27 +11210,236 @@ function nextMatchesToShow(){
   return null;
 }
 /* --- risultati dell'ultima giornata completata (per la presentazione) --- */
-function lastRoundResults(){
+/* L'ULTIMA TORNATA DISPUTATA, girone per girone e tabellone per tabellone.
+   Non è "il turno in corso": se un girone è già passato alla giornata 4 ma
+   non ha ancora giocato nulla, quello che la sala vuole vedere è la 3, non un
+   riquadro vuoto. Per ciascun girone si prende quindi la giornata più
+   avanzata che abbia almeno un punteggio.
+   Con conLive valgono anche le gare in corso, non solo quelle chiuse: è il
+   caso del quadro completo, che resta acceso sul proiettore mentre si gioca. */
+function lastRoundResults({conLive=false}={}){
+  const vale=m=>conLive?(m.hs!=null&&m.as!=null):m.done;
+  const valeKo=m=>conLive?(m.s1!=null&&m.s2!=null):!!koWinner(m);
   const out=[];
   allGroups().forEach(g=>{
-    const doneRounds=[...new Set(g.matches.filter(m=>m.done).map(m=>m.round))].sort((a,b)=>a-b);
-    if(!doneRounds.length)return;
-    const r=doneRounds[doneRounds.length-1];
+    if(!g.matches||!g.matches.length)return;
+    const buone=g.matches.filter(vale);
+    if(!buone.length)return;
+    const r=Math.max(...buone.map(m=>m.round));
     const pre=g.swiss||S.cfg.format==='campionato'?'':'Girone ';
-    g.matches.filter(m=>m.round===r&&m.done).forEach(m=>out.push({
+    buone.filter(m=>m.round===r).forEach(m=>out.push({
       ctx:`${pre}${g.name} · ${g.swiss?'Turno':'Giornata'} ${r}`,
-      a:m.home,b:m.away,sa:m.hs,sb:m.as,live:false,done:true,events:m.events||[]}));
+      a:m.home,b:m.away,sa:m.hs,sb:m.as,live:!!m.live,done:!!m.done,events:m.events||[]}));
   });
   allKOs().forEach(ko=>{
     for(let i=ko.rounds.length-1;i>=0;i--){
-      const ms=ko.rounds[i].matches.filter(m=>m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&koWinner(m));
-      if(ms.length){
-        ms.forEach(m=>out.push({ctx:`${ko.title} · ${ko.rounds[i].name}`,a:m.t1,b:m.t2,sa:m.s1,sb:m.s2,live:false,done:true,events:m.events||[]}));
-        break;
-      }
+      const ms=ko.rounds[i].matches.filter(m=>m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&valeKo(m));
+      if(!ms.length)continue;
+      ms.forEach(m=>out.push({ctx:`${L(ko.title)} · ${L(ko.rounds[i].name)}`,
+        a:m.t1,b:m.t2,sa:m.s1,sb:m.s2,live:!!m.live,done:!!koWinner(m),events:m.events||[]}));
+      break;
     }
+    const t=ko.third;
+    if(t&&t.t1&&t.t2&&valeKo(t))
+      out.push({ctx:`${L(ko.title)} · ${L('Finale 3° posto')}`,
+        a:t.t1,b:t.t2,sa:t.s1,sb:t.s2,live:!!t.live,done:!!koWinner(t),events:t.events||[]});
   });
   return out;
+}
+/* =========================================================
+   WHATSAPP — i risultati e le classifiche fuori dalla sala
+   =========================================================
+   Chi non è al torneo vuole sapere com'è finita, e il posto dove lo chiede
+   è il gruppo WhatsApp. Qui si costruisce il messaggio — ultima tornata
+   giocata e classifiche aggiornate — e lo si consegna a WhatsApp già
+   scritto.
+
+   UN LIMITE DA DIRE CHIARO: WhatsApp non permette a un programma di
+   spedire da solo, né a un gruppo né a una persona. Non è una mancanza di
+   questa applicazione: le uniche vie sarebbero l'API a pagamento di
+   WhatsApp Business (che ai gruppi comunque non arriva) oppure gli
+   automatismi non ufficiali, che fanno chiudere l'account. Quello che si
+   può fare — e che si fa qui — è arrivare fino all'ultimo passo: WhatsApp
+   si apre con il messaggio già pronto e la chat giusta selezionata, e
+   all'utente resta il tocco su "invia".                                  */
+
+function waStato(){
+  if(!S.wa)S.wa={tipo:'tutto',auto:false};
+  if(!S.tel)S.tel={};
+  return S.wa;
+}
+/* i numeri si normalizzano in formato internazionale senza segni: wa.me
+   accetta solo cifre, e "+39 333 123 45 67" così com'è non funziona */
+function waNumero(t){
+  let n=String(t||'').replace(/[^\d+]/g,'');
+  if(!n)return '';
+  if(n.startsWith('00'))n='+'+n.slice(2);
+  if(!n.startsWith('+')){
+    // senza prefisso si assume l'Italia: è il caso di gran lunga più comune
+    // per chi organizza questi tornei, e un numero senza prefisso non parte
+    n=(n.length>=9&&n.length<=11)?'+39'+n:'+'+n;
+  }
+  return n.replace(/\D/g,'');
+}
+function waTitolo(){
+  const n=S.cfg&&S.cfg.name?S.cfg.name:L('Torneo');
+  return S.cfg&&S.cfg.loc?`${n} · ${S.cfg.loc}`:n;
+}
+/* ---- i risultati dell'ultima tornata, raggruppati per girone ---- */
+function waRisultatiTesto(){
+  const items=lastRoundResults({conLive:true});
+  if(!items.length)return '';
+  const blocchi=[];
+  items.forEach(it=>{
+    let b=blocchi.find(x=>x.ctx===it.ctx);
+    if(!b){b={ctx:it.ctx,righe:[]};blocchi.push(b);}
+    b.righe.push(it);
+  });
+  return blocchi.map(b=>`*${quadroCtx(b.ctx)}*\n`+b.righe.map(it=>{
+    const vivo=it.live?'  🔴':'';
+    return `${it.a} ${it.sa}-${it.sb} ${it.b}${vivo}`;
+  }).join('\n')).join('\n\n');
+}
+/* ---- le classifiche aggiornate, una per girone ---- */
+function waClassificheTesto(){
+  const gs=allGroups();
+  if(!gs.length)return '';
+  return gs.map(g=>{
+    const{order,stats}=g.rosa?rosaRank(g):g.rosaSea?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
+    const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
+    const pre=(g.swiss||isTier||S.cfg.format==='campionato')?'':L('Girone ');
+    const righe=order.map((n,i)=>{
+      const st=stats[n];
+      const medaglia=['🥇','🥈','🥉'][i]||`${i+1}.`;
+      // le sigle non passano dal dizionario: una chiave di una lettera sola
+      // verrebbe pescata da translateStatic anche dove non c'entra nulla
+      const sg=LANG==='en'?['p','w','d','l']:['g','v','n','p'];
+      return `${medaglia} ${n} — ${st.pts} pt (${st.pl}${sg[0]} ${st.w}${sg[1]} ${st.d}${sg[2]} ${st.l}${sg[3]}, ${st.dr>0?'+':''}${st.dr})`;
+    }).join('\n');
+    return `*${pre}${g.name}*\n${righe}`;
+  }).join('\n\n');
+}
+function waMessaggio(tipo){
+  const t=tipo||waStato().tipo||'tutto';
+  const capo=`🏆 *${waTitolo()}*\n${new Date().toLocaleString(LANG==='en'?'en-GB':'it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}`;
+  const pezzi=[capo];
+  if(t!=='classifiche'){
+    const r=waRisultatiTesto();
+    if(r)pezzi.push(`⚽ *${L('Ultima tornata').toUpperCase()}*\n\n`+r);
+  }
+  if(t!=='risultati'){
+    const c=waClassificheTesto();
+    if(c)pezzi.push(`📊 *${L('Classifiche complete').toUpperCase()}*\n\n`+c);
+  }
+  if(S.champion)pezzi.push(`🏅 *${L('Campione')}: ${S.champion}*`);
+  return pezzi.join('\n\n———————————\n\n');
+}
+function waAggiorna(){
+  const ta=$('#wa-testo'); if(!ta)return;
+  ta.value=waMessaggio();
+  const n=$('#wa-nota');
+  if(n){
+    const quanti=Object.keys(S.tel||{}).filter(k=>waNumero(S.tel[k])).length;
+    n.innerHTML=ta.value.length>1800
+      ? `⚠️ ${L('Messaggio lungo')} (${ta.value.length} ${L('caratteri')}): ${L('su alcuni telefoni WhatsApp lo tronca. Conviene mandare separatamente risultati e classifiche.')}`
+      : `${ta.value.length} ${L('caratteri')} · ${quanti} ${L('partecipanti con numero')}`;
+  }
+}
+function waPannelloUI(){
+  const st=waStato();
+  const t=$('#wa-tipo'); if(t)t.value=st.tipo||'tutto';
+  const a=$('#wa-auto'); if(a)a.checked=!!st.auto;
+  waRubricaUI();
+  waAggiorna();
+}
+function waTipo(v){waStato().tipo=v;persist();waAggiorna();}
+function waAuto(on){waStato().auto=!!on;persist();}
+function waCopia(){
+  const ta=$('#wa-testo'); if(!ta||!ta.value)return;
+  navigator.clipboard.writeText(ta.value)
+    .then(()=>toast('📋 '+L('Messaggio copiato')))
+    .catch(()=>{ta.select();document.execCommand('copy');toast('📋 '+L('Messaggio copiato'));});
+}
+function waApri(numero,testo){
+  const base=numero?`https://wa.me/${numero}?text=`:'https://wa.me/?text=';
+  window.open(base+encodeURIComponent(testo),'_blank');
+}
+function waInviaGruppo(){
+  const ta=$('#wa-testo'); const testo=(ta&&ta.value)||waMessaggio();
+  if(!testo)return;
+  waApri('',testo);
+  toast('📲 '+L('WhatsApp aperto: scegli il gruppo del torneo e invia'));
+}
+/* ---- invio ai singoli: una chat alla volta ----
+   Aprire dieci schede WhatsApp insieme non funziona (il browser le blocca e
+   l'utente si perde): si procede uno alla volta, con l'elenco che avanza. */
+let waCoda=[];
+function waInviaSingoli(){
+  const ta=$('#wa-testo'); const testo=(ta&&ta.value)||waMessaggio();
+  if(!testo)return;
+  const rubrica=S.tel||{};
+  waCoda=(S.teams||[]).filter(n=>waNumero(rubrica[n])).map(n=>({nome:n,num:waNumero(rubrica[n])}));
+  if(!waCoda.length){
+    toast('⚠️ '+L('Nessun partecipante ha un numero: compila la rubrica qui accanto.'));
+    return;
+  }
+  waCodaPasso(testo);
+}
+function waCodaPasso(testo){
+  if(!waCoda.length){toast('✅ '+L('Elenco completato'));waRubricaUI();return;}
+  const p=waCoda.shift();
+  waApri(p.num,testo);
+  waRubricaUI();
+  if(waCoda.length)
+    toast(`📲 ${L('Aperta la chat di')} ${p.nome} · ${waCoda.length} ${L('ancora in coda')}`,
+      {azione:L('Prossimo'),onAzione:()=>waCodaPasso(testo)});
+  else toast(`📲 ${L('Aperta la chat di')} ${p.nome} — ${L('era l\'ultimo')}`);
+}
+/* ---- la rubrica ---- */
+function waRubricaUI(){
+  const el=$('#wa-rubrica'); if(!el)return;
+  const teams=S.teams||[];
+  if(!teams.length){el.innerHTML=`<p class="small muted">${L('Nessun partecipante iscritto.')}</p>`;return;}
+  el.innerHTML=teams.map(n=>{
+    const v=(S.tel&&S.tel[n])||'';
+    const ok=!!waNumero(v);
+    return `<label class="wa-riga"><span class="wa-nome">${esc(n)}</span>
+      <input type="tel" value="${esc(v)}" placeholder="+39 333 1234567"
+        oninput="waTelSet(${JSON.stringify(n).replace(/"/g,'&quot;')},this.value)">
+      <span class="wa-spia${ok?' ok':''}">${ok?'✓':'—'}</span></label>`;
+  }).join('');
+}
+function waTelSet(nome,v){
+  if(!S.tel)S.tel={};
+  if(String(v||'').trim())S.tel[nome]=v; else delete S.tel[nome];
+  persist();
+  const l=[...document.querySelectorAll('#wa-rubrica .wa-riga')].find(x=>x.querySelector('.wa-nome').textContent===nome);
+  if(l){const sp=l.querySelector('.wa-spia'),ok=!!waNumero(v);sp.textContent=ok?'✓':'—';sp.classList.toggle('ok',ok);}
+  const n=$('#wa-nota'); if(n&&$('#wa-testo')&&$('#wa-testo').value)waAggiorna();
+}
+/* ---- l'aggancio automatico a fine tornata ----
+   Non spedisce: prepara. Quando l'ultima gara di una giornata si chiude,
+   compare l'avviso col messaggio già scritto e un tasto per aprirlo. */
+let waUltimaTornata=null;
+function waControllaTornata(){
+  if(!waStato().auto)return;
+  const items=lastRoundResults();          // solo le gare chiuse
+  if(!items.length)return;
+  const firma=items.map(i=>`${i.ctx}|${i.a}|${i.b}|${i.sa}-${i.sb}`).sort().join('§');
+  // la tornata è "chiusa" quando nessun girone ha più gare da giocare in
+  // quella giornata: altrimenti l'avviso scatterebbe a ogni risultato
+  const aperte=allGroups().some(g=>{
+    const b=g.matches.filter(m=>m.done);
+    if(!b.length)return false;
+    const r=Math.max(...b.map(m=>m.round));
+    return g.matches.some(m=>m.round===r&&!m.done);
+  });
+  if(aperte)return;
+  if(firma===waUltimaTornata)return;
+  waUltimaTornata=firma;
+  waAggiorna();
+  toast('📲 '+L('Tornata completata: il messaggio WhatsApp è pronto'),
+    {azione:L('Apri WhatsApp'),onAzione:()=>waInviaGruppo()});
 }
 /* stemma per la presentazione (o segnaposto con iniziali) */
 function crestEl(name){
@@ -11262,7 +11514,7 @@ function fullCalendarHTML(paginato){
     ko.rounds.forEach(rd=>{
       const list=rd.matches.filter(m=>m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE);
       if(!list.length)return;
-      h+=`<div class="prhead">${esc(ko.title)} · ${esc(rd.name)}</div>`;
+      h+=`<div class="prhead">${esc(L(ko.title))} · ${esc(L(rd.name))}</div>`;
       list.forEach(m=>{
         const played=m.s1!=null&&m.s2!=null;
         const mid=played?scoreMid(m.s1,m.s2,m.live):(m.live?scoreMid(m.s1??0,m.s2??0,true):`<span class="pvs goldtxt">VS</span>`);
@@ -11293,7 +11545,9 @@ function standingsPresentHTML(onlyLive,onlyGroup){
   return `<div class="pgrid">`+gs.map(g=>{
     const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
     const qual=isTier?0:(S.cfg.format==='gironi-ko'?S.cfg.qualify:(S.cfg.format==='squadre'?2:0));
-    return `<div class="pcard tclass"><div class="pf">${g.swiss||isTier||S.cfg.format==='campionato'?'':'Girone '}${esc(g.name)}</div>${standingsHTML(g,{qual})}${(qual>0||zonesOn)?leg:''}</div>`;
+    const capo=rankTeams(g.teams,g.matches).order[0];
+    const filo=(capo&&S.logos&&S.logos[capo])?`<img class="filigrana" src="${S.logos[capo]}" alt="" aria-hidden="true">`:'';
+    return `<div class="pcard tclass">${filo}<div class="pf">${g.swiss||isTier||S.cfg.format==='campionato'?'':'Girone '}${esc(g.name)}</div>${standingsHTML(g,{qual})}${(qual>0||zonesOn)?leg:''}</div>`;
   }).join('')+`</div>`;
 }
 /* auto-fit: rimpicciolisce i nomi troppo lunghi finché stanno su una riga */
@@ -11431,7 +11685,8 @@ function rgRiquadro(root){
       +'<div class="rg-bar">'
       +  '<div class="rg-bar-r1"><span class="rg-bollo">● REPLAY</span><span class="rg-giro"></span></div>'
       +  '<div class="rg-bar-r2"></div>'
-      +'</div>';
+      +'</div>'
+      +'<div class="rg-gol"><span class="rg-gol-in"></span></div>';
     root.appendChild(box);
   }
   return box;
@@ -11448,6 +11703,14 @@ function rgTitolazione(box,d){
   }else{
     r2.innerHTML=`<span class="rg-solo">${esc(d.squadre||L('Azione'))}</span>`;
   }
+  // cartiglio del marcatore: entra da sinistra quando la rete ha un nome
+  const gol=box.querySelector('.rg-gol'), gi=box.querySelector('.rg-gol-in');
+  if(gol&&gi){
+    if(d.marcatore){
+      gi.innerHTML=`⚽ ${d.minuto!=null?`<b>${d.minuto}'</b> `:''}${esc(String(d.marcatore).toUpperCase())}`;
+      gol.classList.remove('on'); void gol.offsetWidth; gol.classList.add('on');
+    }else gol.classList.remove('on');
+  }
 }
 function rgRiproduci(root,st){
   const d=st.coda.shift();
@@ -11457,24 +11720,42 @@ function rgRiproduci(root,st){
   rgTitolazione(box,d);
   const v=box.querySelector('video'), giro=box.querySelector('.rg-giro');
   let volte=0;
-  clearTimeout(st.rete);
+  clearTimeout(st.rete); clearInterval(st.moto);
+  const punti=()=>{                    // due trattini che si riempiono: si legge da lontano
+    giro.innerHTML=[0,1].map(k=>`<b class="rg-p${k<=volte?' on':''}"></b>`).join('');
+  };
+  /* Rallentatore sull'ultimo secondo: il replay corre a velocità piena e
+     frena quando l'azione si chiude — è il gesto che tutti riconoscono
+     dalla moviola vera, e qui costa solo il controllo del playbackRate. */
+  const rallenta=()=>{
+    if(!isFinite(v.duration)||v.duration<=0)return;
+    const manca=v.duration-v.currentTime;
+    const lento=manca<1.05;
+    const atteso=lento?0.4:1;
+    if(Math.abs(v.playbackRate-atteso)>0.01){ try{v.playbackRate=atteso;}catch(e){} }
+    box.classList.toggle('slow',lento);
+    // alla seconda visione l'inquadratura si stringe: l'occhio va al centro
+    box.classList.toggle('stretta',volte>=1);
+  };
   v.onended=()=>{
     volte++;
     if(volte<2){                                   // la seconda visione
-      giro.textContent=L('replay 2 di 2');
-      v.currentTime=0; const g=v.play(); if(g&&g.catch)g.catch(()=>{});
+      punti();
+      v.currentTime=0; try{v.playbackRate=1;}catch(e){}
+      const g=v.play(); if(g&&g.catch)g.catch(()=>{});
     }else rgProssima(root,st);
   };
-  giro.textContent=L('replay 1 di 2');
-  v.src=d.url;
+  punti();
+  v.src=d.url; try{v.playbackRate=1;}catch(e){}
   const g=v.play(); if(g&&g.catch)g.catch(()=>{});
   box.classList.add('on');
+  st.moto=setInterval(rallenta,80);
   st.rete=setTimeout(()=>rgProssima(root,st), 40000);   // se il video si inceppa
 }
 /** Fine di un'azione: o si passa alla successiva in coda, sfumando il solo
     contenuto, oppure si torna al tabellone in dissolvenza. */
 function rgProssima(root,st){
-  clearTimeout(st.rete);
+  clearTimeout(st.rete); clearInterval(st.moto);
   const box=rgRiquadro(root), v=box.querySelector('video');
   v.onended=null; try{v.pause();}catch(e){}
   if(st.coda.length){
@@ -11488,8 +11769,8 @@ function rgProssima(root,st){
     a sipario chiuso, per non far lampeggiare il nero. */
 function rgCongeda(root,st){
   const box=rgRiquadro(root), v=box.querySelector('video');
-  clearTimeout(st.rete); clearTimeout(st.scambio);
-  box.classList.remove('on','swap');
+  clearTimeout(st.rete); clearTimeout(st.scambio); clearInterval(st.moto);
+  box.classList.remove('on','swap','slow','stretta');
   st.attivo=false; st.corrente=null;
   if(st.fine){ const f=st.fine; st.fine=null; try{ f(); }catch(e){} }
   clearTimeout(st.pulizia);
@@ -11503,7 +11784,7 @@ function rgCongeda(root,st){
     o Presentazione). Se una moviola è già in onda, questa si accoda. */
 function replayGrande(root, d, alTermine){
   let st=RG_CODE.get(root);
-  if(!st){ st={coda:[],attivo:false,corrente:null,fine:null,rete:null,scambio:null,pulizia:null};
+  if(!st){ st={coda:[],attivo:false,corrente:null,fine:null,rete:null,scambio:null,pulizia:null,moto:null};
            RG_CODE.set(root,st); }
   if(alTermine)st.fine=alTermine;
   st.coda.push(d);
@@ -11684,8 +11965,8 @@ function presentRender(){
   if(!presentOpen)return;
   const live=presentIsLive();
   const views=live
-    ?[['live','⚽ '+L('Risultati live')],['classifiche','📊 '+L('Classifiche live')],['prossimo','📢 '+L('Prossimo turno')]]
-    :[['prossimo','📢 '+L('Prossimo turno')],['calendario','📅 '+L('Calendario completo')],['classifiche','📊 '+L('Classifiche per girone')]];
+    ?[['live','⚽ '+L('Risultati live')],['classifiche','📊 '+L('Classifiche live')],['quadro','🖥 '+L('Quadro completo')],['prossimo','📢 '+L('Prossimo turno')]]
+    :[['prossimo','📢 '+L('Prossimo turno')],['quadro','🖥 '+L('Quadro completo')],['calendario','📅 '+L('Calendario completo')],['classifiche','📊 '+L('Classifiche per girone')]];
   // le viste dell'AUTO LIVE sono "composite" (live#2, stand#2): la base serve
   // solo a evidenziare il pulsante corrispondente
   const vbase=String(presentView||'').split('#')[0];
@@ -11695,6 +11976,7 @@ function presentRender(){
     +`<button class="btn ${S.autoLive?'':'sec'}" onclick="toggleAutoLive()" title="${L('Slideshow automatico di risultati, classifiche e cronache')}">🔄 ${S.autoLive?'AUTO LIVE ●':'AUTO LIVE'}</button>`
     +`<button class="btn" onclick="announceNextRound()">🔊 ${L('Annuncia turno')}</button>`;
   const grid=$('#present-grid'),title=$('#present-title');
+  grid.classList.remove('q-fit');       // la rimette solo il quadro completo
   const varg=String(presentView||'').split('#')[1];
   if(vbase==='live'&&varg!=null){          // AUTO LIVE: risultati di UN girone (o dei KO)
     if(varg==='ko'){
@@ -11724,6 +12006,10 @@ function presentRender(){
     grid.innerHTML=items.length
       ?'<div class="plist">'+items.map(it=>prow(it.a,it.b,scoreMid(it.sa,it.sb,it.live),{live:it.live,evs:evStr(it.events,it.a,it.b)})).join('')+'</div>'
       :`<div class="pcard"><p class="muted">${LANG==='en'?'No match with a score.':'Nessuna gara con punteggio.'}</p></div>`;
+  }else if(presentView==='quadro'){
+    title.textContent=LANG==='en'?'Full board · results and standings':'Quadro completo · risultati e classifiche';
+    grid.innerHTML=quadroHTML();
+    grid.classList.add('q-fit');
   }else if(presentView==='classifiche'){
     title.textContent=live?(LANG==='en'?'Live standings':'Classifiche in tempo reale'):L('Classifiche per girone');
     grid.innerHTML=standingsPresentHTML(live);
@@ -11738,7 +12024,7 @@ function presentRender(){
   }
   renderPresentFoto();
   requestAnimationFrame(()=>{
-    fitPresentText();presentFit();
+    fitPresentText();presentFit();lampoSorpassi(document.getElementById('present'));
     // rimisura lo spazio: se in questa schermata ci sta un numero diverso di
     // partite, si ridisegna una volta sola con la nuova capienza
     /* La capienza si misura DOPO aver disegnato, quindi il primo colpo può
@@ -11802,6 +12088,39 @@ function autoLiveSequence(){
   return seq.length?seq:['classifiche'];
 }
 /* risultati della giornata in corso di UN solo girone */
+/* ---------- QUADRO COMPLETO: tutto in una schermata sola ----------
+   Risultati dell'ultima tornata giocata + classifiche complete di ogni
+   girone, affiancati. È la vista da lasciare accesa sul proiettore fra un
+   turno e l'altro: nessuno deve più cambiare schermata per sapere com'è
+   finita una partita o a che punto è la classifica. */
+function quadroCtx(t){
+  // i contesti nascono in italiano dentro currentRoundItems: qui si
+  // traducono i pezzi, così in inglese non resta "Girone A · Giornata 3"
+  return String(t||'')
+    .replace(/^Girone /,L('Girone '))
+    .replace(/· Giornata /,'· '+L('Giornata')+' ')
+    .replace(/· Turno /,'· '+L('Turno')+' ');
+}
+function quadroHTML(){
+  const items=lastRoundResults({conLive:true});
+  const blocchi=[];
+  items.forEach(it=>{
+    let b=blocchi.find(x=>x.ctx===it.ctx);
+    if(!b){b={ctx:it.ctx,righe:[]};blocchi.push(b);}
+    b.righe.push(it);
+  });
+  const ris=blocchi.length
+    ? blocchi.map(b=>`<div class="pq-blocco"><div class="pq-ctx">${esc(quadroCtx(b.ctx))}</div>`
+        +'<div class="plist">'+b.righe.map(it=>prow(it.a,it.b,scoreMid(it.sa,it.sb,it.live),
+            {live:it.live,evs:evStr(it.events,it.a,it.b)})).join('')+'</div></div>').join('')
+    : `<div class="pcard"><p class="muted">${L('Nessuna gara con punteggio.')}</p></div>`;
+  return `<div class="pquadro">
+    <div class="pq-col"><div class="pq-tit">⚽ ${L('Ultima tornata')}</div>
+      <div class="pq-corpo">${ris}</div></div>
+    <div class="pq-col"><div class="pq-tit">📊 ${L('Classifiche complete')}</div>
+      <div class="pq-corpo">${standingsPresentHTML(false)}</div></div>
+  </div>`;
+}
 function groupRoundItems(g){
   if(!g||!g.matches||!g.matches.length)return[];
   const rounds=[...new Set(g.matches.map(m=>m.round))].sort((a,b)=>a-b);
@@ -11863,7 +12182,11 @@ function presentFit(){
   if(!h)return;
   let k=Math.min(1,availH/h,availW/(w||availW));
   if(k>=0.999)return;                 // ci sta già: nessuna scalatura
-  if(k<0.45)return;                   // troppo denso (es. calendario completo): resta scorrevole
+  // Il quadro completo esiste apposta per far stare TUTTO in una videata:
+  // lì si scende fino a un quarto, mentre per le altre viste sotto il 45%
+  // conviene lasciar scorrere invece di produrre caratteri illeggibili.
+  const minimo=g.classList.contains('q-fit')?0.25:0.45;
+  if(k<minimo)return;
   g.style.transform=`scale(${k.toFixed(3)})`;
 }
 function tvLiveBoards(){return S.boards.map((b,i)=>i).filter(i=>{const b=S.boards[i];return b.matchId&&(b.running||b.started||b.suspended);});}
@@ -14153,6 +14476,9 @@ function syncApply(ev){
         // solo in Live: l'azione appena arrivata si guarda subito, sul posto
         mostraReplay(ev.mid,ev.file,t);
         // ...e sul PROIETTORE, quasi a schermo intero, come la moviola in TV
+        // l'ultima marcatura della gara accompagna la clip: diventa il cartiglio
+        const _evs=(f.m&&f.m.events)||[];
+        if(t&&_evs.length)t.ev=_evs[_evs.length-1];
         goalAlSecondoSchermo(ev.mid, ev.file, t);
       });
       return;}
@@ -14644,6 +14970,7 @@ function syncStatusUI(){
   el.textContent=!SYNC.on?(en?'Sync off.':'Sincronizzazione spenta.')
     :SYNC.okAt?(en?'Connected — last update ':'Collegato — ultimo scambio ')+new Date(SYNC.okAt).toLocaleTimeString(en?'en-GB':'it-IT')
     :(en?'Server unreachable…':'Server non raggiungibile…');
+  try{salaVerifica();}catch(e){}   // la spia dell'indirizzo di sala segue lo stato del collegamento
 }
 function renderSyncUI(){
   const on=$('#sy-on');if(!on)return;
@@ -15048,6 +15375,7 @@ setInterval(tickClock,1000);
   if(SYNC.on)syncStart();
   {const v=$('#app-version');if(v)v.textContent='v'+APP_VERSION;}
   try{updInit();}catch(e){}   // scheda aggiornamenti (solo app desktop)
+  try{rackAvvia();rackSincronizza();}catch(e){}   // meter dei livelli in Regia
   spkUI();   // stato iniziale del pulsante speaker (modalità salvata)
   // licenza: verifica la firma del codice salvato e applica gli eventuali limiti
   applyFeatureFlags();

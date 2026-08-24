@@ -1,7 +1,7 @@
 {
- "content": "6.4.2",
+ "content": "7.1.0",
  "minShell": "6.3.4",
- "notes": "Griglie dei gironi compilabili, composizione manuale su tutte le formule, annunci allineati ai campi.",
+ "notes": "Quadro completo in Presentazione, invio su WhatsApp di risultati e classifiche, codici QR da tavolo stampabili in anticipo, metalli del podio in classifica.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,20 +21,12 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "4830ece016530e8a33cd9283611f36be3711eaa4d222db35677ac390a81194d1",
-   "size": 1070145
-  },
-  "iscrizione.html": {
-   "sha256": "5711b1965af5c6e04846654b0e8f8d32c6a53c9ad8ccc68ce9521eedb3c86646",
-   "size": 5740
+   "sha256": "16165e31a3baac0006ce55125d51d43c4f00fb421dd5afc1d9768db281df1abb",
+   "size": 1089749
   },
   "legge.js": {
    "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
    "size": 7787
-  },
-  "maglie_index.js": {
-   "sha256": "9c82823d52e3d1b5aefb846230e5827493b4470990547d3a089310a65918ded3",
-   "size": 167086
   },
   "mp4enc.js": {
    "sha256": "da69c25e153c01969a93e44a9112cba9bf28ca72cfa38b482a77bd134a766b21",
