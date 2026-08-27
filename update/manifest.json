@@ -1,7 +1,7 @@
 {
- "content": "7.1.1",
+ "content": "7.1.2",
  "minShell": "6.3.4",
- "notes": "Presentazione: tolto il pulsante schermo intero, la X di chiusura resta discreta. Numeri corretti di stemmi e formule nella documentazione.",
+ "notes": "Correzione importante per macOS: il pacchetto non era firmato correttamente e a installazione nuova il Mac lo rifiutava come «danneggiato». Ora la firma è valida su tutte le build.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,7 +21,7 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "57a8b719dd23eb2f4cbd6f7dd6b4a87042b31317a9b93e3479d9499f02c22ba0",
+   "sha256": "cf185d649221046f6f80228ebc2bc06df08ba23bce9c9ce16d8e2407159a2f75",
    "size": 1089824
   },
   "legge.js": {
