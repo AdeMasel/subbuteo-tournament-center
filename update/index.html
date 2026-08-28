@@ -2235,6 +2235,86 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 .legge-chap .pass{padding:10px 16px;border-top:1px solid rgba(233,197,106,.12);font-size:.9rem;line-height:1.6;color:#e8ddc4}
 .legge-chap .pass .pr{color:var(--lg-gold);font-weight:700;margin-right:6px}
 @media (prefers-color-scheme: light){}
+/* ===================================================================
+   REGOLE RIPRISTINATE — erano state cancellate insieme alle figurine
+   ===================================================================
+   Togliendo la sezione delle figurine e delle maglie è stata asportata
+   anche una regione di CSS confinante che non c'entrava nulla: gli stili
+   del Consigliere delle formule, del catalogo dei Tornei Reali, degli
+   avvisi di annullamento, della stima della durata, del doppio confronto
+   nei tabelloni e di alcune colonne di classifica. Il codice continuava a
+   generare quelle classi, ma senza regole: il Consigliere, per dirne una,
+   si presentava come un elenco spoglio invece che a schede.
+   Recuperate dalla 6.5.0, l'ultima versione precedente alla rimozione, e
+   verificate una per una: nessuna riporta dentro le figurine. */
+/* elenco di ciò che l'annullamento cancella: si vede PRIMA di confermare */
+.ann-perde{list-style:none;margin:12px 0 0;padding:12px 14px;background:rgba(240,166,64,.09);
+  border:1px solid rgba(240,166,64,.34);border-radius:10px;font-size:.86rem;line-height:1.7}
+.ann-perde li::before{content:'•';color:var(--warn,#f0a640);margin-right:8px}
+.ann-blocco{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.86rem;line-height:1.6;
+  background:rgba(226,72,72,.12);border:1px solid rgba(226,72,72,.42)}
+.ann-gara{font-size:1.06rem;font-weight:600;text-align:center;margin:2px 0 4px}
+.ann-gara b{color:var(--accent2,#f0c465);margin:0 10px}
+/* il comando sulla riga della partita: discreto finché non serve */
+/* doppio confronto: le due gare vanno lette come due, non come una riga lunga */
+.kleg{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted,#8ba0c0);
+  margin:6px 0 2px;display:flex;align-items:center;gap:7px}
+.kleg::after{content:'';flex:1;height:1px;background:currentColor;opacity:.28}
+.kinv{letter-spacing:.04em;text-transform:none;opacity:.72;font-size:.66rem}
+.ktot{margin-top:6px;padding-top:5px;border-top:1px dashed rgba(255,255,255,.16);
+  text-align:right;font-size:.78rem;color:var(--muted,#8ba0c0)}
+.ktot b{color:var(--accent2,#f0c465);font-size:.95rem;margin-left:5px}
+.standings td.mmp{color:var(--muted,#8ba0c0);font-variant-numeric:tabular-nums}
+.btn-ann{background:none;border:0;color:var(--muted,#8ba0c0);cursor:pointer;font-size:.92rem;
+  padding:2px 5px;border-radius:6px;line-height:1}
+.btn-ann:hover{color:#e24848;background:rgba(226,72,72,.14)}
+.est-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:16px}
+.est-f{display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted)}
+.est-f b{color:var(--accent)}
+.est-f input[type=time]{width:auto}
+.est-f input[type=range]{accent-color:var(--accent)}
+.est-out{background:linear-gradient(135deg,rgba(245,197,66,.16),rgba(245,197,66,.05));border:1px solid var(--accent);
+  border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
+.est-end{font-family:'Oswald',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:.8rem}
+.est-end b{display:block;font-size:3rem;letter-spacing:.04em;color:var(--accent);font-family:'Chakra Petch',monospace;line-height:1.1}
+.est-end i{font-style:normal;font-size:.7rem;color:var(--danger);letter-spacing:.1em}
+.est-dur{font-size:.84rem;color:var(--muted);margin-top:4px}
+.est-tab{width:100%;border-collapse:collapse;font-size:.82rem}
+.est-tab th{text-align:left;font-family:'Oswald',sans-serif;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  font-size:.7rem;color:var(--accent2);border-bottom:1px solid var(--line);padding:6px 8px}
+.est-tab td{padding:6px 8px;border-bottom:1px solid color-mix(in srgb,var(--line) 50%,transparent)}
+.est-tab td:last-child{text-align:right;font-family:'Chakra Petch',monospace;color:var(--text)}
+#real-list{overflow-y:auto;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.real-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:7px;transition:transform .18s ease,box-shadow .18s ease}
+.real-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.real-hd{display:flex;align-items:center;gap:12px}
+.real-hd .lg{width:56px;height:56px;flex:0 0 56px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:5px}
+.real-hd .lg img{max-width:100%;max-height:100%;object-fit:contain}
+.real-hd .t{font-family:'Oswald',sans-serif;font-size:1.05rem;letter-spacing:.03em;color:var(--text)}
+.real-hd .e{font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.real-desc{font-size:.8rem;color:var(--muted)}
+.real-z{display:flex;gap:8px;flex-wrap:wrap;font-size:.68rem;letter-spacing:.04em}
+.real-z span{border-radius:12px;padding:1px 9px;font-weight:700}
+.real-z .zu{background:rgba(46,224,107,.15);color:#57e88f}
+.real-z .zp{background:rgba(111,210,255,.15);color:#6fd2ff}
+.real-z .zo{background:rgba(255,176,86,.15);color:#ffb056}
+.real-z .zd{background:rgba(255,107,107,.15);color:#ff6b6b}
+.real-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:4px}
+.real-foot .nn{font-family:'Chakra Petch',monospace;font-size:.78rem;color:var(--accent2)}
+.adv-head{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.adv-head h3{margin:0;font-family:'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.adv-head span{flex:1;color:var(--muted);font-family:'Chakra Petch',monospace}
+#adv-list{overflow-y:auto;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.adv-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:6px;transition:transform .18s ease,box-shadow .18s ease}
+.adv-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.adv-card.star{border-color:var(--accent);box-shadow:0 0 16px rgba(245,197,66,.18)}
+.adv-t{font-family:'Oswald',sans-serif;font-size:1.02rem;letter-spacing:.03em;color:var(--text)}
+.adv-tag{font-size:.8rem;color:var(--muted);font-style:italic}
+.adv-ph{margin:2px 0 0;padding-left:18px;font-size:.8rem;color:var(--muted)}
+.adv-ph li{margin:2px 0}
+.adv-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px}
+.adv-tot{font-family:'Chakra Petch',monospace;font-size:.78rem;color:var(--accent2)}
+/* === fine delle regole ripristinate === */
 </style>
 </head>
 <body>
@@ -3426,7 +3506,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.1.2';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.1.3';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
