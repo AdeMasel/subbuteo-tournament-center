@@ -1,7 +1,7 @@
 {
- "content": "7.1.3",
+ "content": "7.2.0",
  "minShell": "6.3.4",
- "notes": "Ripristinate le regole grafiche cancellate per sbaglio con le figurine: il Consigliere delle formule torna a schede, e con lui i Tornei Reali, la stima della durata, gli avvisi di annullamento e il doppio confronto nei tabelloni.",
+ "notes": "Versione ricostruita a partire dalla 6.5.0, con la rimozione delle figurine rifatta per appartenenza invece che per posizione: tornano al loro posto il Consigliere delle formule a schede, i Tornei Reali, la stima della durata, gli avvisi di annullamento e il doppio confronto nei tabelloni.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "7f58e2764ee62ceae5b6a4afdaf721f8a06d5693632c1bc38d90a346696035f9",
-   "size": 1096496
+   "sha256": "62c74851d5b6c74deb5d4c4db36d2bc379c440885f2cf22f4d67ba82d5ef9e61",
+   "size": 1095972
   },
   "legge.js": {
    "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
