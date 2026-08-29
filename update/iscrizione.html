@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Iscrizione al torneo</title>
+<style>
+:root{--bg1:#070d1f;--bg2:#0c1730;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.16);
+  --text:#eef2ff;--muted:#8ba0c0;--accent:#f5b942;--ok:#3ddc84;--danger:#ff6b6b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  color:var(--text);background:radial-gradient(120% 90% at 50% -10%,var(--bg2),var(--bg1) 70%);
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.box{width:min(440px,100%);background:var(--card);border:1px solid var(--line);border-radius:20px;
+  padding:26px 22px;backdrop-filter:blur(10px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+h1{margin:0 0 4px;font-size:1.45rem;letter-spacing:.02em}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 20px}
+label{display:block;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:14px 0 5px}
+input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--line);
+  background:rgba(0,0,0,.28);color:var(--text);font-size:1.05rem;font-family:inherit}
+input:focus{outline:none;border-color:var(--accent)}
+.hint{font-size:.76rem;color:var(--muted);margin-top:4px}
+button{width:100%;margin-top:22px;padding:15px;border-radius:12px;border:none;cursor:pointer;
+  font-size:1.06rem;font-weight:600;font-family:inherit;
+  background:linear-gradient(135deg,#ffe9a8,var(--accent) 60%,#b07f19);color:#0a1020}
+button:disabled{opacity:.5;cursor:default}
+.esito{margin-top:16px;padding:13px 15px;border-radius:11px;font-size:.92rem;display:none}
+.esito.ok{display:block;background:rgba(61,220,132,.14);border:1px solid rgba(61,220,132,.4);color:#b6ffd4}
+.esito.ko{display:block;background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.4);color:#ffc9c9}
+.fatto{text-align:center;padding:20px 0}
+.fatto .big{font-size:3rem;margin-bottom:8px}
+</style></head><body>
+<div class="box">
+  <div id="modulo">
+    <h1 id="tit">Iscrizione al torneo</h1>
+    <p class="sub" id="sub">Compila e invia: l'organizzatore ti troverà già in elenco.</p>
+    <label for="nome">Nome e cognome</label>
+    <input id="nome" autocomplete="name" placeholder="Mario Rossi">
+    <label for="team">Squadra che vuoi rappresentare</label>
+    <input id="team" placeholder="Es. Napoli">
+    <div class="hint">Facoltativa: se la lasci vuota la sceglie l'organizzatore.</div>
+    <label for="tel">Numero di telefono</label>
+    <input id="tel" type="tel" autocomplete="tel" placeholder="+39 333 1234567">
+    <div class="hint">Serve solo a ricevere risultati e classifiche del torneo. Facoltativo.</div>
+    <button id="vai" onclick="manda()">Iscrivimi</button>
+    <div class="esito" id="esito"></div>
+  </div>
+  <div class="fatto" id="fatto" style="display:none">
+    <div class="big">✅</div>
+    <h1>Iscrizione inviata</h1>
+    <p class="sub" id="riep"></p>
+    <button onclick="ancora()">Iscrivi un'altra persona</button>
+  </div>
+</div>
+<script>
+const q=new URLSearchParams(location.search);
+const KEY=(q.get('k')||'').toUpperCase();
+if(!KEY){document.getElementById('esito').className='esito ko';
+  document.getElementById('esito').textContent='Manca la chiave del torneo: usa il link o il QR che ti ha dato l’organizzatore.';
+  document.getElementById('vai').disabled=true;}
+function manda(){
+  const nome=document.getElementById('nome').value.trim();
+  const team=document.getElementById('team').value.trim();
+  const tel=document.getElementById('tel').value.trim();
+  const e=document.getElementById('esito');
+  if(!nome){e.className='esito ko';e.textContent='Scrivi almeno il tuo nome.';return;}
+  const b=document.getElementById('vai'); b.disabled=true; b.textContent='Invio…';
+  fetch('/api/iscrizione',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:KEY,cognome:nome,team,tel})})
+   .then(r=>r.json()).then(j=>{
+     if(j&&j.ok){
+       document.getElementById('modulo').style.display='none';
+       document.getElementById('fatto').style.display='';
+       document.getElementById('riep').textContent=nome+(team?' — '+team:'');
+     }else{e.className='esito ko';e.textContent=(j&&j.err)||'Invio non riuscito.';b.disabled=false;b.textContent='Iscrivimi';}
+   })
+   .catch(()=>{e.className='esito ko';e.textContent='Non riesco a raggiungere il torneo. Sei sulla stessa rete?';
+     b.disabled=false;b.textContent='Iscrivimi';});
+}
+function ancora(){
+  ['nome','team','tel'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('fatto').style.display='none';
+  document.getElementById('modulo').style.display='';
+  const b=document.getElementById('vai'); b.disabled=false; b.textContent='Iscrivimi';
+  document.getElementById('esito').className='esito';
+}
+</script>
+</body></html>

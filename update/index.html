@@ -423,6 +423,88 @@ nav#tabs button .dotlive{display:inline-block;width:8px;height:8px;border-radius
   height:68px;display:flex;align-items:center;margin:10px 10px 0;position:relative;
   box-shadow:0 10px 26px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.07)}
 #ticker-wrap.hidden{display:none}
+/* ---------- LE DUE FASCE IN ALTO A SCOMPARSA -------------------------
+   Su un proiettore, o su un portatile con poco schermo, l'intestazione e la
+   riga delle sezioni rubano due centimetri di altezza a un tabellone che ne
+   avrebbe bisogno. Con l'interruttore in Opzioni si ritirano.
+
+   Tornano in tre modi, e sono tre stati diversi:
+     · sfiorando il bordo superiore  → riappaiono TRASPARENTI, per guardare
+       senza impegnarsi: si vede dove sono i comandi e si torna al lavoro;
+     · con un clic mentre sono affacciate → tornano PIENE e utilizzabili,
+       come se l'interruttore fosse spento, finché il mouse resta lassù;
+     · allontanandosi → si ritirano di nuovo, dopo un attimo di grazia che
+       evita che spariscano mentre si sta per premere un pulsante.
+
+   Il ritiro avviene con un margine negativo, non con una traslazione: così
+   lo spazio si libera davvero invece di restare vuoto. */
+body{--barre-h:0px;--h1:0px;--h2:0px;--p1t:0px;--p1b:0px;--p2t:0px;--p2b:0px}
+/* Le fasce COLLASSANO, non si spostano. Un margine negativo sulla pila non
+   basta: la pila è "sticky" con top:0 e lo sticky la riancora a zero, così
+   lo spazio delle fasce restava lì come una banda nera vuota. Portando a
+   zero altezza e imbottiture lo spazio si libera davvero, e tutto quello
+   che sta sotto — avviso, rullo e quadro centrale — sale a occuparlo. */
+body.barre-auto header.topbar,body.barre-auto nav#tabs{
+  height:0;min-height:0;padding-top:0;padding-bottom:0;overflow:hidden;
+  opacity:0;pointer-events:none;
+  transition:height .32s cubic-bezier(.3,1,.4,1),padding .32s ease,opacity .26s ease}
+/* affacciate: si vedono in trasparenza ma non si possono ancora premere */
+body.barre-auto.sbircia header.topbar{height:var(--h1);padding-top:var(--p1t);padding-bottom:var(--p1b);opacity:.45}
+body.barre-auto.sbircia nav#tabs{height:var(--h2);padding-top:var(--p2t);padding-bottom:var(--p2b);opacity:.45}
+/* richiamate col clic: piene e vive */
+body.barre-auto.barre-ferme header.topbar{height:var(--h1);padding-top:var(--p1t);padding-bottom:var(--p1b);opacity:1;pointer-events:auto}
+body.barre-auto.barre-ferme nav#tabs{height:var(--h2);padding-top:var(--p2t);padding-bottom:var(--p2b);opacity:1;pointer-events:auto}
+/* Il quadro centrale si estende a riempire quello che si libera: senza
+   questo il contenuto salirebbe lasciando un vuoto in fondo, che è solo un
+   modo diverso di sprecare lo stesso spazio. */
+main{min-height:calc(100vh - var(--sopra-main,300px) - var(--tick-sotto))}
+/* La striscia invisibile che sente il bordo superiore dello schermo. Deve
+   stare SOPRA la pila dei comandi (che è a 60), altrimenti mentre le fasce
+   sono affacciate il clic finisce su di loro e non arriva mai qui. */
+#bordo-su{position:fixed;left:0;right:0;top:0;height:6px;z-index:61;display:none}
+body.barre-auto #bordo-su{display:block}
+body.barre-auto.sbircia #bordo-su{height:var(--barre-h);background:transparent}
+/* una volta richiamate col clic la striscia si toglie di mezzo: i pulsanti
+   delle sezioni devono tornare premibili */
+body.barre-auto.barre-ferme #bordo-su{height:6px}
+/* un filo luminoso sul bordo dice che lassù c'è qualcosa */
+body.barre-auto #bordo-su::after{content:'';position:absolute;left:50%;top:0;width:120px;height:3px;
+  transform:translateX(-50%);border-radius:0 0 6px 6px;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 70%,transparent),transparent);
+  opacity:.5;transition:opacity .3s}
+body.barre-auto.sbircia #bordo-su::after,body.barre-auto.barre-ferme #bordo-su::after{opacity:0}
+body.no-anim body.barre-auto .topstack{transition:none}
+/* ---------- IL RULLO SI SPOSTA ------------------------------------------
+   La striscia dei risultati si prende col mouse e si porta a qualunque
+   altezza: in cima resta agganciata sotto i comandi come sempre, in fondo
+   si aggancia al bordo inferiore come la fascia di una diretta televisiva,
+   e in mezzo resta sospesa dove la si lascia.
+   Perché nulla finisca irraggiungibile sotto di essa, la pagina si
+   restringe di altrettanto: il contenuto guadagna in alto o in basso lo
+   spazio che il rullo occupa, secondo il bordo a cui è più vicino. */
+#ticker-wrap{cursor:grab;touch-action:none}
+#ticker-wrap.staccato{position:fixed;left:10px;right:10px;margin:0;z-index:58;
+  top:var(--tick-y,0px);box-shadow:0 14px 40px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.09)}
+/* Agganciato in basso la striscia è una fascia da diretta, non un vetro: il
+   fondo diventa pieno e il contenuto sottostante non traspare più. Al suo
+   posto il quadro centrale si accorcia di altrettanto. */
+#ticker-wrap.staccato.giu{background:linear-gradient(100deg,var(--bg2,#0c1730),var(--bg1,#070d1f));
+  border-color:color-mix(in srgb,var(--accent) 28%,var(--line));
+  box-shadow:0 -10px 34px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09)}
+#ticker-wrap.trascino{cursor:grabbing;opacity:.92;transition:none;
+  box-shadow:0 18px 52px rgba(0,0,0,.7),0 0 0 2px color-mix(in srgb,var(--accent) 55%,transparent)}
+/* la maniglia: due righine sulla pastiglia, si vedono solo passandoci sopra */
+#ticker-label::before{content:'⋮⋮';position:absolute;left:6px;top:50%;transform:translateY(-50%);
+  font-size:.7rem;letter-spacing:-2px;opacity:0;transition:opacity .2s}
+#ticker-wrap:hover #ticker-label::before{opacity:.55}
+/* la guida che appare mentre si trascina, per far vedere dove si aggancia */
+#tick-guida{position:fixed;left:10px;right:10px;height:68px;border-radius:14px;pointer-events:none;
+  z-index:57;display:none;border:2px dashed color-mix(in srgb,var(--accent) 70%,transparent);
+  background:color-mix(in srgb,var(--accent) 10%,transparent)}
+#tick-guida.on{display:block}
+/* lo spazio che il contenuto cede al rullo staccato */
+body{--tick-sopra:0px;--tick-sotto:0px}
+@media(max-width:640px){#ticker-wrap.staccato{left:4px;right:4px}}
 /* la pastiglia «Ultimi risultati»: gradiente sul colore d'accento, non tinta
    piatta, e un bordo sfumato che la stacca dal testo che scorre */
 #ticker-label{flex:0 0 auto;color:#fff;font-family:'Oswald',sans-serif;font-size:1.02rem;
@@ -449,6 +531,18 @@ nav#tabs button .dotlive{display:inline-block;width:8px;height:8px;border-radius
   will-change:transform;backface-visibility:hidden;transform:translateZ(0);font-size:1.7rem;color:var(--muted);font-family:'Oswald',sans-serif;letter-spacing:.05em}
 #ticker b{color:var(--text)} #ticker .sep{color:var(--accent);margin:0 30px}
 #ticker .titem{text-transform:uppercase}
+/* le voci non di risultato: l'occhio deve distinguerle a colpo d'occhio */
+#ticker .tarb{color:var(--muted);font-size:.72em;letter-spacing:.04em;margin-left:8px;text-transform:none}
+#ticker .tvs2{color:var(--accent);margin:0 6px}
+#ticker .tok{color:var(--ok,#3ddc84)}
+#ticker .tlate{color:var(--warn,#f0a640)}
+#ticker .tnew b{color:var(--accent)}
+/* la pastiglia prende il colore dell'argomento: verde per il prossimo turno,
+   celeste per le notizie, quella d'accento per i risultati */
+#ticker-wrap[data-modo="prossimo"] #ticker-label{background:linear-gradient(135deg,#7fe6a6,#2ea862 55%,#1d7345)}
+#ticker-wrap[data-modo="news"] #ticker-label{background:linear-gradient(135deg,#9fd8ff,#3f9fe0 55%,#1f6ea8)}
+#ticker-wrap[data-modo="prossimo"] #ticker-label::after{background:linear-gradient(90deg,#1d7345,transparent)}
+#ticker-wrap[data-modo="news"] #ticker-label::after{background:linear-gradient(90deg,#1f6ea8,transparent)}
 #ticker .tsc{font-family:'Chakra Petch',monospace;font-weight:700;margin:0 8px}
 #ticker .dotlive-t{color:var(--danger);animation:blink 1.1s infinite;margin-left:10px;font-size:1.1rem;vertical-align:middle}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-100%)}}
@@ -480,6 +574,15 @@ body.no-anim #ticker{animation:none;padding-left:12px}
 body.no-anim .goldtxt,body.no-anim .greentxt,body.no-anim .coppertxt{animation:none}
 
 main{max-width:1440px;margin:0 auto;padding:22px 18px 90px}
+/* Lo spazio che il contenuto cede al rullo quando è staccato. Deve stare
+   DOPO la riga qui sopra: quella usa il 'padding' abbreviato, che azzera
+   qualunque padding-top e padding-bottom dichiarati prima. */
+/* Lo spazio che il contenuto cede al rullo lo cede il QUADRO CENTRALE, non
+   la pagina intera: le due fasce in alto non si devono muovere di un pixel.
+   Il piè di pagina, che sta fuori da main ed è fissato all'angolo, si
+   solleva per conto suo (vedi la regola di footer più sotto). */
+main{padding-top:calc(22px + var(--tick-sopra));
+     padding-bottom:calc(90px + var(--tick-sotto))}
 section.tab{display:none;animation:fadein .35s ease}
 section.tab.on{display:block}
 @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -946,6 +1049,97 @@ body.no-anim #present .pbg .beam,body.no-anim #present .pbg .fball,body.no-anim 
 #present .pstage>.pgrid{width:100%}
 #present #present-xfade{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .9s ease;overflow:hidden}
 #present #present-xfade.on{opacity:1}
+/* la fascia che annuncia il fatto sopra la proiezione */
+#regia-fascia{position:absolute;left:50%;top:2.5vh;transform:translateX(-50%) translateY(-140%);
+  z-index:6;display:flex;align-items:center;gap:14px;padding:10px 26px;border-radius:999px;
+  background:linear-gradient(100deg,rgba(6,12,26,.94),rgba(12,26,54,.88));
+  border:1px solid color-mix(in srgb,var(--gold) 55%,transparent);
+  box-shadow:0 14px 44px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.12);
+  opacity:0;transition:transform .55s cubic-bezier(.2,1.3,.3,1),opacity .45s ease;pointer-events:none}
+#regia-fascia.on{transform:translateX(-50%) translateY(0);opacity:1}
+#regia-fascia .rf-tag{font-family:'Oswald',sans-serif;letter-spacing:.2em;font-size:.82rem;
+  text-transform:uppercase;color:#06101f;padding:4px 14px;border-radius:999px;
+  background:linear-gradient(135deg,#ffe9a8,var(--gold) 60%,#b07f19)}
+#regia-fascia .rf-txt{font-family:'Oswald',sans-serif;font-size:1.25rem;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--text)}
+body.no-anim #regia-fascia{transition:none}
+.stag-wrap{margin-top:14px;padding:12px 14px;border-radius:12px;
+  border:1px dashed color-mix(in srgb,var(--accent2) 42%,transparent);
+  background:color-mix(in srgb,var(--accent2) 5%,transparent)}
+.stag-box{margin-top:12px;padding:11px 14px;border-radius:10px;background:var(--card2);
+  border:1px solid var(--line)}
+.stag-t{font-family:'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  font-size:.76rem;color:var(--accent2);margin-bottom:6px}
+.stag-righe{display:flex;gap:20px;flex-wrap:wrap;font-size:.88rem}
+.stag-righe b{color:var(--accent)}
+.round-data{font-family:'Chakra Petch',monospace;font-size:.78em;color:var(--muted);
+  margin-left:10px;letter-spacing:.06em}
+#iscrizioni .adv-box{width:min(660px,94vw)}
+.iscr-testa{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+#iscr-qr{background:#fff;border-radius:12px;padding:8px;flex:0 0 auto}
+.iscr-lato{flex:1;min-width:200px}
+.iscr-link{font-family:'Chakra Petch',monospace;font-size:.78rem;word-break:break-all;color:var(--accent2)}
+.iscr-lista{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow:auto;padding-right:4px}
+.iscr-riga{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;
+  background:var(--card2);border:1px solid var(--line)}
+.iscr-riga.dentro{opacity:.62}
+.iscr-chi{flex:1;min-width:0}
+.iscr-tel{font-family:'Chakra Petch',monospace;font-size:.74rem;color:var(--muted);margin-top:1px}
+.iscr-cmd{display:flex;gap:6px;align-items:center;flex:0 0 auto}
+.iscr-ok{font-size:.78rem;color:var(--ok,#3ddc84)}
+.voce-riga{display:flex;gap:16px;align-items:flex-start}
+.voce-corpo{flex:1;min-width:0}
+.voce-btn{flex:0 0 auto;width:64px;height:64px;border-radius:50%;font-size:1.7rem;cursor:pointer;
+  border:2px solid var(--line);background:var(--card2);color:var(--text);transition:all .25s ease}
+.voce-btn:hover{border-color:var(--accent)}
+.voce-btn.on{border-color:#2ee06b;color:#b0ffc4;background:radial-gradient(circle at 50% 30%,#176028,#08260e 74%);
+  box-shadow:0 0 26px rgba(70,255,120,.5);animation:spkpulse 1.5s ease-in-out infinite}
+.voce-stato{margin-top:8px;font-family:'Chakra Petch',monospace;font-size:.86rem;color:var(--accent2);min-height:1.2em}
+/* ---------- IL SORPASSO, COME SI DEVE VEDERE -------------------------
+   Un sorpasso in classifica è il momento che il pubblico deve cogliere, e
+   una freccina accanto al numero non basta: passa inosservata. Qui la riga
+   che avanza sale davvero — parte da sotto e si porta al suo posto nuovo,
+   illuminandosi d'oro — mentre quella scavalcata scende e si spegne in un
+   grigio bluastro. Sopra la riga che sale corre una pioggia di scintille.
+   Le scintille sono elementi effimeri: nascono, volano e si tolgono da
+   sole. Nessuna resta attaccata al documento. */
+@keyframes sorpSale{
+  0%  {transform:translateY(var(--sorp-da,42px)) scale(1);filter:brightness(1)}
+  38% {transform:translateY(0) scale(1.035);filter:brightness(1.55)}
+  62% {transform:translateY(0) scale(1.035);filter:brightness(1.55)}
+  100%{transform:translateY(0) scale(1);filter:brightness(1)}}
+@keyframes sorpScende{
+  0%  {transform:translateY(var(--sorp-da,-42px));filter:saturate(1)}
+  45% {transform:translateY(0);filter:saturate(.35) brightness(.78)}
+  100%{transform:translateY(0);filter:saturate(1)}}
+tr.sorp-su{animation:sorpSale 1.5s cubic-bezier(.22,1.2,.3,1) both;position:relative;z-index:3}
+tr.sorp-giu{animation:sorpScende 1.5s ease both;position:relative;z-index:2}
+/* La scia che accompagna la riga. La cella del NOME va lasciata stare: i
+   metalli del podio ritagliano il testo dal proprio gradiente di sfondo, e
+   sostituirglielo faceva sparire il nome dentro un blocco colorato. Lì
+   resta solo il bagliore interno, che non tocca lo sfondo. */
+tr.sorp-su td:not(.l){background:linear-gradient(90deg,
+  color-mix(in srgb,var(--gold) 34%,transparent),
+  color-mix(in srgb,var(--gold) 12%,transparent) 55%,transparent)!important}
+tr.sorp-su td{box-shadow:inset 0 0 22px color-mix(in srgb,var(--gold) 26%,transparent)}
+tr.sorp-giu td:not(.l){background:color-mix(in srgb,#5b6b86 16%,transparent)!important}
+tr.sorp-giu td{box-shadow:inset 0 0 18px rgba(91,107,134,.18)}
+/* le scintille: puntini d'oro che salgono e svaniscono ruotando */
+.scintilla{position:fixed;pointer-events:none;z-index:130;width:var(--s,7px);height:var(--s,7px);
+  border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff8d8,var(--gold) 46%,transparent 72%);
+  box-shadow:0 0 10px 2px color-mix(in srgb,var(--gold) 70%,transparent);
+  animation:scint var(--dur,1.1s) ease-out forwards}
+@keyframes scint{
+  0%  {opacity:0;transform:translate(0,0) scale(.4) rotate(0deg)}
+  14% {opacity:1}
+  100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-70px)) scale(var(--sc,1.25)) rotate(var(--rot,180deg))}}
+/* una stella a quattro punte ogni tanto, per non avere solo pallini */
+.scintilla.stella{border-radius:0;background:none;box-shadow:none;
+  filter:drop-shadow(0 0 6px color-mix(in srgb,var(--gold) 80%,transparent))}
+.scintilla.stella::before{content:'✦';position:absolute;inset:-6px;display:flex;align-items:center;
+  justify-content:center;color:#fff4cf;font-size:calc(var(--s,7px) * 2.1);line-height:1}
+body.no-anim tr.sorp-su,body.no-anim tr.sorp-giu{animation:none}
+body.no-anim .scintilla{display:none}
 /* ---------- QUADRO COMPLETO ------------------------------------------
    Una sola videata con tutto quanto: a sinistra i risultati dell'ultima
    tornata giocata, a destra le classifiche complete di ogni girone. Serve
@@ -1367,7 +1561,7 @@ body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass
 #modal .box{max-width:440px;width:100%;text-align:center}
 #modal .box p{margin-bottom:20px;font-size:1.05rem}
 
-footer{position:fixed;bottom:4px;right:12px;left:auto;text-align:right;font-size:.62rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;padding:4px 6px;background:none;opacity:.42;pointer-events:none;z-index:40}
+footer{position:fixed;bottom:calc(4px + var(--tick-sotto,0px));right:12px;left:auto;text-align:right;font-size:.62rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;padding:4px 6px;background:none;opacity:.42;pointer-events:none;z-index:40}
 
 /* ---------- countdown START ---------- */
 #countdown{position:fixed;inset:0;z-index:115;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(3,6,18,.88);backdrop-filter:blur(6px);cursor:pointer}
@@ -1721,9 +1915,9 @@ tr.sorpasso td{animation:sorpassoLampo 1.35s ease-out both}
   flex-direction:column;align-items:center;justify-content:center;gap:6px}
 #sim-quadro .sim-t{font-family:'Oswald',sans-serif;font-size:1.3rem;letter-spacing:.06em;text-transform:uppercase}
 #sim-quadro .sim-s{font-size:.78rem;color:var(--muted)}
-#inni,#innimgr{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;
+#inni,#innimgr,#iscrizioni{position:fixed;inset:0;z-index:128;display:none;align-items:center;justify-content:center;
   background:rgba(4,7,18,.9);backdrop-filter:blur(8px)}
-#inni.on,#innimgr.on{display:flex}
+#inni.on,#innimgr.on,#iscrizioni.on{display:flex}
 #innimgr .adv-box{width:min(620px,95vw);max-height:88vh;display:flex;flex-direction:column}
 /* la modalità grafica della Rosa dei Venti: la bussola a tutto schermo */
 #rosaview{position:fixed;inset:0;z-index:130;display:none;flex-direction:column;
@@ -2166,11 +2360,15 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
   #print-report .pframe .pfbody{padding:0 15mm 0 25mm;vertical-align:top}
   #pdfview{display:none!important}
   .bg-fx,header.topbar,nav#tabs,#ticker-wrap,footer,.btn,.bctrl,.bcfg,#gironi-actions,#miniplayer{display:none!important}
-  body{background:#fff;color:#000}
+  body{background:#fff;color:#000;padding-bottom:0}
+  /* il rullo è nascosto in stampa: lo spazio che gli si cede va tolto,
+     altrimenti resta un margine vuoto in fondo a ogni foglio */
+  main{padding-top:22px}
   /* I metalli — zone di classifica e podio — sono testo trasparente riempito
      da un gradiente di sfondo. In stampa il browser disegna gli sfondi solo
      se l'utente lascia acceso "Grafica di sfondo": senza, il nome sparirebbe
      dal foglio. Sulla carta si torna quindi a inchiostro nero pieno. */
+  main{min-height:0}   /* in stampa il quadro non deve riempire la finestra */
   table.standings tr[class] .tn-wrap,table.standings tr[class] td.pos,table.standings tr[class] td.l,
   table.standings tr .tn-wrap,table.standings tr td.pos,table.standings tr td.l{
     background-image:none!important;color:#000!important;
@@ -2394,6 +2592,20 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
         </div>
         <div class="row" style="gap:10px;margin-top:2px">
           <button class="btn sec" onclick="openAdvisor()">💡 Formule consigliate</button>
+        <button class="btn sec" onclick="iscrApri()" title="Apri le iscrizioni dal telefono, anche giorni prima">📝 Iscrizioni online</button>
+      </div>
+      <!-- ---------- campionato che dura mesi ---------- -->
+      <div class="stag-wrap">
+        <label class="ck small" style="margin:0"><input type="checkbox" id="stag-on" onchange="stagioneImposta('attiva',this.checked)"> 📅 <b>Campionato stagionale</b> — le giornate si giocano in date diverse, nell'arco di settimane o mesi</label>
+        <div id="stag-campi" class="row" style="display:none;gap:14px;margin-top:10px;flex-wrap:wrap;align-items:flex-end">
+          <span><label class="f" style="margin:0">Prima giornata</label>
+            <input type="date" id="stag-dal" onchange="stagioneImposta('dal',this.value)"></span>
+          <span><label class="f" style="margin:0">Una giornata ogni</label>
+            <input type="number" id="stag-ogni" min="1" max="60" value="7" style="width:90px" onchange="stagioneImposta('ogni',this.value)"> <span class="small muted">giorni</span></span>
+        </div>
+        <div id="stag-riep"></div>
+      </div>
+      <div class="row" style="display:none">
           <button class="btn sec" onclick="openCeremony()">🎩 Sorteggio spettacolare</button>
           <button class="btn sec" onclick="openRealTorneo()">🏆 Torneo Reale</button>
           <button class="btn sec" onclick="openEstimate()">⏱ Stima durata</button>
@@ -2573,6 +2785,21 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 <section class="tab" id="tab-live">
   <h2 class="sect">Match Center — Tabelloni Live</h2>
   <p class="muted small" style="margin:-8px 0 16px">Uso facoltativo: puoi sempre inserire i risultati direttamente nei gironi o nel tabellone. Ogni campo ha timer indipendente (1–60 min per tempo) con eventuali supplementari, orologio simulato 0′–90′ (+120′), tabellino marcatori, punteggio live e modalità TV a schermo intero.</p>
+  <!-- ---------- il risultato dettato a voce ---------- -->
+  <div class="card voce-card" style="margin-bottom:18px">
+    <div class="voce-riga">
+      <button id="voce-btn" class="voce-btn" onclick="voceMic()" title="Detta il risultato">🎙</button>
+      <div class="voce-corpo">
+        <b>Detta il risultato</b>
+        <p class="small muted" style="margin:2px 0 0">Tocca il microfono e di' <b>«campo due, tre a uno»</b>. Con un campo solo in gioco basta <b>«tre a uno»</b>. Prima di scrivere l'app ripete quello che ha capito e aspetta la conferma.</p>
+        <div id="voce-stato" class="voce-stato"></div>
+        <div id="voce-conferma" class="row" style="display:none;gap:8px;margin-top:8px">
+          <button class="btn mini" onclick="voceApplica();this.parentNode.style.display='none'">✅ Confermo</button>
+          <button class="btn sec mini" onclick="voceAnnulla();this.parentNode.style.display='none'">✕ No</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="card" style="margin-bottom:18px">
     <div class="row spread">
       <div class="row">
@@ -2620,6 +2847,32 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 </section>
 
 <!-- ritiro di un partecipante -->
+<!-- ---------- iscrizioni aperte prima del torneo ---------- -->
+<div id="iscrizioni">
+  <div class="adv-box">
+    <div class="adv-head">
+      <b>📝 Iscrizioni al torneo</b>
+      <button class="btn sec mini" onclick="iscrChiudi()">✕ Chiudi</button>
+    </div>
+    <p class="small muted" style="margin:0 0 12px">Manda il link o fai inquadrare il codice: chi partecipa si iscrive dal proprio telefono, anche giorni prima. Nome, squadra e numero arrivano qui, e da qui entrano in elenco e in rubrica con un tocco.</p>
+    <div class="iscr-testa">
+      <canvas id="iscr-qr" width="240" height="240"></canvas>
+      <div class="iscr-lato">
+        <div class="iscr-link" id="iscr-link"></div>
+        <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn mini" onclick="iscrWhatsApp()">📤 Manda su WhatsApp</button>
+          <button class="btn sec mini" onclick="iscrAggiorna()">🔄 Aggiorna</button>
+        </div>
+      </div>
+    </div>
+    <p class="small" id="iscr-conta" style="margin:14px 0 8px;color:var(--accent2)"></p>
+    <div id="iscr-lista" class="iscr-lista"></div>
+    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn mini" onclick="iscrAccettaTutti()">➕ Aggiungi tutti all'elenco</button>
+      <button class="btn sec mini" onclick="iscrSvuota()">🗑 Svuota le iscrizioni</button>
+    </div>
+  </div>
+</div>
 <div id="inni">
   <div class="adv-box">
     <div class="adv-head">
@@ -2753,7 +3006,13 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 <section class="tab" id="tab-opzioni">
   <h2 class="sect">Opzioni & Personalizzazione</h2>
   <div class="grid g2">
-    <div class="card" style="grid-column:1/-1">
+    <div class="card">
+    <h3 class="subt">🖥 Spazio dello schermo</h3>
+    <label class="ck"><input type="checkbox" id="opt-barre" onchange="barreImposta(this.checked)"> <b>Fasce superiori a scomparsa</b> — l'intestazione e la riga delle sezioni si ritirano verso l'alto, lasciando tutto lo schermo al tabellone</label>
+    <p class="small muted" style="margin:6px 0 0">Per rivederle <b>sfiora il bordo alto</b> dello schermo: si affacciano trasparenti. Un <b>clic</b> mentre sono affacciate le rende di nuovo piene e utilizzabili; allontanando il mouse si ritirano da sole.</p>
+    <p class="small muted" style="margin:6px 0 0">Il rullo dei risultati si sposta invece trascinandolo col mouse a qualunque altezza: in cima resta agganciato ai comandi, in fondo diventa una fascia da diretta. Doppio clic per rimetterlo in alto.</p>
+  </div>
+  <div class="card" style="grid-column:1/-1">
       <h3 class="subt">Tornei Simultanei & Campi Condivisi</h3>
       <div id="mt-box"></div>
     </div>
@@ -3484,7 +3743,8 @@ let S=defaultState();
 function defaultState(){return{
   started:false, screen:'setup', theme:'notte', anim:true, sound:true,
   celebrated:false, champion:null, phase:'groups',
-  cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,qrAddr:'',
+  cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,qrAddr:'',tickerPos:'alto',barreAuto:false,stagione:{attiva:false,dal:'',ogni:7},   // dove sta il rullo: 'alto', 'basso' o i pixel dall'alto
+  
        ritorno:false,third:true,swissRounds:5,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
        refSource:'players',refPool:[],showPlayers:false,showRefBoard:true,fotoConsenso:true,
        poffN:4,poutN:0,poffFmt:'ko',chQ:8,kohTarget:5,consB:false,oneHalf:false,noAnticipo:false,
@@ -3498,7 +3758,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.2.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -3781,7 +4041,68 @@ const TR={
   "Elenco completato":"List finished","Aperta la chat di":"Opened the chat with","ancora in coda":"still queued",
   "Prossimo":"Next","era l'ultimo":"that was the last one","Nessun partecipante iscritto.":"No entrant registered.",
   "Tornata completata: il messaggio WhatsApp è pronto":"Matchday complete: the WhatsApp message is ready",
-  "Apri WhatsApp":"Open WhatsApp","Campione":"Champion",
+  "Apri WhatsApp":"Open WhatsApp","Campione":"Champion","Rullo rimesso in alto":"Ticker back at the top",
+  "📝 Iscrizioni al torneo":"📝 Tournament entries",
+  "Manda il link o fai inquadrare il codice: chi partecipa si iscrive dal proprio telefono, anche giorni prima. Nome, squadra e numero arrivano qui, e da qui entrano in elenco e in rubrica con un tocco.":"Send the link or let them scan the code: entrants register from their own phone, even days ahead. Name, team and number arrive here, and from here they join the list and the address book with one tap.",
+  "📤 Manda su WhatsApp":"📤 Send on WhatsApp",
+  "🔄 Aggiorna":"🔄 Refresh",
+  "➕ Aggiungi tutti all'elenco":"➕ Add everyone to the list",
+  "🗑 Svuota le iscrizioni":"🗑 Clear the entries",
+  "📝 Iscrizioni online":"📝 Online entries",
+  "iscrizioni ricevute":"entries received",
+  "Nessuna iscrizione ancora. Manda il link o fai inquadrare il QR.":"No entries yet. Send the link or let them scan the QR.",
+  "in elenco":"on the list",
+  "Aggiungi":"Add",
+  "Elimina":"Delete",
+  "numero in rubrica":"number in the address book",
+  "iscrizioni riversate in elenco":"entries poured into the list",
+  "Cancellare tutte le iscrizioni ricevute?":"Delete every entry received?",
+  "Iscriviti al torneo da qui":"Enter the tournament here",
+  "Detta il risultato":"Dictate the result",
+  "Ascolto…":"Listening…",
+  "Non ho capito":"I did not catch that",
+  "Nessuna partita da giocare sul campo":"No match to play on table",
+  "confermi?":"confirm?",
+  "Confermi?":"Confirm?",
+  "Registrato":"Recorded",
+  "Annullato.":"Cancelled.",
+  "Campo":"Table",
+  "Dettatura non supportata da questo browser (usa Chrome).":"Dictation is not supported by this browser (use Chrome).",
+  "La dettatura richiede una pagina sicura (https) o l'app desktop.":"Dictation needs a secure page (https) or the desktop app.",
+  "Dettatura non disponibile.":"Dictation unavailable.",
+  "Errore di dettatura":"Dictation error",
+  "✅ Confermo":"✅ Confirm",
+  "✕ No":"✕ No",
+  "Tocca il microfono e di' «campo due, tre a uno». Con un campo solo in gioco basta «tre a uno». Prima di scrivere l'app ripete quello che ha capito e aspetta la conferma.":"Tap the microphone and say “table two, three one”. With a single table in play “three one” is enough. Before writing anything the app repeats what it understood and waits for your confirmation.",
+  "Campionato stagionale":"Season league",
+  "di":"of",
+  "giornate concluse":"matchdays completed",
+  "Siamo alla":"We are on matchday",
+  "Prossima":"Next",
+  "Ultima giornata in programma":"Last matchday scheduled",
+  "📅 Campionato stagionale — le giornate si giocano in date diverse, nell'arco di settimane o mesi":"📅 Season league — matchdays are played on different dates, over weeks or months",
+  "Prima giornata":"First matchday",
+  "Una giornata ogni":"One matchday every",
+  "giorni":"days",
+  "🖥 Spazio dello schermo":"🖥 Screen space",
+  "Fasce superiori a scomparsa — l'intestazione e la riga delle sezioni si ritirano verso l'alto, lasciando tutto lo schermo al tabellone":"Auto-hiding top bars — the header and the section row withdraw upwards, leaving the whole screen to the board",
+  "Per rivederle sfiora il bordo alto dello schermo: si affacciano trasparenti. Un clic mentre sono affacciate le rende di nuovo piene e utilizzabili; allontanando il mouse si ritirano da sole.":"To see them again brush the top edge of the screen: they lean out translucent. A click while they are out makes them solid and usable again; move the mouse away and they withdraw by themselves.",
+  "Il rullo dei risultati si sposta invece trascinandolo col mouse a qualunque altezza: in cima resta agganciato ai comandi, in fondo diventa una fascia da diretta. Doppio clic per rimetterlo in alto.":"The results ticker instead is moved by dragging it with the mouse to any height: at the top it stays docked to the controls, at the bottom it becomes a broadcast band. Double-click to put it back on top.",
+  "Fasce a scomparsa attive: sfiora il bordo alto per rivederle":"Auto-hiding bars on: brush the top edge to see them again",
+  "Fasce sempre visibili":"Bars always visible",
+  "Prossimo turno":"Next round",
+  "News":"News",
+  "Live":"Live",
+  "In orario":"On schedule",
+  "fine prevista":"expected finish",
+  "di ritardo":"behind schedule",
+  "in anticipo di":"ahead by",
+  "Pausa pranzo prevista":"Lunch break scheduled",
+  "manca una gara alla chiusura":"one match to go",
+  "mancano 2 gare alla chiusura":"two matches to go",
+  "è il campione":"is the champion",
+  "passa in testa":"takes the lead","guadagna posizioni":"climbs the table",
+  "SORPASSO IN VETTA":"LEAD CHANGE","SORPASSO":"OVERTAKE",
   "🏟 Indirizzo di sala — per stampare i QR in anticipo":"🏟 Venue address — to print the QR codes in advance",
   "Fissa qui l'indirizzo che avrà il computer il giorno del torneo: i codici da tavolo si possono così stampare e attaccare ai campi giorni prima, senza che il collegamento sia acceso. Perché funzionino, quel giorno il computer deve ritrovarsi lo stesso indirizzo.":"Fix here the address the computer will have on tournament day: the table codes can then be printed and taped to the pitches days ahead, with the link switched off. For them to work, on the day the computer must find itself on that same address.",
   "📍 Usa quello attuale":"📍 Use the current one",
@@ -4231,7 +4552,7 @@ const TR={
   "su un host pubblico.":"on a public host.",
 };
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
-const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint';
+const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint,#wa-rubrica,#wa-testo,#wa-nota,#sy-sala-esito,#voce-stato,#iscr-lista,#iscr-conta,#iscr-link,#stag-riep,#regia-fascia';
 function translateNodeText(node){
   const orig=node.__it!=null?node.__it:(node.__it=node.nodeValue);
   if(LANG!=='en'){node.nodeValue=orig;return;}
@@ -8151,7 +8472,8 @@ function checkGroupsComplete(){
   }
   kohMaybeAdvance();
   renderGironiActions();
-  try{waControllaTornata();}catch(e){}   // avviso WhatsApp a tornata chiusa
+  try{waControllaTornata();}catch(e){}
+  try{regiaOsserva();}catch(e){}      // la regia guarda se c'è un sorpasso da mostrare   // avviso WhatsApp a tornata chiusa
 }
 function qualifiersByRanks(ranks){
   // ordine di seed: prima tutti i 1° (per girone), poi tutti i 2°, ecc.
@@ -8813,6 +9135,9 @@ function updateTabs(){
   const anyLive=S.boards.some(b=>b.matchId&&b.running);
   q('live').querySelector('.dotlive').style.display=anyLive?'':'none';
   $('#ticker-wrap').classList.toggle('hidden',!S.started);
+  tickAvvia();                       // trascinamento del rullo, una volta sola
+  tickerAvvia();                     // il rullo cambia argomento a ogni passata
+  barreAvvia();                      // fasce in alto a scomparsa
   updateSetupButton();
   updateAutoLiveBtn();
   updateWakeLock();
@@ -8857,18 +9182,139 @@ function currentRoundItems(){
   });
   return items;
 }
+/* =========================================================
+   IL RULLO CHE SA COSA DIRE
+   =========================================================
+   Una striscia che ripete i risultati anche quando non si gioca è rumore.
+   Fra un turno e l'altro chi sta in sala ha bisogno di sapere altro: dove
+   andare a giocare e con quale arbitro, se si è in orario, chi ha appena
+   scavalcato chi, quanto manca alla chiusura di un girone.
+
+   Il rullo sceglie quindi da sé che cosa dire, e lo dichiara nella
+   pastiglia a sinistra — RISULTATI, PROSSIMO TURNO o NEWS. Quando c'è più
+   di una cosa da dire le alterna a ogni passata, così nessuna resta
+   indietro e nessuna si ripete all'infinito. */
+let tickerGiro=0;
+
+/* --- le gare del turno che sta per cominciare, campo per campo --- */
+function tickerProssimo(){
+  let wave=[];
+  try{ wave=nextWaveByField()||[]; }catch(e){ return []; }
+  return wave.map(w=>{
+    const campo=`<b class="tsc">${esc(fieldLabel(w.field))}</b>`;
+    const arb=w.ref?` <span class="tarb">🧑‍⚖️ ${esc(w.ref)}</span>`:'';
+    return `<span class="titem">${campo} ${esc(w.home)} <span class="tvs2">–</span> ${esc(w.away)}${arb}</span>`;
+  });
+}
+/* --- le notizie: tempistica, sorpassi, avanzamento, pause --- */
+function tickerNews(){
+  const v=[];
+  // 1. si sta rispettando l'orario?
+  try{
+    const e=(typeof estLive==='function')?estLive():null;
+    if(e&&!e.presto&&e.tot){
+      if(Math.abs(e.scarto)<=8)
+        v.push(`<span class="titem tok">⏱ ${L('In orario')} — ${L('fine prevista')} <b class="tsc">${e.fine}</b></span>`);
+      else if(e.scarto>8)
+        v.push(`<span class="titem tlate">⏱ <b class="tsc">${e.scarto}′</b> ${L('di ritardo')} — ${L('fine prevista')} <b class="tsc">${e.fine}</b></span>`);
+      else
+        v.push(`<span class="titem tok">⏱ ${L('in anticipo di')} <b class="tsc">${Math.abs(e.scarto)}′</b> — ${L('fine prevista')} <b class="tsc">${e.fine}</b></span>`);
+      if(e.scarto>8&&e.consigli&&e.consigli.length)
+        v.push(`<span class="titem">💡 ${esc(e.consigli[0])}</span>`);
+    }
+  }catch(err){}
+  // 2. la pausa che deve ancora arrivare
+  try{
+    // la configurazione dei tempi sta in S.cfg.est, non in S.est
+    const e=(typeof estCfg==='function')?estCfg():{};
+    if(!e.lunchDone&&(+e.lunch||0)>0&&S.started)
+      v.push(`<span class="titem">🍽 ${L('Pausa pranzo prevista')}: <b class="tsc">${+e.lunch}′</b></span>`);
+  }catch(err){}
+  // 3. i sorpassi appena avvenuti, dalla stessa memoria che usa la regia
+  try{
+    (regiaCoda||[]).slice(0,3).forEach(fa=>{
+      v.push(`<span class="titem tnew">${fa.vetta?'★':'▲'} ${L('Girone ')}${esc(fa.girone)}: <b>${esc(fa.titolo)}</b></span>`);
+    });
+  }catch(err){}
+  // 4. i gironi vicini alla chiusura
+  try{
+    allGroups().forEach(g=>{
+      const tot=g.matches.length, fatte=g.matches.filter(m=>m.done).length;
+      if(!tot||fatte===tot)return;
+      const restano=tot-fatte;
+      if(restano<=2){
+        const pre=(g.swiss||S.cfg.format==='campionato')?'':L('Girone ');
+        v.push(`<span class="titem">🏁 ${pre}${esc(g.name)}: ${restano===1?L('manca una gara alla chiusura'):L('mancano 2 gare alla chiusura')}</span>`);
+      }
+    });
+  }catch(err){}
+  // 5. i capiclassifica, se non c'è altro di più fresco da dire
+  if(v.length<2){
+    try{
+      allGroups().forEach(g=>{
+        if(!g.matches.some(m=>m.done))return;
+        const rk=g.rosa?rosaRank(g):g.rosaSea?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
+        if(!rk.order.length)return;
+        const pre=(g.swiss||S.cfg.format==='campionato')?'':L('Girone ');
+        v.push(`<span class="titem">👑 ${pre}${esc(g.name)}: <b>${esc(rk.order[0])}</b> ${rk.stats[rk.order[0]].pts} pt</span>`);
+      });
+    }catch(err){}
+  }
+  // 6. il campione, quando c'è, apre sempre
+  if(S.champion)v.unshift(`<span class="titem tnew">🏆 <b>${esc(S.champion)}</b> ${L('è il campione')}</span>`);
+  return v;
+}
+/* --- i risultati, come prima --- */
+function tickerRisultati(){
+  const items=currentRoundItems();
+  if(items.length)return items.map(it=>
+    `<span class="titem">${esc(it.a)}<b class="tsc goldtxt">${it.sa}–${it.sb}</b>${esc(it.b)}${it.live?'<span class="dotlive-t">●&nbsp;LIVE</span>':''}</span>`);
+  if(S.results.length)return S.results.slice(-12);
+  return [];
+}
+/* Sceglie che cosa mandare in onda. Se si sta giocando vincono i risultati:
+   è quello che il pubblico vuole vedere. Altrimenti si alternano il
+   prossimo turno e le notizie, cambiando a ogni passata. */
+function tickerScegli(){
+  const live=allGroups().some(g=>g.matches.some(m=>m.live));
+  const ris=tickerRisultati();
+  if(live&&ris.length)return ['risultati',L('Live'),ris];
+  const modi=[];
+  const pro=tickerProssimo(); if(pro.length)modi.push(['prossimo',L('Prossimo turno'),pro]);
+  const news=tickerNews();    if(news.length)modi.push(['news',L('News'),news]);
+  if(ris.length)modi.push(['risultati',L('Ultimi risultati'),ris]);
+  if(!modi.length)return null;
+  return modi[tickerGiro%modi.length];
+}
 function renderTicker(){
   const t=$('#ticker');if(!t)return;
-  const items=currentRoundItems();
-  if(items.length){
-    t.innerHTML=items.map(it=>
-      `<span class="titem">${esc(it.a)}<b class="tsc goldtxt">${it.sa}–${it.sb}</b>${esc(it.b)}${it.live?'<span class="dotlive-t">●&nbsp;LIVE</span>':''}</span>`
-    ).join('<span class="sep">•</span>');
-  }else if(S.results.length){
-    t.innerHTML=S.results.join('<span class="sep">•</span>');
-  }else t.innerHTML=`<span class="muted">${L('In attesa dei primi risultati…')}</span>`;
+  const scelta=tickerScegli();
+  const lab=$('#ticker-label');
+  if(!scelta){
+    t.innerHTML=`<span class="muted">${L('In attesa dei primi risultati…')}</span>`;
+    if(lab)lab.textContent=L('Ultimi risultati');
+  }else{
+    const modo=scelta[0], etichetta=scelta[1], voci=scelta[2];
+    t.innerHTML=voci.join('<span class="sep">•</span>');
+    if(lab)lab.textContent=etichetta;
+    const w=$('#ticker-wrap'); if(w)w.dataset.modo=modo;
+  }
   // la striscia ha cambiato lunghezza: la durata va rifatta o la velocità cambia
   tickerRitmo();
+}
+/* A ogni passata completa il rullo cambia argomento: così prossimo turno e
+   notizie si alternano da sé senza che nessuno debba toccare niente. */
+function tickerAvanza(){
+  if(!S.started)return;
+  tickerGiro++;
+  renderTicker();
+}
+/* Il cambio di argomento avviene a passata finita, non a tempo: cambiare a
+   metà corsa taglierebbe una frase a metà proprio mentre qualcuno la legge. */
+function tickerAvvia(){
+  const t=$('#ticker'); if(!t||t.__giroPronto)return;
+  t.__giroPronto=true;
+  t.addEventListener('animationiteration',()=>{ try{tickerAvanza();}catch(e){} });
 }
 /* flash in sovraimpressione sul rullo quando viene segnata una rete */
 let tickerFlashTimer=null;
@@ -8881,6 +9327,214 @@ function tickerFlash(html){
 /* Il secondo argomento è facoltativo: con {azione,onAzione} l'avviso porta
    anche un pulsante e resta a schermo più a lungo, il tempo di cliccarlo.
    Senza, si comporta esattamente come prima. */
+/* =========================================================
+   IL RULLO SI SPOSTA — trascinamento e riassetto della pagina
+   =========================================================
+   Chi manda la grafica su un proiettore vuole la striscia dei risultati
+   dove serve a lui: in cima come una barra di stato, in fondo come la
+   fascia di una diretta, o a mezz'aria sopra il tabellone.
+
+   Il punto delicato non è il trascinamento: è che la pagina non deve
+   perdere pezzi sotto la striscia. Per questo, quando il rullo si stacca,
+   il contenuto cede altrettanto spazio dal bordo a cui il rullo è più
+   vicino — in alto o in basso — e nulla resta irraggiungibile.
+
+   Vicino ai due estremi il rullo si aggancia: in cima torna dentro la
+   pila dei comandi com'era in origine, in fondo si incolla al bordo
+   inferiore. Doppio clic per rimetterlo al suo posto. */
+/* =========================================================
+   LE DUE FASCE IN ALTO A SCOMPARSA
+   =========================================================
+   Intestazione e riga delle sezioni si ritirano verso l'alto, liberando
+   spazio al tabellone. Il bordo superiore dello schermo resta sensibile:
+   sfiorandolo si affacciano trasparenti, cliccandoci tornano piene.
+
+   L'altezza di ritiro si misura ogni volta invece di essere cablata: le due
+   fasce cambiano altezza secondo la lingua, il numero di sezioni sbloccate
+   e la larghezza della finestra, e un valore fisso sarebbe sbagliato quasi
+   sempre. */
+let barreT=null;
+function barreAuto(){return !!(S.cfg&&S.cfg.barreAuto);}
+/* Misura le due fasce alla loro altezza NATURALE. Va fatto a fasce aperte:
+   quando sono collassate l'altezza vale zero e si misurerebbe il nulla. Se
+   sono chiuse si riaprono per un istante senza transizione, si misura e si
+   richiudono — dura un fotogramma e non si vede. */
+function barreMisura(){
+  const b=document.body;
+  const h=document.querySelector('header.topbar'), n=document.getElementById('tabs');
+  if(!h||!n)return 0;
+  /* Per misurare l'altezza NATURALE va tolta la classe che la impone:
+     con «barre-auto» addosso l'altezza vale quella della variabile che sto
+     cercando di calcolare, e si misurerebbe sé stessa. Si toglie, si
+     misura senza transizione e si rimette: dura un fotogramma. */
+  const attiva=b.classList.contains('barre-auto');
+  let ripristina=null;
+  if(attiva){
+    const tr=[h.style.transition,n.style.transition];
+    h.style.transition=n.style.transition='none';
+    b.classList.remove('barre-auto');
+    void h.offsetHeight;
+    ripristina=()=>{b.classList.add('barre-auto');void h.offsetHeight;
+      h.style.transition=tr[0];n.style.transition=tr[1];};
+  }
+  const cs1=getComputedStyle(h), cs2=getComputedStyle(n);
+  const a1=h.offsetHeight, a2=n.offsetHeight;
+  b.style.setProperty('--h1',a1+'px');  b.style.setProperty('--p1t',cs1.paddingTop); b.style.setProperty('--p1b',cs1.paddingBottom);
+  b.style.setProperty('--h2',a2+'px');  b.style.setProperty('--p2t',cs2.paddingTop); b.style.setProperty('--p2b',cs2.paddingBottom);
+  b.style.setProperty('--barre-h',(a1+a2)+'px');
+  if(ripristina)ripristina();
+  altezzaSopraMain();
+  return a1+a2;
+}
+/* Quanto occupa la pila in alto: il quadro centrale comincia subito sotto,
+   e deve arrivare fino in fondo alla finestra invece di lasciare un vuoto.
+   Il valore lo segue un osservatore invece di essere ricalcolato a mano
+   dopo ogni gesto: le fasce che collassano, il rullo che si stacca e il
+   ridimensionamento della finestra cambiano quell'altezza in momenti
+   diversi, e una misura presa "dopo un attimo" resta indietro almeno una
+   volta su tre. */
+let sopraOss=null;
+function altezzaSopraMain(){
+  const st=document.querySelector('.topstack');
+  document.body.style.setProperty('--sopra-main',(st?st.offsetHeight:0)+'px');
+}
+function altezzaSopraAvvia(){
+  const st=document.querySelector('.topstack'); if(!st||sopraOss)return;
+  altezzaSopraMain();
+  if(window.ResizeObserver){
+    sopraOss=new ResizeObserver(()=>altezzaSopraMain());
+    sopraOss.observe(st);
+  }
+  window.addEventListener('resize',altezzaSopraMain);
+}
+function barreImposta(on){
+  S.cfg.barreAuto=!!on; persist(); barreApplica();
+  toast(on?L('Fasce a scomparsa attive: sfiora il bordo alto per rivederle')
+          :L('Fasce sempre visibili'));
+}
+function barrePannelloUI(){
+  const c=$('#opt-barre'); if(c)c.checked=barreAuto();
+}
+function barreApplica(){
+  const b=document.body;
+  barreMisura();                       // prima si misura, poi si nasconde
+  b.classList.toggle('barre-auto',barreAuto());
+  barrePannelloUI();
+  if(!barreAuto()){ b.classList.remove('sbircia','barre-ferme'); }
+}
+/* mostra o ritira secondo dove sta il puntatore */
+function barreSbircia(on){
+  if(!barreAuto())return;
+  document.body.classList.toggle('sbircia',!!on);
+  setTimeout(altezzaSopraMain,360);
+}
+function barreFerma(){
+  if(!barreAuto())return;
+  document.body.classList.add('sbircia','barre-ferme');
+}
+function barreLibera(){
+  document.body.classList.remove('barre-ferme','sbircia');
+  setTimeout(altezzaSopraMain,360);
+}
+function barreAvvia(){
+  if(document.body.__barrePronte)return;
+  document.body.__barrePronte=true;
+  if(!document.getElementById('bordo-su')){
+    const d=document.createElement('div'); d.id='bordo-su';
+    d.addEventListener('mouseenter',()=>barreSbircia(true));
+    d.addEventListener('mousedown',e=>{ e.preventDefault(); barreFerma(); });
+    document.body.appendChild(d);
+  }
+  window.addEventListener('mousemove',e=>{
+    if(!barreAuto())return;
+    const alt=parseInt(getComputedStyle(document.body).getPropertyValue('--barre-h'))||0;
+    if(e.clientY<=6){ barreSbircia(true); if(barreT){clearTimeout(barreT);barreT=null;} return; }
+    // finché il puntatore resta sopra le fasce affacciate non si ritirano
+    if(document.body.classList.contains('sbircia')&&e.clientY<=alt+16){
+      if(barreT){clearTimeout(barreT);barreT=null;}
+      return;
+    }
+    if(document.body.classList.contains('sbircia')&&!barreT){
+      // un attimo di grazia: sparire mentre si sta per premere è peggio
+      barreT=setTimeout(()=>{barreLibera();barreT=null;},900);
+    }
+  });
+  window.addEventListener('resize',()=>{ if(barreAuto())barreMisura(); });
+  altezzaSopraAvvia();
+  barreApplica();
+}
+const TICK_AGG=70;            // entro quanti pixel dal bordo si aggancia
+function tickAltezza(){const w=$('#ticker-wrap');return w?w.offsetHeight||68:68;}
+function tickLimiti(){
+  const t=document.querySelector('.topstack');
+  const cima=t?t.getBoundingClientRect().bottom:0;
+  return {min:Math.max(0,cima-tickAltezza()), max:window.innerHeight-tickAltezza()-10};
+}
+/* applica la posizione salvata: 'alto' = dentro la pila, 'basso' = al fondo,
+   un numero = pixel dal bordo superiore della finestra */
+function tickPosiziona(){
+  const w=$('#ticker-wrap'); if(!w)return;
+  const p=(S.cfg&&S.cfg.tickerPos!=null)?S.cfg.tickerPos:'alto';
+  const h=tickAltezza();
+  if(p==='alto'){
+    w.classList.remove('staccato','giu');
+    document.body.style.setProperty('--tick-sopra','0px');
+    document.body.style.setProperty('--tick-sotto','0px');
+    return;
+  }
+  const {min,max}=tickLimiti();
+  const y=(p==='basso')?max:Math.max(min,Math.min(max,+p||0));
+  w.classList.add('staccato');
+  w.style.setProperty('--tick-y',y+'px');
+  // il contenuto cede spazio dal bordo più vicino
+  const versoIlBasso = (y+h/2) > window.innerHeight/2;
+  w.classList.toggle('giu',versoIlBasso);   // in basso il fondo diventa pieno
+  document.body.style.setProperty('--tick-sopra', versoIlBasso?'0px':(h+14)+'px');
+  document.body.style.setProperty('--tick-sotto', versoIlBasso?(h+14)+'px':'0px');
+  setTimeout(altezzaSopraMain,60);
+}
+function tickSalva(p){ if(!S.cfg)return; S.cfg.tickerPos=p; persist(); tickPosiziona(); }
+function tickAvvia(){
+  const w=$('#ticker-wrap'); if(!w||w.__tickPronto)return;
+  w.__tickPronto=true;
+  let guida=document.getElementById('tick-guida');
+  if(!guida){ guida=document.createElement('div'); guida.id='tick-guida'; document.body.appendChild(guida); }
+  let attivo=false,scartoY=0;
+  const giu=e=>{
+    // il trascinamento parte solo dal corpo della striscia, non dai comandi
+    if(e.button!=null&&e.button!==0)return;
+    attivo=true;
+    const r=w.getBoundingClientRect();
+    scartoY=e.clientY-r.top;
+    w.classList.add('trascino'); guida.classList.add('on');
+    e.preventDefault();
+  };
+  const muovi=e=>{
+    if(!attivo)return;
+    const {min,max}=tickLimiti();
+    let y=Math.max(min,Math.min(max,e.clientY-scartoY));
+    // aggancio ai due estremi: la guida mostra dove finirà
+    const inCima = y<=min+TICK_AGG, inFondo = y>=max-TICK_AGG;
+    const yg = inCima?min : inFondo?max : y;
+    guida.style.top=yg+'px'; guida.style.height=tickAltezza()+'px';
+    w.classList.add('staccato'); w.style.setProperty('--tick-y',y+'px');
+  };
+  const su=e=>{
+    if(!attivo)return; attivo=false;
+    w.classList.remove('trascino'); guida.classList.remove('on');
+    const {min,max}=tickLimiti();
+    let y=Math.max(min,Math.min(max,e.clientY-scartoY));
+    if(y<=min+TICK_AGG)      tickSalva('alto');
+    else if(y>=max-TICK_AGG) tickSalva('basso');
+    else                     tickSalva(Math.round(y));
+  };
+  w.addEventListener('pointerdown',giu);
+  window.addEventListener('pointermove',muovi);
+  window.addEventListener('pointerup',su);
+  w.addEventListener('dblclick',()=>{tickSalva('alto');toast(L('Rullo rimesso in alto'));});
+  window.addEventListener('resize',tickPosiziona);
+  tickPosiziona();
+}
 function toast(msg,opt){
   const d=document.createElement('div');
   d.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:12px 24px;z-index:130;box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:.9rem;backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px';
@@ -8992,14 +9646,93 @@ function movimentoHTML(gKey,nome,pos){
 /* Il lampo del sorpasso: dopo aver ridisegnato una classifica si accendono
    per un attimo le righe che hanno cambiato posizione. È il momento che il
    pubblico deve cogliere, e altrimenti passerebbe inosservato. */
-function lampoSorpassi(root){
-  (root||document).querySelectorAll('.tclass tr[data-tn]').forEach(tr=>{
-    const n=tr.getAttribute('data-tn');
-    if(tr.querySelector('.mov')){
-      tr.classList.remove('sorpasso'); void tr.offsetWidth; tr.classList.add('sorpasso');
-      setTimeout(()=>tr.classList.remove('sorpasso'),1400);
+/* LE SCINTILLE. Nascono sul bordo superiore della riga che sale, si
+   sparpagliano verso l'alto e si tolgono da sole: nessuna resta appesa al
+   documento. Sono elementi fissi rispetto alla finestra, così non spostano
+   nulla e non fanno ricalcolare la pagina mentre volano. */
+/* Accetta un elemento oppure un rettangolo già misurato. Serve la seconda
+   forma: fra l'inizio dell'animazione e la nascita delle scintille passano
+   due decimi di secondo, e in quel tempo la classifica può essere stata
+   ridisegnata — la riga di prima è staccata dal documento e la sua
+   posizione vale zero, così non nasceva nessuna scintilla. */
+function scintille(el,quante){
+  if(document.body.classList.contains('no-anim'))return;
+  const r=(el&&typeof el.getBoundingClientRect==='function')?el.getBoundingClientRect():el;
+  if(!r||!r.width)return;
+  const n=Math.max(6,Math.min(quante||18,26));
+  for(let i=0;i<n;i++){
+    const s=document.createElement('i');
+    s.className='scintilla'+(i%4===0?' stella':'');
+    const x=r.left+Math.random()*r.width, y=r.top+r.height*(0.15+Math.random()*0.7);
+    s.style.left=x+'px'; s.style.top=y+'px';
+    s.style.setProperty('--s',(4+Math.random()*8).toFixed(1)+'px');
+    s.style.setProperty('--dx',((Math.random()-0.5)*120).toFixed(0)+'px');
+    s.style.setProperty('--dy',(-40-Math.random()*90).toFixed(0)+'px');
+    s.style.setProperty('--sc',(0.8+Math.random()*1.1).toFixed(2));
+    s.style.setProperty('--rot',((Math.random()-0.5)*540).toFixed(0)+'deg');
+    s.style.setProperty('--dur',(0.75+Math.random()*0.75).toFixed(2)+'s');
+    s.style.animationDelay=(Math.random()*0.35).toFixed(2)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),2200);
+  }
+}
+/* IL SORPASSO. Chi è salito parte da dove stava prima e si porta al posto
+   nuovo illuminandosi; chi è stato scavalcato fa il movimento opposto e si
+   spegne. L'altezza di partenza è quella vera — quanti posti ha guadagnato
+   per l'altezza di una riga — così il movimento racconta l'entità del
+   sorpasso invece di essere sempre uguale. */
+/* Anima il sorpasso conoscendo i nomi: chi sale parte da dove stava e si
+   porta al posto nuovo fra le scintille, chi è stato scavalcato scende e si
+   spegne. È la via usata dalla regia; lampoSorpassi resta per il caso
+   normale, quando le frecce di movimento sono ancora nel documento. */
+function sorpassoAnima(root,saliti,scesi){
+  const R=root||document;
+  /* La stessa squadra compare in più tabelle — i Gironi, le Classifiche, la
+     Presentazione — e quasi tutte stanno in schede nascoste. Prendere la
+     prima corrispondenza significa animare una riga che non si vede: era
+     esattamente questo il motivo per cui il sorpasso restava invisibile.
+     Si animano quindi tutte le righe di quella squadra che hanno davvero
+     un ingombro sullo schermo. */
+  const righeVisibili=nome=>[...R.querySelectorAll(
+      `.tclass tr[data-tn="${CSS.escape(nome)}"], table.standings tbody tr[data-tn="${CSS.escape(nome)}"]`)]
+    .filter(tr=>{const r=tr.getBoundingClientRect();return r.width>0&&r.height>0;});
+  const muovi=(voce,su)=>{
+    righeVisibili(voce.n).forEach(tr=>muoviRiga(tr,voce,su));
+  };
+  const muoviRiga=(tr,voce,su)=>{
+    const h=tr.getBoundingClientRect().height||34;
+    tr.classList.remove('sorp-su','sorp-giu');
+    void tr.offsetWidth;
+    tr.style.setProperty('--sorp-da',((su?1:-1)*Math.min(voce.posti*h,h*4))+'px');
+    tr.classList.add(su?'sorp-su':'sorp-giu');
+    if(su){
+      const rett=tr.getBoundingClientRect();      // misurata ORA, finché la riga c'è
+      setTimeout(()=>scintille(rett,12+voce.posti*6),200);
     }
+    setTimeout(()=>{tr.classList.remove('sorp-su','sorp-giu');tr.style.removeProperty('--sorp-da');},1700);
+  };
+  (saliti||[]).forEach(v=>muovi(v,true));
+  (scesi||[]).forEach(v=>muovi(v,false));
+  return (saliti||[]).length;
+}
+function lampoSorpassi(root){
+  const R=root||document;
+  const righe=[...R.querySelectorAll('.tclass tr[data-tn], table.standings tbody tr[data-tn]')];
+  let saliti=0;
+  righe.forEach(tr=>{
+    const mov=tr.querySelector('.mov'); if(!mov)return;
+    const su=mov.classList.contains('su');
+    const posti=Math.abs(parseInt(mov.textContent.replace(/[^\d]/g,''))||1);
+    const h=tr.getBoundingClientRect().height||34;
+    tr.classList.remove('sorp-su','sorp-giu','sorpasso');
+    void tr.offsetWidth;                       // forza il riavvio dell'animazione
+    tr.style.setProperty('--sorp-da',(su?1:-1)*Math.min(posti*h,h*4)+'px');
+    tr.classList.add(su?'sorp-su':'sorp-giu');
+    if(su){ saliti++; const rett=tr.getBoundingClientRect();
+            setTimeout(()=>scintille(rett,12+posti*6),260); }
+    setTimeout(()=>{tr.classList.remove('sorp-su','sorp-giu');tr.style.removeProperty('--sorp-da');},1600);
   });
+  return saliti;
 }
 function movimentoRegistra(gKey,ordine){
   POSPREC[gKey]=POSPREC[gKey]||{};
@@ -9072,6 +9805,9 @@ function groupCardHTML(g,{qual=0,idPrefix='g'}={}){
   let mh='';
   roundKeys.forEach((r,i)=>{
     let lbl=g.koh?`${L('Sfida')} ${r}`:g.swiss?`${L('Turno')} ${r}`:`${L('Giornata')} ${r}`;
+    // nel campionato stagionale ogni giornata porta con sé la sua data
+    const dst=stagioneDataTesto(r);
+    if(dst)lbl+=` <span class="round-data">${dst}</span>`;
     if(half>0)lbl=i<half?`${LANG==='en'?'Home':'Andata'} — ${L('Giornata')} ${r}`:`${LANG==='en'?'Away':'Ritorno'} — ${L('Giornata')} ${r-half}`;
     mh+=`<div class="round-label">${lbl}</div>`;
     byRound[r].forEach(m=>mh+=matchRowHTML(m));
@@ -12169,6 +12905,397 @@ function autoLiveSequence(){
    girone, affiancati. È la vista da lasciare accesa sul proiettore fra un
    turno e l'altro: nessuno deve più cambiare schermata per sapere com'è
    finita una partita o a che punto è la classifica. */
+/* =========================================================
+   IL CAMPIONATO CHE DURA MESI
+   =========================================================
+   Tutte le formule presuppongono un evento in un giorno solo. Un club che
+   gioca il campionato sociale da ottobre a maggio non aveva strumento: qui
+   ogni giornata prende una data, il programma sa qual è la prossima e si
+   può tornare a inserire i risultati per settimane senza perdere il filo.
+
+   Non è una formula nuova: è uno strato di calendario sopra le formule che
+   già ci sono — campionato, andata e ritorno, gironi. Si accende quando
+   serve e non tocca chi organizza un torneo di una domenica. */
+function stagioneOn(){return !!(S.cfg&&S.cfg.stagione&&S.cfg.stagione.attiva);}
+function stagioneImposta(campo,val){
+  S.cfg.stagione=S.cfg.stagione||{attiva:false,dal:'',ogni:7};
+  S.cfg.stagione[campo]=(campo==='ogni')?Math.max(1,parseInt(val)||7)
+                       :(campo==='attiva'?!!val:String(val||''));
+  persist(); stagionePannelloUI(); renderAll();
+}
+/* La data di una giornata: si parte dal giorno indicato e si aggiunge
+   l'intervallo per ogni giornata successiva. */
+function stagioneData(round){
+  const st=S.cfg&&S.cfg.stagione;
+  if(!st||!st.attiva||!st.dal)return null;
+  const d=new Date(st.dal+'T12:00:00');
+  if(isNaN(d))return null;
+  d.setDate(d.getDate()+(Math.max(1,+round||1)-1)*(st.ogni||7));
+  return d;
+}
+function stagioneDataTesto(round,lunga){
+  const d=stagioneData(round); if(!d)return '';
+  return d.toLocaleDateString(LANG==='en'?'en-GB':'it-IT',
+    lunga?{weekday:'long',day:'numeric',month:'long'}:{day:'2-digit',month:'2-digit'});
+}
+/* La giornata di oggi: l'ultima la cui data è già arrivata. Serve a dire
+   «siamo alla quinta» senza contare a mano. */
+function stagioneGiornataDiOggi(){
+  if(!stagioneOn())return null;
+  const g=allGroups()[0]; if(!g)return null;
+  const turni=[...new Set(g.matches.map(m=>m.round))].sort((a,b)=>a-b);
+  const oggi=new Date(); oggi.setHours(0,0,0,0);
+  let cur=turni[0]||1;
+  turni.forEach(r=>{ const d=stagioneData(r); if(d&&d<=oggi)cur=r; });
+  return cur;
+}
+/* Il riquadro che riassume a che punto è la stagione. */
+function stagioneRiepilogo(){
+  if(!stagioneOn())return '';
+  const g=allGroups()[0]; if(!g)return '';
+  const turni=[...new Set(g.matches.map(m=>m.round))].sort((a,b)=>a-b);
+  if(!turni.length)return '';
+  const oggi=stagioneGiornataDiOggi();
+  const prossima=turni.find(r=>{const d=stagioneData(r);return d&&d>new Date();});
+  const giocate=turni.filter(r=>g.matches.filter(m=>m.round===r).every(m=>m.done)).length;
+  return `<div class="stag-box">
+    <div class="stag-t">📅 ${L('Campionato stagionale')}</div>
+    <div class="stag-righe">
+      <span><b>${giocate}</b> ${L('di')} <b>${turni.length}</b> ${L('giornate concluse')}</span>
+      <span>${L('Siamo alla')} <b>${oggi}ª</b></span>
+      ${prossima?`<span>${L('Prossima')}: <b>${stagioneDataTesto(prossima,true)}</b> (${prossima}ª)</span>`
+                :`<span>${L('Ultima giornata in programma')}</span>`}
+    </div></div>`;
+}
+function stagionePannelloUI(){
+  const st=S.cfg&&S.cfg.stagione||{};
+  const a=$('#stag-on'); if(a)a.checked=!!st.attiva;
+  const d=$('#stag-dal'); if(d)d.value=st.dal||'';
+  const o=$('#stag-ogni'); if(o)o.value=st.ogni||7;
+  const c=$('#stag-campi'); if(c)c.style.display=st.attiva?'':'none';
+  const r=$('#stag-riep'); if(r)r.innerHTML=stagioneRiepilogo();
+}
+/* =========================================================
+   ISCRIZIONI PRIMA DEL TORNEO
+   =========================================================
+   L'organizzatore apre le iscrizioni giorni prima e manda in giro un link
+   o un QR: chi partecipa scrive nome, squadra e numero dal proprio
+   telefono. Il giorno del torneo l'elenco è già pronto, e con lui la
+   rubrica per mandare risultati e classifiche su WhatsApp — che altrimenti
+   va compilata a mano, numero per numero.
+
+   Passa dal server di sincronizzazione già in uso per l'App Campo: nessuna
+   infrastruttura nuova, nessun servizio esterno, nessun dato che esce di
+   casa. Le iscrizioni restano nella memoria del torneo. */
+function iscrLink(){
+  const base=(typeof syncPhoneUrls==='function'?syncPhoneUrls()[0]:null);
+  if(!base||!SYNC.key)return null;
+  return base+'/iscrizione?k='+encodeURIComponent(SYNC.key);
+}
+function iscrApri(){
+  if(!licGate('qr'))return;
+  const l=iscrLink();
+  if(!l){toast(L('Prima accendi il collegamento telefoni nella sezione Regia.'));tabTo('audio');return;}
+  $('#iscr-link').textContent=l;
+  try{qrDraw($('#iscr-qr'),l,520);}catch(e){}
+  $('#iscrizioni').classList.add('on');
+  iscrAggiorna();
+  if(iscrTimer)clearInterval(iscrTimer);
+  iscrTimer=setInterval(iscrAggiorna,6000);      // arrivano mentre guardi
+}
+let iscrTimer=null,iscrElenco=[];
+function iscrChiudi(){$('#iscrizioni').classList.remove('on');if(iscrTimer){clearInterval(iscrTimer);iscrTimer=null;}}
+function iscrAggiorna(){
+  const b=(typeof syncBase==='function')?syncBase():null;
+  if(!b)return;
+  fetch(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key))
+    .then(r=>r.json()).then(j=>{ iscrElenco=(j&&j.list)||[]; iscrRender(); })
+    .catch(()=>{});
+}
+function iscrRender(){
+  const el=$('#iscr-lista'); if(!el)return;
+  const gia=new Set((S.teams||[]).map(x=>String(x).toLowerCase()));
+  $('#iscr-conta').textContent=iscrElenco.length
+    ? `${iscrElenco.length} ${L('iscrizioni ricevute')}`
+    : L('Nessuna iscrizione ancora. Manda il link o fai inquadrare il QR.');
+  el.innerHTML=iscrElenco.map(i=>{
+    const dentro=gia.has(String(i.cognome||'').toLowerCase());
+    return `<div class="iscr-riga${dentro?' dentro':''}">
+      <div class="iscr-chi"><b>${esc(i.cognome||'')}</b>${i.team?` <span class="muted">— ${esc(i.team)}</span>`:''}
+        ${i.tel?`<div class="iscr-tel">${esc(i.tel)}</div>`:''}</div>
+      <div class="iscr-cmd">
+        ${dentro?`<span class="iscr-ok">✓ ${L('in elenco')}</span>`
+                :`<button class="btn mini" onclick="iscrAccetta('${i.id}')">➕ ${L('Aggiungi')}</button>`}
+        <button class="btn sec mini" onclick="iscrScarta('${i.id}')" title="${L('Elimina')}">✕</button>
+      </div></div>`;
+  }).join('');
+}
+/* Accettare un'iscrizione riempie tre cose in un colpo: l'elenco dei
+   partecipanti, la squadra assegnata e il numero nella rubrica WhatsApp. */
+function iscrAccetta(id){
+  const i=iscrElenco.find(x=>x.id===id); if(!i)return;
+  const nome=String(i.cognome||'').trim(); if(!nome)return;
+  S.teams=S.teams||[];
+  if(!S.teams.some(t=>String(t).toLowerCase()===nome.toLowerCase()))S.teams.push(nome);
+  if(i.tel){ S.tel=S.tel||{}; S.tel[nome]=i.tel; }
+  if(i.team){ S.players=S.players||{}; }
+  persist(); renderTeamInputs&&renderTeamInputs(); renderAll(); iscrRender();
+  toast(`➕ ${nome}${i.tel?' · '+L('numero in rubrica'):''}`);
+}
+function iscrAccettaTutti(){
+  const n=iscrElenco.length; iscrElenco.forEach(i=>iscrAccetta(i.id));
+  toast(`➕ ${n} ${L('iscrizioni riversate in elenco')}`);
+}
+function iscrScarta(id){
+  const b=(typeof syncBase==='function')?syncBase():null; if(!b)return;
+  fetch(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key)+'&del='+encodeURIComponent(id))
+    .then(()=>iscrAggiorna()).catch(()=>{});
+}
+function iscrSvuota(){
+  if(!confirm(L('Cancellare tutte le iscrizioni ricevute?')))return;
+  const b=(typeof syncBase==='function')?syncBase():null; if(!b)return;
+  fetch(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key)+'&clear=1')
+    .then(()=>iscrAggiorna()).catch(()=>{});
+}
+function iscrWhatsApp(){
+  const l=iscrLink(); if(!l){toast(L('Prima accendi il collegamento telefoni nella sezione Regia.'));return;}
+  const n=S.cfg.name||L('Torneo');
+  const msg=`🏆 ${n}\n${L('Iscriviti al torneo da qui')}:\n${l}`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+/* =========================================================
+   IL RISULTATO SI DETTA A VOCE
+   =========================================================
+   Chi dirige il torneo cammina fra i tavoli con le mani occupate, e per
+   scrivere «3-1» deve tornare al banco. Qui basta dire
+   «campo due, tre a uno» e la partita è registrata.
+
+   Il motore vocale è lo stesso che risponde alle domande su «La Legge»:
+   qui però la grammatica è ristrettissima — un numero di campo e due
+   punteggi — e questo la rende molto più affidabile del dettato libero.
+   Nulla viene scritto senza conferma: l'app ripete ad alta voce quello
+   che ha capito e aspetta un sì. */
+const VOCE_NUM={'zero':0,'uno':1,'una':1,'due':2,'tre':3,'quattro':4,'cinque':5,'sei':6,'sette':7,
+  'otto':8,'nove':9,'dieci':10,'undici':11,'dodici':12,
+  'zero.':0,'nulla':0,'niente':0,
+  'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,'ten':10};
+function voceNumero(t){
+  if(t==null)return null;
+  const p=String(t).trim().toLowerCase().replace(/[.,;]/g,'');
+  if(/^\d+$/.test(p))return Math.min(99,parseInt(p));
+  return VOCE_NUM[p]!=null?VOCE_NUM[p]:null;
+}
+/* Estrae campo e punteggi da una frase detta. Accetta le forme che vengono
+   naturali a bordo campo: «campo due tre a uno», «due, tre a uno»,
+   «campo 2 3 1», «campo due pareggio uno». */
+function voceInterpreta(frase){
+  const t=' '+String(frase||'').toLowerCase().replace(/[^\w àèéìòù]/g,' ').replace(/\s+/g,' ')+' ';
+  let campo=null;
+  const mc=t.match(/ (?:campo|tavolo|field|table) (\S+)/);
+  if(mc)campo=voceNumero(mc[1]);
+  // i due punteggi: «tre a uno», «tre uno», «3 a 1»
+  let a=null,b=null;
+  const mp=t.match(/ (\S+) (?:a|à|to) (\S+) /);
+  if(mp){a=voceNumero(mp[1]);b=voceNumero(mp[2]);}
+  if(a==null||b==null){
+    // senza la «a» in mezzo: si prendono gli ultimi due numeri della frase
+    const nums=t.split(' ').map(voceNumero).filter(x=>x!=null);
+    if(campo!=null&&nums.length>=3){a=nums[nums.length-2];b=nums[nums.length-1];}
+    else if(campo==null&&nums.length>=2){a=nums[nums.length-2];b=nums[nums.length-1];}
+  }
+  const pari=/ (pareggio|pari|patta|draw) /.test(t);
+  if(pari){
+    // «campo quattro pareggio due» = 2-2 sul campo 4: il numero che segue
+    // «pareggio» vale per entrambe le squadre
+    const mp2=t.match(/ (?:pareggio|pari|patta|draw) (\S+)/);
+    const q=mp2?voceNumero(mp2[1]):null;
+    if(q!=null){a=q;b=q;}
+    else if(a!=null&&b==null)b=a;
+  }
+  if(campo==null&&a!=null&&b!=null){
+    // «tre a uno» senza campo: vale se c'è un solo campo in gioco
+    const soli=voceCampiInGioco();
+    if(soli.length===1)campo=soli[0];
+  }
+  if(campo==null||a==null||b==null)return null;
+  return {campo,a,b};
+}
+/* I campi che in questo momento hanno una partita da giocare. */
+function voceCampiInGioco(){
+  const c=new Set();
+  allGroups().forEach(g=>g.matches.forEach(m=>{
+    if(!m.done&&m.field&&m.home&&m.away)c.add(m.field);
+  }));
+  return [...c].sort((x,y)=>x-y);
+}
+/* La partita aperta su quel campo: la prima non ancora conclusa. */
+function voceGaraSuCampo(n){
+  let out=null;
+  allGroups().forEach(g=>g.matches.forEach(m=>{
+    if(out||m.done||!m.field||m.field!==n||!m.home||!m.away)return;
+    out={id:m.id,home:m.home,away:m.away,girone:g.name};
+  }));
+  return out;
+}
+let vocePendente=null,voceRec=null,voceAttivo=false;
+function voceApplica(){
+  const p=vocePendente; vocePendente=null;
+  if(!p)return;
+  setScore(p.id,'h',p.a); setScore(p.id,'a',p.b);
+  toast(`✅ ${p.home} ${p.a}–${p.b} ${p.away}`);
+  try{ if(S.sound&&typeof speakIt==='function')speakIt(`${L('Registrato')}. ${p.home} ${p.a}, ${p.away} ${p.b}.`); }catch(e){}
+  voceStato(`✅ ${p.home} ${p.a}–${p.b} ${p.away}`);
+}
+function voceAnnulla(){ vocePendente=null; voceStato(L('Annullato.')); }
+function voceStato(txt){
+  const el=$('#voce-stato'); if(el)el.textContent=txt||'';
+}
+/* Il pulsante del microfono: si accende, ascolta una frase, la interpreta e
+   chiede conferma. Un secondo tocco spegne. */
+function voceMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast(L('Dettatura non supportata da questo browser (usa Chrome).'));return;}
+  if(!window.isSecureContext){toast(L('La dettatura richiede una pagina sicura (https) o l\'app desktop.'));return;}
+  if(voceAttivo){ try{voceRec&&voceRec.stop();}catch(e){} return; }
+  let rec; try{rec=new SR();}catch(e){toast(L('Dettatura non disponibile.'));return;}
+  voceRec=rec; voceAttivo=true;
+  rec.lang=LANG==='en'?'en-GB':'it-IT'; rec.continuous=false; rec.interimResults=false; rec.maxAlternatives=3;
+  const btn=$('#voce-btn'); if(btn)btn.classList.add('on');
+  voceStato(L('Ascolto…'));
+  rec.onresult=e=>{
+    // si prova ogni alternativa: la prima che ha senso vince
+    let letto=null,frase='';
+    for(let i=0;i<e.results[0].length;i++){
+      frase=e.results[0][i].transcript;
+      letto=voceInterpreta(frase);
+      if(letto)break;
+    }
+    if(!letto){ voceStato(`❓ ${L('Non ho capito')}: «${frase}»`); return; }
+    const gara=voceGaraSuCampo(letto.campo);
+    if(!gara){ voceStato(`⚠️ ${L('Nessuna partita da giocare sul campo')} ${letto.campo}`); return; }
+    vocePendente={...gara,a:letto.a,b:letto.b};
+    voceStato(`🎙 ${gara.home} ${letto.a}–${letto.b} ${gara.away} — ${L('confermi?')}`);
+    try{ if(S.sound&&typeof speakIt==='function')
+      speakIt(`${L('Campo')} ${letto.campo}. ${gara.home} ${letto.a}, ${gara.away} ${letto.b}. ${L('Confermi?')}`); }catch(e){}
+    const c=$('#voce-conferma'); if(c)c.style.display='';
+  };
+  rec.onerror=ev2=>{ voceStato('⚠️ '+(typeof speechErrMsg==='function'?speechErrMsg(ev2.error):L('Errore di dettatura'))); };
+  rec.onend=()=>{ voceAttivo=false; const b=$('#voce-btn'); if(b)b.classList.remove('on'); };
+  try{rec.start();}catch(e){voceAttivo=false;voceStato(L('Errore di dettatura'));}
+}
+/* =========================================================
+   LA REGIA CHE DECIDE DA SOLA — priorità di ciò che accade
+   =========================================================
+   L'AUTO LIVE ruotava le videate in ordine fisso. Ma in una giornata di
+   torneo non tutti i momenti valgono uguale: un sorpasso in vetta a un
+   girone merita lo schermo subito, una classifica ferma da mezz'ora no.
+   Qui si tiene d'occhio quello che cambia e, quando succede qualcosa che
+   vale, si dirotta la proiezione su quel girone e si accende l'animazione.
+   Non sostituisce la rotazione: la interrompe quando c'è una ragione. */
+let regiaPrec={};              // firma per girone: chi era in che posizione
+let regiaCoda=[];              // fatti notevoli in attesa di andare in onda
+function regiaFirma(g){
+  const{order}=g.rosa?rosaRank(g):g.rosaSea?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
+  return order;
+}
+/* Confronta l'ordine di prima con quello di adesso e stabilisce se è
+   successo qualcosa che vale la pena mostrare, dandogli un punteggio.
+   Il primo posto pesa più degli altri: è quello che il pubblico guarda. */
+function regiaValuta(nome,prima,dopo){
+  if(!prima||!prima.length)return null;
+  const posPrima={},posDopo={};
+  prima.forEach((n,i)=>posPrima[n]=i+1);
+  dopo.forEach((n,i)=>posDopo[n]=i+1);
+  let peso=0,chi=null,quanti=0;
+  dopo.forEach(n=>{
+    const a=posPrima[n],b=posDopo[n];
+    if(a==null||a===b)return;
+    if(a>b){                                   // è salito
+      quanti++;
+      let p=(a-b)*2;                           // quanti posti ha guadagnato
+      if(b===1)p+=10;                          // ha preso la vetta
+      else if(b<=3)p+=4;                       // è entrato sul podio
+      if(p>peso){peso=p;chi=n;}
+    }
+  });
+  if(!peso)return null;
+  // chi è salito e chi è sceso, per nome: servono all'animazione, che non
+  // può dedurli dalle frecce — quelle le consuma il primo disegno della
+  // classifica, e quando la Presentazione ridisegna non ci sono più
+  const saliti=[],scesi=[];
+  dopo.forEach(n2=>{
+    const a=posPrima[n2],b=posDopo[n2];
+    if(a==null||a===b)return;
+    (a>b?saliti:scesi).push({n:n2,posti:Math.abs(a-b)});
+  });
+  const vetta=posDopo[chi]===1;
+  return {girone:nome,chi,peso,quanti,vetta,saliti,scesi,
+    titolo:vetta?`${chi} ${L('passa in testa')}`:`${chi} ${L('guadagna posizioni')}`};
+}
+/* Da chiamare dopo ogni risultato: aggiorna le firme e accoda i fatti. */
+function regiaOsserva(){
+  if(!S.started)return;
+  allGroups().forEach(g=>{
+    const nome=g.name||'';
+    const dopo=regiaFirma(g);
+    const fatto=regiaValuta(nome,regiaPrec[nome],dopo);
+    regiaPrec[nome]=dopo;
+    if(fatto&&S.cfg.regiaAuto!==false)regiaCoda.push({...fatto,quando:Date.now()});
+  });
+  regiaCoda=regiaCoda.filter(x=>Date.now()-x.quando<90000);   // i fatti invecchiano
+  if(!regiaCoda.length)return;
+  if(presentOpen)regiaMostra();
+  else regiaInPagina();          // niente proiettore: si anima dove si sta lavorando
+}
+/* Il sorpasso si deve vedere anche senza la Presentazione aperta. Chi
+   inserisce i risultati sta nei Gironi o nelle Classifiche, e lì prima non
+   accadeva nulla: l'animazione viveva solo dentro la proiezione, e questo
+   la rendeva invisibile proprio a chi usa il programma.
+   Va aspettato il ridisegno: regiaOsserva parte da checkGroupsComplete, che
+   viene PRIMA che le classifiche siano riscritte, e animare in quel momento
+   significherebbe animare righe che stanno per essere sostituite. */
+function regiaInPagina(){
+  if(!regiaCoda.length)return;
+  regiaCoda.sort((a,b)=>b.peso-a.peso);
+  const f=regiaCoda.shift();
+  setTimeout(()=>{
+    try{
+      const quante=sorpassoAnima(document,f.saliti,f.scesi);
+      if(quante)toast(`${f.vetta?'★':'▲'} ${L('Girone ')}${f.girone}: ${f.titolo}`);
+    }catch(e){}
+  },170);
+}
+/* Porta in scena il fatto di peso maggiore, se la Presentazione è aperta. */
+let regiaInScena=false;
+function regiaMostra(){
+  if(regiaInScena||!presentOpen||!regiaCoda.length)return;
+  regiaCoda.sort((a,b)=>b.peso-a.peso);
+  const f=regiaCoda.shift();
+  const idx=allGroups().findIndex(g=>(g.name||'')===f.girone);
+  if(idx<0)return;
+  regiaInScena=true;
+  const prima=presentView;
+  regiaAnnuncia(f);
+  presentShow('stand#'+idx);
+  // l'animazione parte a videata disegnata
+  setTimeout(()=>{try{sorpassoAnima(document.getElementById('present'),f.saliti,f.scesi);}catch(e){}},260);
+  setTimeout(()=>{                       // poi si torna da dove si veniva
+    regiaInScena=false;
+    if(presentOpen&&presentView==='stand#'+idx&&prima)presentShow(prima);
+    if(regiaCoda.length)regiaMostra();
+  },Math.max(5200,presentGiroMs()));
+}
+/* La fascia che annuncia il fatto, in alto sulla proiezione. */
+function regiaAnnuncia(f){
+  const p=document.getElementById('present'); if(!p)return;
+  let b=document.getElementById('regia-fascia');
+  if(!b){b=document.createElement('div');b.id='regia-fascia';p.appendChild(b);}
+  b.innerHTML=`<span class="rf-tag">${f.vetta?'★ '+L('SORPASSO IN VETTA'):'▲ '+L('SORPASSO')}</span>
+    <span class="rf-txt">${esc(L('Girone '))}${esc(f.girone)} — ${esc(f.titolo)}</span>`;
+  b.classList.remove('on'); void b.offsetWidth; b.classList.add('on');
+  setTimeout(()=>b.classList.remove('on'),4800);
+  try{ if(S.sound&&typeof speakIt==='function'&&f.vetta)speakIt(`${L('Girone ')}${f.girone}. ${f.titolo}.`); }catch(e){}
+}
 function quadroCtx(t){
   // i contesti nascono in italiano dentro currentRoundItems: qui si
   // traducono i pezzi, così in inglese non resta "Girone A · Giornata 3"

@@ -1,7 +1,7 @@
 {
- "content": "7.2.0",
+ "content": "7.4.0",
  "minShell": "6.3.4",
- "notes": "Versione ricostruita a partire dalla 6.5.0, con la rimozione delle figurine rifatta per appartenenza invece che per posizione: tornano al loro posto il Consigliere delle formule a schede, i Tornei Reali, la stima della durata, gli avvisi di annullamento e il doppio confronto nei tabelloni.",
+ "notes": "Il rullo sceglie da sé cosa dire: risultati quando si gioca, prossimo turno con campo e arbitro fra un turno e l'altro, notizie su ritardi e sorpassi. Le animazioni del sorpasso ora si vedono anche nelle Classifiche e nei Gironi, non solo in proiezione. Fasce superiori a scomparsa, rullo trascinabile, catalogo stemmi ripulito dalle voci che non sono squadre.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,12 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "62c74851d5b6c74deb5d4c4db36d2bc379c440885f2cf22f4d67ba82d5ef9e61",
-   "size": 1095972
+   "sha256": "d6f39294d6316d2a006cd2f944beb405e4affda8b80de605b7ae50682b224389",
+   "size": 1158600
+  },
+  "iscrizione.html": {
+   "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
+   "size": 4938
   },
   "legge.js": {
    "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
@@ -53,8 +57,8 @@
    "size": 34789
   },
   "stemmi_club.js": {
-   "sha256": "5da4a041bc53a62ebe6dda0a6fa07fd46c25d2716cdb4b30031b01ba216564d6",
-   "size": 14531278
+   "sha256": "7bd92e064390b32d8ec8b7387ebe9b7fa78c187252466ea2b7e382d66adaaee2",
+   "size": 14520604
   },
   "tornei_reali.js": {
    "sha256": "02bee0959d6a540cb56a4bdd0466d8ca80975c2d0339ac99ece8b40aee92ec5a",
