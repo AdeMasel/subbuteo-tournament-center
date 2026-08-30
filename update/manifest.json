@@ -1,7 +1,7 @@
 {
- "content": "7.4.0",
- "minShell": "6.3.4",
- "notes": "Il rullo sceglie da sé cosa dire: risultati quando si gioca, prossimo turno con campo e arbitro fra un turno e l'altro, notizie su ritardi e sorpassi. Le animazioni del sorpasso ora si vedono anche nelle Classifiche e nei Gironi, non solo in proiezione. Fasce superiori a scomparsa, rullo trascinabile, catalogo stemmi ripulito dalle voci che non sono squadre.",
+ "content": "7.5.1",
+ "minShell": "7.5.0",
+ "notes": "Avvisi liberi in Regia: uno sul rullo, uno letto a voce.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "d6f39294d6316d2a006cd2f944beb405e4affda8b80de605b7ae50682b224389",
-   "size": 1158600
+   "sha256": "225bb9d19fc1c0c071469c09497bae41629ffefcbed0c26e7dbdb945b07546a8",
+   "size": 1183973
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",

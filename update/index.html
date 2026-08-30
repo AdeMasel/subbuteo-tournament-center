@@ -543,6 +543,10 @@ body{--tick-sopra:0px;--tick-sotto:0px}
 #ticker-wrap[data-modo="news"] #ticker-label{background:linear-gradient(135deg,#9fd8ff,#3f9fe0 55%,#1f6ea8)}
 #ticker-wrap[data-modo="prossimo"] #ticker-label::after{background:linear-gradient(90deg,#1d7345,transparent)}
 #ticker-wrap[data-modo="news"] #ticker-label::after{background:linear-gradient(90deg,#1f6ea8,transparent)}
+/* l'avviso dell'organizzatore si distingue a colpo d'occhio: arancione */
+#ticker-wrap[data-modo="avviso"] #ticker-label{background:linear-gradient(135deg,#ffc978,#f0902a 55%,#b45f0d)}
+#ticker-wrap[data-modo="avviso"] #ticker-label::after{background:linear-gradient(90deg,#b45f0d,transparent)}
+#ticker .tavviso{font-weight:600}
 #ticker .tsc{font-family:'Chakra Petch',monospace;font-weight:700;margin:0 8px}
 #ticker .dotlive-t{color:var(--danger);animation:blink 1.1s infinite;margin-left:10px;font-size:1.1rem;vertical-align:middle}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-100%)}}
@@ -1087,6 +1091,23 @@ body.no-anim #regia-fascia{transition:none}
 .iscr-tel{font-family:'Chakra Petch',monospace;font-size:.74rem;color:var(--muted);margin-top:1px}
 .iscr-cmd{display:flex;gap:6px;align-items:center;flex:0 0 auto}
 .iscr-ok{font-size:.78rem;color:var(--ok,#3ddc84)}
+.tts-qualita{margin-top:10px;padding:11px 14px;border-radius:11px;font-size:.86rem;line-height:1.6}
+.tts-qualita.base{background:color-mix(in srgb,var(--warn,#f0a640) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--warn,#f0a640) 34%,transparent)}
+.tts-qualita.buona{background:color-mix(in srgb,var(--ok,#3ddc84) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--ok,#3ddc84) 30%,transparent)}
+.tts-qualita b{color:var(--accent)}
+.vn-box{margin-top:10px;padding:12px 14px;border-radius:11px;font-size:.86rem;line-height:1.6;
+  background:color-mix(in srgb,var(--accent2,#4ea3ff) 8%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent2,#4ea3ff) 26%,transparent)}
+.vn-box.pronta{background:color-mix(in srgb,var(--ok,#3ddc84) 9%,transparent);
+  border-color:color-mix(in srgb,var(--ok,#3ddc84) 28%,transparent)}
+.vn-box b{color:var(--accent)}
+.vn-barra{height:8px;border-radius:5px;margin-top:9px;overflow:hidden;
+  background:color-mix(in srgb,var(--fg,#fff) 12%,transparent)}
+.vn-barra>i{display:block;height:100%;width:0;border-radius:5px;
+  background:linear-gradient(90deg,var(--accent2,#4ea3ff),var(--accent,#7ef));transition:width .2s}
+.tts-qualita code{font-family:'Chakra Petch',monospace;font-size:.92em;color:var(--accent2)}
 .voce-riga{display:flex;gap:16px;align-items:flex-start}
 .voce-corpo{flex:1;min-width:0}
 .voce-btn{flex:0 0 auto;width:64px;height:64px;border-radius:50%;font-size:1.7rem;cursor:pointer;
@@ -3107,6 +3128,46 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
     </div>
   </div>
 
+  <!-- ---------- gli avvisi scritti dall'organizzatore ---------- -->
+  <h3 class="rgband">📢 Avvisi liberi — sul rullo e a voce</h3>
+  <div class="card" style="margin-bottom:18px">
+    <p class="muted small" style="margin-top:0">Due avvisi scritti da te, indipendenti l’uno dall’altro:
+    uno <b>scorre sul rullo</b> insieme a risultati e prossimo turno, l’altro viene <b>letto a voce</b> a
+    intervalli regolari. Ognuno si accende e si spegne con la propria spunta, senza cancellare il testo:
+    così un avviso ricorrente si riaccende quando serve.</p>
+
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+      <label class="ck"><input type="checkbox" id="an-rullo-on" onchange="annSet('rulloOn',this.checked)">
+        <b>📜 Manda questo avviso sul rullo</b></label>
+      <input type="text" id="an-rullo-txt" maxlength="240" style="margin-top:9px"
+             placeholder="Es. La premiazione è alle 18:30 nella sala grande."
+             oninput="annSet('rulloTxt',this.value)"
+             title="Il testo scorre sul rullo, con la pastiglia arancione «Avviso»">
+      <span class="small muted">Entra nella rotazione del rullo con la pastiglia arancione <b>Avviso</b>.
+      Se si sta giocando si alterna ai risultati, così l’avviso passa comunque senza coprire il campo.
+      Vale anche sul secondo schermo.</span>
+    </div>
+
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+      <label class="ck"><input type="checkbox" id="an-voce-on" onchange="annSet('voceOn',this.checked)">
+        <b>🔊 Fai leggere questo avviso a voce</b></label>
+      <input type="text" id="an-voce-txt" maxlength="240" style="margin-top:9px"
+             placeholder="Es. Si avvisano i giocatori che il bar chiude alle 19."
+             oninput="annSet('voceTxt',this.value)"
+             title="Viene letto dalla voce degli annunci, alla cadenza scelta qui sotto">
+      <div class="row" style="align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
+        <span class="small">Ripeti ogni</span>
+        <input type="number" id="an-voce-min" value="5" min="1" max="120" style="width:88px"
+               onchange="annSet('voceMin',this.value)">
+        <span class="small">minuti</span>
+        <button class="btn sec mini" onclick="annVoceOra()">▶ Leggilo adesso</button>
+        <span class="small muted" id="an-voce-stato"></span>
+      </div>
+      <span class="small muted">Lo legge la voce scelta in <b>Opzioni → Audio</b>, compresa quella neurale.
+      La lettura salta da sé se in quel momento sta parlando lo speaker o è in corso un altro annuncio.</span>
+    </div>
+  </div>
+
   <!-- ---------- il secondo schermo e la moviola ---------- -->
   <h3 class="rgband">🖥 Secondo schermo &amp; Replay Goal</h3>
   <div class="card" style="margin-bottom:18px">
@@ -3277,12 +3338,15 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
       <div class="row" style="margin-top:16px;align-items:center">
         <label class="f" style="margin:0">🔊 Voce annunci (TTS)</label>
         <select id="tts-voice" style="width:auto" onchange="setTtsVoice(this.value)">
-          <option value="F">Femminile</option>
-          <option value="M">Maschile</option>
+          <option value="F">Femminile (automatica)</option>
+          <option value="M">Maschile (automatica)</option>
+          <option value="N" id="tts-opt-n" hidden>Paola — neurale (alta qualità)</option>
         </select>
         <button class="btn sec mini" onclick="testVoice()">▶ Prova</button>
         <span class="small muted">voce: <span id="tts-voice-lbl">—</span></span>
       </div>
+      <div id="tts-qualita" class="tts-qualita"></div>
+      <div id="vn-box" class="vn-box"></div>
       <p class="small muted" style="margin-top:14px">Suoni: fischietto arbitrale di SpliceSound · buzzer di David Pride (entrambi CC0, Wikimedia Commons) · suono gol personalizzato (goal.mp3).</p>
     </div>
     <div class="card" style="grid-column:1/-1">
@@ -3743,7 +3807,7 @@ let S=defaultState();
 function defaultState(){return{
   started:false, screen:'setup', theme:'notte', anim:true, sound:true,
   celebrated:false, champion:null, phase:'groups',
-  cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,qrAddr:'',tickerPos:'alto',barreAuto:false,stagione:{attiva:false,dal:'',ogni:7},   // dove sta il rullo: 'alto', 'basso' o i pixel dall'alto
+  cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,ann:{rulloOn:false,rulloTxt:'',voceOn:false,voceTxt:'',voceMin:5},qrAddr:'',tickerPos:'alto',barreAuto:false,stagione:{attiva:false,dal:'',ogni:7},   // dove sta il rullo: 'alto', 'basso' o i pixel dall'alto
   
        ritorno:false,third:true,swissRounds:5,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
        refSource:'players',refPool:[],showPlayers:false,showRefBoard:true,fotoConsenso:true,
@@ -3758,7 +3822,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.5.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -4101,6 +4165,24 @@ const TR={
   "manca una gara alla chiusura":"one match to go",
   "mancano 2 gare alla chiusura":"two matches to go",
   "è il campione":"is the champion",
+  "Stai usando una voce di qualità":"You are using a quality voice",
+  "Sul sistema ce ne sono":"The system has",
+  "di questo tipo per la lingua in uso.":"of this kind for the language in use.",
+  "Sono disponibili solo le voci di base":"Only the basic voices are available",
+  "Se ne possono scaricare di molto più naturali, gratis:":"Far more natural ones can be downloaded, free of charge:",
+  "apri":"open",
+  "cerca la lingua e scarica una voce marcata":"find your language and download a voice marked",
+  "o":"or",
+  "oppure":"or",
+  "e installa una voce marcata":"and install a voice marked",
+  "Sono gratuite e funzionano senza rete. Riavvia il programma e la troverà da sé.":"They are free and work offline. Restart the program and it will find it by itself.",
+  "installa un motore vocale migliore, per esempio":"install a better speech engine, for example",
+  "con le voci":"with the",
+  "poi riavvia il programma.":"then restart the program.",
+  "Installa dal tuo sistema operativo una voce di qualità per questa lingua, poi riavvia il programma.":"Install a quality voice for this language from your operating system, then restart the program.",
+  "Le voci «Google» che si sentono nel browser non sono utilizzabili qui: sono un servizio di rete di Chrome, non installabile in un programma.":"The “Google” voices you hear in the browser cannot be used here: they are a Chrome network service, not something a program can install.",
+  "Femminile (automatica)":"Female (automatic)",
+  "Maschile (automatica)":"Male (automatic)",
   "passa in testa":"takes the lead","guadagna posizioni":"climbs the table",
   "SORPASSO IN VETTA":"LEAD CHANGE","SORPASSO":"OVERTAKE",
   "🏟 Indirizzo di sala — per stampare i QR in anticipo":"🏟 Venue address — to print the QR codes in advance",
@@ -4550,9 +4632,35 @@ const TR={
   "📊 Classifiche CSV":"📊 Standings CSV",
   "Ripescaggio olimpico: chi è stato battuto da un finalista rientra (due bronzi)":"Olympic repechage: anyone beaten by a finalist comes back in (two bronze medals)",
   "su un host pubblico.":"on a public host.",
+
+  /* avvisi liberi della Regia */
+  "📢 Avvisi liberi — sul rullo e a voce":"📢 Free announcements — on the ticker and out loud",
+  "Due avvisi scritti da te, indipendenti l’uno dall’altro: uno":"Two announcements written by you, independent of each other: one",
+  "scorre sul rullo":"scrolls on the ticker",
+  "insieme a risultati e prossimo turno, l’altro viene":"alongside results and next round, the other is",
+  "letto a voce":"read out loud",
+  "a intervalli regolari. Ognuno si accende e si spegne con la propria spunta, senza cancellare il testo: così un avviso ricorrente si riaccende quando serve.":"at regular intervals. Each is switched on and off by its own tick box, without clearing the text: a recurring announcement can be switched back on whenever it is needed.",
+  "📜 Manda questo avviso sul rullo":"📜 Put this announcement on the ticker",
+  "Entra nella rotazione del rullo con la pastiglia arancione":"It joins the ticker rotation with the orange",
+  "Avviso":"Announcement",
+  ". Se si sta giocando si alterna ai risultati, così l’avviso passa comunque senza coprire il campo. Vale anche sul secondo schermo.":" pill. While matches are being played it alternates with the results, so the announcement still gets through without hiding the play. It applies to the second screen too.",
+  "🔊 Fai leggere questo avviso a voce":"🔊 Have this announcement read out loud",
+  "Ripeti ogni":"Repeat every",
+  "minuti":"minutes",
+  "▶ Leggilo adesso":"▶ Read it now",
+  "Lo legge la voce scelta in":"It is read by the voice chosen in",
+  "Opzioni → Audio":"Options → Audio",
+  ", compresa quella neurale. La lettura salta da sé se in quel momento sta parlando lo speaker o è in corso un altro annuncio.":", including the neural one. A reading is skipped by itself if the speaker is on air at that moment or another announcement is already running.",
+  "Es. La premiazione è alle 18:30 nella sala grande.":"E.g. The prize-giving is at 6:30 pm in the main hall.",
+  "Il testo scorre sul rullo, con la pastiglia arancione «Avviso»":"The text scrolls on the ticker, with the orange «Announcement» pill",
+  "Es. Si avvisano i giocatori che il bar chiude alle 19.":"E.g. Players are advised that the bar closes at 7 pm.",
+  "Viene letto dalla voce degli annunci, alla cadenza scelta qui sotto":"Read by the announcement voice, at the interval chosen below",
+  "Scrivi prima il testo dell’avviso.":"Write the announcement text first.",
+  "ultima lettura":"last read",
+  "in attesa del primo intervallo":"waiting for the first interval",
 };
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
-const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint,#wa-rubrica,#wa-testo,#wa-nota,#sy-sala-esito,#voce-stato,#iscr-lista,#iscr-conta,#iscr-link,#stag-riep,#regia-fascia';
+const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint,#wa-rubrica,#wa-testo,#wa-nota,#sy-sala-esito,#voce-stato,#iscr-lista,#iscr-conta,#iscr-link,#stag-riep,#regia-fascia,#tts-qualita,#vn-box';
 function translateNodeText(node){
   const orig=node.__it!=null?node.__it:(node.__it=node.nodeValue);
   if(LANG!=='en'){node.nodeValue=orig;return;}
@@ -9108,7 +9216,7 @@ function tabTo(name){
   const sec=document.getElementById('tab-'+name);
   if(sec)sec.classList.add('on');
   document.querySelectorAll('nav#tabs button[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
-  if(name==='audio'){waPannelloUI();salaPannelloUI();}   // rubrica, anteprima e indirizzo di sala
+  if(name==='audio'){waPannelloUI();salaPannelloUI();try{ttsQualitaUI();}catch(e){}}   // rubrica, anteprima e indirizzo di sala
   S.screen=name;persist();
 }
 /* "Fase Finale" o "Fase Successiva"? Di regola chiudere i gironi porta
@@ -9272,14 +9380,120 @@ function tickerRisultati(){
   if(S.results.length)return S.results.slice(-12);
   return [];
 }
+/* --- gli avvisi liberi dell'organizzatore -------------------------------
+   Due caselle di testo in Regia, indipendenti fra loro: una manda l'avviso
+   sul rullo, l'altra lo fa leggere a voce ogni tot minuti. Ognuna ha la sua
+   spunta, e spegnere la spunta non cancella il testo: un avviso ricorrente
+   («la premiazione è alle 18:30») si riaccende quando serve senza riscriverlo.
+
+   Il testo resta nello stato del torneo, quindi sopravvive alla chiusura del
+   programma e viaggia con il salvataggio. */
+function annCfg(){
+  if(!S.cfg.ann)S.cfg.ann={rulloOn:false,rulloTxt:'',voceOn:false,voceTxt:'',voceMin:5};
+  return S.cfg.ann;
+}
+function annSet(campo,valore){
+  const a=annCfg();
+  if(campo==='voceMin')valore=Math.max(1,Math.min(120,parseInt(valore)||5));
+  if(campo==='rulloTxt'||campo==='voceTxt')valore=String(valore||'').slice(0,240);
+  a[campo]=valore;
+  persist();
+  if(campo==='rulloOn'||campo==='rulloTxt')renderTicker();
+  if(campo==='voceOn'||campo==='voceMin')annVoceRiavvia();
+  if(campo==='voceOn')annVoceStato();
+}
+/* le voci che l'avviso mette sul rullo: una sola, ma ripetuta quel tanto che
+   basta a non lasciare un buco quando la frase è corta */
+function annRulloVoci(){
+  const a=annCfg();
+  if(!a.rulloOn)return [];
+  const t=String(a.rulloTxt||'').trim();
+  if(!t)return [];
+  const pezzo=`<span class="titem tavviso">${esc(t)}</span>`;
+  return t.length<70?[pezzo,pezzo]:[pezzo];
+}
+
+/* --- l'avviso letto a voce ---------------------------------------------- */
+let annVoceTimer=null, annVoceUltimo=0;
+function annVoceRiavvia(){
+  if(annVoceTimer){clearInterval(annVoceTimer);annVoceTimer=null;}
+  /* La voce esce dal banco di regia, non dal proiettore. Il tabellone riceve
+     tutto lo stato del torneo — spunta compresa — e senza questa riga farebbe
+     partire il proprio timer: in sala si sentirebbe l'avviso due volte, letto
+     da due finestre che non si aspettano a vicenda. */
+  try{ if(isSchermoTabellone())return; }catch(e){}
+  const a=annCfg();
+  if(!a.voceOn)return;
+  const ms=Math.max(1,parseInt(a.voceMin)||5)*60000;
+  /* la prima lettura non è immediata: chi spunta la casella sta ancora
+     scrivendo, e sentirsi parlare addosso mentre si digita è sgradevole.
+     Parte dopo un intervallo, come le successive. */
+  annVoceTimer=setInterval(annVoceDillo,ms);
+  annVoceStato();
+}
+function annVoceDillo(){
+  const a=annCfg();
+  if(!a.voceOn)return;
+  const t=String(a.voceTxt||'').trim();
+  if(!t)return;
+  /* se lo speaker è in onda o sta già parlando qualcun altro, questa lettura
+     si salta: si riproverà al giro dopo. Meglio un avviso mancato che due
+     voci sovrapposte in sala. */
+  try{if(typeof SPK!=='undefined'&&SPK.on)return;}catch(e){}
+  try{if(speechSynthesis.speaking||speechSynthesis.pending)return;}catch(e){}
+  try{if(typeof VN!=='undefined'&&VN.inCorso)return;}catch(e){}
+  annVoceUltimo=Date.now();
+  speakIt(t);
+  annVoceStato();
+}
+function annVoceOra(){
+  const t=String(annCfg().voceTxt||'').trim();
+  if(!t){toast(L('Scrivi prima il testo dell’avviso.'));return;}
+  annVoceUltimo=Date.now();
+  speakIt(t);
+  annVoceStato();
+}
+function annVoceStato(){
+  const el=$('#an-voce-stato'); if(!el)return;
+  const a=annCfg();
+  if(!a.voceOn){el.textContent='';return;}
+  el.textContent=annVoceUltimo
+    ? L('ultima lettura')+': '+new Date(annVoceUltimo).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+    : L('in attesa del primo intervallo');
+}
+/* riporta nei campi quello che c'è nello stato: serve all'avvio e ogni volta
+   che si carica un torneo salvato */
+function annRipristina(){
+  const a=annCfg();
+  const r1=$('#an-rullo-on'), r2=$('#an-rullo-txt');
+  const v1=$('#an-voce-on'), v2=$('#an-voce-txt'), v3=$('#an-voce-min');
+  if(r1)r1.checked=!!a.rulloOn;
+  if(r2)r2.value=a.rulloTxt||'';
+  if(v1)v1.checked=!!a.voceOn;
+  if(v2)v2.value=a.voceTxt||'';
+  if(v3)v3.value=a.voceMin||5;
+  annVoceRiavvia();
+  annVoceStato();
+}
+
 /* Sceglie che cosa mandare in onda. Se si sta giocando vincono i risultati:
    è quello che il pubblico vuole vedere. Altrimenti si alternano il
    prossimo turno e le notizie, cambiando a ogni passata. */
 function tickerScegli(){
   const live=allGroups().some(g=>g.matches.some(m=>m.live));
   const ris=tickerRisultati();
-  if(live&&ris.length)return ['risultati',L('Live'),ris];
+  const avv=annRulloVoci();
+  /* con le partite in corso comandano i risultati, ma se c'è un avviso
+     dell'organizzatore i due si alternano: l'avviso passa lo stesso e il
+     campo non resta mai coperto per due giri di fila. */
+  if(live&&ris.length){
+    if(!avv.length)return ['risultati',L('Live'),ris];
+    return (tickerGiro%2)
+      ? ['avviso',L('Avviso'),avv]
+      : ['risultati',L('Live'),ris];
+  }
   const modi=[];
+  if(avv.length)modi.push(['avviso',L('Avviso'),avv]);
   const pro=tickerProssimo(); if(pro.length)modi.push(['prossimo',L('Prossimo turno'),pro]);
   const news=tickerNews();    if(news.length)modi.push(['news',L('News'),news]);
   if(ris.length)modi.push(['risultati',L('Ultimi risultati'),ris]);
@@ -13510,12 +13724,246 @@ function ttsLoadVoices(){
   TTS_VOICES.en.M=pickVoice(en,false)||pickVoice(vs,false);
   if(TTS_VOICES.en.M===TTS_VOICES.en.F){const alt=en.find(v=>v!==TTS_VOICES.en.F);if(alt)TTS_VOICES.en.M=alt;}
 }
-if('speechSynthesis'in window){ttsLoadVoices();speechSynthesis.onvoiceschanged=()=>{ttsLoadVoices();const l=document.getElementById('tts-voice-lbl');if(l)l.textContent=ttsListLabel()||'—';};}
+if('speechSynthesis'in window){ttsLoadVoices();speechSynthesis.onvoiceschanged=()=>{ttsLoadVoices();try{ttsQualitaUI();}catch(e){}const l=document.getElementById('tts-voice-lbl');if(l)l.textContent=ttsListLabel()||'—';};}
+/* =========================================================
+   QUANTO SUONA BENE LA VOCE, E COME MIGLIORARLA
+   =========================================================
+   Le voci «Google» che si sentono in Chrome NON si possono usare qui: sono
+   un servizio di rete di Chrome, con le sue chiavi, e in un'applicazione
+   desktop non esistono — misurato: 19 in Chrome, zero nell'app. Non sono
+   nemmeno ridistribuibili.
+
+   Le voci buone però ci sono, e sono gratis: le mette a disposizione il
+   sistema operativo, che le tiene però NON installate finché qualcuno non
+   le scarica. La differenza fra la voce di base e quella migliorata è la
+   stessa che passa fra un annuncio di stazione degli anni Ottanta e uno di
+   oggi. Qui l'app guarda che cosa ha davvero a disposizione e, se trova
+   solo le voci di base, spiega come procurarsi le altre — sul sistema che
+   si sta usando, non in generale. */
+function ttsSistema(){
+  const p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'';
+  if(/mac/i.test(p))return 'mac';
+  if(/win/i.test(p))return 'win';
+  if(/linux|x11/i.test(p))return 'linux';
+  return 'altro';
+}
+/* Le voci di qualità si riconoscono dal nome: i sistemi le marcano tutti,
+   con parole diverse ma sempre esplicite. */
+const RX_BUONA=/(google|natural|neural|siri|enhanced|premium|migliorata|eloquence)/i;
+function ttsQualita(){
+  if(!('speechSynthesis'in window))return null;
+  const vs=speechSynthesis.getVoices();
+  if(!vs.length)return null;
+  const lg=LANG==='en'?'en':'it';
+  const mie=vs.filter(v=>new RegExp('^'+lg+'(-|_|$)','i').test(v.lang));
+  const buone=mie.filter(v=>RX_BUONA.test(v.name));
+  return {tot:vs.length, lingua:mie.length, buone:buone.length,
+          nomi:buone.slice(0,3).map(v=>v.name), inUso:(ttsCurrentVoice()||{}).name||'—'};
+}
+function ttsQualitaUI(){
+  try{vnUI();}catch(e){}
+  const el=$('#tts-qualita'); if(!el)return;
+  if(S.ttsVoice==='N'&&VN.pronta){el.className='tts-qualita';el.innerHTML='';return;}
+  const q=ttsQualita();
+  if(!q){el.innerHTML='';return;}
+  el.classList.remove('base','buona');
+  if(q.buone>0){
+    el.classList.add('buona');
+    el.innerHTML=`✅ ${L('Stai usando una voce di qualità')}: <b>${esc(q.inUso)}</b>. `
+      +`${L('Sul sistema ce ne sono')} <b>${q.buone}</b> ${L('di questo tipo per la lingua in uso.')}`;
+    return;
+  }
+  el.classList.add('base');
+  const s=ttsSistema();
+  const guida={
+    mac:`<b>macOS</b> — ${L('apri')} <code>Impostazioni di Sistema → Accessibilità → Contenuto letto → Voce del sistema → Gestisci voci</code>, `
+       +`${L('cerca la lingua e scarica una voce marcata')} <b>Migliorata</b> ${L('o')} <b>Premium</b>. `
+       +`${L('Sono gratuite e funzionano senza rete. Riavvia il programma e la troverà da sé.')}`,
+    win:`<b>Windows</b> — ${L('apri')} <code>Impostazioni → Ora e lingua → Voce</code> `
+       +`(${L('oppure')} <code>Lingua e area geografica → Opzioni lingua</code>) `
+       +`${L('e installa una voce marcata')} <b>Natural</b>. `
+       +`${L('Sono gratuite e funzionano senza rete. Riavvia il programma e la troverà da sé.')}`,
+    linux:`<b>Linux</b> — ${L('installa un motore vocale migliore, per esempio')} <code>speech-dispatcher</code> `
+       +`${L('con le voci')} <code>mbrola</code> ${L('o')} <code>piper</code>, `
+       +`${L('poi riavvia il programma.')}`,
+    altro:L('Installa dal tuo sistema operativo una voce di qualità per questa lingua, poi riavvia il programma.')
+  }[s];
+  el.innerHTML=`⚠️ ${L('Sono disponibili solo le voci di base')} (<b>${esc(q.inUso)}</b>). `
+    +`${L('Se ne possono scaricare di molto più naturali, gratis:')}<br>${guida}<br>`
+    +`<span class="small muted">${L('Le voci «Google» che si sentono nel browser non sono utilizzabili qui: sono un servizio di rete di Chrome, non installabile in un programma.')}</span>`;
+}
 function ttsCurrentVoice(){const lg=LANG==='en'?'en':'it';return S.ttsVoice==='M'?TTS_VOICES[lg].M:TTS_VOICES[lg].F;}
-function ttsListLabel(){const v=ttsCurrentVoice();if(v)return v.name;return S.ttsVoice==='M'?(LANG==='en'?'male':'maschile'):(LANG==='en'?'female':'femminile');}
-function setTtsVoice(g){S.ttsVoice=g;persist();const el=$('#tts-voice');if(el)el.value=g;const l=$('#tts-voice-lbl');if(l)l.textContent=ttsListLabel();}
+/* con la voce neurale scelta, l'etichetta e il pannello qualità parlano di
+   quella: le voci di sistema restano solo come ripiego. */
+function ttsListLabel(){if(S.ttsVoice==='N'&&VN.pronta)return 'Paola'+(LANG==='en'?' (neural)':' (neurale)');
+  const v=ttsCurrentVoice();if(v)return v.name;return S.ttsVoice==='M'?(LANG==='en'?'male':'maschile'):(LANG==='en'?'female':'femminile');}
+function setTtsVoice(g){S.ttsVoice=g;persist();try{ttsQualitaUI();}catch(e){}const el=$('#tts-voice');if(el)el.value=g;const l=$('#tts-voice-lbl');if(l)l.textContent=ttsListLabel();}
 function testVoice(){speakIt(LANG==='en'?'Voice test. Players, please get ready with your teams for the next round.':'Prova della voce. Si preparino i giocatori con le squadre per il prossimo turno.');}
+/* --- voce neurale offline (Piper) --------------------------------------
+   Le voci di sistema sono una lotteria: su un Mac aggiornato si sente una
+   voce dignitosa, su un Windows appena installato un robot degli anni
+   Novanta. In sala, con l'impianto acceso, la differenza si sente tutta.
+   Qui si affianca alle voci di sistema un motore neurale che gira in locale,
+   senza rete e senza account, con la voce italiana femminile «Paola».
+
+   Il motore non è dentro l'app: pesa una novantina di megabyte e sarebbero
+   quasi mezzo gigabyte in più da pubblicare a ogni versione, per cinque
+   sistemi. Si scarica una volta sola dalle Opzioni e resta nella cartella
+   dati, quindi sopravvive agli aggiornamenti. Se non c'è — o se si apre
+   l'app nel browser, dove window.STCVoce non esiste — tutto continua a
+   funzionare con le voci di sistema: questa è un'aggiunta, non una
+   dipendenza. */
+const VN={pronta:false,supportato:false,stato:null,audio:null,inCorso:false};
+
+async function vnLeggiStato(){
+  if(!window.STCVoce){VN.stato=null;VN.pronta=false;VN.supportato=false;return null;}
+  try{
+    VN.stato=await STCVoce.stato();
+    VN.pronta=!!VN.stato.pronta; VN.supportato=!!VN.stato.supportato;
+  }catch(e){VN.stato=null;VN.pronta=false;}
+  return VN.stato;
+}
+
+/* silenzio totale: ferma sia il motore neurale sia la voce di sistema. */
+function vnFerma(){
+  try{speechSynthesis.cancel();}catch(e){}
+  if(VN.audio){
+    try{VN.audio.pause();}catch(e){}
+    try{URL.revokeObjectURL(VN.audio.src);}catch(e){}
+    VN.audio=null;
+  }
+  VN.inCorso=false;
+  if(window.STCVoce){try{STCVoce.ferma();}catch(e){}}
+}
+
+/* Prende in carico la frase se la voce neurale è scelta, installata e la
+   lingua è l'italiano (Paola parla solo italiano: in inglese si torna alle
+   voci di sistema). Ritorna true se se n'è occupata. */
+function vnParla(testo,opz){
+  if(!VN.pronta||S.ttsVoice!=='N'||!window.STCVoce)return false;
+  if((opz&&opz.lingua||LANG)==='en'&&!(opz&&opz.forzaIt))return false;
+  const o=opz||{};
+  vnFerma(); VN.inCorso=true;
+  STCVoce.parla(String(testo||''),{rate:o.rate||1}).then(dati=>{
+    if(!VN.inCorso)return;                      // nel frattempo è stata fermata
+    const b=new Blob([dati instanceof Uint8Array?dati:new Uint8Array(dati)],{type:'audio/wav'});
+    const a=new Audio(URL.createObjectURL(b));
+    VN.audio=a;
+    a.onended=a.onerror=()=>{try{URL.revokeObjectURL(a.src);}catch(e){} if(VN.audio===a){VN.audio=null;VN.inCorso=false;}};
+    a.play().catch(()=>{});
+  }).catch(err=>{
+    VN.inCorso=false;
+    /* se il motore fallisce non si resta muti: si ricade sul sistema */
+    if(String(err&&err.message||'').indexOf('annullata')<0)vnRipiego(testo,o);
+  });
+  return true;
+}
+/* ripiego sulle voci di sistema quando il motore neurale non risponde */
+function vnRipiego(testo,o){
+  if(!('speechSynthesis'in window))return;
+  const u=new SpeechSynthesisUtterance(String(testo||''));
+  u.lang=(o&&o.lingua==='it')||LANG!=='en'?'it-IT':'en-US';
+  const v=(TTS_VOICES[LANG==='en'?'en':'it']||{}).F; if(v)u.voice=v;
+  u.rate=.98;u.pitch=1.1;
+  try{speechSynthesis.speak(u);}catch(e){}
+}
+
+/* Electron avvolge gli errori del processo principale in un prefisso
+   («Error invoking remote method ...»)  che all'utente non dice nulla: qui
+   resta solo il motivo vero. */
+function vnMotivo(e){
+  return String(e&&e.message||e||'')
+    .replace(/^Error invoking remote method '[^']*':\s*/,'')
+    .replace(/^Error:\s*/,'');
+}
+/* --- installazione dalle Opzioni --------------------------------------- */
+function vnUI(){
+  const el=$('#vn-box'); if(!el)return;
+  const opt=$('#tts-opt-n');
+  const en=LANG==='en';
+  if(!window.STCVoce){                       // aperta nel browser, non nell'app
+    el.innerHTML=`<span class="small muted">${en
+      ?'The offline neural voice is available in the installed desktop app.'
+      :'La voce neurale offline è disponibile nell’app installata sul computer.'}</span>`;
+    if(opt)opt.hidden=true;
+    return;
+  }
+  const st=VN.stato||{};
+  if(!st.supportato){
+    el.innerHTML=`<span class="small muted">${en
+      ?'The neural engine has no official build for this system (Windows on ARM): the system voices remain in use.'
+      :'Per questo sistema (Windows su ARM) non esiste una versione ufficiale del motore neurale: restano in uso le voci di sistema.'}</span>`;
+    if(opt)opt.hidden=true;
+    return;
+  }
+  if(st.pronta){
+    el.classList.add('pronta');
+    if(opt)opt.hidden=false;
+    el.innerHTML=`✅ <b>${en?'Neural voice installed':'Voce neurale installata'}</b> — Paola (${en?'Italian, medium quality':'italiana, qualità media'}). `
+      +`${en?'It works with no internet connection.':'Funziona senza collegamento a internet.'}<br>`
+      +`<button class="btn sec mini" style="margin-top:8px" onclick="vnProva()">▶ ${en?'Try it':'Prova'}</button> `
+      +`<button class="btn sec mini" style="margin-top:8px" onclick="vnRimuovi()">🗑 ${en?'Remove':'Rimuovi'}</button>`;
+    return;
+  }
+  el.classList.remove('pronta');
+  if(opt)opt.hidden=true;
+  el.innerHTML=`🎙 <b>${en?'High-quality Italian voice (offline)':'Voce italiana di alta qualità (offline)'}</b><br>`
+    +`${en
+      ?'A neural voice, «Paola», that runs on this computer with no internet and no account. Recommended when announcements go through a PA system.'
+      :'Una voce neurale, «Paola», che gira su questo computer senza internet e senza account. Consigliata quando gli annunci passano dall’impianto della sala.'}<br>`
+    +`<span class="small muted">${en?'One-time download, about 64 MB. It stays installed across app updates.'
+      :'Scaricamento una tantum, circa 64 MB. Resta installata anche dopo gli aggiornamenti dell’app.'}</span><br>`
+    +`<button class="btn mini" id="vn-btn" style="margin-top:9px" onclick="vnInstalla()">⬇ ${en?'Download the voice':'Scarica la voce'}</button>`
+    +`<div id="vn-prog" style="display:none"><div class="vn-barra"><i id="vn-barra-i"></i></div>`
+    +`<span class="small muted" id="vn-prog-txt"></span></div>`;
+}
+function vnProva(){
+  const t=LANG==='en'
+    ?'Prova della voce neurale. Si preparino i giocatori per il prossimo turno.'
+    :'Prova della voce neurale. Si preparino i giocatori con le squadre per il prossimo turno.';
+  const g=S.ttsVoice; S.ttsVoice='N';        // prova sempre quella neurale
+  if(!vnParla(t,{forzaIt:true}))toast(L('Voce neurale non disponibile.'));
+  S.ttsVoice=g;
+}
+async function vnInstalla(){
+  const b=$('#vn-btn'), pr=$('#vn-prog'), ba=$('#vn-barra-i'), tx=$('#vn-prog-txt');
+  if(b)b.disabled=true;
+  if(pr)pr.style.display='';
+  const nome={motore:LANG==='en'?'engine':'motore',voce:LANG==='en'?'voice':'voce',
+              prova:LANG==='en'?'checking':'verifica',fatto:LANG==='en'?'done':'fatto'};
+  const stop=STCVoce.suAvanzamento(d=>{
+    const pct=d.totale?Math.round(d.fatti*100/d.totale):0;
+    if(ba)ba.style.width=pct+'%';
+    if(tx)tx.textContent=`${nome[d.fase]||d.fase} — ${pct}%`+
+      (d.totale?` (${(d.fatti/1048576).toFixed(1)}/${(d.totale/1048576).toFixed(1)} MB)`:'');
+  });
+  try{
+    await STCVoce.installa();
+    await vnLeggiStato();
+    setTtsVoice('N');
+    toast(LANG==='en'?'Neural voice installed.':'Voce neurale installata.');
+  }catch(e){
+    toast((LANG==='en'?'Installation failed: ':'Installazione non riuscita: ')+vnMotivo(e));
+    if(b)b.disabled=false;
+    if(pr)pr.style.display='none';
+  }finally{
+    try{stop&&stop();}catch(x){}
+    vnUI();
+  }
+}
+async function vnRimuovi(){
+  if(!confirm(LANG==='en'?'Remove the neural voice from this computer?'
+                         :'Rimuovere la voce neurale da questo computer?'))return;
+  try{await STCVoce.disinstalla();}catch(e){}
+  await vnLeggiStato();
+  if(S.ttsVoice==='N')setTtsVoice('F');
+  vnUI();
+}
+if(window.STCVoce){vnLeggiStato().then(()=>{try{vnUI();}catch(e){}
+  if(!VN.pronta&&S.ttsVoice==='N')S.ttsVoice='F';});}
+
 function speakIt(text){
+  if(vnParla(text))return;                   // voce neurale, se scelta e pronta
   if(!('speechSynthesis'in window)){toast(L('Sintesi vocale non supportata dal browser.'));return;}
   if(!TTS_VOICES.it.F&&!TTS_VOICES.en.F)ttsLoadVoices();
   speechSynthesis.cancel();
@@ -16384,7 +16832,7 @@ function leggeAsk(keepInput){
     <div class="body">${leggeHighlight(b.t,q)}</div>
     <div class="actions">
       <button class="play" onclick="leggeSpeak(${JSON.stringify(a.spoken).replace(/"/g,'&quot;')})">🔊 ${en?'Read aloud':'Leggi ad alta voce'}</button>
-      <button onclick="speechSynthesis.cancel()">⏹ ${en?'Stop':'Ferma'}</button>
+      <button onclick="vnFerma()">⏹ ${en?'Stop':'Ferma'}</button>
     </div>
   </div>`;
   // passaggi correlati
@@ -16406,7 +16854,7 @@ function leggeOpenPassage(doc,ref){
   $('#legge-answer').innerHTML=`<div class="legge-ans">
     <div class="head"><span class="src">${esc(window.Legge.docName(doc))}</span><span class="ref">${en?'Rule':'Regola'} ${esc(ref)}</span>${p.c?`<span class="chap">${esc(p.c)}${p.s?' · '+esc(p.s):''}</span>`:''}</div>
     <div class="body">${esc(p.t)}</div>
-    <div class="actions"><button class="play" onclick="leggeSpeak(${JSON.stringify('Regola '+ref+'. '+p.t).replace(/"/g,'&quot;')})">🔊 ${en?'Read aloud':'Leggi ad alta voce'}</button><button onclick="speechSynthesis.cancel()">⏹ ${en?'Stop':'Ferma'}</button></div>
+    <div class="actions"><button class="play" onclick="leggeSpeak(${JSON.stringify('Regola '+ref+'. '+p.t).replace(/"/g,'&quot;')})">🔊 ${en?'Read aloud':'Leggi ad alta voce'}</button><button onclick="vnFerma()">⏹ ${en?'Stop':'Ferma'}</button></div>
   </div>`;
   $('#legge-answer').scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -16427,6 +16875,8 @@ function renderLeggeBrowse(){
 }
 /* --- lettura vocale in italiano (fonte ufficiale) con la voce annunci --- */
 function leggeSpeak(text){
+  /* i regolamenti sono in italiano anche con l'interfaccia in inglese */
+  if(vnParla(text,{forzaIt:true}))return;
   if(!('speechSynthesis'in window)){toast(L('Sintesi vocale non supportata dal browser.'));return;}
   if(!TTS_VOICES.it.F&&!TTS_VOICES.it.M)ttsLoadVoices();
   speechSynthesis.cancel();
@@ -16497,6 +16947,7 @@ function renderSetupFromState(){
   $('#s-nteams').value=S.teams.length||8;
   if($('#s-presentsec'))$('#s-presentsec').value=S.cfg.presentSec||9;
   if($('#s-tickervel')){$('#s-tickervel').value=S.cfg.tickerVel||5;tickerRitmo();}
+  try{annRipristina();}catch(e){}
   $('#s-pergroup').value=S.cfg.perGroup;$('#s-qualify').value=S.cfg.qualify;
   $('#s-extra').value=S.cfg.extraQ||0;
   $('#s-ritorno').checked=S.cfg.ritorno;$('#s-third').checked=S.cfg.third;
