@@ -1,7 +1,7 @@
 {
- "content": "7.5.1",
+ "content": "7.6.0",
  "minShell": "7.5.0",
- "notes": "Avvisi liberi in Regia: uno sul rullo, uno letto a voce.",
+ "notes": "Ding dong prima degli annunci, musica che si abbassa sotto la voce, seconda voce neurale maschile.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "225bb9d19fc1c0c071469c09497bae41629ffefcbed0c26e7dbdb945b07546a8",
-   "size": 1183973
+   "sha256": "5796b91dfe27cfd0a15af74a4d5b05aa05ae42373eabebcd4935d1f7cd356aa9",
+   "size": 1236831
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
