@@ -1,5 +1,5 @@
 {
-  "content": "7.6.1",
+  "content": "7.6.2",
   "minShell": "7.5.0",
   "notes": "Ding dong prima degli annunci, musica che si abbassa sotto la voce, seconda voce neurale maschile.",
   "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
@@ -21,8 +21,8 @@
       "size": 14206
     },
     "index.html": {
-      "sha256": "e7e927e530e9c3086a99dbc5abcceb816d47d58d13ce8e40cd839768112c17a3",
-      "size": 1238361
+      "sha256": "e2512a4e93207e7f23d6936a87f244743c0693442867c5ddca169f073f52215a",
+      "size": 1239016
     },
     "iscrizione.html": {
       "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
