@@ -2061,51 +2061,80 @@ body.solo-tabellone #present .pclose,body.solo-tabellone #present-modes{display:
 #cer-urn{display:flex;flex-direction:column;align-items:center;gap:10px;transition:transform .1s}
 #cer-urn.shake{animation:cershake .5s ease-in-out infinite}
 @keyframes cershake{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg) translateX(-3px)}75%{transform:rotate(4deg) translateX(3px)}}
-/* --- URNA DI CRISTALLO fotorealistica: vetro spesso con riflessi speculari,
-   rifrazione, ombra di contatto e base dorata tornita --- */
-.cer-urnwrap{perspective:1400px}
-.cer-bowl{width:216px;height:170px;position:relative;
-  border-radius:46% 46% 50% 50%/28% 28% 72% 72%;
+/* --- URNA DEL SORTEGGIO, presa dai sorteggi televisivi: una boccia di vetro
+   spesso appoggiata su un tavolo di cristallo, sfere bianche e nere lucide, e
+   dietro il chiarore azzurro di uno studio fuori fuoco.
+   Via la base dorata che c'era prima: nei sorteggi veri il vetro tocca il
+   tavolo, e sono il riflesso e l'ombra di contatto a dare il peso. --- */
+.cer-urnwrap{perspective:1500px}
+
+/* il fondale: due fari da studio, sfocati, dietro l'urna */
+.cer-bowlwrap{position:relative;display:flex;flex-direction:column;align-items:center;isolation:isolate}
+.cer-bowlwrap::before{content:'';position:absolute;left:-26%;right:-26%;top:-14%;height:96%;z-index:0;
+  border-radius:30px;filter:blur(22px);opacity:.9;pointer-events:none;
   background:
-    radial-gradient(120px 90px at 32% 20%,rgba(255,255,255,.42),rgba(255,255,255,.06) 48%,transparent 62%),
-    radial-gradient(90px 70px at 76% 74%,rgba(180,220,255,.20),transparent 60%),
-    linear-gradient(168deg,rgba(226,240,255,.20) 0%,rgba(150,180,220,.10) 34%,rgba(10,16,34,.30) 78%),
-    radial-gradient(circle at 50% 118%,rgba(255,214,120,.28),transparent 58%);
-  border:2px solid rgba(226,240,255,.55);overflow:hidden;
+    radial-gradient(58% 66% at 16% 28%,rgba(58,120,214,.50),transparent 72%),
+    radial-gradient(52% 60% at 86% 22%,rgba(126,86,206,.34),transparent 74%),
+    linear-gradient(180deg,rgba(16,32,70,.72),rgba(6,12,30,.22))}
+
+/* Il cristallo. Una boccia da sorteggio è una SFERA con la calotta tagliata:
+   perciò il corpo è un cerchio (border-radius 50%) e non una forma a scatola
+   arrotondata, che è l'errore in cui si cade partendo da un div.
+   Il vetro dev'essere quasi invisibile: quello che si vede sono i BORDI e i
+   RIFLESSI, non la superficie. Con i velluti bianchi sopra il fondo scuro
+   veniva un vetro smerigliato da bagno, non un cristallo da studio. */
+.cer-bowl{width:230px;height:206px;position:relative;z-index:2;
+  border-radius:50%;
+  background:
+    radial-gradient(112px 96px at 30% 16%,rgba(255,255,255,.13),transparent 58%),
+    radial-gradient(86px 70px at 78% 74%,rgba(150,200,255,.07),transparent 64%),
+    linear-gradient(170deg,rgba(200,226,255,.05) 0%,rgba(120,160,210,.03) 40%,rgba(6,12,28,.16) 82%);
+  border:1.5px solid rgba(214,236,255,.38);overflow:hidden;
   box-shadow:
-    inset 0 22px 44px rgba(255,255,255,.26),
-    inset 0 -34px 54px rgba(4,10,26,.8),
-    inset 22px 0 46px rgba(150,195,255,.20),
-    inset -22px 0 46px rgba(150,195,255,.20),
-    0 26px 50px rgba(0,0,0,.6),
-    0 0 70px rgba(150,200,255,.20);
-  backdrop-filter:blur(1.5px);transform-style:preserve-3d}
-/* riflesso speculare principale + bagliore del bordo superiore (labbro del vetro) */
-.cer-bowl::before{content:'';position:absolute;left:9%;top:5%;width:44%;height:52%;border-radius:50% 50% 60% 40%;
-  background:linear-gradient(148deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.34) 26%,rgba(255,255,255,.06) 58%,transparent 74%);
-  filter:blur(4px);pointer-events:none;z-index:4;transform:rotate(-8deg)}
-/* secondo riflesso, stretto, sul fianco destro: dà spessore al cristallo */
-.cer-bowl .cbglow{position:absolute;right:11%;top:16%;width:9%;height:46%;border-radius:50%;z-index:4;pointer-events:none;
-  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.10) 70%,transparent);filter:blur(2.5px)}
-.cer-bowl::after{content:'';position:absolute;left:6%;right:6%;top:-6px;height:16px;border-radius:50%;
-  background:linear-gradient(90deg,rgba(255,232,170,.15),rgba(255,255,255,.85),rgba(255,232,170,.15));
-  box-shadow:0 2px 12px rgba(255,255,255,.5),0 0 26px rgba(233,197,106,.45);pointer-events:none;z-index:5}
-/* base tornita in ottone, saldata sotto al cristallo, con ombra di contatto */
-.cer-bowlwrap{position:relative;display:flex;flex-direction:column;align-items:center}
-.cer-bowlwrap .cbstand{display:block;width:104px;height:20px;margin-top:-10px;border-radius:50%;
-  background:linear-gradient(180deg,#ffeec2,#c99a2c 34%,#8a6414 62%,#3a2707);
-  box-shadow:0 3px 10px rgba(0,0,0,.6),inset 0 2px 4px rgba(255,248,224,.85),inset 0 -5px 9px rgba(0,0,0,.55)}
-.cer-bowlwrap .cbfoot{display:block;width:158px;height:26px;margin-top:-4px;border-radius:50%;
-  background:linear-gradient(180deg,#f3d68f,#a9791f 42%,#6b4a10 70%,#2c1d05);
-  box-shadow:0 14px 30px rgba(0,0,0,.8),inset 0 3px 6px rgba(255,244,214,.7),inset 0 -6px 10px rgba(0,0,0,.5)}
-/* palline: sfere con luce speculare, luce di rimbalzo e ombra propria */
+    inset 0 16px 30px rgba(255,255,255,.10),
+    inset 0 -26px 44px rgba(4,10,26,.42),
+    inset 18px 0 40px rgba(150,195,255,.09),
+    inset -18px 0 40px rgba(150,195,255,.09),
+    0 20px 40px rgba(0,0,0,.50);
+  transform-style:preserve-3d}
+/* riflesso speculare grande, in alto a sinistra */
+.cer-bowl::before{content:'';position:absolute;left:11%;top:10%;width:40%;height:42%;border-radius:50% 50% 60% 40%;
+  background:linear-gradient(148deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.18) 30%,rgba(255,255,255,.03) 62%,transparent 78%);
+  filter:blur(5px);pointer-events:none;z-index:4;transform:rotate(-8deg)}
+/* riflesso stretto sul fianco destro: è ciò che fa leggere lo spessore */
+.cer-bowl .cbglow{position:absolute;right:9%;top:20%;width:7%;height:44%;border-radius:50%;z-index:4;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.06) 74%,transparent);filter:blur(2.5px)}
+
+/* La bocca: un anello ellittico che taglia la calotta. Si vede ANCHE il bordo
+   di fondo, più tenue, perché il vetro è trasparente: è quel doppio arco a
+   dire all'occhio che l'oggetto è cavo. */
+.cer-vetro{position:relative;width:230px;height:206px}
+.cer-bocca{position:absolute;left:17%;right:17%;top:5%;height:30px;z-index:6;pointer-events:none;
+  border-radius:50%;
+  border:2px solid rgba(232,246,255,.66);
+  border-bottom-color:rgba(232,246,255,.24);
+  box-shadow:0 3px 14px rgba(180,220,255,.34),inset 0 -3px 10px rgba(90,140,200,.28)}
+.cer-bocca::after{content:'';position:absolute;left:6%;right:6%;top:-2px;height:6px;border-radius:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);filter:blur(1px)}
+
+/* il tavolo di cristallo: contatto, ombra e il chiarore riflesso sotto */
+.cer-tavolo{position:relative;width:300px;height:74px;margin-top:-14px;z-index:1}
+.cer-tavolo::before{content:'';position:absolute;left:50%;top:2px;transform:translateX(-50%);
+  width:210px;height:66px;border-radius:50%;filter:blur(10px);opacity:.62;
+  background:linear-gradient(180deg,rgba(214,236,255,.78),rgba(130,172,222,.22) 50%,transparent 78%)}
+.cer-tavolo::after{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);
+  width:158px;height:22px;border-radius:50%;filter:blur(7px);
+  background:radial-gradient(closest-side,rgba(0,0,0,.78),transparent)}
+
+/* le sfere: bianche e nere alternate, lucide, con luce speculare in alto a
+   sinistra e luce di rimbalzo dal basso */
 .cer-bowl .cb{position:absolute;width:var(--sz,30px);height:var(--sz,30px);border-radius:50%;
   left:var(--x,20px);bottom:var(--y,10px);
   background:
-    radial-gradient(circle at 32% 26%,rgba(255,255,255,.98) 0 8%,rgba(255,255,255,.55) 14%,transparent 34%),
-    radial-gradient(circle at 68% 82%,rgba(140,190,255,.5),transparent 44%),
-    radial-gradient(circle at 44% 40%,var(--c1,#fdfefe),var(--c2,#c6cede) 52%,var(--c3,#7d879c) 84%,#39405a);
-  box-shadow:0 6px 12px rgba(0,0,0,.55),inset -5px -7px 12px rgba(0,0,0,.4),inset 3px 4px 8px rgba(255,255,255,.3);
+    radial-gradient(circle at 30% 24%,rgba(255,255,255,var(--lum,.98)) 0 7%,rgba(255,255,255,calc(var(--lum,.9)*.55)) 13%,transparent 32%),
+    radial-gradient(circle at 70% 84%,var(--rimb,rgba(150,195,255,.42)),transparent 46%),
+    radial-gradient(circle at 42% 38%,var(--c1,#fdfefe),var(--c2,#c6cede) 54%,var(--c3,#7d879c) 86%,var(--c4,#39405a));
+  box-shadow:0 6px 12px rgba(0,0,0,.55),inset -5px -7px 12px rgba(0,0,0,.34),inset 3px 4px 8px rgba(255,255,255,.20);
   animation:cbb 2.4s ease-in-out infinite alternate;animation-delay:var(--d)}
 @keyframes cbb{from{transform:translateY(0) rotate(0) scale(1)}to{transform:translateY(-6px) rotate(18deg) scale(1.02)}}
 #cer-urn.shake .cb{animation:cbshake .28s linear infinite;animation-delay:var(--d)}
@@ -3826,7 +3855,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.6.2';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.6.3';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -6880,21 +6909,40 @@ function cerUrn(){
   // tinte leggermente diverse: nessuna griglia percepibile)
   // pila naturale: il vetro si stringe verso il fondo, quindi le file basse
   // hanno meno sfere e una campata più corta (nessuna pallina "fuori" dal vetro)
-  const ROWS=[{n:4,x0:66,x1:142,y:12},{n:5,x0:48,x1:160,y:34},{n:6,x0:34,x1:174,y:56}];
+  /* Le file seguono la curva del vetro: in basso la campata è corta perché
+     la sfera si stringe. L'ultima fila è quasi sempre incompleta — con 12
+     palline restano 3 su 6 — e se la si riempie da sinistra il mucchio
+     pende da una parte. Quindi la fila parziale si centra sulla propria
+     campata invece di partire dal bordo. */
+  const ROWS=[{n:4,x0:62,x1:140,y:14},{n:5,x0:44,x1:158,y:36},{n:6,x0:32,x1:170,y:58}];
   const n=Math.min(left,15);
   let idx=0,balls='';
   for(const r of ROWS){
-    for(let k=0;k<r.n&&idx<n;k++,idx++){
-      const t=r.n>1?k/(r.n-1):.5;
+    const restano=n-idx; if(restano<=0)break;
+    const quante=Math.min(r.n,restano);
+    for(let k=0;k<quante;k++,idx++){
+      /* con la fila piena si usa tutta la campata; con quella parziale si
+         resta al centro, mantenendo lo stesso passo delle altre file */
+      const passo=r.n>1?(r.x1-r.x0)/(r.n-1):0;
+      const larg=passo*(quante-1);
+      const inizio=r.x0+((r.x1-r.x0)-larg)/2;
+      const t=r.n>1?(inizio+k*passo-r.x0)/(r.x1-r.x0):.5;
       const jx=((idx*37)%9)-4, jy=((idx*53)%5)-2;
       const x=Math.round(r.x0+t*(r.x1-r.x0))+jx;
       const y=r.y+jy;
       const sz=27+((idx*29)%4);
-      const tint=[['#fdfefe','#ccd4e2','#828da1'],['#fffdf6','#ded9c9','#8f8878'],['#f9fcff','#c8d3e8','#7c879f']][idx%3];
-      balls+=`<span class="cb" style="--x:${x}px;--y:${y}px;--sz:${sz}px;--d:${((idx*0.31)%2).toFixed(2)}s;--c1:${tint[0]};--c2:${tint[1]};--c3:${tint[2]}"></span>`;
+      /* bianche e nere alternate, come nelle urne dei sorteggi veri. Le
+         nere non sono nere piatte: senza un po' di blu di rimbalzo dal
+         vetro sembrano buchi ritagliati invece che sfere. */
+      const nera=idx%2===1;
+      const tinta=nera
+        ? {c1:'#5c626e',c2:'#282c36',c3:'#12141b',c4:'#05060a',lum:.72,rimb:'rgba(120,170,235,.30)'}
+        : {c1:'#ffffff',c2:'#e8ecf3',c3:'#b3bccb',c4:'#7c8698',lum:.98,rimb:'rgba(150,195,255,.42)'};
+      balls+=`<span class="cb" style="--x:${x}px;--y:${y}px;--sz:${sz}px;--d:${((idx*0.31)%2).toFixed(2)}s;`
+           +`--c1:${tinta.c1};--c2:${tinta.c2};--c3:${tinta.c3};--c4:${tinta.c4};--lum:${tinta.lum};--rimb:${tinta.rimb}"></span>`;
     }
   }
-  $('#cer-urn').innerHTML=`${potLbl}<div class="cer-bowlwrap"><div class="cer-bowl">${balls}<span class="cbglow"></span></div><span class="cbstand"></span><span class="cbfoot"></span></div><div class="cer-left">${left} ${L('nell’urna')}</div>`;
+  $('#cer-urn').innerHTML=`${potLbl}<div class="cer-bowlwrap"><div class="cer-vetro"><div class="cer-bowl">${balls}<span class="cbglow"></span></div><span class="cer-bocca"></span></div><div class="cer-tavolo"></div></div><div class="cer-left">${left} ${L('nell’urna')}</div>`;
 }
 function cerT(fn,ms){CER.timers.push(setTimeout(fn,ms));}
 function cerStep(){
@@ -6914,6 +6962,18 @@ function cerStep(){
         <div class="cer-dest">→ ${L('Girone')} ${String.fromCharCode(65+it.grp)}</div>
       </div><div class="cer-burst"></div>`;
     cerSnd('pop');
+    /* la voce degli annunci pronuncia la squadra appena uscita: è il momento
+       in cui la sala guarda il tabellone e non il banco. Senza rintocco: la
+       cerimonia ha già il suo suono, e un ding dong per ognuna delle sedici
+       estrazioni diventerebbe una cantilena. */
+    /* più lenta del passo normale: è un nome solo, detto a una sala che si
+       è appena girata verso il tabellone, e a velocità piena passerebbe prima
+       che la gente abbia alzato la testa. Il valore è misurato, non scelto a
+       occhio: su una parola sola gran parte della durata è silenzio ai bordi,
+       che non si allunga, quindi 0.82 rendeva appena il 7% in più — non si
+       sentiva. A 0.72 il nome dura circa un terzo di più, che si sente, senza
+       arrivare alla cantilena. */
+    try{ if(S.sound!==false) speakIt(it.n,{senzaDing:true,rate:.72}); }catch(e){}
   },850);
   cerT(()=>{
     // atterraggio nello slot del girone
@@ -6926,8 +6986,26 @@ function cerStep(){
     $('#cer-reveal').innerHTML='';
     if(db)db.disabled=false;
     if(c.idx>=c.seq.length)cerFinale();
-    else if(c.auto)cerT(cerStep,700);
+    else if(c.auto)cerAttendiVoce(()=>cerStep());
   },2300);
+}
+/* Nel sorteggio automatico un'estrazione parte ogni tre secondi, ma la voce
+   neurale può metterci più tempo: prima calcola l'audio, poi lo pronuncia.
+   Senza questa attesa ogni nome verrebbe zittito dal successivo e in sala si
+   sentirebbe una sequenza di sillabe mozzate. Si aspetta che abbia finito —
+   con un tetto, perché se il motore si pianta la cerimonia deve andare avanti
+   lo stesso. */
+function cerAttendiVoce(poi){
+  const c=CER; if(!c)return;
+  const scade=Date.now()+9000;
+  const guarda=()=>{
+    if(!CER)return;
+    const parla=(typeof VN!=='undefined'&&(VN.inCorso||(VN.audio&&!VN.audio.paused)))
+             || (window.speechSynthesis&&(speechSynthesis.speaking||speechSynthesis.pending));
+    if(!parla||Date.now()>scade){cerT(poi,320);return;}
+    cerT(guarda,200);
+  };
+  cerT(guarda,700);
 }
 function cerAuto(){if(!CER)return;CER.auto=true;const b=$('#cer-auto');if(b)b.style.display='none';cerStep();}
 function cerSkip(){
@@ -14104,7 +14182,7 @@ function speakIt(text,opz){
   const varco=(o.senzaDing||S.dingDong===false||!S.sound)
     ? Promise.resolve()
     : dingDong();
-  speakOra(text,varco);
+  speakOra(text,varco,o.rate);
 }
 /* --- la musica sotto l'annuncio -----------------------------------------
    Il sottofondo scende quando parte il rintocco e risale quando la voce ha
@@ -14130,9 +14208,13 @@ function annuncioChiude(){
   if(annScadenza){clearTimeout(annScadenza);annScadenza=null;}
   duckImposta('annuncio',null);
 }
-function speakOra(text,varco){
+/* `rate` è un moltiplicatore: 1 è il passo normale, sotto 1 si rallenta.
+   Vale per entrambi i motori — la voce neurale allunga i fonemi, quella di
+   sistema abbassa la sua velocità — così un annuncio suona uguale comunque
+   sia configurata la macchina. */
+function speakOra(text,varco,rate){
   varco=varco||Promise.resolve();
-  if(vnParla(text,{varco}))return;           // voce neurale, se scelta e pronta
+  if(vnParla(text,{varco,rate}))return;      // voce neurale, se scelta e pronta
   if(!('speechSynthesis'in window)){toast(L('Sintesi vocale non supportata dal browser.'));return;}
   if(!TTS_VOICES.it.F&&!TTS_VOICES.en.F)ttsLoadVoices();
   varco.then(()=>{
@@ -14142,7 +14224,7 @@ function speakOra(text,varco){
     const male=S.ttsVoice==='M';
     const v=ttsCurrentVoice();
     if(v)u.voice=v;
-    u.rate=.98;u.pitch=male?0.9:1.12; // tono più basso per la maschile, più alto per la femminile
+    u.rate=.98*(rate||1);u.pitch=male?0.9:1.12; // tono più basso per la maschile, più alto per la femminile
     u.onend=u.onerror=annuncioChiude;
     speechSynthesis.speak(u);
   });
