@@ -3378,6 +3378,16 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
         <button class="btn sec mini" onclick="testVoice()">▶ Prova</button>
         <span class="small muted">voce: <span id="tts-voice-lbl">—</span></span>
       </div>
+      <div class="row" style="margin-top:12px;align-items:center;gap:12px;flex-wrap:wrap">
+        <label class="f" style="margin:0">🐢 Velocità della voce</label>
+        <input type="range" id="tts-rate" min="0.6" max="1.4" step="0.05" value="1"
+               style="width:190px" oninput="setTtsRate(this.value)"
+               title="Quanto in fretta parla la voce degli annunci: a sinistra più lenta, a destra più svelta">
+        <span class="small" id="tts-rate-lbl" style="font-family:'Chakra Petch',monospace;min-width:8ch">normale</span>
+        <button class="btn sec mini" onclick="testVoice()">▶ Riascolta</button>
+        <span class="small muted" style="max-width:52ch">In una palestra che rimbomba una voce un po’ più lenta
+        si capisce molto meglio. Vale per tutti gli annunci, con qualunque voce.</span>
+      </div>
       <div id="tts-qualita" class="tts-qualita"></div>
       <div id="vn-box" class="vn-box"></div>
       <p class="small muted" style="margin-top:14px">Suoni: fischietto arbitrale di SpliceSound · buzzer di David Pride (entrambi CC0, Wikimedia Commons) · suono gol personalizzato (goal.mp3) · ding dong degli annunci generato con ElevenLabs.</p>
@@ -3855,7 +3865,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.6.4';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.6.5';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -4700,6 +4710,11 @@ const TR={
   "Serena — neurale, femminile (qualità alta)":"Serena — neural, female (high quality)",
   "Paola — neurale, femminile":"Paola — neural, female",
   "Riccardo — neurale, maschile":"Riccardo — neural, male",
+  /* regolatore di velocità della voce */
+  "🐢 Velocità della voce":"🐢 Voice speed",
+  "In una palestra che rimbomba una voce un po’ più lenta si capisce molto meglio. Vale per tutti gli annunci, con qualunque voce.":"In a hall that echoes, a slightly slower voice is far easier to follow. It applies to every announcement, with any voice.",
+  "▶ Riascolta":"▶ Play again",
+  "Quanto in fretta parla la voce degli annunci: a sinistra più lenta, a destra più svelta":"How fast the announcement voice speaks: slower to the left, quicker to the right",
 };
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
 const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint,#wa-rubrica,#wa-testo,#wa-nota,#sy-sala-esito,#voce-stato,#iscr-lista,#iscr-conta,#iscr-link,#stag-riep,#regia-fascia,#tts-qualita,#vn-box';
@@ -13952,6 +13967,27 @@ function ttsQualitaUI(){
     +`${L('Se ne possono scaricare di molto più naturali, gratis:')}<br>${guida}<br>`
     +`<span class="small muted">${L('Le voci «Google» che si sentono nel browser non sono utilizzabili qui: sono un servizio di rete di Chrome, non installabile in un programma.')}</span>`;
 }
+/* Velocità della voce: un moltiplicatore che vale per tutti gli annunci e per
+   entrambi i motori. 1 è il passo naturale; sotto si rallenta.
+   Chi chiama può chiedere una velocità PROPRIA (la cerimonia lo fa, perché un
+   nome solo va detto più adagio): quella si moltiplica a questa invece di
+   sostituirla, così spostando il cursore si sposta tutto insieme e i rapporti
+   fra un annuncio e l'altro restano quelli pensati. */
+function ttsRate(){const v=parseFloat(S.ttsRate);return (v>=.6&&v<=1.4)?v:1;}
+function ttsRateLabel(){
+  const v=ttsRate(), en=LANG==='en';
+  if(v<.75)return en?'very slow':'molto lenta';
+  if(v<.92)return en?'slow':'lenta';
+  if(v<=1.08)return en?'normal':'normale';
+  if(v<=1.25)return en?'quick':'svelta';
+  return en?'very quick':'molto svelta';
+}
+function setTtsRate(v){
+  S.ttsRate=Math.max(.6,Math.min(1.4,parseFloat(v)||1));
+  const i=$('#tts-rate'); if(i)i.value=S.ttsRate;
+  const l=$('#tts-rate-lbl'); if(l)l.textContent=ttsRateLabel()+' · '+S.ttsRate.toFixed(2)+'×';
+  persist();
+}
 function ttsCurrentVoice(){const lg=LANG==='en'?'en':'it';return S.ttsVoice==='M'?TTS_VOICES[lg].M:TTS_VOICES[lg].F;}
 /* con la voce neurale scelta, l'etichetta e il pannello qualità parlano di
    quella: le voci di sistema restano solo come ripiego. */
@@ -14223,7 +14259,8 @@ function annuncioChiude(){
    sia configurata la macchina. */
 function speakOra(text,varco,rate){
   varco=varco||Promise.resolve();
-  if(vnParla(text,{varco,rate}))return;      // voce neurale, se scelta e pronta
+  const vel=Math.max(.5,Math.min(1.6,ttsRate()*(rate||1)));
+  if(vnParla(text,{varco,rate:vel}))return;  // voce neurale, se scelta e pronta
   if(!('speechSynthesis'in window)){toast(L('Sintesi vocale non supportata dal browser.'));return;}
   if(!TTS_VOICES.it.F&&!TTS_VOICES.en.F)ttsLoadVoices();
   varco.then(()=>{
@@ -14233,7 +14270,7 @@ function speakOra(text,varco,rate){
     const male=S.ttsVoice==='M';
     const v=ttsCurrentVoice();
     if(v)u.voice=v;
-    u.rate=.98*(rate||1);u.pitch=male?0.9:1.12; // tono più basso per la maschile, più alto per la femminile
+    u.rate=.98*vel;u.pitch=male?0.9:1.12; // tono più basso per la maschile, più alto per la femminile
     u.onend=u.onerror=annuncioChiude;
     speechSynthesis.speak(u);
   });
@@ -17212,6 +17249,7 @@ function renderSetupFromState(){
   if($('#s-presentsec'))$('#s-presentsec').value=S.cfg.presentSec||9;
   if($('#s-tickervel')){$('#s-tickervel').value=S.cfg.tickerVel||5;tickerRitmo();}
   try{annRipristina();}catch(e){}
+  try{setTtsRate(S.ttsRate||1);}catch(e){}
   $('#s-pergroup').value=S.cfg.perGroup;$('#s-qualify').value=S.cfg.qualify;
   $('#s-extra').value=S.cfg.extraQ||0;
   $('#s-ritorno').checked=S.cfg.ritorno;$('#s-third').checked=S.cfg.third;
