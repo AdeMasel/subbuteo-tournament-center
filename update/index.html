@@ -560,6 +560,12 @@ body.no-anim #ticker{animation:none;padding-left:12px}
   background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.94) 10% 90%,rgba(0,0,0,0));
   font-family:'Oswald',sans-serif;font-size:1.9rem;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden}
 #ticker-flash.on{display:flex;animation:flashin .45s cubic-bezier(.2,1.2,.3,1)}
+/* Il fondo del flash sfuma ai due estremi, quindi da lì si vedeva il rullo
+   continuare a scorrere DIETRO l'avviso: due messaggi diversi contemporanei,
+   uno sopra l'altro. Finché il flash è in onda la striscia che scorre si
+   spegne, e in quel momento sul rullo c'è una cosa sola. */
+#ticker-wrap.flash #ticker-clip{opacity:0}
+#ticker-clip{transition:opacity .16s linear}
 #ticker-flash .fmin{font-family:'Chakra Petch',monospace;color:var(--accent2)}
 @keyframes flashin{from{transform:translateY(105%);opacity:0}to{transform:none;opacity:1}}
 
@@ -3865,7 +3871,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.6.6';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.6.7';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -9705,13 +9711,42 @@ function tickerAvvia(){
   t.__giroPronto=true;
   t.addEventListener('animationiteration',()=>{ try{tickerAvanza();}catch(e){} });
 }
-/* flash in sovraimpressione sul rullo quando viene segnata una rete */
-let tickerFlashTimer=null;
+/* Flash in sovraimpressione sul rullo: reti, cartellini, avvisi.
+   Prima ogni nuovo messaggio sovrascriveva quello in onda: due reti a
+   distanza di pochi secondi — che in un torneo su più campi capita di
+   continuo — e la prima spariva dopo un attimo senza che nessuno l'avesse
+   letta. Ora fanno la fila: ognuno ha il suo tempo, poi tocca al successivo.
+   Quando ce n'è più d'uno in attesa ciascuno resta un po' meno, altrimenti
+   una raffica di gol allungherebbe la coda oltre il ragionevole. */
+let tickerFlashTimer=null, tickerCoda=[], tickerInOnda=false;
+const TICKER_SOLO=5000, TICKER_CODA=3200, TICKER_MAX=6;
 function tickerFlash(html){
   const el=$('#ticker-flash');if(!el)return;
-  el.innerHTML=html;el.classList.add('on');
+  tickerCoda.push(html);
+  /* se la sala segna più di sei volte mentre guardiamo, i più vecchi si
+     buttano: mostrarli tutti vorrebbe dire restare indietro di mezzo minuto */
+  if(tickerCoda.length>TICKER_MAX)tickerCoda.splice(0,tickerCoda.length-TICKER_MAX);
+  if(!tickerInOnda)tickerFlashProssimo();
+}
+function tickerFlashProssimo(){
+  const el=$('#ticker-flash'); if(!el){tickerInOnda=false;return;}
+  const w=$('#ticker-wrap');
+  const html=tickerCoda.shift();
   clearTimeout(tickerFlashTimer);
-  tickerFlashTimer=setTimeout(()=>el.classList.remove('on'),5000);
+  if(html===undefined){
+    tickerInOnda=false;
+    el.classList.remove('on');
+    if(w)w.classList.remove('flash');
+    return;
+  }
+  tickerInOnda=true;
+  el.innerHTML=html;
+  if(w)w.classList.add('flash');
+  /* si toglie e si rimette la classe forzando un ricalcolo, altrimenti il
+     secondo messaggio comparirebbe senza l'animazione d'entrata e sembrerebbe
+     che il testo sia cambiato per magia sotto gli occhi */
+  el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+  tickerFlashTimer=setTimeout(tickerFlashProssimo, tickerCoda.length?TICKER_CODA:TICKER_SOLO);
 }
 /* Il secondo argomento è facoltativo: con {azione,onAzione} l'avviso porta
    anche un pulsante e resta a schermo più a lungo, il tempo di cliccarlo.
