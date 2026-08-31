@@ -3865,7 +3865,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.6.5';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.6.6';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -15778,6 +15778,24 @@ function champPlayersOf(name){
   }
   return ps.join(' · ');
 }
+/* L'annuncio del campione.
+   Prima l'avevo spezzato in due — «Abbiamo il campione, è…» pausa «Inter!» —
+   perché è così che lo dice uno speaker. Misurandolo si è visto che fra le due
+   parti restavano oltre CINQUE secondi, e quasi tutti erano tempo di calcolo
+   della voce neurale, non silenzio voluto: il secondo annuncio azzera il primo
+   e deve sintetizzare da capo. In sala sarebbe sembrata un'esitazione, non una
+   sospensione.
+   Quindi una frase sola, che esce di fila in due secondi e mezzo. L'enfasi
+   arriva da dove può arrivare davvero: l'andatura più lenta del normale e il
+   punto esclamativo sul nome, che la voce neurale — addestrata sulla
+   punteggiatura — rende alzando la cadenza. */
+function champAnnuncia(nome){
+  if(!nome||S.sound===false)return;
+  const en=LANG==='en';
+  const frase=(en?'We have a champion, it is… ':'Abbiamo il campione, è… ')+String(nome)+'!';
+  try{ speakIt(frase,{senzaDing:true,rate:.82}); }catch(e){}
+}
+
 function showChampion(){
   const champ=S.champion||'';
   $('#champ-tourn').textContent=[S.cfg.name,S.cfg.loc].filter(Boolean).join(' · ');
@@ -15809,7 +15827,7 @@ function showChampion(){
   $('#champ-podio').innerHTML=podio;
   $('#champion').classList.add('on');
   acquireWakeLock&&acquireWakeLock();
-  tripleWhistle();   // il boato resta ai gol: qui basta la triplice
+  champAnnuncia(champ);
   if(champFx){champFx.stop();champFx=null;}
   setTimeout(()=>{champFx=champFireworks();},260);
   champMusicStart();
