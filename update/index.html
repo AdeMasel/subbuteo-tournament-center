@@ -3342,6 +3342,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
         <select id="tts-voice" style="width:auto" onchange="setTtsVoice(this.value)">
           <option value="F">Femminile (automatica)</option>
           <option value="M">Maschile (automatica)</option>
+          <option value="NS" id="tts-opt-ns" hidden>Serena — neurale, femminile (qualità alta)</option>
           <option value="N" id="tts-opt-n" hidden>Paola — neurale, femminile</option>
           <option value="NM" id="tts-opt-nm" hidden>Riccardo — neurale, maschile</option>
         </select>
@@ -3825,7 +3826,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.6.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.6.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -13861,7 +13862,8 @@ function ttsQualitaUI(){
 function ttsCurrentVoice(){const lg=LANG==='en'?'en':'it';return S.ttsVoice==='M'?TTS_VOICES[lg].M:TTS_VOICES[lg].F;}
 /* con la voce neurale scelta, l'etichetta e il pannello qualità parlano di
    quella: le voci di sistema restano solo come ripiego. */
-function ttsListLabel(){if(vnNeurale()&&VN.pronta)return (S.ttsVoice==='NM'?'Riccardo':'Paola')+(LANG==='en'?' (neural)':' (neurale)');
+const VN_NOMI={serena:'Serena',paola:'Paola',riccardo:'Riccardo'};
+function ttsListLabel(){if(vnNeurale()&&VN.pronta)return VN_NOMI[vnQuale()]+(LANG==='en'?' (neural)':' (neurale)');
   const v=ttsCurrentVoice();if(v)return v.name;return S.ttsVoice==='M'?(LANG==='en'?'male':'maschile'):(LANG==='en'?'female':'femminile');}
 function setTtsVoice(g){S.ttsVoice=g;persist();try{ttsQualitaUI();}catch(e){}const el=$('#tts-voice');if(el)el.value=g;const l=$('#tts-voice-lbl');if(l)l.textContent=ttsListLabel();}
 function testVoice(){speakIt(LANG==='en'?'Voice test. Players, please get ready with your teams for the next round.':'Prova della voce. Si preparino i giocatori con le squadre per il prossimo turno.');}
@@ -13881,7 +13883,7 @@ function testVoice(){speakIt(LANG==='en'?'Voice test. Players, please get ready 
    dipendenza. */
 const VN={pronta:false,supportato:false,stato:null,audio:null,inCorso:false};
 /* nel selettore le voci neurali sono due: N femminile, NM maschile */
-function vnNeurale(){return S.ttsVoice==='N'||S.ttsVoice==='NM';}
+function vnNeurale(){return S.ttsVoice==='N'||S.ttsVoice==='NM'||S.ttsVoice==='NS';}
 
 async function vnLeggiStato(){
   if(!window.STCVoce){VN.stato=null;VN.pronta=false;VN.supportato=false;return null;}
@@ -13916,7 +13918,7 @@ function vnFerma(){
    lingua è l'italiano (Paola parla solo italiano: in inglese si torna alle
    voci di sistema). Ritorna true se se n'è occupata. */
 /* quale voce neurale corrisponde alla scelta nel selettore */
-function vnQuale(){return S.ttsVoice==='NM'?'riccardo':'paola';}
+function vnQuale(){return S.ttsVoice==='NM'?'riccardo':(S.ttsVoice==='NS'?'serena':'paola');}
 function vnDisponibile(id){return !!(VN.stato&&VN.stato.voci&&VN.stato.voci[id]);}
 function vnParla(testo,opz){
   if(!VN.pronta||!vnNeurale()||!window.STCVoce)return false;
@@ -13924,7 +13926,9 @@ function vnParla(testo,opz){
   if((opz&&opz.lingua||LANG)==='en'&&!(opz&&opz.forzaIt))return false;
   const o=opz||{};
   vnFerma(); VN.inCorso=true;
-  STCVoce.parla(String(testo||''),{rate:o.rate||1,voce:vnQuale()}).then(dati=>{
+  const varco=o.varco||Promise.resolve();
+  Promise.all([STCVoce.parla(String(testo||''),{rate:o.rate||1,voce:vnQuale()}),varco])
+   .then(([dati])=>{
     if(!VN.inCorso)return;                      // nel frattempo è stata fermata
     const b=new Blob([dati instanceof Uint8Array?dati:new Uint8Array(dati)],{type:'audio/wav'});
     const a=new Audio(URL.createObjectURL(b));
@@ -13983,21 +13987,28 @@ function vnUI(){
     if(opt)opt.hidden=true;
     return;
   }
-  const optM=$('#tts-opt-nm');
+  /* Le voci si leggono da quello che dice il MOTORE installato, non
+     dall'elenco dei nomi che conosce questa pagina: la pagina si aggiorna da
+     sola, il motore no. Un'installazione 7.6.0 non sa nulla di Serena, e
+     nominargliela fra le mancanti la farebbe risultare eternamente assente,
+     perché il suo pulsante non saprebbe scaricarla. */
+  const optM=$('#tts-opt-nm'), optS=$('#tts-opt-ns');
   if(st.pronta){
     el.classList.add('pronta');
     const voci=st.voci||{};
+    if(optS)optS.hidden=!voci.serena;
     if(opt)opt.hidden=!voci.paola;
     if(optM)optM.hidden=!voci.riccardo;
     const elenco=[];
+    if(voci.serena)elenco.push(`<b>Serena</b> (${en?'female, high quality':'femminile, qualità alta'})`);
     if(voci.paola)elenco.push(`<b>Paola</b> (${en?'female, medium quality':'femminile, qualità media'})`);
     if(voci.riccardo)elenco.push(`<b>Riccardo</b> (${en?'male, lower quality':'maschile, qualità inferiore'})`);
     el.innerHTML=`✅ <b>${en?'Neural voice installed':'Voce neurale installata'}</b> — ${elenco.join(' · ')}. `
       +`${en?'It works with no internet connection.':'Funziona senza collegamento a internet.'}<br>`
       +(st.incompleta&&('incompleta'in st)
         ? `<span class="small muted">${en
-            ?'The Italian male voice «Riccardo» is not downloaded yet.'
-            :'La voce maschile italiana «Riccardo» non è ancora stata scaricata.'}</span><br>`
+            ?'Not downloaded yet: '
+            :'Non ancora scaricate: '}<b>${Object.keys(voci).filter(k=>!voci[k]).map(k=>VN_NOMI[k]||k).join(', ')}</b>.</span><br>`
           +`<button class="btn mini" id="vn-btn" style="margin-top:8px" onclick="vnInstalla()">⬇ ${en?'Download the missing voice':'Scarica la voce mancante'}</button> `
           +`<div id="vn-prog" style="display:none"><div class="vn-barra"><i id="vn-barra-i"></i></div>`
           +`<span class="small muted" id="vn-prog-txt"></span></div>`+guasto
@@ -14007,14 +14018,15 @@ function vnUI(){
     return;
   }
   if(optM)optM.hidden=true;
+  if(optS)optS.hidden=true;
   el.classList.remove('pronta');
   if(opt)opt.hidden=true;
   el.innerHTML=`🎙 <b>${en?'High-quality Italian voice (offline)':'Voce italiana di alta qualità (offline)'}</b><br>`
     +`${en
-      ?'Two neural voices that run on this computer with no internet and no account: «Paola», female, medium quality, and «Riccardo», male, of lower quality — the only Italian male voice published for this engine. Recommended when announcements go through a PA system.'
-      :'Due voci neurali che girano su questo computer senza internet e senza account: «Paola», femminile, di qualità media, e «Riccardo», maschile, di qualità inferiore — è l’unica voce maschile italiana pubblicata per questo motore. Consigliate quando gli annunci passano dall’impianto della sala.'}<br>`
-    +`<span class="small muted">${en?'One-time download, about 80 MB in all. They stay installed across app updates.'
-      :'Scaricamento una tantum, circa 80 MB in tutto. Restano installate anche dopo gli aggiornamenti dell’app.'}</span><br>`
+      ?'Three neural voices that run on this computer with no internet and no account: «Serena», female, high quality; «Paola», female, medium; and «Riccardo», male, of lower quality — the only Italian male voice published for this engine. Recommended when announcements go through a PA system.'
+      :'Tre voci neurali che girano su questo computer senza internet e senza account: «Serena», femminile, di qualità alta; «Paola», femminile, media; e «Riccardo», maschile, di qualità inferiore — è l’unica voce maschile italiana pubblicata per questo motore. Consigliate quando gli annunci passano dall’impianto della sala.'}<br>`
+    +`<span class="small muted">${en?'One-time download, about 180 MB in all. They stay installed across app updates.'
+      :'Scaricamento una tantum, circa 180 MB in tutto. Restano installate anche dopo gli aggiornamenti dell’app.'}</span><br>`
     +`<button class="btn mini" id="vn-btn" style="margin-top:9px" onclick="vnInstalla()">⬇ ${en?'Download the voice':'Scarica la voce'}</button>`
     +`<div id="vn-prog" style="display:none"><div class="vn-barra"><i id="vn-barra-i"></i></div>`
     +`<span class="small muted" id="vn-prog-txt"></span></div>`+guasto;
@@ -14024,7 +14036,7 @@ function vnProva(){
     ?'Prova della voce neurale. Si preparino i giocatori per il prossimo turno.'
     :'Prova della voce neurale. Si preparino i giocatori con le squadre per il prossimo turno.';
   const g=S.ttsVoice;
-  if(!vnNeurale())S.ttsVoice='N';            // se non è scelta, prova la femminile
+  if(!vnNeurale())S.ttsVoice=(VN.stato&&VN.stato.voci&&VN.stato.voci.serena)?'NS':'N';
   if(!vnParla(t,{forzaIt:true}))toast(L('Voce neurale non disponibile.'));
   S.ttsVoice=g;
 }
@@ -14033,8 +14045,9 @@ async function vnInstalla(){
   VN.guasto=null;
   if(b)b.disabled=true;
   if(pr)pr.style.display='';
-  const nome={motore:LANG==='en'?'engine':'motore',voce:LANG==='en'?'voice':'voce',
-              voce2:LANG==='en'?'male voice':'voce maschile',
+  const nome={motore:LANG==='en'?'engine':'motore',
+              serena:'Serena', paola:'Paola', riccardo:'Riccardo',
+              voce:LANG==='en'?'voice':'voce', voce2:LANG==='en'?'male voice':'voce maschile',
               prova:LANG==='en'?'checking':'verifica',fatto:LANG==='en'?'done':'fatto'};
   const stop=STCVoce.suAvanzamento(d=>{
     const pct=d.totale?Math.round(d.fatti*100/d.totale):0;
@@ -14045,7 +14058,7 @@ async function vnInstalla(){
   try{
     await STCVoce.installa();
     await vnLeggiStato();
-    if(!vnNeurale())setTtsVoice('N');
+    if(!vnNeurale())setTtsVoice((VN.stato&&VN.stato.voci&&VN.stato.voci.serena)?'NS':'N');
     toast(LANG==='en'?'Neural voice installed.':'Voce neurale installata.');
   }catch(e){
     VN.guasto=vnMotivo(e);
@@ -14076,8 +14089,16 @@ if(window.STCVoce){vnLeggiStato().then(()=>{try{vnUI();}catch(e){}
 function speakIt(text,opz){
   const o=opz||{};
   annuncioApre(text);
-  if(o.senzaDing||S.dingDong===false||!S.sound){speakOra(text);return;}
-  dingDong().then(()=>speakOra(text));
+  /* Il rintocco non è un'attesa morta: la voce neurale di qualità alta
+     impiega più di un secondo a produrre l'audio, e se la sintesi cominciasse
+     solo a rintocco finito si sentirebbe un buco. Quindi il rintocco diventa
+     un «varco» — la sintesi parte subito, in parallelo, e l'audio esce quando
+     entrambi sono pronti. Con la voce alta il tempo di calcolo sparisce
+     dentro i due secondi del ding dong. */
+  const varco=(o.senzaDing||S.dingDong===false||!S.sound)
+    ? Promise.resolve()
+    : dingDong();
+  speakOra(text,varco);
 }
 /* --- la musica sotto l'annuncio -----------------------------------------
    Il sottofondo scende quando parte il rintocco e risale quando la voce ha
@@ -14103,19 +14124,22 @@ function annuncioChiude(){
   if(annScadenza){clearTimeout(annScadenza);annScadenza=null;}
   duckImposta('annuncio',null);
 }
-function speakOra(text){
-  if(vnParla(text))return;                   // voce neurale, se scelta e pronta
+function speakOra(text,varco){
+  varco=varco||Promise.resolve();
+  if(vnParla(text,{varco}))return;           // voce neurale, se scelta e pronta
   if(!('speechSynthesis'in window)){toast(L('Sintesi vocale non supportata dal browser.'));return;}
   if(!TTS_VOICES.it.F&&!TTS_VOICES.en.F)ttsLoadVoices();
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang=LANG==='en'?'en-US':'it-IT';
-  const male=S.ttsVoice==='M';
-  const v=ttsCurrentVoice();
-  if(v)u.voice=v;
-  u.rate=.98;u.pitch=male?0.9:1.12; // tono più basso per la maschile, più alto per la femminile
-  u.onend=u.onerror=annuncioChiude;
-  speechSynthesis.speak(u);
+  varco.then(()=>{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=LANG==='en'?'en-US':'it-IT';
+    const male=S.ttsVoice==='M';
+    const v=ttsCurrentVoice();
+    if(v)u.voice=v;
+    u.rate=.98;u.pitch=male?0.9:1.12; // tono più basso per la maschile, più alto per la femminile
+    u.onend=u.onerror=annuncioChiude;
+    speechSynthesis.speak(u);
+  });
 }
 /* accoppiamenti dei 4 tavoli di un incontro a squadre (dalla distinta
    se già schierata, altrimenti i primi 4 della rosa) */
