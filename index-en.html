@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Subbuteo Tournament Center — tournament software for Subbuteo and table football</title>
-<meta name="description" content="Run Subbuteo and table-football tournaments with the direction of a live TV broadcast: 15 tournament formats, a spectacular draw, apps for referees and replays, dual screen, standings, memory book, a 144-page manual. Free demo for macOS, Windows and Linux; full licence €20.">
+<meta name="description" content="Run Subbuteo and table-football tournaments with the direction of a live TV broadcast: 15 tournament formats, a spectacular draw, referee and replay apps, dual screen and standings. Free demo for macOS, Windows and Linux; licences from €20 and a new format every month.">
 <meta name="author" content="Antonio de Masellis">
 <meta property="og:title" content="Subbuteo Tournament Center">
 <meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
@@ -248,10 +248,21 @@ section{position:relative}
     linear-gradient(180deg,var(--panel2),#0b1725);
   box-shadow:0 40px 90px -55px rgba(245,196,81,.55)
 }
-.price .amt{display:flex;align-items:baseline;gap:12px;margin:6px 0 12px}
-.price .amt b{font-family:var(--fn);font-size:68px;font-weight:700;line-height:1;letter-spacing:-.01em;
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.plan{position:relative;display:flex;flex-direction:column;min-height:190px;padding:20px 16px 17px;
+  border:1px solid var(--line2);border-radius:14px;background:rgba(6,11,18,.48)}
+.plan.best{border-color:rgba(245,196,81,.75);background:linear-gradient(180deg,rgba(245,196,81,.12),rgba(6,11,18,.55));
+  box-shadow:0 18px 36px -28px rgba(245,196,81,.95)}
+.plan .flag{position:absolute;right:10px;top:10px;padding:4px 7px;border-radius:99px;background:var(--gold);
+  color:#171200;font-family:var(--fn);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.plan .duration{color:var(--gold);font-family:var(--fn);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.plan .amt{margin:11px 0 8px}
+.plan .amt b{font-family:var(--fn);font-size:43px;font-weight:700;line-height:1;letter-spacing:-.02em;
   background:linear-gradient(180deg,#fff0c4,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.price .amt span{color:var(--mut);font-size:15px}
+.plan p{color:var(--mut);font-size:13.5px;line-height:1.45;margin:auto 0 0}
+.update-promise{margin:18px 0 4px;padding:16px 18px;border:1px solid rgba(50,204,135,.35);border-radius:12px;
+  background:rgba(50,204,135,.07);color:var(--mut);font-size:15px}
+.update-promise b,.update-promise strong{color:#9ef0c5}
 .price .minimo{color:var(--gold);font-size:15px;margin:-2px 0 14px;font-family:var(--fb)}
 .price .minimo b{font-weight:700}
 .price ul{list-style:none;padding:0;margin:20px 0 0}
@@ -291,32 +302,6 @@ section{position:relative}
   border:1px solid rgba(43,140,208,.5);border-radius:10px;padding:9px 14px;letter-spacing:.02em;
   display:inline-block;margin-top:4px}
 .pp-tit{font-weight:700;color:#dff0ff;font-size:15px}
-
-/* minisondaggio sul prezzo */
-.pollwrap{max-width:640px;margin:34px auto 0;background:linear-gradient(180deg,var(--panel),#0b1725);
-  border:1px solid var(--line2);border-radius:18px;padding:30px 30px 26px}
-.pollwrap h3{font-size:clamp(19px,2.4vw,25px);text-transform:uppercase;text-align:center;margin-bottom:6px}
-.pollwrap .sub{color:var(--mut);font-size:14.5px;text-align:center;margin:0 auto 22px;max-width:44ch}
-.polls{display:flex;flex-direction:column;gap:10px}
-.pollbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;
-  background:rgba(6,11,18,.5);border:1px solid var(--line2);border-radius:12px;padding:14px 18px;
-  color:var(--txt);font-family:var(--fb);font-size:15.5px;transition:transform .15s,border-color .2s,background .2s}
-.pollbtn:hover{transform:translateY(-2px);border-color:var(--gold);background:rgba(15,28,43,.8)}
-.pollbtn .em{font-size:20px;flex:0 0 auto}
-.pollbtn b{margin-left:auto;font-family:var(--fn);color:var(--gold);font-size:14px}
-/* stato dopo il voto: barre dei risultati */
-.pollres{display:flex;flex-direction:column;gap:11px}
-.pollrow{position:relative}
-.pollrow .lab{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:var(--mut)}
-.pollrow .lab b{color:var(--txt);font-weight:600}
-.pollrow .lab .pc{font-family:var(--fn);color:var(--gold)}
-.pollrow .bar{height:12px;border-radius:99px;background:rgba(140,175,210,.12);overflow:hidden}
-.pollrow .bar i{display:block;height:100%;border-radius:99px;
-  background:linear-gradient(90deg,var(--gold2),var(--gold));width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
-.pollrow.mine .lab b::after{content:' ✓';color:var(--grn)}
-.pollrow.mine .bar i{background:linear-gradient(90deg,var(--grn2),var(--grn))}
-.polltot{text-align:center;color:var(--mut2);font-size:13px;margin-top:16px}
-.polltot a{color:var(--mut);cursor:pointer;text-decoration:underline}
 
 /* contatore visite */
 .hits{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--mut2)}
@@ -373,6 +358,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
   .dgrid{grid-template-columns:repeat(2,1fr)}
   .steps{grid-template-columns:repeat(2,1fr);gap:28px 18px}
   .pricewrap{grid-template-columns:1fr}
+  .plans{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:860px){
   body{font-size:16px}
@@ -396,6 +382,8 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
   .fgrid{grid-template-columns:1fr}
   .hero-in{padding:118px 0 80px}
   .price{padding:30px 24px}
+  .plans{grid-template-columns:1fr}
+  .plan{min-height:0}
 }
 @media (max-width:560px){
   .statgrid{grid-template-columns:repeat(2,1fr)}
@@ -512,10 +500,6 @@ header.nav{top:var(--podh)}
   .podtit{display:none}
   .podt{font-size:11px}
 }
-.scadenza{margin:8px 0 10px;padding:7px 12px;border-radius:8px;font-size:14px;
-  background:rgba(226,86,79,.12);border:1px solid rgba(226,86,79,.45);color:#ffb9b4;
-  display:inline-block;letter-spacing:.01em}
-.scadenza b{color:#fff}
 </style>
 </head>
 <body>
@@ -558,7 +542,7 @@ header.nav{top:var(--podh)}
   <div class="hero-img"><img src="assets/hero.webp" alt="Il pallone sul panno verde del campo da gioco" fetchpriority="high"></div>
   <div class="hero-in">
     <div class="wrap">
-      <div class="eyebrow">Version 7.6 · Broadcast Edition</div>
+      <div class="eyebrow">Version 7.6.1 · Broadcast Edition</div>
       <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Subbuteo Tournament Center"><h1>Your tournament<br>becomes<em>a live show</em></h1>
       <p class="sub">From the first entry to the final trophy: <b>Subbuteo Tournament Center</b>
       it runs groups, brackets, clocks, referees and standings — and presents them to the room with the polish of a television broadcast.</p>
@@ -576,12 +560,12 @@ header.nav{top:var(--podh)}
         </a>
         <a class="btn sec" href="#licenza">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3m-3 3l2 2m-4 0l2 2"/></svg>
-          Full version · €20
+          Licences from €20
         </a>
       </div>
       <div class="hero-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        macOS · Windows · Linux — no sign-up, no adverts, no subscription
+        macOS · Windows · Linux — three terms, updates included
       </div>
     </div>
   </div>
@@ -596,7 +580,7 @@ header.nav{top:var(--podh)}
     <div class="stat"><b>4,823</b><span>Club badges</span></div>
     <div class="stat"><b>153</b><span>National anthems</span></div>
     <div class="stat"><b>45</b><span>Tracks in the music library</span></div>
-    <div class="stat"><b>162</b><span>Pages of manual</span></div>
+    <div class="stat"><b>168</b><span>Pages of manual</span></div>
   </div>
 </section>
 
@@ -944,7 +928,7 @@ header.nav{top:var(--podh)}
   <div class="wrap">
     <div class="eyebrow rv">Download</div>
     <h2 class="rv">The demo version, free</h2>
-    <p class="lead rv">Same program, same installation. You try the whole rig — a single-league tournament, the live boards, the standings, the Presentation, the duration estimate — and when it convinces you <b>you unlock everything with a code</b>, without reinstalling anything. The full licence costs <b>20 €</b> once and for all: <b>offer valid until 15 September 2026</b>.</p>
+    <p class="lead rv">Same program, same installation. You try the whole rig — a single-league tournament, the live boards, the standings, the Presentation, the duration estimate — and when it convinces you <b>you unlock everything with a code</b>, without reinstalling anything. Choose a <b>one-year licence for €20</b>, a <b>two-year licence for €30</b> or a <b>lifetime licence for €50</b>. The software is continually updated and <b>one new tournament format is published every month</b>.</p>
 
     <div class="dgrid rv">
       <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v7.6.1/Subbuteo-Tournament-Center-7.6.1-macOS-AppleSilicon.dmg">
@@ -1039,7 +1023,7 @@ header.nav{top:var(--podh)}
     <table class="cmp rv">
       <thead><tr><th>Feature</th><th>Demo</th><th>Full</th></tr></thead>
       <tbody>
-        <tr><td>Tournament formats</td><td class="lim">single league only</td><td class="yes">all 14</td></tr>
+        <tr><td>Tournament formats</td><td class="lim">single league only</td><td class="yes">all 15</td></tr>
         <tr><td>Format Adviser and Real Tournament</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Saving and reloading tournaments</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Exporting and importing data</td><td class="no">✕</td><td class="yes">✓</td></tr>
@@ -1100,9 +1084,13 @@ header.nav{top:var(--podh)}
 <section class="sec" id="licenza">
   <div class="wrap">
     <div class="eyebrow rv">The licence</div>
-    <h2 class="rv">Four steps, once only</h2>
-    <p class="lead rv">The full licence costs <b>20 €</b>, once only — <b>offer valid until 15 September 2026</b>. To get it you write directly to the author at <b>onyxsubbuteo@gmail.com</b> enclosing your <b>alphanumeric code</b> and the <b>name the licence should be made out to</b>; once the €20 payment has been received by
-    <b>PayPal to the account ademase@gmail.com</b>, the activation code arrives. The licence is valid for a <b>single device</b>: you activate it once and it stays, checked at every start <b>even with no Internet connection</b>. No subscription, no renewal.</p>
+    <h2 class="rv">Four steps, your choice of term</h2>
+    <p class="lead rv">Three full licences are available: <b>one year for €20</b>, <b>two years for
+    €30</b> and <b>lifetime for €50</b>. To obtain one, write directly to the author at
+    <b>onyxsubbuteo@gmail.com</b> with your <b>alphanumeric code</b>, the <b>name for the licence</b>
+    and your chosen term. Once payment has been received by <b>PayPal at ademase@gmail.com</b>, the
+    activation code arrives. Each licence is valid for a <b>single device</b> and is checked at every
+    start <b>even without an Internet connection</b>.</p>
 
     <div class="steps rv">
       <div class="step">
@@ -1115,22 +1103,42 @@ header.nav{top:var(--podh)}
         <span class="keybox">STC-XXXX-XXXX-XXXX-XXXX</span>
       </div>
       <div class="step">
-        <h4>Write and pay €20</h4>
-        <p>Send an email with your <b>alphanumeric code</b> and the <b>name</b> to put on the licence, then send the <b>20 €</b> by PayPal to <b>ademase@gmail.com</b> (the QR code is below).</p>
+        <h4>Choose, write and pay</h4>
+        <p>Send an email with your <b>alphanumeric code</b>, the <b>name</b> for the licence and your
+        chosen term, then send <b>€20, €30 or €50</b> by PayPal to <b>ademase@gmail.com</b> (the QR
+        code is below).</p>
       </div>
       <div class="step">
         <h4>Paste it and play</h4>
-        <p>You receive the <b>activation code</b>: paste it into the same panel and every feature unlocks instantly, for good.</p>
+        <p>You receive the <b>activation code</b>: paste it into the same panel and every feature unlocks instantly for the selected term.</p>
       </div>
     </div>
 
     <div class="pricewrap rv">
       <div class="price">
-        <div class="eyebrow" style="margin-bottom:6px">Full licence</div>
-        <div class="amt"><b>20 €</b><span>one-off, for one device</span></div>
-        <div class="scadenza">⏳ Offer valid until <b>15 September 2026</b></div>
-        <div class="minimo">single payment by <b>PayPal</b> — covering the time invested and the production costs</div>
-        <p style="color:var(--mut);margin:0">No fees, no expiry, updates included.</p>
+        <div class="eyebrow" style="margin-bottom:6px">Three full licences</div>
+        <div class="plans">
+          <article class="plan">
+            <span class="duration">1 year</span>
+            <div class="amt"><b>€20</b></div>
+            <p>Twelve months of full use with all updates included.</p>
+          </article>
+          <article class="plan best">
+            <span class="flag">Best value</span>
+            <span class="duration">2 years</span>
+            <div class="amt"><b>€30</b></div>
+            <p>Twenty-four full months: save €10 compared with two annual licences.</p>
+          </article>
+          <article class="plan">
+            <span class="duration">Lifetime</span>
+            <div class="amt"><b>€50</b></div>
+            <p>No expiry: the program and all future updates remain yours.</p>
+          </article>
+        </div>
+        <div class="update-promise"><b>Continually updated.</b> Every licence includes all updates
+        published during its term. In addition, <strong>one new tournament format is released every
+        month</strong>.</div>
+        <div class="minimo">One <b>PayPal</b> payment for your selected term, with no automatic charges</div>
         <ul>
           <li>All <b>fifteen formats</b>, the Adviser and Real Tournament</li>
           <li><b>Saving</b>, reloading and exporting tournaments</li>
@@ -1141,31 +1149,32 @@ header.nav{top:var(--podh)}
           <li><b>Photos of the opponents</b> and memory book as a PDF</li>
           <li><b>Pre-Event</b> with fees, payments and receipts</li>
           <li><b>Table App, Captain App and Replay App</b> with QR codes</li>
-          <li>Complete manual of <b>166 pages</b> as a PDF</li>
+          <li>Complete manual of <b>168 pages</b> as a PDF</li>
         </ul>
       </div>
 
       <div class="mailcard">
         <h4>Request your code</h4>
         <p>In the email give the <b>alphanumeric code</b> shown in the Licence panel and the
-        <b>name</b> to make it out to; then send the <b>20 €</b> by PayPal to <b>ademase@gmail.com</b>.</p>
+        <b>name</b> to make it out to and your <b>chosen term</b>; then send the corresponding amount
+        of <b>€20, €30 or €50</b> by PayPal to <b>ademase@gmail.com</b>.</p>
         <div class="mailbox">
           <code id="mail">onyxsubbuteo@gmail.com</code>
           <button class="copy" id="cp" type="button">Copy</button>
         </div>
         <a class="btn pri" style="font-size:14.5px;padding:14px 22px"
-           href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20Subbuteo%20Tournament%20Center%207.6&body=Buongiorno%2C%0A%0Avorrei%20acquistare%20la%20licenza%20completa%20di%20Subbuteo%20Tournament%20Center%20al%20prezzo%20di%2020%20%E2%82%AC.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AProvvedo%20al%20pagamento%20di%2020%20%E2%82%AC%20con%20PayPal.%0A%0AGrazie.">
+           href="mailto:onyxsubbuteo@gmail.com?subject=Subbuteo%20Tournament%20Center%207.6%20licence%20request&body=Hello%2C%0A%0AI%20would%20like%20to%20purchase%20a%20Subbuteo%20Tournament%20Center%20licence.%0A%0ASelected%20term%20%281%20year%20%E2%82%AC20%20%2F%202%20years%20%E2%82%AC30%20%2F%20lifetime%20%E2%82%AC50%29%3A%20%0AMy%20device%20code%3A%20STC-....-....-....-....%0AName%20for%20the%20licence%3A%20%0A%0AI%20will%20send%20the%20payment%20by%20PayPal.%0A%0AThank%20you.">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/></svg>
           Write now
         </a>
         <!-- PAYPAL: il QR va in assets/paypal-qr.png. Se il file manca, il blocco si nasconde da solo. -->
         <div class="paypal" id="pp">
           <a href="https://www.paypal.com/qrcodes/p2pqrc/YLFSMQL54CZ7J" target="_blank" rel="noopener"
-             title="Apri il pagamento PayPal">
-            <img src="assets/paypal-qr.png" alt="Codice QR PayPal per il pagamento di 20 €" width="230" height="230"
+             title="Open the PayPal payment">
+            <img src="assets/paypal-qr.png" alt="PayPal QR code for the selected licence payment" width="230" height="230"
                  onerror="document.getElementById('pp').classList.add('noqr')">
           </a>
-          <div class="pp-tit">Payment by PayPal — €20</div>
+          <div class="pp-tit">Payment by PayPal — €20, €30 or €50</div>
           <span>Scan the code with your phone, or tap it to open the payment. The transfer goes to the PayPal account:</span>
           <code class="pp-mail">ademase@gmail.com</code>
           <span style="font-size:13.5px">The activation code comes back to you by email.</span>
@@ -1177,19 +1186,6 @@ header.nav{top:var(--podh)}
       <img src="assets/shots-en/25_licenza.webp" alt="Il pannello della licenza nel programma" loading="lazy">
     </div>
 
-    <!-- minisondaggio sul prezzo -->
-    <div class="pollwrap rv" id="poll">
-      <h3>What do you think it is worth?</h3>
-      <p class="sub">The price is €20. But how much would you pay for a program like this? An anonymous vote, just to get a sense of it.</p>
-      <div class="polls" id="poll-opts">
-        <button class="pollbtn" data-k="a"><span class="em">🙂</span> Less than €15 <b>vote</b></button>
-        <button class="pollbtn" data-k="b"><span class="em">👍</span> 15 – 25 € <b>vote</b></button>
-        <button class="pollbtn" data-k="c"><span class="em">💪</span> 26 – 40 € <b>vote</b></button>
-        <button class="pollbtn" data-k="d"><span class="em">🏆</span> More than €40 <b>vote</b></button>
-      </div>
-      <div class="pollres" id="poll-res" style="display:none"></div>
-      <div class="polltot" id="poll-tot"></div>
-    </div>
   </div>
 </section>
 
@@ -1261,7 +1257,7 @@ header.nav{top:var(--podh)}
     <div class="fgrid">
       <div>
         <a class="brand" href="#top" style="margin-bottom:16px"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
-        <p style="max-width:44ch;margin-top:4px">The management program for Subbuteo and table football tournaments. Version 7.6 — August 2026. Software and manual by Antonio de Masellis.</p>
+        <p style="max-width:44ch;margin-top:4px">The management program for Subbuteo and table football tournaments. Version 7.6.1 — September 2026. Software and manual by Antonio de Masellis.</p>
       </div>
       <div>
         <h5>The program</h5>
@@ -1321,7 +1317,7 @@ cp.onclick=async()=>{
   }catch(e){cp.textContent='Selezionala'}
 };
 
-/* ---------- contatore visite + minisondaggio ----------
+/* ---------- visitor counter ----------
    Contati da un piccolo servizio anonimo e gratuito (Abacus): nessun cookie,
    nessun dato personale, solo dei numeri interi condivisi fra i visitatori.
    Se il servizio non risponde, si ripiega su un conteggio locale del browser,
@@ -1349,54 +1345,6 @@ async function hitCall(verbo,chiave){
     n=loc;
   }
   el.textContent=nf.format(HIT_BASE+(n||0));
-})();
-
-// --- minisondaggio sul prezzo
-const POLL_KEYS=['a','b','c','d'];
-const POLL_LAB={a:'Meno di 15 €',b:'15 – 25 €',c:'26 – 40 €',d:'Più di 40 €'};
-const POLL_EM={a:'🙂',b:'👍',c:'💪',d:'🏆'};
-async function pollResults(){
-  // in parallelo, tollerando i buchi
-  const vals=await Promise.all(POLL_KEYS.map(k=>hitCall('get','price-'+k).catch(()=>0)));
-  const o={}; POLL_KEYS.forEach((k,i)=>o[k]=vals[i]||0); return o;
-}
-function pollRender(res,mine){
-  const box=document.getElementById('poll-res'), opts=document.getElementById('poll-opts'),
-        tot=document.getElementById('poll-tot');
-  const somma=POLL_KEYS.reduce((a,k)=>a+(res[k]||0),0);
-  opts.style.display='none'; box.style.display='';
-  box.innerHTML=POLL_KEYS.map(k=>{
-    const v=res[k]||0, pc=somma?Math.round(v/somma*100):0;
-    return `<div class="pollrow${k===mine?' mine':''}">
-      <div class="lab"><b>${POLL_EM[k]} ${POLL_LAB[k]}</b><span class="pc">${pc}%</span></div>
-      <div class="bar"><i data-w="${pc}"></i></div></div>`;
-  }).join('');
-  setTimeout(()=>box.querySelectorAll('.bar i').forEach(i=>{i.style.width=i.dataset.w+'%';}),40);
-  tot.innerHTML = (somma? nf.format(somma)+(somma===1?' voto':' voti')+' finora'
-                        : 'Sii il primo a votare!') +
-    ' · <a id="poll-again">rivota</a>';
-  const again=document.getElementById('poll-again');
-  if(again) again.onclick=()=>{ localStorage.removeItem('stc_price_vote');
-    opts.style.display=''; box.style.display='none'; tot.textContent=''; };
-}
-async function pollVote(k){
-  localStorage.setItem('stc_price_vote',k);
-  try{ await hitCall('hit','price-'+k); }catch(e){
-    // fallback locale: registra il voto in localStorage
-    const loc=JSON.parse(localStorage.getItem('stc_price_local')||'{}');
-    loc[k]=(loc[k]||0)+1; localStorage.setItem('stc_price_local',JSON.stringify(loc));
-  }
-  let res; try{ res=await pollResults(); }catch(e){ res=JSON.parse(localStorage.getItem('stc_price_local')||'{}'); }
-  pollRender(res,k);
-}
-document.querySelectorAll('#poll-opts .pollbtn').forEach(b=>{
-  b.addEventListener('click',()=>pollVote(b.dataset.k));
-});
-// se ha già votato, mostra subito i risultati
-(async()=>{
-  const gia=localStorage.getItem('stc_price_vote'); if(!gia) return;
-  let res; try{ res=await pollResults(); }catch(e){ res=JSON.parse(localStorage.getItem('stc_price_local')||'{}'); }
-  pollRender(res,gia);
 })();
 
 /* ---- podcast: player della barra in alto ---------------------------------

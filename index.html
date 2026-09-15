@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Subbuteo Tournament Center — il gestionale per i tornei di Calcio da Tavolo</title>
-<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 15 formule di gioco, sorteggio spettacolare, app per arbitri e replay, doppio schermo, classifiche, libro dei ricordi, manuale da 160 pagine. Demo gratuita per macOS, Windows e Linux; licenza completa 20 €.">
+<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 15 formule di gioco, sorteggio spettacolare, app per arbitri e replay, doppio schermo e classifiche. Demo gratuita per macOS, Windows e Linux; licenze da 20 € e una nuova formula ogni mese.">
 <meta name="author" content="Antonio de Masellis">
 <meta property="og:title" content="Subbuteo Tournament Center">
 <meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
@@ -248,10 +248,21 @@ section{position:relative}
     linear-gradient(180deg,var(--panel2),#0b1725);
   box-shadow:0 40px 90px -55px rgba(245,196,81,.55)
 }
-.price .amt{display:flex;align-items:baseline;gap:12px;margin:6px 0 12px}
-.price .amt b{font-family:var(--fn);font-size:68px;font-weight:700;line-height:1;letter-spacing:-.01em;
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.plan{position:relative;display:flex;flex-direction:column;min-height:190px;padding:20px 16px 17px;
+  border:1px solid var(--line2);border-radius:14px;background:rgba(6,11,18,.48)}
+.plan.best{border-color:rgba(245,196,81,.75);background:linear-gradient(180deg,rgba(245,196,81,.12),rgba(6,11,18,.55));
+  box-shadow:0 18px 36px -28px rgba(245,196,81,.95)}
+.plan .flag{position:absolute;right:10px;top:10px;padding:4px 7px;border-radius:99px;background:var(--gold);
+  color:#171200;font-family:var(--fn);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.plan .duration{color:var(--gold);font-family:var(--fn);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.plan .amt{margin:11px 0 8px}
+.plan .amt b{font-family:var(--fn);font-size:43px;font-weight:700;line-height:1;letter-spacing:-.02em;
   background:linear-gradient(180deg,#fff0c4,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.price .amt span{color:var(--mut);font-size:15px}
+.plan p{color:var(--mut);font-size:13.5px;line-height:1.45;margin:auto 0 0}
+.update-promise{margin:18px 0 4px;padding:16px 18px;border:1px solid rgba(50,204,135,.35);border-radius:12px;
+  background:rgba(50,204,135,.07);color:var(--mut);font-size:15px}
+.update-promise b,.update-promise strong{color:#9ef0c5}
 .price .minimo{color:var(--gold);font-size:15px;margin:-2px 0 14px;font-family:var(--fb)}
 .price .minimo b{font-weight:700}
 .price ul{list-style:none;padding:0;margin:20px 0 0}
@@ -291,32 +302,6 @@ section{position:relative}
   border:1px solid rgba(43,140,208,.5);border-radius:10px;padding:9px 14px;letter-spacing:.02em;
   display:inline-block;margin-top:4px}
 .pp-tit{font-weight:700;color:#dff0ff;font-size:15px}
-
-/* minisondaggio sul prezzo */
-.pollwrap{max-width:640px;margin:34px auto 0;background:linear-gradient(180deg,var(--panel),#0b1725);
-  border:1px solid var(--line2);border-radius:18px;padding:30px 30px 26px}
-.pollwrap h3{font-size:clamp(19px,2.4vw,25px);text-transform:uppercase;text-align:center;margin-bottom:6px}
-.pollwrap .sub{color:var(--mut);font-size:14.5px;text-align:center;margin:0 auto 22px;max-width:44ch}
-.polls{display:flex;flex-direction:column;gap:10px}
-.pollbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;
-  background:rgba(6,11,18,.5);border:1px solid var(--line2);border-radius:12px;padding:14px 18px;
-  color:var(--txt);font-family:var(--fb);font-size:15.5px;transition:transform .15s,border-color .2s,background .2s}
-.pollbtn:hover{transform:translateY(-2px);border-color:var(--gold);background:rgba(15,28,43,.8)}
-.pollbtn .em{font-size:20px;flex:0 0 auto}
-.pollbtn b{margin-left:auto;font-family:var(--fn);color:var(--gold);font-size:14px}
-/* stato dopo il voto: barre dei risultati */
-.pollres{display:flex;flex-direction:column;gap:11px}
-.pollrow{position:relative}
-.pollrow .lab{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:var(--mut)}
-.pollrow .lab b{color:var(--txt);font-weight:600}
-.pollrow .lab .pc{font-family:var(--fn);color:var(--gold)}
-.pollrow .bar{height:12px;border-radius:99px;background:rgba(140,175,210,.12);overflow:hidden}
-.pollrow .bar i{display:block;height:100%;border-radius:99px;
-  background:linear-gradient(90deg,var(--gold2),var(--gold));width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
-.pollrow.mine .lab b::after{content:' ✓';color:var(--grn)}
-.pollrow.mine .bar i{background:linear-gradient(90deg,var(--grn2),var(--grn))}
-.polltot{text-align:center;color:var(--mut2);font-size:13px;margin-top:16px}
-.polltot a{color:var(--mut);cursor:pointer;text-decoration:underline}
 
 /* contatore visite */
 .hits{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--mut2)}
@@ -373,6 +358,7 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
   .dgrid{grid-template-columns:repeat(2,1fr)}
   .steps{grid-template-columns:repeat(2,1fr);gap:28px 18px}
   .pricewrap{grid-template-columns:1fr}
+  .plans{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:860px){
   body{font-size:16px}
@@ -396,6 +382,8 @@ footer{border-top:1px solid var(--line);background:#050a10;padding:56px 0 40px;f
   .fgrid{grid-template-columns:1fr}
   .hero-in{padding:118px 0 80px}
   .price{padding:30px 24px}
+  .plans{grid-template-columns:1fr}
+  .plan{min-height:0}
 }
 @media (max-width:560px){
   .statgrid{grid-template-columns:repeat(2,1fr)}
@@ -512,10 +500,6 @@ header.nav{top:var(--podh)}
   .podtit{display:none}
   .podt{font-size:11px}
 }
-.scadenza{margin:8px 0 10px;padding:7px 12px;border-radius:8px;font-size:14px;
-  background:rgba(226,86,79,.12);border:1px solid rgba(226,86,79,.45);color:#ffb9b4;
-  display:inline-block;letter-spacing:.01em}
-.scadenza b{color:#fff}
 </style>
 </head>
 <body>
@@ -558,7 +542,7 @@ header.nav{top:var(--podh)}
   <div class="hero-img"><img src="assets/hero.webp" alt="Il pallone sul panno verde del campo da gioco" fetchpriority="high"></div>
   <div class="hero-in">
     <div class="wrap">
-      <div class="eyebrow">Versione 7.6 · Broadcast Edition</div>
+      <div class="eyebrow">Versione 7.6.1 · Broadcast Edition</div>
       <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Subbuteo Tournament Center"><h1>Il torneo<br>diventa<em>una diretta</em></h1>
       <p class="sub">Dalla prima iscrizione all'ultima premiazione: <b>Subbuteo Tournament Center</b>
       gestisce gironi, tabelloni, cronometri, arbitri e classifiche — e li racconta al pubblico
@@ -577,12 +561,12 @@ header.nav{top:var(--podh)}
         </a>
         <a class="btn sec" href="#licenza">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3m-3 3l2 2m-4 0l2 2"/></svg>
-          Versione completa · 20 €
+          Licenze da 20 €
         </a>
       </div>
       <div class="hero-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        macOS · Windows · Linux — nessuna registrazione, nessuna pubblicità, nessun abbonamento
+        macOS · Windows · Linux — tre durate, aggiornamenti inclusi
       </div>
     </div>
   </div>
@@ -597,7 +581,7 @@ header.nav{top:var(--podh)}
     <div class="stat"><b>4.823</b><span>Stemmi di club</span></div>
     <div class="stat"><b>153</b><span>Inni nazionali</span></div>
     <div class="stat"><b>45</b><span>Brani della libreria musicale</span></div>
-    <div class="stat"><b>160</b><span>Pagine di manuale</span></div>
+    <div class="stat"><b>168</b><span>Pagine di manuale</span></div>
   </div>
 </section>
 
@@ -1058,8 +1042,10 @@ header.nav{top:var(--podh)}
     <h2 class="rv">La versione dimostrativa, gratis</h2>
     <p class="lead rv">Stesso programma, stessa installazione. Provi l'impianto — un torneo a girone
     unico, i tabelloni dal vivo, le classifiche, la Presentazione, la stima della durata — e quando
-    ti convince <b>sblocchi tutto con un codice</b>, senza reinstallare niente. La licenza completa
-    costa <b>20 €</b> una tantum: <b>offerta valida fino al 15 settembre 2026</b>.</p>
+    ti convince <b>sblocchi tutto con un codice</b>, senza reinstallare niente. Puoi scegliere la
+    licenza di <b>un anno a 20 €</b>, quella di <b>due anni a 30 €</b> oppure la licenza
+    <b>a vita a 50 €</b>. Il software viene aggiornato costantemente e <b>ogni mese viene pubblicata
+    una nuova formula di gioco</b>.</p>
 
     <div class="dgrid rv">
       <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v7.6.1/Subbuteo-Tournament-Center-7.6.1-macOS-AppleSilicon.dmg">
@@ -1138,7 +1124,7 @@ header.nav{top:var(--podh)}
       <p><b>Non vuoi installare niente?</b> La stessa versione dimostrativa gira anche nel browser,
       su qualsiasi sistema operativo — utile per dare un'occhiata prima di scaricare mezzo giga.</p>
       <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Apri nel browser</a>
-      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v7.6.1/Manuale-Subbuteo-Tournament-Center-2026-09-15.pdf"><img src="assets/copertina-manuale.jpg" alt="Manuale PDF" loading="lazy"><span class="mt"><b>Manuale PDF</b><span>164 pagine · con appendice sulle formule</span></span></a>
+      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v7.6.1/Manuale-Subbuteo-Tournament-Center-2026-09-15.pdf"><img src="assets/copertina-manuale.jpg" alt="Manuale PDF" loading="lazy"><span class="mt"><b>Manuale PDF</b><span>168 pagine · con appendice sulle formule</span></span></a>
       <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Inni-Nazionali-153.zip" style="font-size:14px;padding:12px 22px">🎵 Inni nazionali · 153 brani (393 MB)</a>
     </div>
   </div>
@@ -1156,7 +1142,7 @@ header.nav{top:var(--podh)}
     <table class="cmp rv">
       <thead><tr><th>Funzione</th><th>Demo</th><th>Completa</th></tr></thead>
       <tbody>
-        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 14</td></tr>
+        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 15</td></tr>
         <tr><td>Consigliere delle formule e Torneo Reale</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Salvataggio e richiamo dei tornei</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Esportazione e importazione dei dati</td><td class="no">✕</td><td class="yes">✓</td></tr>
@@ -1216,13 +1202,13 @@ header.nav{top:var(--podh)}
 <section class="sec" id="licenza">
   <div class="wrap">
     <div class="eyebrow rv">La licenza</div>
-    <h2 class="rv">Quattro passaggi, una volta sola</h2>
-    <p class="lead rv">La licenza completa costa <b>20 €</b>, una sola volta. Per averla si scrive
-    direttamente all'autore a <b>onyxsubbuteo@gmail.com</b> allegando il proprio <b>codice
-    alfanumerico</b> e il <b>nome a cui intestare la licenza</b>; ricevuto il pagamento di 20 € con
-    <b>PayPal sull'account ademase@gmail.com</b>, arriva il codice di attivazione. La licenza vale per il <b>singolo dispositivo</b>: si
-    attiva una volta e resta, verificata a ogni avvio <b>anche senza collegamento a Internet</b>.
-    Nessun abbonamento, nessun rinnovo.</p>
+    <h2 class="rv">Quattro passaggi, scegli tu la durata</h2>
+    <p class="lead rv">Sono disponibili tre licenze complete: <b>un anno a 20 €</b>, <b>due anni a
+    30 €</b> e <b>a vita a 50 €</b>. Per averne una si scrive direttamente all'autore a
+    <b>onyxsubbuteo@gmail.com</b> indicando il proprio <b>codice alfanumerico</b>, il <b>nome a cui
+    intestare la licenza</b> e la durata scelta; ricevuto il pagamento con <b>PayPal sull'account
+    ademase@gmail.com</b>, arriva il codice di attivazione. Ogni licenza vale per un <b>singolo
+    dispositivo</b> ed è verificata a ogni avvio <b>anche senza collegamento a Internet</b>.</p>
 
     <div class="steps rv">
       <div class="step">
@@ -1237,24 +1223,43 @@ header.nav{top:var(--podh)}
         <span class="keybox">STC-XXXX-XXXX-XXXX-XXXX</span>
       </div>
       <div class="step">
-        <h4>Scrivi e paga 20 €</h4>
+        <h4>Scegli, scrivi e paga</h4>
         <p>Manda un'email con il tuo <b>codice alfanumerico</b> e il <b>nome</b> da mettere sulla
-        licenza, poi versa i <b>20 €</b> con PayPal a <b>ademase@gmail.com</b> (il codice QR è qui sotto).</p>
+        licenza, indica la durata e versa <b>20 €, 30 € o 50 €</b> con PayPal a
+        <b>ademase@gmail.com</b> (il codice QR è qui sotto).</p>
       </div>
       <div class="step">
         <h4>Incolla e gioca</h4>
         <p>Ti arriva il <b>codice di attivazione</b>: lo incolli nello stesso pannello e tutte
-        le funzioni si sbloccano all'istante, per sempre.</p>
+        le funzioni si sbloccano all'istante per la durata scelta.</p>
       </div>
     </div>
 
     <div class="pricewrap rv">
       <div class="price">
-        <div class="eyebrow" style="margin-bottom:6px">Licenza completa</div>
-        <div class="amt"><b>20 €</b><span>una tantum, per un dispositivo</span></div>
-        <div class="scadenza">⏳ Offerta valida fino al <b>15 settembre 2026</b></div>
-        <div class="minimo">pagamento unico con <b>PayPal</b> — a copertura del tempo dedicato e dei costi di produzione</div>
-        <p style="color:var(--mut);margin:0">Nessun canone: si paga una volta sola e gli aggiornamenti sono compresi.</p>
+        <div class="eyebrow" style="margin-bottom:6px">Tre licenze complete</div>
+        <div class="plans">
+          <article class="plan">
+            <span class="duration">1 anno</span>
+            <div class="amt"><b>20 €</b></div>
+            <p>Dodici mesi di utilizzo completo e aggiornamenti inclusi.</p>
+          </article>
+          <article class="plan best">
+            <span class="flag">Più conveniente</span>
+            <span class="duration">2 anni</span>
+            <div class="amt"><b>30 €</b></div>
+            <p>Ventiquattro mesi completi: risparmi 10 € rispetto a due licenze annuali.</p>
+          </article>
+          <article class="plan">
+            <span class="duration">A vita</span>
+            <div class="amt"><b>50 €</b></div>
+            <p>Nessuna scadenza: il programma e i futuri aggiornamenti restano tuoi.</p>
+          </article>
+        </div>
+        <div class="update-promise"><b>Aggiornamenti continui.</b> Ogni licenza comprende tutti gli
+        aggiornamenti pubblicati durante la sua validità. Inoltre viene aggiunta
+        <strong>una nuova formula di gioco ogni mese</strong>.</div>
+        <div class="minimo">Un solo pagamento con <b>PayPal</b> per la durata scelta, senza addebiti automatici</div>
         <ul>
           <li>Tutte e <b>quindici le formule</b>, Consigliere e Torneo Reale</li>
           <li><b>Salvataggio</b>, richiamo ed esportazione dei tornei</li>
@@ -1265,20 +1270,21 @@ header.nav{top:var(--podh)}
           <li><b>Foto degli sfidanti</b> e libro dei ricordi in PDF</li>
           <li><b>Pre-Torneo</b> con quote, pagamenti e ricevute</li>
           <li><b>App Campo, App Capitano e App Replay</b> con i codici QR</li>
-          <li>Manuale completo da <b>164 pagine</b> in PDF</li>
+          <li>Manuale completo da <b>168 pagine</b> in PDF</li>
         </ul>
       </div>
 
       <div class="mailcard">
         <h4>Richiedi il tuo codice</h4>
         <p>Nell'email indica il <b>codice alfanumerico</b> che leggi nel pannello Licenza e il
-        <b>nome</b> a cui intestarla; poi versa i <b>20 €</b> con PayPal a <b>ademase@gmail.com</b>.</p>
+        <b>nome</b> a cui intestarla e la <b>durata scelta</b>; poi versa il relativo importo di
+        <b>20 €, 30 € o 50 €</b> con PayPal a <b>ademase@gmail.com</b>.</p>
         <div class="mailbox">
           <code id="mail">onyxsubbuteo@gmail.com</code>
           <button class="copy" id="cp" type="button">Copia</button>
         </div>
         <a class="btn pri" style="font-size:14.5px;padding:14px 22px"
-           href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20Subbuteo%20Tournament%20Center%207.6&body=Buongiorno%2C%0A%0Avorrei%20acquistare%20la%20licenza%20completa%20di%20Subbuteo%20Tournament%20Center%20al%20prezzo%20di%2020%20%E2%82%AC.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AProvvedo%20al%20pagamento%20di%2020%20%E2%82%AC%20con%20PayPal.%0A%0AGrazie.">
+           href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20Subbuteo%20Tournament%20Center%207.6&body=Buongiorno%2C%0A%0Avorrei%20acquistare%20una%20licenza%20di%20Subbuteo%20Tournament%20Center.%0A%0ADurata%20scelta%20%281%20anno%2020%20%E2%82%AC%20%2F%202%20anni%2030%20%E2%82%AC%20%2F%20a%20vita%2050%20%E2%82%AC%29%3A%20%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AProvvedo%20al%20pagamento%20con%20PayPal.%0A%0AGrazie.">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/></svg>
           Scrivi ora
         </a>
@@ -1286,10 +1292,10 @@ header.nav{top:var(--podh)}
         <div class="paypal" id="pp">
           <a href="https://www.paypal.com/qrcodes/p2pqrc/YLFSMQL54CZ7J" target="_blank" rel="noopener"
              title="Apri il pagamento PayPal">
-            <img src="assets/paypal-qr.png" alt="Codice QR PayPal per il pagamento di 20 €" width="230" height="230"
+            <img src="assets/paypal-qr.png" alt="Codice QR PayPal per il pagamento della licenza scelta" width="230" height="230"
                  onerror="document.getElementById('pp').classList.add('noqr')">
           </a>
-          <div class="pp-tit">Pagamento con PayPal — 20 €</div>
+          <div class="pp-tit">Pagamento con PayPal — 20 €, 30 € o 50 €</div>
           <span>Inquadra il codice con il telefono, oppure toccalo per aprire il pagamento.
           Il versamento va all'account PayPal:</span>
           <code class="pp-mail">ademase@gmail.com</code>
@@ -1302,20 +1308,6 @@ header.nav{top:var(--podh)}
       <img src="assets/shots/25_licenza.webp" alt="Il pannello della licenza nel programma" loading="lazy">
     </div>
 
-    <!-- minisondaggio sul prezzo -->
-    <div class="pollwrap rv" id="poll">
-      <h3>Secondo te quanto vale?</h3>
-      <p class="sub">Il prezzo è 20 €. Ma tu quanto pagheresti per un programma come questo?
-      Un voto anonimo, giusto per farci un'idea.</p>
-      <div class="polls" id="poll-opts">
-        <button class="pollbtn" data-k="a"><span class="em">🙂</span> Meno di 15 € <b>vota</b></button>
-        <button class="pollbtn" data-k="b"><span class="em">👍</span> 15 – 25 € <b>vota</b></button>
-        <button class="pollbtn" data-k="c"><span class="em">💪</span> 26 – 40 € <b>vota</b></button>
-        <button class="pollbtn" data-k="d"><span class="em">🏆</span> Più di 40 € <b>vota</b></button>
-      </div>
-      <div class="pollres" id="poll-res" style="display:none"></div>
-      <div class="polltot" id="poll-tot"></div>
-    </div>
   </div>
 </section>
 
@@ -1404,7 +1396,7 @@ header.nav{top:var(--podh)}
       <div>
         <a class="brand" href="#top" style="margin-bottom:16px"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
         <p style="max-width:44ch;margin-top:4px">Il gestionale per i tornei di Subbuteo e Calcio da
-        Tavolo. Versione 7.6 — agosto 2026. Software e manuale di Antonio de Masellis.</p>
+        Tavolo. Versione 7.6.1 — settembre 2026. Software e manuale di Antonio de Masellis.</p>
       </div>
       <div>
         <h5>Il programma</h5>
@@ -1465,7 +1457,7 @@ cp.onclick=async()=>{
   }catch(e){cp.textContent='Selezionala'}
 };
 
-/* ---------- contatore visite + minisondaggio ----------
+/* ---------- contatore visite ----------
    Contati da un piccolo servizio anonimo e gratuito (Abacus): nessun cookie,
    nessun dato personale, solo dei numeri interi condivisi fra i visitatori.
    Se il servizio non risponde, si ripiega su un conteggio locale del browser,
@@ -1493,54 +1485,6 @@ async function hitCall(verbo,chiave){
     n=loc;
   }
   el.textContent=nf.format(HIT_BASE+(n||0));
-})();
-
-// --- minisondaggio sul prezzo
-const POLL_KEYS=['a','b','c','d'];
-const POLL_LAB={a:'Meno di 15 €',b:'15 – 25 €',c:'26 – 40 €',d:'Più di 40 €'};
-const POLL_EM={a:'🙂',b:'👍',c:'💪',d:'🏆'};
-async function pollResults(){
-  // in parallelo, tollerando i buchi
-  const vals=await Promise.all(POLL_KEYS.map(k=>hitCall('get','price-'+k).catch(()=>0)));
-  const o={}; POLL_KEYS.forEach((k,i)=>o[k]=vals[i]||0); return o;
-}
-function pollRender(res,mine){
-  const box=document.getElementById('poll-res'), opts=document.getElementById('poll-opts'),
-        tot=document.getElementById('poll-tot');
-  const somma=POLL_KEYS.reduce((a,k)=>a+(res[k]||0),0);
-  opts.style.display='none'; box.style.display='';
-  box.innerHTML=POLL_KEYS.map(k=>{
-    const v=res[k]||0, pc=somma?Math.round(v/somma*100):0;
-    return `<div class="pollrow${k===mine?' mine':''}">
-      <div class="lab"><b>${POLL_EM[k]} ${POLL_LAB[k]}</b><span class="pc">${pc}%</span></div>
-      <div class="bar"><i data-w="${pc}"></i></div></div>`;
-  }).join('');
-  setTimeout(()=>box.querySelectorAll('.bar i').forEach(i=>{i.style.width=i.dataset.w+'%';}),40);
-  tot.innerHTML = (somma? nf.format(somma)+(somma===1?' voto':' voti')+' finora'
-                        : 'Sii il primo a votare!') +
-    ' · <a id="poll-again">rivota</a>';
-  const again=document.getElementById('poll-again');
-  if(again) again.onclick=()=>{ localStorage.removeItem('stc_price_vote');
-    opts.style.display=''; box.style.display='none'; tot.textContent=''; };
-}
-async function pollVote(k){
-  localStorage.setItem('stc_price_vote',k);
-  try{ await hitCall('hit','price-'+k); }catch(e){
-    // fallback locale: registra il voto in localStorage
-    const loc=JSON.parse(localStorage.getItem('stc_price_local')||'{}');
-    loc[k]=(loc[k]||0)+1; localStorage.setItem('stc_price_local',JSON.stringify(loc));
-  }
-  let res; try{ res=await pollResults(); }catch(e){ res=JSON.parse(localStorage.getItem('stc_price_local')||'{}'); }
-  pollRender(res,k);
-}
-document.querySelectorAll('#poll-opts .pollbtn').forEach(b=>{
-  b.addEventListener('click',()=>pollVote(b.dataset.k));
-});
-// se ha già votato, mostra subito i risultati
-(async()=>{
-  const gia=localStorage.getItem('stc_price_vote'); if(!gia) return;
-  let res; try{ res=await pollResults(); }catch(e){ res=JSON.parse(localStorage.getItem('stc_price_local')||'{}'); }
-  pollRender(res,gia);
 })();
 
 /* ---- podcast: player della barra in alto ---------------------------------
