@@ -3238,6 +3238,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
       <div style="margin-top:14px">
         <label class="f">Server di sincronizzazione</label>
         <div class="row"><input type="text" id="sy-url" placeholder="http://127.0.0.1:8765" style="flex:1;min-width:190px"><button class="btn sec mini" onclick="setSyncUrl()">Applica</button></div>
+        <div class="row"><label><span>Token amministratore relay HTTPS</span> <input type="password" id="sy-admin" autocomplete="off" placeholder="Solo per un server remoto" onchange="syncRemoteAdmin=this.value.trim();SYNC.lastSnapJson=''" /></label></div>
       </div>
       <div id="sy-addr-wrap" style="margin-top:14px;display:none">
         <label class="f">Indirizzo che i telefoni devono raggiungere</label>
@@ -3873,7 +3874,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='7.6.7';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='7.8.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -4725,6 +4726,7 @@ const TR={
   "Quanto in fretta parla la voce degli annunci: a sinistra più lenta, a destra più svelta":"How fast the announcement voice speaks: slower to the left, quicker to the right",
 };
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
+TR['Token amministratore relay HTTPS']='HTTPS relay administrator token';TR['Solo per un server remoto']='For a remote server only';
 const DYN_SEL='#gironi-box,#gironi-actions,#finale-box,#boards-box,#classifica-box,#cronache-box,#ticker,#ticker-flash,#mt-box,#mt-sel,#theme-box,#team-inputs,#bulk-names,#tb-editor,#tb-editor2,#present-grid,#present-modes,#present-title,#tiers-box,#music-list,#tv,#champ-name,#champ-podio,#champ-name,#st-grid,#st-info,#st-selinfo,#ml-grid,#ml-info,#d-rows,#d-teams,#d-tot,#d-note,#so-grid,#so-teams,#so-score,#so-turn,#so-result,#hdr-title,#hdr-meta,#lu-cols,#pdf-paper,#print-report,#tts-voice-lbl,#mp-name,#legge-docs,#legge-answer,#legge-results,#legge-browse,#legge-hint,#adv-list,#adv-n,#cer-sub,#cer-urn,#cer-reveal,#cer-groups,#cer-ctrl,#spk-btn,#pre-table,#pre-svc-list,#pre-tot,#real-list,#real-n,#capqr-grid,#est-body,#pr-teams,#pr-toss,#pr-body,#pr-ctrl,#mini-grid,#mini-hint,#wa-rubrica,#wa-testo,#wa-nota,#sy-sala-esito,#voce-stato,#iscr-lista,#iscr-conta,#iscr-link,#stag-riep,#regia-fascia,#tts-qualita,#vn-box';
 function translateNodeText(node){
   const orig=node.__it!=null?node.__it:(node.__it=node.nodeValue);
@@ -7946,7 +7948,13 @@ function salaPannelloUI(){
   salaVerifica();
 }
 function salaBase(){return salaNormalizza(salaIndirizzo())||syncPhoneUrls()[0]||'';}
-function printQrCampi(){
+async function printQrCampi(){
+  try{
+    const response=await syncRequest(syncBase()+'/api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:SYNC.key,snap:syncSnapshot()})});
+    if(!response.ok)throw new Error('Regia non autorizzata');
+    SYNC.fieldKeys=(await response.json()).fieldKeys||{};
+  }catch(e){toast(LANG==='en'?'Cannot prepare secure field codes: check the local server.':'Impossibile preparare i codici protetti: verifica il server locale.');return;}
+
   const base=salaBase();
   if(!base){
     // senza indirizzo di sala servono per forza quelli veri del momento
@@ -7959,7 +7967,7 @@ function printQrCampi(){
   const carte=[];
   for(let i=1;i<=F;i++){
     const n=off+i;
-    const link=base+'/?k='+encodeURIComponent(SYNC.key)+'&f='+n;
+    const link=base+'/?k='+encodeURIComponent(syncFieldKey(n))+'&f='+n;
     if(!qrDraw(cv,link,560)){ toast(L('Indirizzo troppo lungo per il codice QR.')); return; }
     carte.push({n, link, img:cv.toDataURL('image/png'),
                 lbl: sq?(L('Tavoli')+' '+n+'–'+(n+3)):(L('Campo')+' '+n)});
@@ -13434,7 +13442,7 @@ function iscrChiudi(){$('#iscrizioni').classList.remove('on');if(iscrTimer){clea
 function iscrAggiorna(){
   const b=(typeof syncBase==='function')?syncBase():null;
   if(!b)return;
-  fetch(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key))
+  syncRequest(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key))
     .then(r=>r.json()).then(j=>{ iscrElenco=(j&&j.list)||[]; iscrRender(); })
     .catch(()=>{});
 }
@@ -13474,13 +13482,13 @@ function iscrAccettaTutti(){
 }
 function iscrScarta(id){
   const b=(typeof syncBase==='function')?syncBase():null; if(!b)return;
-  fetch(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key)+'&del='+encodeURIComponent(id))
+  syncRequest(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key)+'&del='+encodeURIComponent(id))
     .then(()=>iscrAggiorna()).catch(()=>{});
 }
 function iscrSvuota(){
   if(!confirm(L('Cancellare tutte le iscrizioni ricevute?')))return;
   const b=(typeof syncBase==='function')?syncBase():null; if(!b)return;
-  fetch(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key)+'&clear=1')
+  syncRequest(b+'/api/iscrizione?key='+encodeURIComponent(SYNC.key)+'&clear=1')
     .then(()=>iscrAggiorna()).catch(()=>{});
 }
 function iscrWhatsApp(){
@@ -14441,10 +14449,10 @@ function announceNextRound(){
    ========================================================= */
 const FOTO={list:[],tot:0,t:null};
 function fotoAttive(){return !!(SYNC.lan&&SYNC.lan.foto&&SYNC.on);}
-function fotoSrc(f){return syncBase()+'/api/photo?f='+encodeURIComponent(f);}
+function fotoSrc(f){return syncBase()+'/api/photo?f='+encodeURIComponent(f)+'&key='+encodeURIComponent(SYNC.key);}
 function fotoAggiorna(){
   if(!fotoAttive()){FOTO.list=[];FOTO.tot=0;return Promise.resolve();}
-  return fetch(syncBase()+'/api/photo').then(r=>r.json()).then(d=>{
+  return syncRequest(syncBase()+'/api/photo').then(r=>r.json()).then(d=>{
     if(d&&d.ok){FOTO.list=d.list||[];FOTO.tot=d.tot||0;}
   }).catch(()=>{});
 }
@@ -14460,7 +14468,7 @@ function fotoDi(mid){
 }
 function fotoElimina(f){
   askConfirm(L('Cancellare questa foto?'),()=>{
-    fetch(syncBase()+'/api/photo?del='+encodeURIComponent(f))
+    syncRequest(syncBase()+'/api/photo?del='+encodeURIComponent(f))
       .then(()=>fotoAggiorna()).then(renderFotoBox);
   });
 }
@@ -14584,7 +14592,7 @@ function fotoPulisciOrfane(){
   const orfane=FOTO.list.filter(x=>!vive.has(x.mid));
   if(!orfane.length)return;
   askConfirm(L('Rimuovere')+' '+orfane.length+' '+L('foto di un torneo precedente?'),()=>{
-    Promise.all(orfane.map(x=>fetch(syncBase()+'/api/photo?del='+encodeURIComponent(x.f))))
+    Promise.all(orfane.map(x=>syncRequest(syncBase()+'/api/photo?del='+encodeURIComponent(x.f))))
       .then(()=>fotoAggiorna()).then(renderFotoBox);
   });
 }
@@ -14688,10 +14696,10 @@ function mostraReplay(mid,file,t){
   replayT=setTimeout(chiudiReplay,15000);
 }
 function clipAttive(){return !!(SYNC.lan&&SYNC.lan.clip&&SYNC.on);}
-function clipSrc(f){return syncBase()+'/api/clip?f='+encodeURIComponent(f);}
+function clipSrc(f){return syncBase()+'/api/clip?f='+encodeURIComponent(f)+'&key='+encodeURIComponent(SYNC.key);}
 function clipAggiorna(){
   if(!clipAttive()){CLIP.list=[];CLIP.tot=0;return Promise.resolve();}
-  return fetch(syncBase()+'/api/clip').then(r=>r.json()).then(d=>{
+  return syncRequest(syncBase()+'/api/clip').then(r=>r.json()).then(d=>{
     if(d&&d.ok){CLIP.list=d.list||[];CLIP.tot=d.tot||0;}
   }).catch(()=>{});
 }
@@ -14709,7 +14717,7 @@ function clipMont(mid){
 }
 function clipElimina(f,dopo){
   askConfirm(L('Cancellare questa clip?'),()=>{
-    fetch(syncBase()+'/api/clip?del='+encodeURIComponent(f))
+    syncRequest(syncBase()+'/api/clip?del='+encodeURIComponent(f))
       .then(()=>clipAggiorna()).then(()=>{renderClipBox();if(dopo)dopo();});
   });
 }
@@ -14758,7 +14766,7 @@ function clipPulisciOrfane(){
   const orf=clipOrfane();
   if(!orf.length)return;
   askConfirm(L('Rimuovere')+' '+orf.length+' '+L('clip di un torneo precedente?'),()=>{
-    Promise.all(orf.map(x=>fetch(syncBase()+'/api/clip?del='+encodeURIComponent(x.f))))
+    Promise.all(orf.map(x=>syncRequest(syncBase()+'/api/clip?del='+encodeURIComponent(x.f))))
       .then(()=>clipAggiorna()).then(renderClipBox);
   });
 }
@@ -14782,7 +14790,7 @@ function clipMonta(mid,auto){
     .then(()=>{
       if(vecchie?!window.gifMontage:!(window.MP4&&MP4.montaMp4))throw new Error(modulo);
       if(!vecchie&&cs.some(c=>/\.gif$/i.test(c.f)))throw new Error('misto');
-      return Promise.all(cs.map(c=>fetch(clipSrc(c.f)).then(r=>r.arrayBuffer())));
+      return Promise.all(cs.map(c=>syncRequest(clipSrc(c.f)).then(r=>r.arrayBuffer())));
     })
     .then(bufs=>{
       const blob=vecchie?gifMontage(bufs,{pausa:700}):MP4.montaMp4(bufs,700);
@@ -14797,8 +14805,8 @@ function clipMonta(mid,auto){
     .then(o=>{
       // via il montaggio precedente, così non se ne accumulano copie
       const vecchi=CLIP.list.filter(x=>x.mid===mid+MONTSUF);
-      return Promise.all(vecchi.map(x=>fetch(syncBase()+'/api/clip?del='+encodeURIComponent(x.f)).catch(()=>{})))
-        .then(()=>fetch(syncBase()+'/api/clip',{method:'POST',headers:{'Content-Type':'application/json'},
+      return Promise.all(vecchi.map(x=>syncRequest(syncBase()+'/api/clip?del='+encodeURIComponent(x.f)).catch(()=>{})))
+        .then(()=>syncRequest(syncBase()+'/api/clip',{method:'POST',headers:{'Content-Type':'application/json'},
           body:JSON.stringify({key:SYNC.key,mid:mid+MONTSUF,ts:Date.now(),mp4:o.d})}))
         .then(r=>r.json()).then(d=>{
           if(!d||!d.ok)throw new Error((d&&d.err)||'invio');
@@ -14821,7 +14829,7 @@ function matchTeamsById(mid){
 }
 /* scarica sul computer il filmato di una partita */
 function clipScarica(f,nome){
-  fetch(clipSrc(f)).then(r=>r.blob()).then(b=>{
+  syncRequest(clipSrc(f)).then(r=>r.blob()).then(b=>{
     const u=URL.createObjectURL(b),a=document.createElement('a');
     a.href=u;a.download=(nome||'replay')+(/\.gif$/i.test(f)?'.gif':'.mp4');a.click();
     setTimeout(()=>URL.revokeObjectURL(u),4000);
@@ -15028,7 +15036,7 @@ function arcCopiaFoto(r){
       if(!p.f[q])return;
       const k='arcfoto/'+r.id+'/'+p.m.id+'__'+q;
       lavori.push(
-        fetch(fotoSrc(p.f[q])).then(x=>x.blob()).then(b=>fidbPut(k,b)).then(()=>{
+        syncRequest(fotoSrc(p.f[q])).then(x=>x.blob()).then(b=>fidbPut(k,b)).then(()=>{
           r.foto.push({mid:p.m.id,quando:q,k,a:p.a,b:p.b,ra:p.ra,rb:p.rb,fase:p.fase});
         }).catch(()=>{})
       );
@@ -15925,7 +15933,7 @@ function bkNow(silenzioso){
   let dati=null;
   try{dati=JSON.parse(localStorage.getItem(MTKEY)||'null');}catch(e){}
   if(!dati){if(!silenzioso)toast(L('Niente da salvare.'));return;}
-  fetch(syncBase()+'/api/backup',{method:'POST',headers:{'Content-Type':'application/json'},
+  syncRequest(syncBase()+'/api/backup',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({dati})})
     .then(r=>r.json())
     .then(d=>{
@@ -15937,7 +15945,7 @@ function bkNow(silenzioso){
     .catch(()=>{if(!silenzioso)toast(L('Backup non riuscito.'));});
 }
 function bkList(){
-  fetch(syncBase()+'/api/backup').then(r=>r.json()).then(d=>{
+  syncRequest(syncBase()+'/api/backup').then(r=>r.json()).then(d=>{
     const box=$('#bk-list');if(!box)return;
     if(!d||!d.list||!d.list.length){box.innerHTML=`<p class="small muted">${L('Nessuna copia salvata.')}</p>`;return;}
     box.innerHTML=`<p class="small muted">${esc(d.dir||'')}</p>`+
@@ -15952,7 +15960,7 @@ function bkList(){
 }
 function bkRestore(f){
   askConfirm(L('Ripristinare questa copia? Il torneo attuale verrà sostituito.'),()=>{
-    fetch(syncBase()+'/api/backup?f='+encodeURIComponent(f)).then(r=>r.json()).then(d=>{
+    syncRequest(syncBase()+'/api/backup?f='+encodeURIComponent(f)).then(r=>r.json()).then(d=>{
       if(!d||!d.ok||!d.dati){toast(L('Copia non leggibile.'));return;}
       localStorage.setItem(MTKEY,JSON.stringify(d.dati));
       toast('💾 '+L('Copia ripristinata: ricarico…'));
@@ -16289,11 +16297,20 @@ function qrDraw(canvas,text,px){
    piazzati, formazioni e referti CdT. Ogni chiamata è
    protetta dalla chiave privata del torneo.
    ========================================================= */
-function genSyncKey(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<8;i++){if(i===4)s+='-';s+=A[Math.floor(Math.random()*A.length)];}return s;}
+function genSyncKey(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint8Array(16));return [...r].map(v=>A[v%32]).join('');}
 let SYNC={on:false,url:'http://127.0.0.1:8765',key:'',lastEv:0,lastSnapJson:'',okAt:0,timer:null,lan:null,addr:''};
 try{Object.assign(SYNC,JSON.parse(localStorage.getItem('subbuteo_sync_v1')||'{}'),{timer:null,lastSnapJson:'',okAt:0,lan:null});}catch(e){}
 if(!SYNC.key)SYNC.key=genSyncKey();
 function syncPersist(){try{localStorage.setItem('subbuteo_sync_v1',JSON.stringify({on:SYNC.on,url:SYNC.url,key:SYNC.key,lastEv:SYNC.lastEv,addr:SYNC.addr}));}catch(e){}}
+let syncRemoteAdmin='';
+function syncRequest(url,options){
+  const opts={...(options||{})};
+  const target=new URL(url),base=new URL(syncBase());
+  if(syncRemoteAdmin && target.origin===base.origin && target.protocol==='https:' && target.pathname.startsWith(base.pathname.replace(/\/$/,'')+'/api/')){
+    opts.headers={...(opts.headers||{}),'X-STC-Admin':syncRemoteAdmin};opts.redirect='error';
+  }
+  return fetch(url,opts);
+}
 function syncBase(){return String(SYNC.url||'').replace(/\/+$/,'');}
 
 function syncSubOf(m){
@@ -16357,7 +16374,7 @@ function syncCardsOf(m){
 function syncSnapshot(){
   const sq=S.cfg.format==='squadre';
   return{
-    v:2,ts:Date.now(),n:S.cfg.name||'Torneo Subbuteo',loc:S.cfg.loc||'',date:S.cfg.date||'',sq,
+    v:2,fieldCount:S.cfg.fields,fieldOffset:S.cfg.fieldOffset||0,ts:Date.now(),n:S.cfg.name||'Torneo Subbuteo',loc:S.cfg.loc||'',date:S.cfg.date||'',sq,
     logo:S.cfg.logo||null,   // il logo del torneo, ben visibile anche sulle app mobili
     boards:S.boards.map(b=>{
       const ph=b.matchId?boardPhases(b)[b.phaseIdx]:null;
@@ -16610,12 +16627,14 @@ async function syncTick(){
     if(!SYNC.pubAt||Date.now()-SYNC.pubAt>30000)SYNC.lastSnapJson=''; // ripubblica comunque ogni 30s (relay riavviati)
     if(j!==SYNC.lastSnapJson){
       SYNC.pubAt=Date.now();
-      const r=await fetch(syncBase()+'/api/state',{method:'POST',
+      const r=await syncRequest(syncBase()+'/api/state',{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({key:SYNC.key,snap})});
-      if(r.ok)SYNC.lastSnapJson=j;
+      if(!r.ok)throw new Error('Pubblicazione rifiutata: '+r.status);
+      if(r.ok){const ack=await r.json();SYNC.lastSnapJson=j;SYNC.fieldKeys=ack.fieldKeys||{};renderSyncQR();}
     }
-    const r2=await fetch(syncBase()+'/api/events?key='+encodeURIComponent(SYNC.key)+'&after='+SYNC.lastEv);
+    const r2=await syncRequest(syncBase()+'/api/events?key='+encodeURIComponent(SYNC.key)+'&after='+SYNC.lastEv);
+    if(!r2.ok)throw new Error('Sincronizzazione rifiutata: '+r2.status);
     const d=await r2.json();
     (d.events||[]).forEach(ev=>{
       SYNC.lastEv=Math.max(SYNC.lastEv,ev.id||0);
@@ -16641,10 +16660,10 @@ function syncStop(){
   hdrTunUI();
 }
 function setSyncOn(v){SYNC.on=!!v;syncPersist();if(SYNC.on)syncStart();else syncStop();renderSyncUI();}
-function setSyncUrl(){const el=$('#sy-url');if(!el)return;SYNC.url=el.value.trim()||'http://127.0.0.1:8765';SYNC.lastSnapJson='';SYNC.lan=null;syncPersist();if(SYNC.on)syncStart();renderSyncUI();}
-function regenSyncKey(){SYNC.key=genSyncKey();SYNC.lastEv=0;SYNC.lastSnapJson='';syncPersist();renderSyncUI();toast(LANG==='en'?'New private key generated.':'Nuova chiave privata generata.');}
+function setSyncUrl(){syncRemoteAdmin='';const auth=document.getElementById('sy-admin');if(auth)auth.value='';const el=$('#sy-url');if(!el)return;SYNC.url=el.value.trim()||'http://127.0.0.1:8765';SYNC.lastSnapJson='';SYNC.lan=null;syncPersist();if(SYNC.on)syncStart();renderSyncUI();}
+function regenSyncKey(){SYNC.key=genSyncKey();SYNC.fieldKeys={};SYNC.lastEv=0;SYNC.lastSnapJson='';syncPersist();renderSyncUI();toast(LANG==='en'?'New private key generated.':'Nuova chiave privata generata.');}
 function syncFetchInfo(){
-  fetch(syncBase()+'/api/info').then(r=>r.json()).then(d=>{SYNC.lan=d;renderSyncUI();bkRender();bkAvvia();fotoAvvia();clipAvvia();}).catch(()=>{SYNC.lan=null;renderSyncUI();bkRender();});
+  syncRequest(syncBase()+'/api/info').then(r=>r.json()).then(d=>{SYNC.lan=d;renderSyncUI();bkRender();bkAvvia();fotoAvvia();clipAvvia();}).catch(()=>{SYNC.lan=null;renderSyncUI();bkRender();});
 }
 /* --- QR di collegamento: generale o legato a un singolo campo --- */
 function syncPhoneUrls(){
@@ -16738,7 +16757,7 @@ function setSyncTunnel(voluto){
   const chk=$('#sy-tunnel-chk');if(chk)chk.checked=turnOn;   // risposta immediata al tocco
   if(turnOn){const sw=$('#sy-tunnel-sw');if(sw){sw.classList.remove('ko');sw.classList.add('avv');}
     const st=$('#sy-tunnel-status');if(st)st.textContent=en?'⏳ starting…':'⏳ avvio in corso…';}
-  fetch(syncBase()+'/api/tunnel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on:turnOn})})
+  syncRequest(syncBase()+'/api/tunnel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({on:turnOn})})
     .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
     .then(()=>{
       // il quick tunnel ci mette dai 3 ai 15 secondi: si ricontrolla finché
@@ -16884,6 +16903,7 @@ function capQrZoom(i){
   $('#qrfull').classList.add('on');
 }
 function closeCapQr(){$('#capqr').classList.remove('on');}
+function syncFieldKey(f){return SYNC.fieldKeys&&SYNC.fieldKeys[f]||'';}
 function syncQrLink(){
   const base=syncPhoneUrls()[0];if(!base)return null;
   const v=$('#sy-qrtarget')?$('#sy-qrtarget').value:'0';
@@ -16892,7 +16912,8 @@ function syncQrLink(){
   if(v==='R')                          // QR per l'App REPLAY (riprese video)
     return base+'/replay?k='+encodeURIComponent(SYNC.key);
   const f=parseInt(v)||0;
-  return base+'/?k='+encodeURIComponent(SYNC.key)+(f>0?'&f='+f:'');
+  if(f>0&&!syncFieldKey(f))return null;
+  return base+'/?k='+encodeURIComponent(f>0?syncFieldKey(f):SYNC.key)+(f>0?'&f='+f:'');
 }
 function renderSyncQR(){
   if(!LIC.ok){const cv=$('#sy-qr');if(cv)cv.style.display='none';const h=$('#sy-qrhint');if(h)h.innerHTML='🔒 '+L('Il collegamento dei dispositivi mobili è riservato alla versione completa.');const cb=$('#sy-capqr-btn');if(cb)cb.style.display='none';return;}
