@@ -1,68 +1,68 @@
 {
-  "content": "8.1.0",
-  "minShell": "7.5.0",
-  "notes": "Ding dong prima degli annunci, musica che si abbassa sotto la voce, seconda voce neurale maschile.",
-  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
-  "files": {
-    "bandiere.js": {
-      "sha256": "2743e343f650bb9f7d1f33d135e51de0ae9cc63a09e42f42ae773aedade4f41a",
-      "size": 154284
-    },
-    "campo.html": {
-      "sha256": "954a0a0b6610429d2e21590e8e3a004a5e04f52ecabc594c50bc0cd4ffcd6cdc",
-      "size": 50573
-    },
-    "capitano.html": {
-      "sha256": "47820fe4399c0339cf80aea4efa111904ef96eec85da3499daf142b494a7fe97",
-      "size": 26250
-    },
-    "gifenc.js": {
-      "sha256": "d4abcba938a8ed397f8493c8473b32a73c0eb176c8e85c8498b69d8937ffea2b",
-      "size": 14206
-    },
-    "index.html": {
-      "sha256": "85df6df03b47727ef45cb5ce5f568f31af05f7e3436d1bc1612edd4239e9a70c",
-      "size": 2429839
-    },
-    "iscrizione.html": {
-      "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
-      "size": 4938
-    },
-    "legge.js": {
-      "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
-      "size": 7787
-    },
-    "mp4enc.js": {
-      "sha256": "da69c25e153c01969a93e44a9112cba9bf28ca72cfa38b482a77bd134a766b21",
-      "size": 13103
-    },
-    "musiche.js": {
-      "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
-      "size": 2424
-    },
-    "overlay.html": {
-      "sha256": "aa7b8afdd9532b45ba329470b8bdd456c96d296847d27964f390747cf4ea0a99",
-      "size": 16276
-    },
-    "regolamenti.js": {
-      "sha256": "4f6040c8aabdbf0e1fe898d5b332d4fdfd62320f87d5dcb3cfdc51221cf31c4a",
-      "size": 436654
-    },
-    "regolamenti_en.js": {
-      "sha256": "ff74f40b8c466389921ad7a45cca63262dbc1694f4a9df39931632e8f5a133df",
-      "size": 390562
-    },
-    "replay.html": {
-      "sha256": "222c09110187ce53845f825cc2bd7cefd61cb0798ae61c27ead00b7a961b19d6",
-      "size": 34789
-    },
-    "stemmi_club.js": {
-      "sha256": "10330dea4d72640219ef97d328090e34949ffd3cc141c7c4e4d89e051917afd2",
-      "size": 17247581
-    },
-    "tornei_reali.js": {
-      "sha256": "02bee0959d6a540cb56a4bdd0466d8ca80975c2d0339ac99ece8b40aee92ec5a",
-      "size": 216403
-    }
+ "content": "8.2.0",
+ "minShell": "7.6.8",
+ "notes": "Nuova Sala Replay: moviola, azioni in arrivo e messa in onda immediata su Presentazione, AUTO LIVE e TV.",
+ "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
+ "files": {
+  "bandiere.js": {
+   "sha256": "2743e343f650bb9f7d1f33d135e51de0ae9cc63a09e42f42ae773aedade4f41a",
+   "size": 154284
+  },
+  "campo.html": {
+   "sha256": "a12a11a96e76b53c874be73723a5c3a585ae5e39afe81729beafe3be3bc3c612",
+   "size": 50686
+  },
+  "capitano.html": {
+   "sha256": "47820fe4399c0339cf80aea4efa111904ef96eec85da3499daf142b494a7fe97",
+   "size": 26250
+  },
+  "gifenc.js": {
+   "sha256": "d4abcba938a8ed397f8493c8473b32a73c0eb176c8e85c8498b69d8937ffea2b",
+   "size": 14206
+  },
+  "index.html": {
+   "sha256": "9e0d59188827d1179db8c2c9f32e2aa4ef076783c292e265288e2a3fe059a699",
+   "size": 2471499
+  },
+  "iscrizione.html": {
+   "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
+   "size": 4938
+  },
+  "legge.js": {
+   "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
+   "size": 7787
+  },
+  "mp4enc.js": {
+   "sha256": "da69c25e153c01969a93e44a9112cba9bf28ca72cfa38b482a77bd134a766b21",
+   "size": 13103
+  },
+  "musiche.js": {
+   "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
+   "size": 2424
+  },
+  "overlay.html": {
+   "sha256": "aa7b8afdd9532b45ba329470b8bdd456c96d296847d27964f390747cf4ea0a99",
+   "size": 16276
+  },
+  "regolamenti.js": {
+   "sha256": "4f6040c8aabdbf0e1fe898d5b332d4fdfd62320f87d5dcb3cfdc51221cf31c4a",
+   "size": 436654
+  },
+  "regolamenti_en.js": {
+   "sha256": "ff74f40b8c466389921ad7a45cca63262dbc1694f4a9df39931632e8f5a133df",
+   "size": 390562
+  },
+  "replay.html": {
+   "sha256": "2de9554f062421aa094a8269096382b206fef63ab5e6f87ca3f6db85f8e0facd",
+   "size": 34902
+  },
+  "stemmi_club.js": {
+   "sha256": "10330dea4d72640219ef97d328090e34949ffd3cc141c7c4e4d89e051917afd2",
+   "size": 17247581
+  },
+  "tornei_reali.js": {
+   "sha256": "02bee0959d6a540cb56a4bdd0466d8ca80975c2d0339ac99ece8b40aee92ec5a",
+   "size": 216403
   }
+ }
 }
