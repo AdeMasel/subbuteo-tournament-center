@@ -59,3 +59,5 @@ a:focus-visible,button:focus-visible{outline:3px solid #86e2c1;outline-offset:5p
 #lb{overscroll-behavior:contain}
 @media(max-width:760px){.theme-pair{grid-template-columns:1fr}.theme-story{padding-block:60px}.theme-scene{padding:24px}.theme-scene p{min-height:0}}
 @media(prefers-reduced-motion:reduce){.theme-scene::before,.theme-scene .shot{transform:none!important;transition:none!important}}
+
+.theme-scene .shot img{display:block;width:100%;height:auto}
