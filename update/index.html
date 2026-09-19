@@ -8973,7 +8973,7 @@ async function printQrCampi(){
 
 /* =========================================================
    CATALOGO STEMMI — club internazionali dallo Stemmario
-   (file stemmi_club.js accanto all'app, caricato al primo uso;
+   (file stemmi_club.js + stemmi_club_2.js accanto all'app, caricati al primo uso;
    generato con /Volumes/DRIVE2/stemmario/build_tournament_catalog.py)
    ========================================================= */
 const stemmiSel=new Map(); // indice nel catalogo -> voce squadra
@@ -8996,7 +8996,11 @@ function openStemmi(){
   if(stemmiLoading)return;
   stemmiLoading=true;
   toast('Carico il catalogo stemmi e bandiere (solo la prima volta)…');
+  /* Il catalogo è in due file: l'aggiornamento automatico accetta file fino a
+     16 MiB e il catalogo intero li supera. La seconda metà si accoda alla prima
+     nello stesso ordine; se mancasse, il catalogo resta usabile, solo più corto. */
   loadScriptOnce('stemmi_club.js')
+    .then(()=>loadScriptOnce('stemmi_club_2.js').catch(()=>{}))
     .then(()=>loadScriptOnce('bandiere.js').catch(()=>{}))  // le bandiere sono opzionali
     .then(()=>{
       stemmiLoading=false;mergeFlags();stemmiShow();

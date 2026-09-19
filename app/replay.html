@@ -262,7 +262,7 @@ function status(){
   el.textContent=connected?T('Collegato'):T('Non raggiungibile');
   el.className=connected?'on':'';
 }
-function api(path){return cfg.url.replace(/\/+$/,'')+path;}
+function api(path){if(/^\/api\/(photo|clip)(\?|$)/.test(path))path+=(path.includes('?')?'&':'?')+'key='+encodeURIComponent(cfg.key);return cfg.url.replace(/\/+$/,'')+path;}
 
 /* la telecamera pretende https: se manca, lo si dice subito e chiaro */
 function sicuro(){return window.isSecureContext===true;}

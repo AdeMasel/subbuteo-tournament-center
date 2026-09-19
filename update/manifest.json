@@ -1,7 +1,7 @@
 {
  "content": "8.2.1",
  "minShell": "7.6.8",
- "notes": "Sorteggio in studio: il conduttore mostra il cartoncino con il nome vero, voce maschile e tabellone bianco. Frecce ▲▼ per l'ordine nei gironi.",
+ "notes": "Sorteggio in studio: il conduttore mostra il cartoncino con il nome vero, voce maschile e tabellone bianco. Frecce ▲▼ per l'ordine nei gironi. Catalogo stemmi diviso in due file.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -21,8 +21,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "2a093b524cfa986bc3ae6b352d500bac2c14cdef22756fdb030a7b6105dbcded",
-   "size": 2496728
+   "sha256": "c7188dd2804398c74c873f3d37e5da0ffe5829679e01cf1bff07e560d624cdc2",
+   "size": 2497059
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -61,8 +61,12 @@
    "size": 5960653
   },
   "stemmi_club.js": {
-   "sha256": "10330dea4d72640219ef97d328090e34949ffd3cc141c7c4e4d89e051917afd2",
-   "size": 17247581
+   "sha256": "6f29cb55e901fdd1d299d1eca9310ba4cdc15375b82ff6cc16bb14109ca6ecca",
+   "size": 8627275
+  },
+  "stemmi_club_2.js": {
+   "sha256": "dad704e4d7d320a8101e3baa10ed9c84a9e2df9c5df1009136e184a60b1e7539",
+   "size": 8620577
   },
   "tornei_reali.js": {
    "sha256": "02bee0959d6a540cb56a4bdd0466d8ca80975c2d0339ac99ece8b40aee92ec5a",
