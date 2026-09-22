@@ -234,6 +234,7 @@ footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);let
       </div>
     </div>
     <input type="file" id="foto-file" accept="image/*" capture="environment" style="display:none" onchange="fotoDaFile(this)">
+    <button id="foto-retry" class="btn sec" hidden onclick="fotoRiprova()">Riprova invio foto</button>
     <p class="small muted" id="foto-hint" style="margin-top:10px"></p>
   </div>
   <div id="m-sos"></div>
@@ -480,7 +481,8 @@ function cardsLine(m){
    del telefono e funziona anche in http. Il mirino integrato resta
    disponibile quando il tunnel Internet è attivo.
    ========================================================= */
-const FOTO={quando:'prima',stato:{},inCorso:false};
+const FOTO={quando:'prima',stato:{},inCorso:false,cattura:null,pending:{},busy:new Set(),confermate:{}};
+try{FOTO.pending=JSON.parse(localStorage.getItem(LS+'_foto_pending')||'{}')||{};}catch(e){}
 function fotoDisponibili(){return !!(snap&&snap.foto);}
 function fotoUrl(mid,quando){
   return api('/api/photo?f='+encodeURIComponent(mid+'__'+quando+'.jpg'))+'&t='+(FOTO.stato[mid+quando]||0);
@@ -492,28 +494,31 @@ function fotoRender(){
   card.style.display='';
   ['prima','dopo'].forEach(q=>{
     const box=$('#fi-'+q);if(!box)return;
-    const c=(snap.fotoList||[]).find(x=>x.mid===curMid&&x.quando===q);
+    const confirmed=FOTO.confermate[curMid+q];
+    const c=(snap.fotoList||[]).find(x=>x.mid===curMid&&x.quando===q)||(confirmed&&confirmed.key===cfg.key&&confirmed.url===cfg.url?confirmed:null);
     box.innerHTML=c?`<img src="${fotoUrl(curMid,q)}" alt="">`
                    :`<span class="vuoto">📷</span>`;
     const b=box.parentElement.querySelector('.btn');
     if(b)b.textContent=c?T('↻ Rifai'):T('📷 Scatta');
   });
+  const retry=$('#foto-retry');if(retry){retry.hidden=!Object.values(FOTO.pending).some(p=>p.key===cfg.key&&p.url===cfg.url);retry.textContent=LANG==='en'?'Retry photo upload':'Riprova invio foto';}
   const h=$('#foto-hint');
   if(h)h.textContent=window.isSecureContext?'':T('Si apre la fotocamera del telefono: scatta, conferma e la foto parte da sola.');
 }
 function fotoScatta(quando){
   if(!curMid)return;
-  FOTO.quando=quando;
+  FOTO.quando=quando;FOTO.cattura={mid:curMid,quando,key:cfg.key,url:cfg.url};
   const inp=$('#foto-file');
   if(inp){inp.value='';inp.click();}
 }
 function fotoDaFile(inp){
   const f=inp.files&&inp.files[0];
   if(!f){return;}
-  const q=FOTO.quando,mid=curMid;
+  const shot=FOTO.cattura||{mid:curMid,quando:FOTO.quando,key:cfg.key,url:cfg.url};
+  const q=shot.quando,mid=shot.mid;if(!mid)return;
   fotoMostraCaricamento(q,true);
   const rd=new FileReader();
-  rd.onload=()=>fotoRidimensiona(rd.result,1280,.8).then(d=>fotoInvia(mid,q,d)).catch(()=>{
+  rd.onload=()=>fotoRidimensiona(rd.result,1280,.8).then(d=>fotoInvia(mid,q,d,{...shot,data:d})).catch(()=>{
     fotoMostraCaricamento(q,false);toast(T('Immagine non leggibile.'));
   });
   rd.onerror=()=>{fotoMostraCaricamento(q,false);toast(T('Immagine non leggibile.'));};
@@ -526,12 +531,14 @@ function fotoRidimensiona(dataUrl,lato,q){
   return new Promise((res,rej)=>{
     const im=new Image();
     im.onload=()=>{
+      try{
       let{width:w,height:h}=im;
       const k=Math.min(1,lato/Math.max(w,h));
       w=Math.round(w*k);h=Math.round(h*k);
       const cv=document.createElement('canvas');cv.width=w;cv.height=h;
       cv.getContext('2d').drawImage(im,0,0,w,h);
       res(cv.toDataURL('image/jpeg',q||.8));
+      }catch(e){rej(e);}
     };
     im.onerror=rej;
     im.src=dataUrl;
@@ -543,22 +550,46 @@ function fotoMostraCaricamento(q,on){
   if(on&&!vecchio){const d=document.createElement('div');d.className='car';d.textContent=T('invio…');box.appendChild(d);}
   if(!on&&vecchio)vecchio.remove();
 }
-function fotoInvia(mid,quando,dataUrl){
-  fetch(api('/api/photo'),{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({key:cfg.key,mid,quando,img:dataUrl})})
-    .then(r=>r.json())
-    .then(d=>{
-      fotoMostraCaricamento(quando,false);
-      if(d&&d.ok){
-        FOTO.stato[mid+quando]=Date.now();
-        snap.fotoList=(snap.fotoList||[]).filter(x=>!(x.mid===mid&&x.quando===quando));
-        snap.fotoList.push({mid,quando});
-        fotoRender();
-        toast('📷 '+T('Foto inviata alla Regia'));
-      }else toast(T('Foto non inviata')+(d&&d.err?': '+d.err:''));
-    })
-    .catch(()=>{fotoMostraCaricamento(quando,false);toast(T('Foto non inviata: nessun collegamento.'));});
+function fotoSalvaCoda(){
+  try{localStorage.setItem(LS+'_foto_pending',JSON.stringify(FOTO.pending));}
+  catch(e){toast(LANG==='en'?'Keep this page open until the photo has been sent.':'Mantieni aperta questa pagina fino all’invio della foto.');}
 }
+function fotoRiprova(){
+  return Object.values(FOTO.pending).filter(p=>p.key===cfg.key&&p.url===cfg.url)
+    .reduce((chain,p)=>chain.then(()=>fotoInvia(p.mid,p.quando,p.data,p)),Promise.resolve());
+}
+async function fotoInvia(mid,quando,dataUrl,context){
+  const p=context||{mid,quando,data:dataUrl,key:cfg.key,url:cfg.url};
+  const id=JSON.stringify([p.url,p.key,mid,quando]);
+  if(FOTO.busy.has(id))return false;
+  FOTO.pending[id]=p;fotoSalvaCoda();FOTO.busy.add(id);
+  fotoMostraCaricamento(quando,true);
+  try{
+    let result;
+    for(let attempt=0;attempt<2;attempt++){
+      const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+      try{
+        const r=await fetch(p.url.replace(/\/+$/,'')+'/api/photo',{method:'POST',signal:controller.signal,
+          headers:{'Content-Type':'application/json'},body:JSON.stringify({key:p.key,mid,quando,img:dataUrl})});
+        result=await r.json();
+        if(!r.ok||!result.ok){const e=new Error(result.err||'Invio non riuscito');e.permanent=r.status>=400&&r.status<500;throw e;}
+        break;
+      }catch(e){if(attempt||e.permanent)throw e;await new Promise(r=>setTimeout(r,750));}
+      finally{clearTimeout(timer);}
+    }
+    delete FOTO.pending[id];fotoSalvaCoda();FOTO.stato[mid+quando]=Date.now();
+    if(snap&&cfg.key===p.key&&cfg.url===p.url){
+      FOTO.confermate[mid+quando]={mid,quando,key:p.key,url:p.url};
+      snap.fotoList=(snap.fotoList||[]).filter(x=>!(x.mid===mid&&x.quando===quando));
+      snap.fotoList.push({mid,quando});
+    }
+    toast('📷 '+T('Foto inviata alla Regia'));return true;
+  }catch(e){
+    toast(LANG==='en'?'Photo retained: use Retry photo upload.':'Foto conservata: usa Riprova invio foto.');return false;
+  }finally{FOTO.busy.delete(id);fotoMostraCaricamento(quando,false);fotoRender();}
+}
+addEventListener('online',()=>fotoRiprova());
+
 
 function renderMatch(){
   const m=findM(curMid);if(!m){showList();return;}

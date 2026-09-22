@@ -1,7 +1,7 @@
 {
- "content": "8.2.1",
+ "content": "8.3.0",
  "minShell": "7.6.8",
- "notes": "Sorteggio in studio: il conduttore mostra il cartoncino con il nome vero, voce maschile e tabellone bianco. Frecce ▲▼ per l'ordine nei gironi. Catalogo stemmi diviso in due file.",
+ "notes": "8.3.0 — sorteggio in studio con il nome vero, club dei partecipanti, niente rivincite nei tabelloni, figurine e album, Coppa Planisfero, replay con dissolvenze, gironi e classifiche più leggibili, rullo dei risultati corretto.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -9,20 +9,24 @@
    "size": 154284
   },
   "campo.html": {
-   "sha256": "a12a11a96e76b53c874be73723a5c3a585ae5e39afe81729beafe3be3bc3c612",
-   "size": 50686
+   "sha256": "07004e1226b830661bf62fc20495595fa1c7364503c5059302c60947413aa7fb",
+   "size": 52865
   },
   "capitano.html": {
    "sha256": "47820fe4399c0339cf80aea4efa111904ef96eec85da3499daf142b494a7fe97",
    "size": 26250
+  },
+  "figurine_motore.js": {
+   "sha256": "445d9b0c1f42b744b976642d6659f82ac98391b622f2589cf5cee6da8c3bf93a",
+   "size": 6062740
   },
   "gifenc.js": {
    "sha256": "d4abcba938a8ed397f8493c8473b32a73c0eb176c8e85c8498b69d8937ffea2b",
    "size": 14206
   },
   "index.html": {
-   "sha256": "c7188dd2804398c74c873f3d37e5da0ffe5829679e01cf1bff07e560d624cdc2",
-   "size": 2497059
+   "sha256": "0c970d79654b4ac9da6dda47d21d872eec3e0ab69c9be91ad88ce38e82f03f86",
+   "size": 4380944
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -33,8 +37,8 @@
    "size": 7787
   },
   "mp4enc.js": {
-   "sha256": "da69c25e153c01969a93e44a9112cba9bf28ca72cfa38b482a77bd134a766b21",
-   "size": 13103
+   "sha256": "eb2af863effc1334dcfc1b954bc0f8ec264d203b80824f63e69b49fd306ec414",
+   "size": 17549
   },
   "musiche.js": {
    "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
@@ -43,6 +47,10 @@
   "overlay.html": {
    "sha256": "aa7b8afdd9532b45ba329470b8bdd456c96d296847d27964f390747cf4ea0a99",
    "size": 16276
+  },
+  "planisfero.html": {
+   "sha256": "8c79da08a83164128c91152c28f6200c867208c8b1f71e2d54f5e3fcd40d2902",
+   "size": 3917
   },
   "regolamenti.js": {
    "sha256": "4f6040c8aabdbf0e1fe898d5b332d4fdfd62320f87d5dcb3cfdc51221cf31c4a",
