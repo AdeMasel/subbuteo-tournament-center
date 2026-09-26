@@ -291,5 +291,83 @@ function montaMp4(buffers, pausa){
   return scriviMp4(tutti, base.avcc, base.larghezza, base.altezza, base.timescale);
 }
 
-glob.MP4 = { disponibile, Registratore, montaMp4, leggiMp4, scriviMp4 };
+// Offline, bounded decoded memory: only the two clips at a transition are open.
+function pianoDissolvenze(durate,secondi=.6){
+  const p=[];
+  durate.forEach((d,i)=>{
+    if(!Number.isFinite(d)||d<=0)throw new Error('Durata clip non valida');
+    const overlap=i?Math.min(secondi,d/3,durate[i-1]/3):0;
+    const start=i?p[i-1].end-overlap:0;
+    p.push({start,end:start+d,duration:d,overlap});
+  });
+  return p;
+}
+async function montaDissolvenze(buffers){
+  if(!disponibile)throw new Error('WebCodecs non disponibile per le dissolvenze');
+  if(!buffers.length)throw new Error('Nessuna clip');
+  const parsed=buffers.map(leggiMp4);
+  const plan=pianoDissolvenze(parsed.map(p=>p.campioni.reduce((n,c)=>n+c.durata,0)/p.timescale));
+  const scale=Math.min(1,1280/parsed[0].larghezza,720/parsed[0].altezza);
+  const width=Math.max(2,Math.round(parsed[0].larghezza*scale/2)*2);
+  const height=Math.max(2,Math.round(parsed[0].altezza*scale/2)*2);
+  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+  const ctx=canvas.getContext('2d');
+  const layer=document.createElement('canvas');layer.width=width;layer.height=height;const lc=layer.getContext('2d');
+  const fps=25,step=40000,samples=[],active=new Map();let avcc=null,error=null;
+  const config={codec:'avc1.42E01F',width,height,bitrate:4000000,framerate:fps,avc:{format:'avc'},latencyMode:'realtime'};
+  if(!(await glob.VideoEncoder.isConfigSupported(config)).supported)throw new Error('Encoder H.264 non disponibile');
+  const encoder=new glob.VideoEncoder({output(chunk,meta){
+    if(meta&&meta.decoderConfig&&meta.decoderConfig.description)avcc=new Uint8Array(meta.decoderConfig.description);
+    const dati=new Uint8Array(chunk.byteLength);chunk.copyTo(dati);
+    samples.push({dati,chiave:chunk.type==='key',durata:step});
+  },error(e){error=e;}});
+  function event(v,name,action){return new Promise((resolve,reject)=>{
+    const done=()=>{clearTimeout(timer);v.removeEventListener(name,ok);v.removeEventListener('error',bad);};
+    const ok=()=>{done();resolve();},bad=()=>{done();reject(new Error('Clip non decodificabile'));};
+    const timer=setTimeout(bad,15000);v.addEventListener(name,ok);v.addEventListener('error',bad);
+    try{action();}catch(e){done();reject(e);}
+  });}
+  async function open(i){
+    if(active.has(i))return active.get(i).video;
+    const video=document.createElement('video'),url=URL.createObjectURL(new Blob([buffers[i]],{type:'video/mp4'}));
+    video.muted=true;video.playsInline=true;video.preload='auto';active.set(i,{video,url});
+    await event(video,'loadeddata',()=>{video.src=url;video.load();});return video;
+  }
+  function close(i){const item=active.get(i);if(!item)return;item.video.pause();item.video.removeAttribute('src');item.video.load();URL.revokeObjectURL(item.url);active.delete(i);}
+  async function paint(i,t,alpha){
+    const v=await open(i),at=Math.max(0,Math.min(t-plan[i].start,v.duration-.001));
+    if(Math.abs(v.currentTime-at)>.0001)await event(v,'seeked',()=>{v.currentTime=at;});
+    const k=Math.min(width/v.videoWidth,height/v.videoHeight),w=v.videoWidth*k,h=v.videoHeight*k;
+    lc.fillStyle='#050b12';lc.fillRect(0,0,width,height);lc.drawImage(v,(width-w)/2,(height-h)/2,w,h);
+    ctx.globalAlpha=alpha;ctx.drawImage(layer,0,0);ctx.globalAlpha=1;
+  }
+  try{
+    encoder.configure(config);
+    const frames=Math.ceil(plan[plan.length-1].end*fps);
+    let i=0;
+    for(let n=0;n<frames;n++){
+      if(error)throw error;
+      const t=n/fps;
+      while(i+1<plan.length&&t>=plan[i+1].start)i++;
+      const overlap=i>0&&t<plan[i-1].end;
+      if(overlap){
+        await paint(i-1,t,1);
+        const x=Math.min(1,(t-plan[i].start)/plan[i].overlap);
+        await paint(i,t,x*x*(3-2*x));
+      }else await paint(i,t,1);
+      for(const k of active.keys())if(k<i-(overlap?1:0))close(k);
+      const frame=new glob.VideoFrame(canvas,{timestamp:n*step,duration:step});
+      try{encoder.encode(frame,{keyFrame:n%50===0});}finally{frame.close();}
+      if(encoder.encodeQueueSize>8)await encoder.flush();
+      if(n%25===0)await new Promise(resolve=>setTimeout(resolve,0));
+    }
+    await encoder.flush();if(error)throw error;if(!avcc||!samples.length)throw new Error('Montaggio vuoto');
+    return scriviMp4(samples,avcc,width,height,1000000);
+  }finally{
+    if(encoder.state!=='closed')encoder.close();
+    for(const i of [...active.keys()])close(i);
+  }
+}
+
+glob.MP4 = { disponibile, Registratore, montaMp4, leggiMp4, scriviMp4, montaDissolvenze, pianoDissolvenze };
 })(typeof window !== 'undefined' ? window : globalThis);

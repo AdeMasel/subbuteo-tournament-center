@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Subbuteo Tournament Center — il gestionale per i tornei di Calcio da Tavolo</title>
-<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 16 formule di gioco, sorteggio spettacolare, app per arbitri e replay, doppio schermo e classifiche. Demo gratuita per macOS, Windows e Linux; licenze da 20 € e una nuova formula ogni mese.">
+<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 19 formule di gioco (anche il regolamento FISTF), sorteggio spettacolare, app per arbitri e replay, doppio schermo e classifiche. Demo gratuita per macOS, Windows e Linux; licenze da 20 € e una nuova formula ogni mese.">
 <meta name="author" content="Antonio de Masellis">
 <meta property="og:title" content="Subbuteo Tournament Center">
 <meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
@@ -503,6 +503,18 @@ header.nav{top:var(--podh)}
 }
 </style>
 <link rel="stylesheet" href="assets/cinematic-2026.css">
+<link rel="stylesheet" href="assets/night-experience.css">
+<script defer src="assets/night-experience.js"></script>
+<style>
+.license-contribution{align-self:start;border:1px solid #dfbd7080;border-radius:14px;background:linear-gradient(130deg,#142640,#071225);overflow:hidden;box-shadow:0 15px 40px #0004}
+.license-contribution>summary{display:flex;align-items:center;justify-content:space-between;gap:18px;list-style:none;cursor:pointer;padding:25px;color:#f5d895;font-family:var(--fh);font-size:24px;line-height:1.25}
+.license-contribution>summary::-webkit-details-marker{display:none}
+.license-contribution>summary::after{content:'+';font-size:30px;flex-shrink:0}
+.license-contribution[open]>summary::after{content:'−'}
+.license-contribution>summary:hover{background:#e5c37612}
+.license-contribution>summary:focus-visible{outline:3px solid #86e2c1;outline-offset:-5px}
+.license-contribution .mailcard{border:0;border-top:1px solid #dfbd7033;border-radius:0;box-shadow:none}
+</style>
 </head>
 <body>
 <div class="podbar" id="podbar">
@@ -541,18 +553,18 @@ header.nav{top:var(--podh)}
 
 <!-- ================================================================ HERO -->
 <section class="hero" id="top">
-  <div class="hero-img"><img src="assets/stadium-stage.jpg" alt="Miniature Subbuteo illuminate dai riflettori" fetchpriority="high"></div>
+  <div class="hero-img"><img src="assets/night-stadium.jpg" alt="Miniature Subbuteo illuminate dai riflettori" fetchpriority="high"></div>
   <div class="hero-in">
     <div class="wrap">
-      <div class="eyebrow">Versione 8.4.0 · Broadcast Edition</div>
+      <div class="eyebrow">Versione 9.0.0 · Broadcast Edition</div>
       <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Subbuteo Tournament Center"><h1>Il torneo<br>diventa<em>una diretta</em></h1>
       <p class="hero-claim">Il software di gestione tornei più professionale e completo al mondo.</p>
       <p class="sub">Dalla prima iscrizione all'ultima premiazione: <b>Subbuteo Tournament Center</b>
       gestisce gironi, tabelloni, cronometri, arbitri e classifiche — e li racconta al pubblico
       con la regia di una trasmissione televisiva.</p>
       <div class="badges">
-        <span class="badge">16 formule di gioco</span>
-        <span class="badge">Regole FISCT / FISTF</span>
+        <span class="badge">19 formule di gioco</span>
+        <span class="badge">Regolamento FISTF ufficiale</span>
         <span class="badge">App per arbitri e capitani</span>
         <span class="badge">Funziona senza Internet</span>
         <span class="badge on">Demo gratuita</span>
@@ -580,16 +592,17 @@ header.nav{top:var(--podh)}
 <!-- ================================================================ NUMERI -->
 <section class="stats">
   <div class="statgrid">
-    <div class="stat"><b>15</b><span>Formule di gioco</span></div>
+    <div class="stat"><b>19</b><span>Formule di gioco</span></div>
     <div class="stat"><b>18</b><span>Tornei reali ufficiali</span></div>
     <div class="stat"><b>5.610</b><span>Stemmi di club</span></div>
     <div class="stat"><b>153</b><span>Inni nazionali</span></div>
     <div class="stat"><b>45</b><span>Brani della libreria musicale</span></div>
-    <div class="stat"><b>168</b><span>Pagine di manuale</span></div>
+    <div class="stat"><b>236</b><span>Pagine di manuale</span></div>
   </div>
 </section>
 
 <!-- ================================================================ INTRO -->
+<section class="night-story"><div class="eyebrow">SUBBUTEO · BROADCAST EXPERIENCE</div><h2 class="rv">Piccole miniature.<br>Grandi emozioni.</h2><p>La passione del calcio da tavolo incontra l’atmosfera di una grande diretta televisiva.</p><div class="night-stages"><a class="night-stage rv" href="#funzioni"><img src="assets/shots/04_sorteggio_studio.webp" alt="Il sorteggio diventa spettacolo" loading="lazy" width="1440" height="900"><div><small>01 / IL SIPARIO SI APRE</small><h3>Il sorteggio diventa spettacolo</h3><p>Ogni squadra ha il suo momento sotto i riflettori.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots/12_present.webp" alt="Il tuo torneo, al centro della scena" loading="lazy" width="1440" height="900"><div><small>02 / SI VA IN DIRETTA</small><h3>Il tuo torneo, al centro della scena</h3><p>Risultati, classifiche e replay. Un’esperienza connessa.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots/08_finale.webp" alt="Una finale da ricordare" loading="lazy" width="1440" height="900"><div><small>03 / IL MOMENTO DECISIVO</small><h3>Una finale da ricordare</h3><p>Dalla prima partita alla celebrazione del campione.</p></div></a></div></section>
 <section class="sec" id="cosa">
   <div class="wrap">
     <div class="eyebrow rv">Che cos'è</div>
@@ -616,11 +629,13 @@ header.nav{top:var(--podh)}
     <!-- 1 -->
     <div class="feat">
       <div class="ftxt rv">
-        <h3>Quindici formule, e chi ti dice quale scegliere</h3>
-        <p>Gironi con eliminazione diretta e ripescaggi, gironi a fasce, campionato (anche
-        andata e ritorno), eliminazione diretta con consolazione, sistema svizzero, playoff con
-        formula Page e playout, fase campionato in stile Champions, doppia eliminazione,
-        «Re del Tavolo», torneo a squadre.</p>
+        <h3>Diciannove formule, e chi ti dice quale scegliere</h3>
+        <p>Gironi con eliminazione diretta e ripescaggi, gironi a fasce, formula speculare,
+        classifica avulsa, seconda fase a gironi, due competizioni con finali incrociate, campionato
+        (anche andata e ritorno), eliminazione diretta con consolazione, sistema svizzero e McMahon,
+        playoff con formula Page e playout, fase campionato in stile Champions, doppia eliminazione,
+        la Rosa dei Venti, la Coppa Planisfero, «Re del Tavolo», torneo a squadre — e le tre formule del
+        <b>regolamento FISTF</b>.</p>
         <p>Non sai quale usare? Il <b>Consigliere delle formule</b> guarda quanti siete e propone
         <b>tutte</b> le soluzioni possibili — anche a più fasi — con partite totali e durata,
         e le applica al Setup con un clic.</p>
@@ -645,7 +660,7 @@ header.nav{top:var(--podh)}
         <p>Rispetta le <b>fasce</b> (teste di serie, seconda fascia…) e può tenere separati i
         <b>compagni di club</b>, uno per girone. Si estrae a mano, una squadra alla volta, oppure si lascia
         andare tutto da solo. Poi un pulsante e il sorteggio diventa la composizione ufficiale dei gironi.</p>
-        <div class="tagrow"><span class="tag n">Novità 8.3</span><span class="tag">Sorteggio in studio</span><span class="tag">Fasce</span><span class="tag">Club</span></div>
+        <div class="tagrow"><span class="tag">Dalla 8.3</span><span class="tag">Sorteggio in studio</span><span class="tag">Fasce</span><span class="tag">Club</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/04_sorteggio_studio.webp"><img src="assets/shots/04_sorteggio_studio.webp" alt="Il sorteggio in studio: il conduttore mostra il nome estratto" loading="lazy"></div>
     </div>
@@ -665,7 +680,7 @@ header.nav{top:var(--podh)}
         </ul>
         <p style="margin-top:16px">Raddoppia i campi e guardi l'ora di fine arretrare di tre ore.
         È il modo più rapido per capire se la formula che hai in mente sta dentro la giornata.</p>
-        <div class="tagrow"><span class="tag n">Novità 3.0</span><span class="tag">Pianificazione</span></div>
+        <div class="tagrow"><span class="tag">Dalla 3.0</span><span class="tag">Pianificazione</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/24_stima.webp"><img src="assets/shots/24_stima.webp" alt="La stima della durata del torneo" loading="lazy"></div>
     </div>
@@ -746,7 +761,8 @@ header.nav{top:var(--podh)}
         <p>Un incontro sono <b>quattro gare in simultanea</b> su quattro tavoli, e l'accoppiamento
         segue la <b>procedura ufficiale FISCT</b>, riprodotta passo per passo: consegna della distinta,
         sorteggio della moneta (o fattore campo nelle gare di ritorno), poi lo <b>schieramento
-        alternato in cinque mosse</b> 1-2-2-2-1.</p>
+        alternato in cinque mosse</b> 1-2-2-2-1. Con la formula FISTF, invece, gli allenatori A e B scelgono
+        gara per gara, come vuole il regolamento internazionale.</p>
         <p>Il programma fa da arbitro della procedura: dice di chi è la mossa, evidenzia in rosso
         il tavolo dove l'avversario è scoperto, <b>impone la copertura</b> quando è dovuta, accetta
         solo i tavoli ammessi e sa tornare indietro. All'intervallo apre da sola la finestra delle
@@ -762,8 +778,8 @@ header.nav{top:var(--podh)}
         <h3>Classifiche che si spiegano da sole</h3>
         <p>Le posizioni che contano sono <b>colorate</b>, e il colore dice che cosa succede:
         verde metallizzato per chi avanza, celeste per playoff e spareggi, arancio per i playout,
-        rosso per chi retrocede, oro per chi resta dov'è. Con la legenda sotto, perché nessuno
-        debba chiedere.</p>
+        rosso per chi retrocede; chi non è in nessuna zona resta in chiaro. Sotto, la legenda elenca solo le
+        zone presenti, con gli stessi colori e gli stessi simboli delle righe, perché nessuno debba chiedere.</p>
         <ul class="flist">
           <li>Criteri di spareggio completi, scontri diretti a cluster, differenza reti, gol fatti</li>
           <li><b>Cronache</b> del torneo con marcatori, cartellini e referti</li>
@@ -792,7 +808,7 @@ header.nav{top:var(--podh)}
           prima di una finale</li>
           <li>Le <b>teste di serie</b> del torneo nuovo compilate dal ranking storico</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 3.3</span><span class="tag">Albo d'oro</span><span class="tag">Ranking</span><span class="tag">Testa a testa</span></div>
+        <div class="tagrow"><span class="tag">Dalla 3.3</span><span class="tag">Albo d'oro</span><span class="tag">Ranking</span><span class="tag">Testa a testa</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/28_perpetua.webp"><img src="assets/shots/28_perpetua.webp" alt="La classifica perpetua" loading="lazy"></div>
     </div>
@@ -834,9 +850,9 @@ header.nav{top:var(--podh)}
           <li>Nella Formula Speculare <b>tutti giocano lo stesso numero di partite</b></li>
           <li>Chi si è già incontrato nei gironi <b>non si rincontra</b> nella seconda fase</li>
           <li>Le fasce si adattano da sole agli iscritti: <b>nessuno resta fuori per una svista</b></li>
-          <li>Quindici formule in tutto, dal girone unico ai tornei da 52 giocatori</li>
+          <li>Oggi le formule sono diciannove, dal girone unico al regolamento FISTF</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 6.3</span><span class="tag">Formula Speculare</span><span class="tag">Classifica Avulsa</span><span class="tag">52 giocatori</span></div>
+        <div class="tagrow"><span class="tag">Dalla 6.3</span><span class="tag">Formula Speculare</span><span class="tag">Classifica Avulsa</span><span class="tag">52 giocatori</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/01_live.webp"><img src="assets/shots/01_live.webp" alt="Le nuove formule di torneo" loading="lazy"></div>
     </div>
@@ -860,7 +876,7 @@ header.nav{top:var(--podh)}
           <li>Esportazione <b>CSV</b> di classifiche, calendario e marcatori</li>
           <li><b>153 inni nazionali</b> (archivio da scaricare a parte): nelle partite fra nazionali si suonano prima del via, se lo chiedi. Si scompatta l’archivio accanto al programma, in modo che il file <b>inni.js</b> e la cartella <b>inni</b> stiano nella stessa posizione dell’applicazione: al primo uso il programma li trova da sé</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 6.1</span><span class="tag">Doppio schermo</span><span class="tag">CSV</span><span class="tag">Inni</span></div>
+        <div class="tagrow"><span class="tag">Dalla 6.1</span><span class="tag">Doppio schermo</span><span class="tag">CSV</span><span class="tag">Inni</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/43_ghiaccio.webp"><img src="assets/shots/43_ghiaccio.webp" alt="Il tema Ghiaccio e la nuova barra con Secondo schermo" loading="lazy"></div>
     </div>
@@ -887,7 +903,7 @@ header.nav{top:var(--podh)}
           <li>Le <b>fotografie inviate dagli arbitri</b> ora arrivano davvero: un difetto le bloccava
           tutte, con o senza tunnel</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 5.5</span><span class="tag">McMahon</span><span class="tag">Ripescaggio olimpico</span><span class="tag">Andata e ritorno</span></div>
+        <div class="tagrow"><span class="tag">Dalla 5.5</span><span class="tag">McMahon</span><span class="tag">Ripescaggio olimpico</span><span class="tag">Andata e ritorno</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/38_doppio.webp"><img src="assets/shots/38_doppio.webp" alt="Il tabellone a doppio confronto: andata, ritorno e totale" loading="lazy"></div>
     </div>
@@ -913,7 +929,7 @@ header.nav{top:var(--podh)}
           <li>Ripresa continua fino a <b>30 minuti</b>, poi si spegne da sé per non svuotare la batteria</li>
           <li>Si collega inquadrando un QR, come l'App Campo</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 8.2</span><span class="tag">Sala Replay</span><span class="tag">MP4 720p</span><span class="tag">Montaggio</span></div>
+        <div class="tagrow"><span class="tag">Dalla 8.2</span><span class="tag">Sala Replay</span><span class="tag">MP4 720p</span><span class="tag">Montaggio</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/53_sala_replay.webp"><img src="assets/shots/53_sala_replay.webp" alt="La Sala Replay: monitor con il cartiglio della partita e azioni in arrivo" loading="lazy"></div>
     </div>
@@ -942,9 +958,34 @@ header.nav{top:var(--podh)}
           <li><b>Album PDF</b> per club, per girone o in ordine di nome, nove figurine per pagina</li>
           <li>Tutto sul tuo computer: nessuna foto esce di casa</li>
         </ul>
-        <div class="tagrow"><span class="tag n">Novità 8.4</span><span class="tag">Coppa Planisfero</span><span class="tag">Missioni sul telefono</span><span class="tag">Figurine</span></div>
+        <div class="tagrow"><span class="tag">Dalla 8.4</span><span class="tag">Coppa Planisfero</span><span class="tag">Missioni sul telefono</span><span class="tag">Figurine</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots/55_planisfero.webp"><img src="assets/shots/55_planisfero.webp" alt="La Coppa Planisfero: i 24 territori con le bandiere dei giocatori" loading="lazy"></div>
+    </div>
+
+    <!-- 13: le novità della 9.0 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>Il regolamento FISTF, tabella per tabella</h3>
+        <p>Tre nuove formule portano nel programma il <b>Tournament Organisers Handbook</b> della FISTF, la
+        federazione mondiale: <b>gironi con tabellone ufficiale</b>, <b>sistema svizzero</b> con fase finale e
+        <b>torneo a squadre</b>. Nessun adattamento: ordine delle gare, criteri di classifica, spareggi e incroci
+        sono quelli del documento, e nel Setup non si toccano.</p>
+        <p>Da 2 a 32 gironi il tabellone nasce dalla <b>tabella ufficiale</b>: chi va agli spareggi M1, M2…, chi
+        ha l'accesso diretto, chi incontra chi fino alla finale. Le 31 tabelle sono state controllate una per una
+        — e il controllo ha trovato perfino un refuso nel documento, corretto.</p>
+        <ul class="flist">
+          <li>Sorteggio per <b>fasce di ranking</b>, compagni di club o di nazione in gironi diversi</li>
+          <li><b>Ordine delle gare</b> FISTF per i gironi da 3 a 10, con gli ordini speciali per i compagni di club</li>
+          <li>Scontri diretti e <b>shoot-out</b> per il pari merito assoluto; categorie U12, U16, U20 e Ladies con
+          lo scarto massimo di 5–0</li>
+          <li>Svizzero: quattro turni, riposo che vale 3–0, tabellone a 16 (1–16, 8–9, 4–13…) o a 8</li>
+          <li>Squadre: allenatori A e B gara per gara, squadre anche di tre giocatori, una sostituzione</li>
+          <li>Ritiro con la regola FISTF, e al primo avvio una schermata riassume tutte le novità della versione</li>
+        </ul>
+        <div class="tagrow"><span class="tag n">Novità 9.0</span><span class="tag">FISTF</span><span class="tag">Tabelloni ufficiali</span><span class="tag">Shoot-out</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/57_fistf_tabellone.webp"><img src="assets/shots/57_fistf_tabellone.webp" alt="Il tabellone FISTF con cinque gironi: spareggi M1 e M2, accessi diretti e quarti di finale" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -953,7 +994,7 @@ header.nav{top:var(--podh)}
 <section class="sec tight" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow rv">E poi</div>
-    <h2 class="rv">Quattro sezioni che non ti aspetti</h2>
+    <h2 class="rv">Dieci cose che non ti aspetti</h2>
     <div class="grid3 rv">
       <div class="card">
         <span class="ic">🎛</span>
@@ -978,7 +1019,7 @@ header.nav{top:var(--podh)}
         è aperto dal <b>ding dong</b> da aeroporto che raccoglie l’attenzione della sala, e la musica di
         sottofondo <b>si abbassa da sola</b> sotto la voce per poi risalire quando ha finito. Sotto,
         un riquadro legge le voci installate nel tuo sistema e ti dice se ne stai già usando una buona.</p>
-        <div class="tagrow"><span class="tag n">Novità 7.6</span><span class="tag">Offline</span><span class="tag">Annunci</span></div>
+        <div class="tagrow"><span class="tag">Dalla 7.6</span><span class="tag">Offline</span><span class="tag">Annunci</span></div>
       </div>
       <div class="card">
         <span class="ic">📒</span>
@@ -991,8 +1032,8 @@ header.nav{top:var(--podh)}
       <div class="card">
         <span class="ic">⚖️</span>
         <h4>La Legge</h4>
-        <p>Tre regolamenti ufficiali — Subbuteo Tradizionale FISCT, CdT FISTF, OldSubbuteo — per
-        <b>700 articoli consultabili offline</b>. Si fa una domanda in italiano corrente
+        <p>Quattro regolamenti ufficiali — Subbuteo Tradizionale FISCT, Calcio da Tavolo FISTF, OldSubbuteo e
+        WASPA — per <b>oltre 800 articoli consultabili offline</b>. Si fa una domanda in italiano corrente
         («quanto dura un tempo?», «quando è fallo di mano?») e risponde con la regola giusta,
         la fonte e il capitolo. Anche a voce, anche dal telefono dell'arbitro.</p>
       </div>
@@ -1024,7 +1065,8 @@ header.nav{top:var(--podh)}
         <span class="ic">🚪</span>
         <h4>Quando qualcosa va storto</h4>
         <p>Un giocatore si infortuna o deve andare via: il <b>ritiro</b> sistema in un colpo tutte le sue
-        partite rimaste, con la regola che scegli tu, senza toccare quelle già giocate. E mentre il torneo
+        partite rimaste, con la regola che scegli tu, senza toccare quelle già giocate (nei tornei FISTF vale la
+        regola del regolamento: 0–3 in tutte le gare del girone). E mentre il torneo
         va avanti, una <b>copia di sicurezza</b> finisce ogni cinque minuti in una cartella sul computer:
         si torna indietro a qualsiasi momento della giornata.</p>
       </div>
@@ -1058,6 +1100,9 @@ header.nav{top:var(--podh)}
     <div class="eyebrow rv">Galleria</div>
     <h2 class="rv">Schermate vere, dal manuale</h2>
     <div class="gal rv">
+<figure data-full="assets/shots/58_novita_90.webp"><img src="assets/shots/58_novita_90.webp" alt="La schermata delle novità della versione 9.0" loading="lazy"><figcaption>Novità della 9.0</figcaption></figure>
+<figure data-full="assets/shots/57_fistf_tabellone.webp"><img src="assets/shots/57_fistf_tabellone.webp" alt="Il tabellone ufficiale FISTF con spareggi e accessi diretti" loading="lazy"><figcaption>Tabellone FISTF</figcaption></figure>
+<figure data-full="assets/shots/59_fistf_shootout.webp"><img src="assets/shots/59_fistf_shootout.webp" alt="Pari merito assoluto in un girone FISTF: lo shoot-out" loading="lazy"><figcaption>Shoot-out FISTF</figcaption></figure>
 <figure data-full="assets/shots/47_dark.webp"><img src="assets/shots/47_dark.webp" alt="Tema Stadium" loading="lazy"><figcaption>Tema Stadium</figcaption></figure>
 <figure data-full="assets/shots/48_light.webp"><img src="assets/shots/48_light.webp" alt="Tema Atelier" loading="lazy"><figcaption>Tema Atelier</figcaption></figure>
 <figure data-full="assets/shots/49_griglie.webp"><img src="assets/shots/49_griglie.webp" alt="Griglie dei gironi" loading="lazy"><figcaption>Griglie dei gironi</figcaption></figure>
@@ -1097,72 +1142,72 @@ header.nav{top:var(--podh)}
     una nuova formula di gioco</b>.</p>
 
     <div class="dgrid rv">
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-macOS-AppleSilicon.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-macOS-AppleSilicon.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
         </div>
         <small>Apple Silicon — M1, M2, M3, M4<br>macOS 11 o successivo</small>
-        <span class="sz">.dmg · 350 MB</span>
+        <span class="sz">.dmg · 362 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-macOS-Intel.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-macOS-Intel.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
         </div>
         <small>Intel — Mac con processore Intel<br>macOS 11 o successivo</small>
-        <span class="sz">.dmg · 359 MB</span>
+        <span class="sz">.dmg · 371 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-Setup-8.4.0-Windows-x64.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-Setup-9.0.0-Windows-x64.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
         </div>
         <small>Processore Intel o AMD a 64 bit<br>Windows 10 e 11</small>
-        <span class="sz">.exe · 326 MB</span>
+        <span class="sz">.exe · 337 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-Setup-8.4.0-Windows-arm64.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-Setup-9.0.0-Windows-arm64.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
         </div>
         <small>Processore ARM (Snapdragon)<br>Windows 10 e 11</small>
-        <span class="sz">.exe · 320 MB</span>
+        <span class="sz">.exe · 331 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-Linux-x86_64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-Linux-x86_64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
         </div>
         <small>AppImage x86_64 — nessuna installazione<br>rendi eseguibile e apri</small>
-        <span class="sz">.AppImage · 345 MB</span>
+        <span class="sz">.AppImage · 356 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-Linux-arm64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-Linux-arm64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
         </div>
         <small>AppImage ARM64 — nessuna installazione<br>rendi eseguibile e apri</small>
-        <span class="sz">.AppImage · 344 MB</span>
+        <span class="sz">.AppImage · 356 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
@@ -1173,7 +1218,7 @@ header.nav{top:var(--podh)}
       <p><b>Non vuoi installare niente?</b> La stessa versione dimostrativa gira anche nel browser,
       su qualsiasi sistema operativo — utile per dare un'occhiata prima di scaricare mezzo giga.</p>
       <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Apri nel browser</a>
-      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Manuale-Subbuteo-Tournament-Center-2026-09-24.pdf"><img src="assets/copertina-manuale.jpg" alt="Manuale PDF" loading="lazy"><span class="mt"><b>Manuale PDF</b><span>178 pagine · con appendice sulle formule</span></span></a>
+      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Manuale-Subbuteo-Tournament-Center-2026-09-26.pdf"><img src="assets/copertina-manuale.jpg" alt="Manuale PDF" loading="lazy"><span class="mt"><b>Manuale PDF</b><span>236 pagine · con appendice sulle formule</span></span></a>
       <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Inni-Nazionali-153.zip" style="font-size:14px;padding:12px 22px">🎵 Inni nazionali · 153 brani (393 MB)</a>
     </div>
   </div>
@@ -1191,7 +1236,7 @@ header.nav{top:var(--podh)}
     <table class="cmp rv">
       <thead><tr><th>Funzione</th><th>Demo</th><th>Completa</th></tr></thead>
       <tbody>
-        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 15</td></tr>
+        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 19</td></tr>
         <tr><td>Consigliere delle formule e Torneo Reale</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Salvataggio e richiamo dei tornei</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Esportazione e importazione dei dati</td><td class="no">✕</td><td class="yes">✓</td></tr>
@@ -1255,8 +1300,7 @@ header.nav{top:var(--podh)}
     <p class="lead rv">Sono disponibili tre licenze complete: <b>un anno a 20 €</b>, <b>due anni a
     30 €</b> e <b>a vita a 40 €</b>. Per averne una si scrive direttamente all'autore a
     <b>onyxsubbuteo@gmail.com</b> indicando il proprio <b>codice alfanumerico</b>, il <b>nome a cui
-    intestare la licenza</b> e la durata scelta; ricevuto il pagamento con <b>PayPal sull'account
-    ademase@gmail.com</b>, arriva il codice di attivazione. Ogni licenza vale per un <b>singolo
+    intestare la licenza</b> e la durata scelta; ricevuto il pagamento con <b>PayPal</b>, arriva il codice di attivazione. Ogni licenza vale per un <b>singolo
     dispositivo</b> ed è verificata a ogni avvio <b>anche senza collegamento a Internet</b>.</p>
 
     <div class="steps rv">
@@ -1274,8 +1318,7 @@ header.nav{top:var(--podh)}
       <div class="step">
         <h4>Scegli, scrivi e paga</h4>
         <p>Manda un'email con il tuo <b>codice alfanumerico</b> e il <b>nome</b> da mettere sulla
-        licenza, indica la durata e versa <b>20 €, 30 € o 40 €</b> con PayPal a
-        <b>ademase@gmail.com</b> (il codice QR è qui sotto).</p>
+        licenza, indica la durata e versa <b>20 €, 30 € o 40 €</b> con PayPal (i dettagli sono nel riquadro qui sotto).</p>
       </div>
       <div class="step">
         <h4>Incolla e gioca</h4>
@@ -1310,7 +1353,7 @@ header.nav{top:var(--podh)}
         <strong>una nuova formula di gioco ogni mese</strong>.</div>
         <div class="minimo">Un solo pagamento con <b>PayPal</b> per la durata scelta, senza addebiti automatici</div>
         <ul>
-          <li>Tutte e <b>sedici le formule</b>, Consigliere e Torneo Reale</li>
+          <li>Tutte e <b>diciannove le formule</b>, Consigliere e Torneo Reale</li>
           <li><b>Salvataggio</b>, richiamo ed esportazione dei tornei</li>
           <li><b>Gestione arbitrale</b> e assegnazione automatica dei campi</li>
           <li>Cerimonia di <b>sorteggio</b> e composizione dei gironi</li>
@@ -1319,15 +1362,15 @@ header.nav{top:var(--podh)}
           <li><b>Foto degli sfidanti</b> e libro dei ricordi in PDF</li>
           <li><b>Pre-Torneo</b> con quote, pagamenti e ricevute</li>
           <li><b>App Campo, App Capitano e App Replay</b> con i codici QR</li>
-          <li>Manuale completo da <b>226 pagine</b> in PDF</li>
+          <li>Manuale completo da <b>236 pagine</b> in PDF</li>
         </ul>
       </div>
 
-      <div class="mailcard">
+      <details class="license-contribution"><summary>Manda il tuo contributo per la licenza</summary><div class="mailcard">
         <h4>Richiedi il tuo codice</h4>
         <p>Nell'email indica il <b>codice alfanumerico</b> che leggi nel pannello Licenza e il
         <b>nome</b> a cui intestarla e la <b>durata scelta</b>; poi versa il relativo importo di
-        <b>20 €, 30 € o 40 €</b> con PayPal a <b>ademase@gmail.com</b>.</p>
+        <b>20 €, 30 € o 40 €</b>.</p>
         <div class="mailbox">
           <code id="mail">onyxsubbuteo@gmail.com</code>
           <button class="copy" id="cp" type="button">Copia</button>
@@ -1350,7 +1393,7 @@ header.nav{top:var(--podh)}
           <code class="pp-mail">ademase@gmail.com</code>
           <span style="font-size:13.5px">Il codice di attivazione ti arriva in risposta all'email.</span>
         </div>
-      </div>
+      </div></details>
     </div>
 
     <div class="shot rv" style="margin-top:52px;max-width:760px" data-full="assets/shots/25_licenza.webp">
@@ -1407,15 +1450,16 @@ header.nav{top:var(--podh)}
       </details>
       <details>
         <summary>Perché l'installer è così grande?</summary>
-        <div class="ans">Perché dentro c'è <b>tutto</b>: la libreria musicale, i 5.610 stemmi di club, le 233
+        <div class="ans">Perché dentro c'è <b>tutto</b>: i 5.610 stemmi di club, le 233
         bandiere, i quattro regolamenti completi, i <b>45 brani originali</b> della libreria musicale e i loghi
         delle competizioni ufficiali. Nulla viene scaricato dopo, così in sala torneo funziona anche senza rete.</div>
       </details>
       <details>
         <summary>Posso usarlo per tornei ufficiali di federazione?</summary>
-        <div class="ans">Sì: le formule, i criteri di classifica e la procedura di abbinamento del
-        Calcio da Tavolo a squadre seguono i <b>regolamenti FISCT/FISTF</b>. Il programma resta però
-        uno strumento indipendente, non è un prodotto federale.</div>
+        <div class="ans">Sì: dalla 9.0 tre formule seguono alla lettera il <b>Tournament Organisers Handbook
+        FISTF</b> — ordine delle gare, criteri di classifica, spareggi e tabelloni ufficiali da 2 a 32 gironi —
+        e il Calcio da Tavolo a squadre ha sia la procedura di abbinamento FISCT sia quella FISTF. Il programma
+        resta però uno strumento indipendente, non è un prodotto federale.</div>
       </details>
       <details>
         <summary>Chi lo ha scritto?</summary>
@@ -1445,7 +1489,7 @@ header.nav{top:var(--podh)}
       <div>
         <a class="brand" href="#top" style="margin-bottom:16px"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
         <p style="max-width:44ch;margin-top:4px">Il gestionale per i tornei di Subbuteo e Calcio da
-        Tavolo. Versione 8.4.0 — settembre 2026. Software e manuale di Antonio de Masellis.</p>
+        Tavolo. Versione 9.0.0 — settembre 2026. Software e manuale di Antonio de Masellis.</p>
       </div>
       <div>
         <h5>Il programma</h5>

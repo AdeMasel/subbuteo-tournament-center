@@ -1,0 +1,19 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Coppa Planisfero · Carta personale</title><style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#234664,#071320 65%);color:#eff3fa;font:17px/1.5 system-ui;min-height:100vh;padding:24px}main{max-width:540px;margin:auto}header{letter-spacing:.12em;color:#efd59c;margin:20px 0}article{padding:26px;border:1px solid #c4a365;border-radius:20px;background:linear-gradient(145deg,#192f44,#0c1928);box-shadow:0 24px 60px #0007}h1{font-size:28px}h2{color:#ffe1a2;font-size:24px}.secret{min-height:170px;padding:20px;border:1px solid #edd6a344;border-radius:14px;background:#07131fb3}button{width:100%;padding:15px;margin-top:14px;border:0;border-radius:10px;background:linear-gradient(120deg,#e3bd70,#fff0b8);color:#142337;font:700 16px system-ui;cursor:pointer}button:disabled{opacity:.55}small{display:block;color:#b8c8d8;margin-top:18px}#status{min-height:26px} [hidden]{display:none!important}</style></head><body><main><header>🌍 COPPA PLANISFERO</header><article><p id="tournament"></p><h1 id="name">Carta personale</h1><p id="nation"></p><div class="secret"><h2 id="mission">La missione è riservata.</h2></div><button id="reveal" disabled>Mostra la mia missione</button><button id="ack" hidden>Confermo di aver ricevuto la missione</button><p id="status" role="status" aria-live="polite">Collegamento alla Regia…</p><button id="retry" hidden>Riprova collegamento</button><small>Questo QR dà accesso alla tua carta: non condividerlo. Usa la rete Wi-Fi del torneo oppure il collegamento Internet fornito dalla Regia. Conserva il link o una foto del QR per riaprire la carta.</small></article></main><script>
+'use strict';
+const token=new URLSearchParams(location.hash.slice(1)).get('token')||'';
+let card=null,visible=false;
+const $=id=>document.getElementById(id);
+async function request(method='GET'){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
+ try{const r=await fetch('/api/plan-mission',{method,headers:{'X-STC-Mission':token},cache:'no-store',signal:controller.signal});const data=await r.json();if(!r.ok)throw Error(data.err||'Collegamento non disponibile');return data;}finally{clearTimeout(timer);}
+}
+async function load(){
+ $('retry').hidden=true;$('reveal').disabled=true;
+ try{if(!/^[a-f0-9]{64}$/.test(token))throw Error('Apri questa pagina usando il QR personale fornito dalla Regia.');const d=await request();card=d.card;$('name').textContent=card.name;$('nation').textContent=card.nation+' · Prima divisa';$('tournament').textContent=card.tournament;$('reveal').disabled=false;$('status').textContent=d.acknowledged?'Ricezione già confermata alla Regia.':'Carta pronta, prima di iniziare la prima partita.';}
+ catch(e){card=null;visible=false;$('mission').textContent='La missione è riservata.';$('ack').hidden=true;$('status').textContent=e.name==='AbortError'?'La Regia non risponde. Verifica il collegamento e riprova.':e.message;$('retry').hidden=false;}
+}
+$('reveal').onclick=()=>{if(!card)return;visible=!visible;$('mission').textContent=visible?card.mission:'La missione è riservata.';$('reveal').textContent=visible?'Nascondi la missione':'Mostra la mia missione';$('ack').hidden=!visible;};
+$('ack').onclick=async()=>{$('ack').disabled=true;try{await request('POST');$('status').textContent='Ricezione confermata alla Regia. Buon torneo!';}catch(e){$('status').textContent='Conferma non inviata: verifica la rete e riprova.';}finally{$('ack').disabled=false;}};
+$('retry').onclick=load;document.addEventListener('visibilitychange',()=>{if(document.hidden){visible=false;$('mission').textContent='La missione è riservata.';$('reveal').textContent='Mostra la mia missione';$('ack').hidden=true;}});load();
+</script></body></html>

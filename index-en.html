@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Subbuteo Tournament Center — tournament software for Subbuteo and table football</title>
-<meta name="description" content="Run Subbuteo and table-football tournaments with the direction of a live TV broadcast: 15 tournament formats, a spectacular draw, referee and replay apps, dual screen and standings. Free demo for macOS, Windows and Linux; licences from €20 and a new format every month.">
+<meta name="description" content="Run Subbuteo and table-football tournaments with the direction of a live TV broadcast: 19 tournament formats (the FISTF regulations included), a spectacular draw, referee and replay apps, dual screen and standings. Free demo for macOS, Windows and Linux; licences from €20 and a new format every month.">
 <meta name="author" content="Antonio de Masellis">
 <meta property="og:title" content="Subbuteo Tournament Center">
-<meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
+<meta property="og:description" content="Your table-football tournament, from the first entry to the last prize-giving.">
 <meta property="og:image" content="assets/hero.webp">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="assets/fonts.css">
@@ -503,6 +503,18 @@ header.nav{top:var(--podh)}
 }
 </style>
 <link rel="stylesheet" href="assets/cinematic-2026.css">
+<link rel="stylesheet" href="assets/night-experience.css">
+<script defer src="assets/night-experience.js"></script>
+<style>
+.license-contribution{align-self:start;border:1px solid #dfbd7080;border-radius:14px;background:linear-gradient(130deg,#142640,#071225);overflow:hidden;box-shadow:0 15px 40px #0004}
+.license-contribution>summary{display:flex;align-items:center;justify-content:space-between;gap:18px;list-style:none;cursor:pointer;padding:25px;color:#f5d895;font-family:var(--fh);font-size:24px;line-height:1.25}
+.license-contribution>summary::-webkit-details-marker{display:none}
+.license-contribution>summary::after{content:'+';font-size:30px;flex-shrink:0}
+.license-contribution[open]>summary::after{content:'−'}
+.license-contribution>summary:hover{background:#e5c37612}
+.license-contribution>summary:focus-visible{outline:3px solid #86e2c1;outline-offset:-5px}
+.license-contribution .mailcard{border:0;border-top:1px solid #dfbd7033;border-radius:0;box-shadow:none}
+</style>
 </head>
 <body>
 <div class="podbar" id="podbar">
@@ -541,17 +553,17 @@ header.nav{top:var(--podh)}
 
 <!-- ================================================================ HERO -->
 <section class="hero" id="top">
-  <div class="hero-img"><img src="assets/stadium-stage.jpg" alt="Subbuteo miniatures under stadium floodlights" fetchpriority="high"></div>
+  <div class="hero-img"><img src="assets/night-stadium.jpg" alt="Subbuteo miniatures under stadium floodlights" fetchpriority="high"></div>
   <div class="hero-in">
     <div class="wrap">
-      <div class="eyebrow">Version 8.4.0 · Broadcast Edition</div>
+      <div class="eyebrow">Version 9.0.0 · Broadcast Edition</div>
       <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Subbuteo Tournament Center"><h1>Your tournament<br>becomes<em>a live show</em></h1>
       <p class="hero-claim">The most professional and complete tournament management software in the world.</p>
       <p class="sub">From the first entry to the final trophy: <b>Subbuteo Tournament Center</b>
       it runs groups, brackets, clocks, referees and standings — and presents them to the room with the polish of a television broadcast.</p>
       <div class="badges">
-        <span class="badge">15 tournament formats</span>
-        <span class="badge">FISCT / FISTF rules</span>
+        <span class="badge">19 tournament formats</span>
+        <span class="badge">Official FISTF regulations</span>
         <span class="badge">Apps for referees and captains</span>
         <span class="badge">Works without the Internet</span>
         <span class="badge on">Free demo</span>
@@ -579,23 +591,24 @@ header.nav{top:var(--podh)}
 <!-- ================================================================ NUMERI -->
 <section class="stats">
   <div class="statgrid">
-    <div class="stat"><b>15</b><span>Tournament formats</span></div>
+    <div class="stat"><b>19</b><span>Tournament formats</span></div>
     <div class="stat"><b>18</b><span>Official real-world tournaments</span></div>
     <div class="stat"><b>5,610</b><span>Club badges</span></div>
     <div class="stat"><b>153</b><span>National anthems</span></div>
     <div class="stat"><b>45</b><span>Tracks in the music library</span></div>
-    <div class="stat"><b>168</b><span>Pages of manual</span></div>
+    <div class="stat"><b>236</b><span>Pages of manual</span></div>
   </div>
 </section>
 
 <!-- ================================================================ INTRO -->
+<section class="night-story"><div class="eyebrow">SUBBUTEO · BROADCAST EXPERIENCE</div><h2 class="rv">Small figures. Big emotions.</h2><p>The passion of table football meets the atmosphere of a television broadcast.</p><div class="night-stages"><a class="night-stage rv" href="#funzioni"><img src="assets/shots-en/04_sorteggio_studio.webp" alt="A draw worth watching" loading="lazy" width="1440" height="900"><div><small>01 / THE OPENING</small><h3>A draw worth watching</h3><p>Give every team its moment in the spotlight.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots-en/12_present.webp" alt="Your tournament, centre stage" loading="lazy" width="1440" height="900"><div><small>02 / ON AIR</small><h3>Your tournament, centre stage</h3><p>Results, standings and replays. One connected experience.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots-en/08_finale.webp" alt="Make the final unforgettable" loading="lazy" width="1440" height="900"><div><small>03 / THE FINAL MOMENT</small><h3>Make the final unforgettable</h3><p>From the first match to the champion’s celebration.</p></div></a></div></section>
 <section class="sec" id="cosa">
   <div class="wrap">
     <div class="eyebrow rv">What it is</div>
     <h2 class="rv">Not a spreadsheet.<br>A broadcast Control Desk.</h2>
     <p class="lead rv">A single program, in a single file, that <b>needs no Internet</b> and asks for no account. On one side it does the arithmetic — fixtures, points, tie-breaks, brackets, referees, tables. On the other it puts them <b>on stage</b>: glowing scoreboards, running clocks, a scrolling ticker, a voice calling players to their tables, music fading as the countdown begins. In the tournament hall you can see the difference.</p>
     <div class="shot rv" style="margin-top:48px" data-full="assets/shots-en/01_live.webp">
-      <img src="assets/shots-en/01_live.webp" alt="Il Match Center dal vivo" loading="lazy">
+      <img src="assets/shots-en/01_live.webp" alt="The live Match Center" loading="lazy">
     </div>
   </div>
 </section>
@@ -611,8 +624,8 @@ header.nav{top:var(--podh)}
     <!-- 1 -->
     <div class="feat">
       <div class="ftxt rv">
-        <h3>Sixteen formats, and something to tell you which one to pick</h3>
-        <p>Groups with knockout and lucky losers, groups with final tiers, league (single or double round), knockout with a consolation bracket, Swiss system, playoffs with the Page system and play-outs, a Champions-style league phase, double elimination, “King of the Table”, and team tournaments.</p>
+        <h3>Nineteen formats, and something to tell you which one to pick</h3>
+        <p>Groups with knockout and lucky losers, groups with final tiers, the mirror format, cross-group ranking, a second group stage, two competitions with crossed finals, league (single or double round), knockout with a consolation bracket, Swiss system and McMahon, playoffs with the Page system and play-outs, a Champions-style league phase, double elimination, the Compass Rose, the World Map Cup, “King of the Table”, team tournaments — and the three formats of the <b>FISTF regulations</b>.</p>
         <p>Not sure which to use? The <b>Format Adviser</b> looks at how many of you there are and offers
         <b>all</b> the workable options — multi-stage ones included — with total matches and duration, then applies them to the Setup in one click.</p>
         <ul class="flist">
@@ -622,7 +635,7 @@ header.nav{top:var(--podh)}
         </ul>
         <div class="tagrow"><span class="tag">Setup</span><span class="tag">Adviser</span><span class="tag">Real Tournament</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/03_advisor.webp"><img src="assets/shots-en/03_advisor.webp" alt="Il Consigliere delle formule" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/03_advisor.webp"><img src="assets/shots-en/03_advisor.webp" alt="The Format Adviser" loading="lazy"></div>
     </div>
 
     <!-- 2 -->
@@ -631,7 +644,7 @@ header.nav{top:var(--podh)}
         <h3>The draw as it looks on television</h3>
         <p>A <b>studio draw</b>: the presenter picks the ball, opens it and shows the slip, where the <b>real name</b> of the team drawn appears, handwritten. The voice says it over the studio sound; beside it a board fills up group by group. At the end, the applause.</p>
         <p>It respects the <b>pots</b> (seeds, second pot and so on) and can keep <b>club-mates apart</b>, one per group. You can draw by hand, one team at a time, or let it run on its own. Then one button turns the draw into the official group composition.</p>
-        <div class="tagrow"><span class="tag n">New in 8.3</span><span class="tag">Studio draw</span><span class="tag">Pots</span><span class="tag">Clubs</span></div>
+        <div class="tagrow"><span class="tag">Since 8.3</span><span class="tag">Studio draw</span><span class="tag">Pots</span><span class="tag">Clubs</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots-en/04_sorteggio_studio.webp"><img src="assets/shots-en/04_sorteggio_studio.webp" alt="The studio draw: the presenter shows the name drawn" loading="lazy"></div>
     </div>
@@ -649,9 +662,9 @@ header.nav{top:var(--podh)}
           <li>The breakdown line by line: matches, waves, playing time, breaks</li>
         </ul>
         <p style="margin-top:16px">Double the tables and watch the finish time move back by three hours. It is the quickest way to see whether the format you have in mind fits inside the day.</p>
-        <div class="tagrow"><span class="tag n">New in 3.0</span><span class="tag">Planning</span></div>
+        <div class="tagrow"><span class="tag">Since 3.0</span><span class="tag">Planning</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/24_stima.webp"><img src="assets/shots-en/24_stima.webp" alt="La stima della durata del torneo" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/24_stima.webp"><img src="assets/shots-en/24_stima.webp" alt="The tournament duration estimate" loading="lazy"></div>
     </div>
 
     <!-- 4 -->
@@ -667,7 +680,7 @@ header.nav{top:var(--podh)}
         </ul>
         <div class="tagrow"><span class="tag">Match Center</span><span class="tag">Referees</span><span class="tag">Tables</span><span class="tag">S.O.S.</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/01_live.webp"><img src="assets/shots-en/01_live.webp" alt="Tabelloni live per campo" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/01_live.webp"><img src="assets/shots-en/01_live.webp" alt="Live scoreboards for each table" loading="lazy"></div>
     </div>
 
     <!-- 5 -->
@@ -683,7 +696,7 @@ header.nav{top:var(--podh)}
         </ul>
         <div class="tagrow"><span class="tag">Presentation</span><span class="tag">AUTO LIVE</span><span class="tag">TV</span><span class="tag">Voice</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/12_present.webp"><img src="assets/shots-en/12_present.webp" alt="La Presentazione per il pubblico" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/12_present.webp"><img src="assets/shots-en/12_present.webp" alt="The Presentation for the audience" loading="lazy"></div>
     </div>
 
     <!-- 6 -->
@@ -701,8 +714,8 @@ header.nav{top:var(--podh)}
         <div class="tagrow"><span class="tag">Table App</span><span class="tag">Captain App</span><span class="tag">Replay App</span><span class="tag">QR</span></div>
       </div>
       <div class="shot phones rv">
-        <img src="assets/shots-en/16_campo.webp" alt="App Campo sul telefono dell'arbitro" loading="lazy" data-full="assets/shots-en/16_campo.webp">
-        <img src="assets/shots-en/20_capitano.webp" alt="App Capitano" loading="lazy" data-full="assets/shots-en/20_capitano.webp">
+        <img src="assets/shots-en/16_campo.webp" alt="The Table App on the referee's phone" loading="lazy" data-full="assets/shots-en/16_campo.webp">
+        <img src="assets/shots-en/20_capitano.webp" alt="The Captain App" loading="lazy" data-full="assets/shots-en/20_capitano.webp">
       </div>
     </div>
 
@@ -710,19 +723,19 @@ header.nav{top:var(--podh)}
     <div class="feat">
       <div class="ftxt rv">
         <h3>Team table football, exactly as the rules require</h3>
-        <p>A tie is <b>four simultaneous matches</b> across four tables, and the pairing follows the <b>official FISCT procedure</b>, reproduced step by step: handing in the team sheet, the coin toss (or home advantage in return legs), then the <b>alternating line-up in five moves</b> 1-2-2-2-1.</p>
+        <p>A tie is <b>four simultaneous matches</b> across four tables, and the pairing follows the <b>official FISCT procedure</b>, reproduced step by step: handing in the team sheet, the coin toss (or home advantage in return legs), then the <b>alternating line-up in five moves</b> 1-2-2-2-1. With the FISTF format, Coach A and Coach B choose game by game instead, as the international regulations require.</p>
         <p>The program referees the procedure itself: it says whose move it is, highlights in red the table where the opponent is exposed, <b>enforces the required cover</b> when it is owed, accepts only the permitted tables and knows how to step back. At the interval it opens the window for the
         <b>two substitutions</b>, respecting the priority set by the draw.</p>
         <div class="tagrow"><span class="tag">Team play</span><span class="tag">FISCT</span><span class="tag">4 tables</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/22_abbinamento.webp"><img src="assets/shots-en/22_abbinamento.webp" alt="La cerimonia di abbinamento FISCT" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/22_abbinamento.webp"><img src="assets/shots-en/22_abbinamento.webp" alt="The FISCT pairing ceremony" loading="lazy"></div>
     </div>
 
     <!-- 8 -->
     <div class="feat rev">
       <div class="ftxt rv">
         <h3>Standings that explain themselves</h3>
-        <p>The positions that matter are <b>colour-coded</b>, and the colour says what happens: metallic green for those going through, light blue for playoffs and play-offs, orange for play-outs, red for relegation, gold for those staying put. With a key underneath, so nobody has to ask.</p>
+        <p>The positions that matter are <b>colour-coded</b>, and the colour says what happens: metallic green for those going through, light blue for playoffs and barrages, orange for play-outs, red for relegation; anyone in no zone stays plain. Underneath, the key lists only the zones present, with the same colours and symbols as the rows, so nobody has to ask.</p>
         <ul class="flist">
           <li>Full tie-break criteria, clustered head-to-head, goal difference, goals scored</li>
           <li><b>Match reports</b> of the tournament with scorers, cards and result sheets</li>
@@ -730,7 +743,7 @@ header.nav{top:var(--podh)}
         </ul>
         <div class="tagrow"><span class="tag">Standings</span><span class="tag">Match reports</span><span class="tag">A4 PDF</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/07_classifiche_83.webp"><img src="assets/shots-en/07_classifiche_83.webp" alt="Classifiche con le zone colorate" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/07_classifiche_83.webp"><img src="assets/shots-en/07_classifiche_83.webp" alt="Standings with coloured zones" loading="lazy"></div>
     </div>
 
     <!-- 9 -->
@@ -745,9 +758,9 @@ header.nav{top:var(--podh)}
           <li>A <b>head-to-head</b> between two names, with every previous meeting — exactly what you want on the microphone before a final</li>
           <li>Le <b>seeds</b> for the new tournament, filled in from the historical ranking</li>
         </ul>
-        <div class="tagrow"><span class="tag n">New in 3.3</span><span class="tag">Roll of honour</span><span class="tag">Ranking</span><span class="tag">Head-to-head</span></div>
+        <div class="tagrow"><span class="tag">Since 3.3</span><span class="tag">Roll of honour</span><span class="tag">Ranking</span><span class="tag">Head-to-head</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/28_perpetua.webp"><img src="assets/shots-en/28_perpetua.webp" alt="La classifica perpetua" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/28_perpetua.webp"><img src="assets/shots-en/28_perpetua.webp" alt="The all-time ranking" loading="lazy"></div>
     </div>
 
     <!-- 10 -->
@@ -764,7 +777,7 @@ header.nav{top:var(--podh)}
         </ul>
         <div class="tagrow"><span class="tag">Photos</span><span class="tag">Memory book</span><span class="tag">4 matches per page</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/29_foto.webp"><img src="assets/shots-en/29_foto.webp" alt="Le foto del torneo" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/29_foto.webp"><img src="assets/shots-en/29_foto.webp" alt="The tournament photos" loading="lazy"></div>
     </div>
 
     <!-- 10a: le novità della 6.3 — le formule del formulario -->
@@ -777,9 +790,9 @@ header.nav{top:var(--podh)}
           <li>In the Mirror Format <b>everyone plays the same number of matches</b></li>
           <li>Players who already met in the group stage <b>do not meet again</b> in the second phase</li>
           <li>The tiers adjust themselves to the number of entrants: <b>nobody is left out through an oversight</b></li>
-          <li>Fifteen formats in all, from a single league to tournaments of 52 players</li>
+          <li>Nineteen formats today, from a single league to the FISTF regulations</li>
         </ul>
-        <div class="tagrow"><span class="tag n">New in 6.3</span><span class="tag">Mirror Format</span><span class="tag">Cross-Group Ranking</span><span class="tag">52 players</span></div>
+        <div class="tagrow"><span class="tag">Since 6.3</span><span class="tag">Mirror Format</span><span class="tag">Cross-Group Ranking</span><span class="tag">52 players</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots-en/01_live.webp"><img src="assets/shots-en/01_live.webp" alt="The new tournament formats" loading="lazy"></div>
     </div>
@@ -796,9 +809,9 @@ header.nav{top:var(--podh)}
           <li>Export <b>CSV</b> of standings, fixtures and scorers</li>
           <li><b>153 national anthems</b> (a separate download): in matches between national teams they play before kick-off, if you ask for them. Unpack the archive next to the program, so that the <b>inni.js</b> file and the <b>inni</b> folder sit in the same place as the application: the first time you need them, the program finds them by itself</li>
         </ul>
-        <div class="tagrow"><span class="tag n">New in 6.1</span><span class="tag">Dual screen</span><span class="tag">CSV</span><span class="tag">Anthems</span></div>
+        <div class="tagrow"><span class="tag">Since 6.1</span><span class="tag">Dual screen</span><span class="tag">CSV</span><span class="tag">Anthems</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/43_ghiaccio.webp"><img src="assets/shots-en/43_ghiaccio.webp" alt="Il tema Ghiaccio e la nuova barra con Secondo schermo" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/43_ghiaccio.webp"><img src="assets/shots-en/43_ghiaccio.webp" alt="The Ice theme and the new bar with the Second screen" loading="lazy"></div>
     </div>
 
     <!-- 10b: le novità della 5.5 -->
@@ -813,9 +826,9 @@ header.nav{top:var(--podh)}
           <li>Every cancellation leaves <b>a trace in a log</b>: a dispute has to be reconstructable</li>
           <li>Le <b>photographs sent by referees</b> now really arrive: a defect was blocking all of them, with or without the tunnel</li>
         </ul>
-        <div class="tagrow"><span class="tag n">New in 5.5</span><span class="tag">McMahon</span><span class="tag">Olympic repechage</span><span class="tag">Two legs</span></div>
+        <div class="tagrow"><span class="tag">Since 5.5</span><span class="tag">McMahon</span><span class="tag">Olympic repechage</span><span class="tag">Two legs</span></div>
       </div>
-      <div class="shot rv" data-full="assets/shots-en/38_doppio.webp"><img src="assets/shots-en/38_doppio.webp" alt="Il tabellone a doppio confronto: andata, ritorno e totale" loading="lazy"></div>
+      <div class="shot rv" data-full="assets/shots-en/38_doppio.webp"><img src="assets/shots-en/38_doppio.webp" alt="The two-legged bracket: first leg, return leg and aggregate" loading="lazy"></div>
     </div>
 
     <!-- 11 -->
@@ -833,7 +846,7 @@ header.nav{top:var(--podh)}
           <li>Continuous filming up to <b>30 minutes</b>, then it switches itself off so as not to drain the battery</li>
           <li>It connects by scanning a QR code, like the Table App</li>
         </ul>
-        <div class="tagrow"><span class="tag n">New in 8.2</span><span class="tag">Replay Room</span><span class="tag">720p MP4</span><span class="tag">Editing</span></div>
+        <div class="tagrow"><span class="tag">Since 8.2</span><span class="tag">Replay Room</span><span class="tag">720p MP4</span><span class="tag">Editing</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots-en/53_sala_replay.webp"><img src="assets/shots-en/53_sala_replay.webp" alt="The Replay Room: monitor with the match caption and incoming actions" loading="lazy"></div>
     </div>
@@ -862,9 +875,34 @@ header.nav{top:var(--podh)}
           <li><b>PDF album</b> by club, by group or in name order, nine stickers per page</li>
           <li>Everything on your own computer: no photograph leaves the building</li>
         </ul>
-        <div class="tagrow"><span class="tag n">New in 8.4</span><span class="tag">World Map Cup</span><span class="tag">Missions on the phone</span><span class="tag">Stickers</span></div>
+        <div class="tagrow"><span class="tag">Since 8.4</span><span class="tag">World Map Cup</span><span class="tag">Missions on the phone</span><span class="tag">Stickers</span></div>
       </div>
       <div class="shot rv" data-full="assets/shots-en/55_planisfero.webp"><img src="assets/shots-en/55_planisfero.webp" alt="The World Map Cup: 24 territories with the players' flags" loading="lazy"></div>
+    </div>
+
+    <!-- 13: new in 9.0 -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>The FISTF regulations, table by table</h3>
+        <p>Three new formats bring the FISTF <b>Tournament Organisers Handbook</b> — the world federation's rules —
+        into the program: <b>groups with the official bracket</b>, the <b>Swiss system</b> with a final stage and the
+        <b>team tournament</b>. No adaptations: match order, ranking criteria, barrages and pairings are those of the
+        document, and they cannot be changed in the Setup.</p>
+        <p>From 2 to 32 groups the bracket comes from the <b>official table</b>: who goes into barrages M1, M2…, who
+        has direct entry, who meets whom all the way to the final. All 31 tables were checked one by one — and the
+        check even found a misprint in the document, now corrected.</p>
+        <ul class="flist">
+          <li>Draw by <b>ranking pots</b>, club-mates or compatriots in different groups</li>
+          <li>FISTF <b>match order</b> for groups of 3 to 10, with the special orders for club-mates</li>
+          <li>Head-to-head and a <b>shoot-out</b> for complete ties; U12, U16, U20 and Ladies categories with a
+          maximum margin of 5–0</li>
+          <li>Swiss: four rounds, a bye worth 3–0, a 16-player bracket (1–16, 8–9, 4–13…) or an 8-player one</li>
+          <li>Teams: Coach A and Coach B game by game, teams of three allowed, one substitution</li>
+          <li>Withdrawal with the FISTF rule, and at first start a screen sums up everything new in the version</li>
+        </ul>
+        <div class="tagrow"><span class="tag n">New in 9.0</span><span class="tag">FISTF</span><span class="tag">Official brackets</span><span class="tag">Shoot-out</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots-en/57_fistf_tabellone.webp"><img src="assets/shots-en/57_fistf_tabellone.webp" alt="The FISTF bracket with five groups: barrages M1 and M2, direct entries and quarter-finals" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -873,7 +911,7 @@ header.nav{top:var(--podh)}
 <section class="sec tight" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow rv">And then</div>
-    <h2 class="rv">Four sections you would not expect</h2>
+    <h2 class="rv">Ten things you would not expect</h2>
     <div class="grid3 rv">
       <div class="card">
         <span class="ic">🎛</span>
@@ -884,7 +922,7 @@ header.nav{top:var(--podh)}
         <span class="ic">🎙</span>
         <h4>Offline neural voice</h4>
         <p>Announcements shouldn't sound like a 2005 satnav. The program can install <b>three neural Italian voices</b> — «Serena», female, <b>high quality</b>; «Paola», female; and «Riccardo», male — that run <b>on your own computer</b>: no internet during the tournament, no account, no cost, no limit on how much they say. They download once from the Control Desk, survive app updates, and are <b>the same on Mac, Windows and Linux</b>. Every announcement opens with the airport-style <b>chime</b> that gathers the room's attention, and background music <b>ducks by itself</b> under the voice, coming back up when it has finished. Below it, a panel reads the voices installed on your system and tells you whether you are already using a good one.</p>
-        <div class="tagrow"><span class="tag n">New in 7.6</span><span class="tag">Offline</span><span class="tag">Announcements</span></div>
+        <div class="tagrow"><span class="tag">Since 7.6</span><span class="tag">Offline</span><span class="tag">Announcements</span></div>
       </div>
       <div class="card">
         <span class="ic">📒</span>
@@ -894,8 +932,8 @@ header.nav{top:var(--podh)}
       <div class="card">
         <span class="ic">⚖️</span>
         <h4>The Law</h4>
-        <p>Three official rulebooks — FISCT Traditional Subbuteo, FISTF team play, OldSubbuteo — with
-        <b>700 articles you can consult offline</b>. You ask a question in plain language (“how long is a half?”, “when is it a handball?”) and it answers with the right rule, the source and the chapter. By voice too, and from the referee's phone as well.</p>
+        <p>Four official rulebooks — FISCT Traditional Subbuteo, FISTF table football, OldSubbuteo and WASPA — with
+        <b>over 800 articles you can consult offline</b>. You ask a question in plain language (“how long is a half?”, “when is it a handball?”) and it answers with the right rule, the source and the chapter. By voice too, and from the referee's phone as well.</p>
       </div>
       <div class="card">
         <span class="ic">🏆</span>
@@ -918,7 +956,7 @@ header.nav{top:var(--podh)}
       <div class="card">
         <span class="ic">🚪</span>
         <h4>When something goes wrong</h4>
-        <p>A player gets injured or has to leave: the <b>withdrawal</b> settles all of their remaining matches in one go, by the rule you choose, without touching those already played. And while the tournament runs, a <b>safety copy</b> is written every five minutes to a folder on the computer: you can go back to any moment of the day.</p>
+        <p>A player gets injured or has to leave: the <b>withdrawal</b> settles all of their remaining matches in one go, by the rule you choose, without touching those already played (in FISTF tournaments the regulation rule applies: 0–3 in every group match). And while the tournament runs, a <b>safety copy</b> is written every five minutes to a folder on the computer: you can go back to any moment of the day.</p>
       </div>
       <div class="card">
         <span class="ic">👁</span>
@@ -944,6 +982,9 @@ header.nav{top:var(--podh)}
     <div class="eyebrow rv">Gallery</div>
     <h2 class="rv">Real screens, from the manual</h2>
     <div class="gal rv">
+<figure data-full="assets/shots-en/58_novita_90.webp"><img src="assets/shots-en/58_novita_90.webp" alt="The What's new in version 9.0 screen" loading="lazy"><figcaption>What's new in 9.0</figcaption></figure>
+<figure data-full="assets/shots-en/57_fistf_tabellone.webp"><img src="assets/shots-en/57_fistf_tabellone.webp" alt="The official FISTF bracket with barrages and direct entries" loading="lazy"><figcaption>FISTF bracket</figcaption></figure>
+<figure data-full="assets/shots-en/59_fistf_shootout.webp"><img src="assets/shots-en/59_fistf_shootout.webp" alt="A complete tie in a FISTF group: the shoot-out" loading="lazy"><figcaption>FISTF shoot-out</figcaption></figure>
 <figure data-full="assets/shots-en/47_dark.webp"><img src="assets/shots-en/47_dark.webp" alt="Stadium theme" loading="lazy"><figcaption>Stadium theme</figcaption></figure>
 <figure data-full="assets/shots-en/48_light.webp"><img src="assets/shots-en/48_light.webp" alt="Atelier theme" loading="lazy"><figcaption>Atelier theme</figcaption></figure>
 <figure data-full="assets/shots-en/49_griglie.webp"><img src="assets/shots-en/49_griglie.webp" alt="Group grids" loading="lazy"><figcaption>Group grids</figcaption></figure>
@@ -952,20 +993,20 @@ header.nav{top:var(--podh)}
 <figure data-full="assets/shots-en/52_archivio_config.webp"><img src="assets/shots-en/52_archivio_config.webp" alt="Archive: settings" loading="lazy"><figcaption>Archive: settings</figcaption></figure>
 <figure data-full="assets/shots-en/53_sala_replay.webp"><img src="assets/shots-en/53_sala_replay.webp" alt="Replay Room" loading="lazy"><figcaption>Replay Room</figcaption></figure>
 <figure data-full="assets/shots-en/54_replay_tv.webp"><img src="assets/shots-en/54_replay_tv.webp" alt="Replay on air on a table TV" loading="lazy"><figcaption>Replay on air on the TV</figcaption></figure>
-      <figure data-full="assets/shots-en/26_campione.webp"><img src="assets/shots-en/26_campione.webp" alt="La pagina del vincitore" loading="lazy"><figcaption>The winner</figcaption></figure>
-      <figure data-full="assets/shots-en/27_archivio.webp"><img src="assets/shots-en/27_archivio.webp" alt="L'albo d'oro" loading="lazy"><figcaption>Roll of honour</figcaption></figure>
-      <figure data-full="assets/shots-en/30_libro.webp"><img src="assets/shots-en/30_libro.webp" alt="Il libro dei ricordi" loading="lazy"><figcaption>Memory book</figcaption></figure>
-      <figure data-full="assets/shots-en/02_setup.webp"><img src="assets/shots-en/02_setup.webp" alt="Setup del torneo" loading="lazy"><figcaption>Setup</figcaption></figure>
-      <figure data-full="assets/shots-en/13_tv.webp"><img src="assets/shots-en/13_tv.webp" alt="TV di campo" loading="lazy"><figcaption>Table TV</figcaption></figure>
-      <figure data-full="assets/shots-en/08_finale.webp"><img src="assets/shots-en/08_finale.webp" alt="Tabellone della fase finale" loading="lazy"><figcaption>Final phase</figcaption></figure>
-      <figure data-full="assets/shots-en/09_cronache.webp"><img src="assets/shots-en/09_cronache.webp" alt="Cronache del torneo" loading="lazy"><figcaption>Match reports</figcaption></figure>
-      <figure data-full="assets/shots-en/17_audio_off.webp"><img src="assets/shots-en/17_audio_off.webp" alt="Regia" loading="lazy"><figcaption>Control Desk — announcer and music</figcaption></figure>
+      <figure data-full="assets/shots-en/26_campione.webp"><img src="assets/shots-en/26_campione.webp" alt="The winner's page" loading="lazy"><figcaption>The winner</figcaption></figure>
+      <figure data-full="assets/shots-en/27_archivio.webp"><img src="assets/shots-en/27_archivio.webp" alt="The roll of honour" loading="lazy"><figcaption>Roll of honour</figcaption></figure>
+      <figure data-full="assets/shots-en/30_libro.webp"><img src="assets/shots-en/30_libro.webp" alt="The memory book" loading="lazy"><figcaption>Memory book</figcaption></figure>
+      <figure data-full="assets/shots-en/02_setup.webp"><img src="assets/shots-en/02_setup.webp" alt="Tournament setup" loading="lazy"><figcaption>Setup</figcaption></figure>
+      <figure data-full="assets/shots-en/13_tv.webp"><img src="assets/shots-en/13_tv.webp" alt="Table TV" loading="lazy"><figcaption>Table TV</figcaption></figure>
+      <figure data-full="assets/shots-en/08_finale.webp"><img src="assets/shots-en/08_finale.webp" alt="Final stage bracket" loading="lazy"><figcaption>Final phase</figcaption></figure>
+      <figure data-full="assets/shots-en/09_cronache.webp"><img src="assets/shots-en/09_cronache.webp" alt="Tournament match reports" loading="lazy"><figcaption>Match reports</figcaption></figure>
+      <figure data-full="assets/shots-en/17_audio_off.webp"><img src="assets/shots-en/17_audio_off.webp" alt="Control Desk" loading="lazy"><figcaption>Control Desk — announcer and music</figcaption></figure>
       <figure data-full="assets/shots-en/46_voce_neurale.webp"><img src="assets/shots-en/46_voce_neurale.webp" alt="The three offline neural voices" loading="lazy"><figcaption>Offline neural voices</figcaption></figure>
       <figure data-full="assets/shots-en/44_avvisi.webp"><img src="assets/shots-en/44_avvisi.webp" alt="Free announcements on the ticker and out loud" loading="lazy"><figcaption>Free announcements</figcaption></figure>
-      <figure data-full="assets/shots-en/19_pretorneo.webp"><img src="assets/shots-en/19_pretorneo.webp" alt="Pre-Torneo" loading="lazy"><figcaption>Pre-Event</figcaption></figure>
-      <figure data-full="assets/shots-en/14_legge.webp"><img src="assets/shots-en/14_legge.webp" alt="La Legge" loading="lazy"><figcaption>The Law</figcaption></figure>
-            <figure data-full="assets/shots-en/21_realtorneo.webp"><img src="assets/shots-en/21_realtorneo.webp" alt="Torneo Reale" loading="lazy"><figcaption>Real Tournament</figcaption></figure>
-      <figure data-full="assets/shots-en/11_sos.webp"><img src="assets/shots-en/11_sos.webp" alt="Richiesta di S.O.S. dal campo" loading="lazy"><figcaption>S.O.S. from the table</figcaption></figure>
+      <figure data-full="assets/shots-en/19_pretorneo.webp"><img src="assets/shots-en/19_pretorneo.webp" alt="Pre-Event" loading="lazy"><figcaption>Pre-Event</figcaption></figure>
+      <figure data-full="assets/shots-en/14_legge.webp"><img src="assets/shots-en/14_legge.webp" alt="The Law" loading="lazy"><figcaption>The Law</figcaption></figure>
+            <figure data-full="assets/shots-en/21_realtorneo.webp"><img src="assets/shots-en/21_realtorneo.webp" alt="Real Tournament" loading="lazy"><figcaption>Real Tournament</figcaption></figure>
+      <figure data-full="assets/shots-en/11_sos.webp"><img src="assets/shots-en/11_sos.webp" alt="S.O.S. request from a table" loading="lazy"><figcaption>S.O.S. from the table</figcaption></figure>
                       </div>
   </div>
 </section>
@@ -978,72 +1019,72 @@ header.nav{top:var(--podh)}
     <p class="lead rv">Same program, same installation. You try the whole rig — a single-league tournament, the live boards, the standings, the Presentation, the duration estimate — and when it convinces you <b>you unlock everything with a code</b>, without reinstalling anything. Choose a <b>one-year licence for €20</b>, a <b>two-year licence for €30</b> or a <b>lifetime licence for €40</b>. The software is continually updated and <b>one new tournament format is published every month</b>.</p>
 
     <div class="dgrid rv">
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-macOS-AppleSilicon.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-macOS-AppleSilicon.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
         </div>
         <small>Apple Silicon — M1, M2, M3, M4<br>macOS 11 or later</small>
-        <span class="sz">.dmg · 350 MB</span>
+        <span class="sz">.dmg · 362 MB</span>
         <span class="go">Download
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-macOS-Intel.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-macOS-Intel.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
         </div>
         <small>Intel — Macs with an Intel processor<br>macOS 11 or later</small>
-        <span class="sz">.dmg · 359 MB</span>
+        <span class="sz">.dmg · 371 MB</span>
         <span class="go">Download
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-Setup-8.4.0-Windows-x64.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-Setup-9.0.0-Windows-x64.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
         </div>
         <small>64-bit Intel or AMD processor<br>Windows 10 and 11</small>
-        <span class="sz">.exe · 326 MB</span>
+        <span class="sz">.exe · 337 MB</span>
         <span class="go">Download
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-Setup-8.4.0-Windows-arm64.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-Setup-9.0.0-Windows-arm64.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
         </div>
         <small>ARM processor (Snapdragon)<br>Windows 10 and 11</small>
-        <span class="sz">.exe · 320 MB</span>
+        <span class="sz">.exe · 331 MB</span>
         <span class="go">Download
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-Linux-x86_64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-Linux-x86_64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
         </div>
         <small>AppImage x86_64 — no installation<br>make it executable and open it</small>
-        <span class="sz">.AppImage · 345 MB</span>
+        <span class="sz">.AppImage · 356 MB</span>
         <span class="go">Download
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Subbuteo-Tournament-Center-8.4.0-Linux-arm64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Subbuteo-Tournament-Center-9.0.0-Linux-arm64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
         </div>
         <small>AppImage ARM64 — no installation<br>make it executable and open it</small>
-        <span class="sz">.AppImage · 344 MB</span>
+        <span class="sz">.AppImage · 356 MB</span>
         <span class="go">Download
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
@@ -1053,7 +1094,7 @@ header.nav{top:var(--podh)}
     <div class="webalt rv">
       <p><b>Don't want to install anything?</b> The same demo also runs in your browser, on any operating system — handy for a look before downloading half a gigabyte.</p>
       <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Open in your browser</a>
-      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v8.4.0/Manual-Subbuteo-Tournament-Center-2026-09-24-EN.pdf"><img src="assets/copertina-manuale-en.jpg" alt="PDF manual" loading="lazy"><span class="mt"><b>PDF manual · English</b><span>180 pages · with the formats appendix</span></span></a>
+      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.0.0/Manual-Subbuteo-Tournament-Center-2026-09-26-EN.pdf"><img src="assets/copertina-manuale-en.jpg" alt="PDF manual" loading="lazy"><span class="mt"><b>PDF manual · English</b><span>236 pages · with the formats appendix</span></span></a>
       <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Inni-Nazionali-153.zip" style="font-size:14px;padding:12px 22px">🎵 National anthems · 153 tracks (393 MB)</a>
     </div>
   </div>
@@ -1070,7 +1111,7 @@ header.nav{top:var(--podh)}
     <table class="cmp rv">
       <thead><tr><th>Feature</th><th>Demo</th><th>Full</th></tr></thead>
       <tbody>
-        <tr><td>Tournament formats</td><td class="lim">single league only</td><td class="yes">all 15</td></tr>
+        <tr><td>Tournament formats</td><td class="lim">single league only</td><td class="yes">all 19</td></tr>
         <tr><td>Format Adviser and Real Tournament</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Saving and reloading tournaments</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Exporting and importing data</td><td class="no">✕</td><td class="yes">✓</td></tr>
@@ -1135,7 +1176,7 @@ header.nav{top:var(--podh)}
     <p class="lead rv">Three full licences are available: <b>one year for €20</b>, <b>two years for
     €30</b> and <b>lifetime for €40</b>. To obtain one, write directly to the author at
     <b>onyxsubbuteo@gmail.com</b> with your <b>alphanumeric code</b>, the <b>name for the licence</b>
-    and your chosen term. Once payment has been received by <b>PayPal at ademase@gmail.com</b>, the
+    and your chosen term. Once payment has been received by <b>PayPal</b>, the
     activation code arrives. Each licence is valid for a <b>single device</b> and is checked at every
     start <b>even without an Internet connection</b>.</p>
 
@@ -1152,8 +1193,7 @@ header.nav{top:var(--podh)}
       <div class="step">
         <h4>Choose, write and pay</h4>
         <p>Send an email with your <b>alphanumeric code</b>, the <b>name</b> for the licence and your
-        chosen term, then send <b>€20, €30 or €40</b> by PayPal to <b>ademase@gmail.com</b> (the QR
-        code is below).</p>
+        chosen term, then send <b>€20, €30 or €40</b> by PayPal (payment details are in the panel below).</p>
       </div>
       <div class="step">
         <h4>Paste it and play</h4>
@@ -1187,7 +1227,7 @@ header.nav{top:var(--podh)}
         month</strong>.</div>
         <div class="minimo">One <b>PayPal</b> payment for your selected term, with no automatic charges</div>
         <ul>
-          <li>All <b>sixteen formats</b>, the Adviser and Real Tournament</li>
+          <li>All <b>nineteen formats</b>, the Adviser and Real Tournament</li>
           <li><b>Saving</b>, reloading and exporting tournaments</li>
           <li><b>Referee management</b> and automatic table assignment</li>
           <li>Ceremony of the <b>draw</b> and group composition</li>
@@ -1196,15 +1236,15 @@ header.nav{top:var(--podh)}
           <li><b>Photos of the opponents</b> and memory book as a PDF</li>
           <li><b>Pre-Event</b> with fees, payments and receipts</li>
           <li><b>Table App, Captain App and Replay App</b> with QR codes</li>
-          <li>Complete manual of <b>228 pages</b> as a PDF</li>
+          <li>Complete manual of <b>236 pages</b> as a PDF</li>
         </ul>
       </div>
 
-      <div class="mailcard">
+      <details class="license-contribution"><summary>Send your contribution for the licence</summary><div class="mailcard">
         <h4>Request your code</h4>
         <p>In the email give the <b>alphanumeric code</b> shown in the Licence panel and the
         <b>name</b> to make it out to and your <b>chosen term</b>; then send the corresponding amount
-        of <b>€20, €30 or €40</b> by PayPal to <b>ademase@gmail.com</b>.</p>
+        of <b>€20, €30 or €40</b>.</p>
         <div class="mailbox">
           <code id="mail">onyxsubbuteo@gmail.com</code>
           <button class="copy" id="cp" type="button">Copy</button>
@@ -1226,11 +1266,11 @@ header.nav{top:var(--podh)}
           <code class="pp-mail">ademase@gmail.com</code>
           <span style="font-size:13.5px">The activation code comes back to you by email.</span>
         </div>
-      </div>
+      </div></details>
     </div>
 
     <div class="shot rv" style="margin-top:52px;max-width:760px" data-full="assets/shots-en/25_licenza.webp">
-      <img src="assets/shots-en/25_licenza.webp" alt="Il pannello della licenza nel programma" loading="lazy">
+      <img src="assets/shots-en/25_licenza.webp" alt="The licence panel in the program" loading="lazy">
     </div>
 
   </div>
@@ -1273,11 +1313,11 @@ header.nav{top:var(--podh)}
       </details>
       <details>
         <summary>Why is the installer so large?</summary>
-        <div class="ans">Because inside there is <b>everything</b>: the music library, the 5,610 club badges, the 233 flags, the four complete rulebooks, the <b>45 original tracks</b> of the music library and the logos of the official competitions. Nothing is downloaded later, so in the tournament hall it works with no network at all.</div>
+        <div class="ans">Because inside there is <b>everything</b>: the 5,610 club badges, the 233 flags, the four complete rulebooks, the <b>45 original tracks</b> of the music library and the logos of the official competitions. Nothing is downloaded later, so in the tournament hall it works with no network at all.</div>
       </details>
       <details>
         <summary>Can I use it for official federation tournaments?</summary>
-        <div class="ans">Yes: the formats, the ranking criteria and the pairing procedure for team table football follow the <b>FISCT/FISTF rules</b>. The program remains an independent tool, however, and is not a federation product.</div>
+        <div class="ans">Yes: since 9.0 three formats follow the <b>FISTF Tournament Organisers Handbook</b> to the letter — match order, ranking criteria, barrages and official brackets for 2 to 32 groups — and team table football has both the FISCT and the FISTF pairing procedures. The program remains an independent tool, however, and is not a federation product.</div>
       </details>
       <details>
         <summary>Who wrote it?</summary>
@@ -1304,7 +1344,7 @@ header.nav{top:var(--podh)}
     <div class="fgrid">
       <div>
         <a class="brand" href="#top" style="margin-bottom:16px"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
-        <p style="max-width:44ch;margin-top:4px">The management program for Subbuteo and table football tournaments. Version 8.4.0 — September 2026. Software and manual by Antonio de Masellis.</p>
+        <p style="max-width:44ch;margin-top:4px">The management program for Subbuteo and table football tournaments. Version 9.0.0 — September 2026. Software and manual by Antonio de Masellis.</p>
       </div>
       <div>
         <h5>The program</h5>

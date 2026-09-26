@@ -855,6 +855,14 @@ nav#tabs button.locked::after{content:'🔒';font-size:.7rem;margin-left:5px}
 
 /* ---------- criteri classifica ---------- */
 .tb-list{display:flex;flex-direction:column;gap:8px}
+.fistf-box{margin:4px 0 10px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;background:var(--card2)}
+.fistf-hd{margin-bottom:8px}
+.fistf-err{color:var(--danger)}
+.fistf-so{margin-top:10px;padding:10px 12px;border:1px solid var(--gold);border-radius:10px;background:rgba(255,196,0,.08);font-size:.9rem;line-height:1.35}
+.fistf-so.ok{border-color:var(--line);background:transparent}
+.fistf-bye{opacity:.8}
+.komatch.fistf-dir{border-style:dashed;opacity:.85}
+.fistf-cap{font-size:.62rem}
 .tb-item{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
 .tb-item .idx{font-family:'Chakra Petch',monospace;color:var(--accent);width:22px;font-weight:700}
 .tb-item .nm{flex:1;font-size:.9rem}
@@ -935,7 +943,9 @@ table.standings tr.pod1 .tn-wrap{background-image:linear-gradient(180deg,#fff6d8
 table.standings tr.pod2 .tn-wrap{background-image:linear-gradient(180deg,#ffffff,#cfd8e6 46%,#6d7a8c)!important}
 table.standings tr.pod3 .tn-wrap{background-image:linear-gradient(180deg,#ffe3cd,#d08a4e 46%,#7a4212)!important}
 .zleg{display:flex;gap:16px;flex-wrap:wrap;font-size:.72rem;letter-spacing:.06em;margin-top:6px}
-.zleg .zl-up{color:#57e88f}.zleg .zl-po{color:#6fd2ff}.zleg .zl-pout{color:#ffb056}.zleg .zl-down{color:#ff6b6b}
+.zleg .zl-up{color:#57e88f}
+table.standings tr.z-no td.pos{color:var(--muted)}
+.zleg .zl-po{color:#6fd2ff}.zleg .zl-pout{color:#ffb056}.zleg .zl-down{color:#ff6b6b}
 table.standings td.pos{font-family:'Chakra Petch',monospace;color:var(--accent);font-weight:700}
 table.standings td.pts{font-family:'Chakra Petch',monospace;font-weight:700;font-size:1rem;color:var(--accent2)}
 table.standings .liveg{color:var(--danger);font-size:.65rem;margin-left:6px;animation:blink 1.2s infinite}
@@ -1329,7 +1339,7 @@ body.no-anim #present .prow,body.no-anim #present .pcard{animation:none}
   background-image:linear-gradient(105deg,#7a4f08,#f5b942 16%,#fff3c4 30%,#f5b942 44%,#96690f 58%,#f5b942 74%,#ffe9a8 90%,#b07f19);
   background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:goldshine 5.5s linear infinite}
 /* zone metallizzate (solo il testo): verde=avanza · celeste=playoff · arancio=playout · rosso=retrocede;
-   le posizioni neutre restano in ORO */
+   in ORO restano solo le classifiche senza zone (e senza legenda) */
 #present .tclass table.standings tr.z-up td.l,#present .tclass table.standings tr.z-up td.l .tn-wrap{background-image:linear-gradient(105deg,#0b5a2a,#3ddc84 16%,#d6ffe6 30%,#3ddc84 44%,#0e6b34 58%,#4fe89a 74%,#c8ffdd 90%,#0b5a2a);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 #present .tclass table.standings tr.z-po td.l,#present .tclass table.standings tr.z-po td.l .tn-wrap{background-image:linear-gradient(105deg,#0d3f6b,#4fb6f0 16%,#e2f5ff 30%,#4fb6f0 44%,#155a94 58%,#7fd0ff 74%,#d0efff 90%,#0d3f6b);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 #present .tclass table.standings tr.z-pout td.l,#present .tclass table.standings tr.z-pout td.l .tn-wrap{background-image:linear-gradient(105deg,#6b3a05,#f0932e 16%,#ffe9cc 30%,#f0932e 44%,#94550f 58%,#ffb45c 74%,#ffe4c2 90%,#6b3a05);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -1347,6 +1357,11 @@ body.no-anim #present .prow,body.no-anim #present .pcard{animation:none}
   background-image:linear-gradient(105deg,#5c6675,#c8d2e0 16%,#ffffff 30%,#c8d2e0 44%,#727d8d 58%,#dfe6f0 74%,#ffffff 90%,#68727f)!important}
 #present .tclass table.standings tr.pod3 td.l,#present .tclass table.standings tr.pod3 td.l .tn-wrap{
   background-image:linear-gradient(105deg,#6b3a12,#d08a4e 16%,#ffe0c4 30%,#d08a4e 44%,#8a4f19 58%,#e6a86a 74%,#ffd9bb 90%,#7a4212)!important}
+/* Righe senza zona in una classifica CON legenda: nome e numero neutri. L'oro
+   delle posizioni neutre, accanto al marrone-arancio del playout, si
+   confondeva — e l'oro in legenda non c'è. */
+#present .tclass table.standings tr.z-no td.l,#present .tclass table.standings tr.z-no td.l .tn-wrap{background-image:none;-webkit-text-fill-color:#dfe5ee;color:#dfe5ee;animation:none}
+#present .tclass table.standings tr.z-no td.pos{color:#9aa6b8}
 /* la zona torna a farsi vedere sul numero di posizione, che il podio non tocca */
 #present .tclass table.standings tr.z-up td.pos{color:#57e88f}
 #present .tclass table.standings tr.z-po td.pos{color:#6fd2ff}
@@ -2031,6 +2046,24 @@ body.solo-tabellone #present .pclose,body.solo-tabellone #present-modes{display:
 .btn-ann:hover{color:#e24848;background:rgba(226,72,72,.14)}
 #estim .adv-box{width:min(760px,94vw)}
 #ritiro .adv-box{width:min(520px,94vw)}
+/* ---- schermata «Novità della versione» (9.0) ---- */
+#novita{position:fixed;inset:0;z-index:140;display:none;align-items:center;justify-content:center;background:rgba(4,7,18,.86);backdrop-filter:blur(8px)}
+#novita.on{display:flex}
+#novita .adv-box{width:min(980px,94vw);max-height:90vh}
+.nv-hero{padding:22px 26px 14px;background:linear-gradient(135deg,rgba(0,200,255,.14),rgba(255,196,0,.10));border-bottom:1px solid var(--line)}
+.nv-hero .nv-ver{font-family:'Oswald',sans-serif;font-size:2.4rem;letter-spacing:.06em;color:var(--gold);line-height:1}
+.nv-hero .nv-tit{font-family:'Oswald',sans-serif;font-size:1.25rem;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.nv-hero p{margin:8px 0 0;color:var(--muted);max-width:760px}
+.nv-body{padding:18px 22px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.nv-card{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.nv-card.big{grid-column:1/-1;border-left:3px solid var(--accent)}
+.nv-card.wide{grid-column:1/-1}
+.nv-card h4{margin:0 0 6px;font-family:'Oswald',sans-serif;letter-spacing:.05em;font-size:1.02rem;color:var(--accent)}
+.nv-card p,.nv-card li{font-size:.9rem;line-height:1.42;margin:0}
+.nv-card ul{margin:6px 0 0;padding-left:18px}
+.nv-card li{margin:3px 0}
+.nv-foot{display:flex;gap:10px;justify-content:flex-end;align-items:center;padding:12px 20px;border-top:1px solid var(--line)}
+.nv-foot .small{flex:1}
 #arcfoto .adv-box{width:min(920px,94vw)}
 .est-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:16px}
 .est-f{display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted)}
@@ -3123,9 +3156,9 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
           <div><label class="f" id="s-fields-label">N° Campi / Tabelloni</label><input type="number" id="s-fields" value="2" min="1" max="52"></div>
         </div>
         <div class="grid g3" style="gap:10px">
-          <div><label class="f" id="s-nteams-label">N° Giocatori</label><input type="number" id="s-nteams" value="8" min="2" max="128" onchange="renderTeamInputs()"></div>
+          <div><label class="f" id="s-nteams-label">N° Giocatori</label><input type="number" id="s-nteams" value="8" min="2" max="128" onchange="renderTeamInputs();fistfSetupInfo()"></div>
           <div><label class="f">Formula</label>
-            <select id="s-format" onchange="S.cfg.zones=null;setupFmtChanged()">
+            <select id="s-format" onchange="S.cfg.zones=null;fistfPreset();setupFmtChanged()">
               <option value="gironi-ko">Gironi + Eliminazione Diretta</option>
               <option value="fasce">Gironi + Fasce (Gold/Silver…)</option>
               <option value="speculare">Formula Speculare (tutti giocano fino in fondo)</option>
@@ -3142,14 +3175,29 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
               <option value="rosa">🧭 La Rosa dei Venti (formula originale · 8–12)</option>
               <option value="kingofcourt">👑 Re del Tavolo (chi vince resta)</option>
               <option value="squadre">🏟 TORNEO A SQUADRE (CdT)</option>
+              <optgroup label="🌐 FISTF">
+                <option value="fistf-gironi">🌐 FISTF — Gironi + tabellone ufficiale</option>
+                <option value="fistf-svizzero">🌐 FISTF — Sistema svizzero + fase finale</option>
+                <option value="fistf-squadre">🌐 FISTF — Torneo a squadre</option>
+              </optgroup>
             </select>
           </div>
           <div id="w-pergroup"><label class="f">Partecipanti per girone</label><input type="number" id="s-pergroup" value="4" min="2" max="16"></div>
           <div id="w-f2size" style="display:none"><label class="f">Gironi 2ª fase da</label><input type="number" id="s-f2size" value="4" min="2" max="8"></div>
           <div id="w-f2streams" style="display:none"><label class="f">Tabelloni 2ª fase</label><input type="number" id="s-f2streams" value="2" min="1" max="4"></div>
         </div>
+        <div id="w-fistf" class="fistf-box" style="display:none">
+          <div class="fistf-hd">🌐 <b>Regolamento FISTF</b> <span class="small muted">Tournament Organisers Handbook v2.1</span></div>
+          <div class="grid g3" style="gap:10px">
+            <div id="w-fistf-g"><label class="f">Numero di gironi</label><select id="s-fistf-g" onchange="fistfSetupInfo()"><option value="0">Automatico</option></select></div>
+            <div id="w-fistf-ko" style="display:none"><label class="f">Fase finale</label><select id="s-fistf-ko" onchange="fistfSetupInfo()"><option value="16">Tabellone a 16</option><option value="8">Tabellone a 8</option></select></div>
+            <div id="w-fistf-cap" style="display:flex;align-items:flex-end;padding-bottom:6px"><label class="ck" title="Nei gironi e nei turni svizzeri una vittoria con 5 o più reti di scarto vale 5–0 in classifica"><input type="checkbox" id="s-fistf-cap"> Categoria U12 · U16 · U20 · Ladies (scarto massimo 5–0)</label></div>
+          </div>
+          <div id="fistf-info" class="small muted" style="margin-top:6px"></div>
+        </div>
         <div class="row" style="gap:10px;margin-top:2px">
           <button class="btn sec" onclick="openAdvisor()">💡 Formule consigliate</button>
+          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 9.0</button>
         <button class="btn sec" onclick="openRealTorneo()">🏆 Torneo Reale</button>
           <button class="btn sec" onclick="openEstimate()">⏱ Stima durata</button>
           <button class="btn sec" id="seed-btn" onclick="seedDaRanking()" title="Compila le fasce in base alla classifica perpetua dell'archivio">🎖 Teste di serie dall'archivio</button>
@@ -3513,6 +3561,14 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
       <button class="btn sec" onclick="closeAnnulla()">No, lascia stare</button>
       <button class="btn" id="ann-ok" onclick="annullaConferma()">Sì, annulla il risultato</button>
     </div>
+  </div>
+</div>
+
+<div id="novita" role="dialog" aria-modal="true" aria-labelledby="nv-titolo">
+  <div class="adv-box">
+    <div class="nv-hero" id="nv-hero"></div>
+    <div class="nv-body" id="nv-body"></div>
+    <div class="nv-foot" id="nv-foot"></div>
   </div>
 </div>
 
@@ -4478,7 +4534,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='8.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='9.0.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -5479,6 +5535,8 @@ Object.assign(TR,{"Serve l’aggiornamento completo":"A full update is required"
 Object.assign(TR,{"Fase a Gironi — Squadre":"Group Stage — Teams","Classifica":"Standings","gare":"matches","Nessuna partita generata.":"No matches generated."});
 /* Kit online (figurine): testi del pannello aggiunto in 8.3 */
 Object.assign(TR,{"🌐 Kit online · ChatGPT": "🌐 Online kit · ChatGPT", "Descrivi squadra, stagione e divisa oppure inventa il tuo kit. La modifica si esegue su ChatGPT nel browser; poi importa qui il risultato.": "Describe team, season and kit, or invent your own. The edit is done on ChatGPT in the browser; then import the result here.", "Squadra o descrizione della maglia": "Team or shirt description", "Es. Italia 2006, maglia azzurra; oppure strisce blu e oro, colletto bianco": "E.g. Italy 2006, blue shirt; or blue and gold stripes, white collar", "Istruzioni da incollare in ChatGPT": "Instructions to paste into ChatGPT", "1 · Scarica foto": "1 · Download photo", "2 · Copia istruzioni": "2 · Copy instructions", "3 · Apri ChatGPT": "3 · Open ChatGPT", "4 · Importa risultato": "4 · Import result", "Accedi sul sito ufficiale, allega la foto scaricata e incolla le istruzioni. Nessuna foto viene inviata automaticamente. Dopo l’importazione controlla l’anteprima e premi Salva; Annulla conserva la foto precedente.": "Sign in on the official site, attach the downloaded photo and paste the instructions. No photo is sent automatically. After importing, check the preview and press Save; Cancel keeps the previous photo.", "Descrivi prima la maglia desiderata.": "Describe the shirt you want first.", "Istruzioni copiate. Apri ChatGPT e allega la foto.": "Instructions copied. Open ChatGPT and attach the photo.", "Seleziona e copia le istruzioni con il comando Copia del dispositivo.": "Select and copy the instructions with your device's Copy command.", "Scegli un’immagine inferiore a 25 MB.": "Choose an image smaller than 25 MB.", "Preparazione anteprima…": "Preparing preview…", "Anteprima pronta. Premi Salva per applicare la nuova maglia.": "Preview ready. Press Save to apply the new shirt.", "Attendi la preparazione dell’anteprima.": "Wait for the preview to be ready.", "Importazione non riuscita. La foto precedente è conservata.": "Import failed. The previous photo has been kept."});
+// Regolamento FISTF (9.0)
+Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Ladies (scarto massimo 5–0)": "U12 · U16 · U20 · Ladies category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Ladies: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Ladies: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "✨ Novità della 9.0": "✨ What’s new in 9.0", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
 
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
 TR['Token amministratore relay HTTPS']='HTTPS relay administrator token';TR['Solo per un server remoto']='For a remote server only';
@@ -5637,7 +5695,7 @@ function renderMtUI(){
     h+=`<div class="mt-row${i===MT.active?' on':''}">
       <span class="idx">${i+1}</span>
       <span class="nm">${nm?esc(nm):`<span class="muted">— ${L('libero')} —</span>`}
-        ${s&&s.started?`<span class="chip" style="font-size:.55rem">${L(FMT_LABELS[s.cfg.format])||''}</span>`:''}
+        ${s&&s.started?`<span class="chip" style="font-size:.55rem">${L(fmtNomeCfg(s.cfg))||''}</span>`:''}
         ${i===MT.active?`<span class="chip acc" style="font-size:.55rem">${L('ATTIVO')}</span>`:''}</span>
       ${multi&&s?`<span class="small muted">campi <input type="number" min="1" max="52" value="${MT.alloc[i]??''}" placeholder="auto" style="width:66px;padding:5px" onchange="mtSetAlloc(${i},this.value)">
         <span class="chip">C${(s.cfg.fieldOffset||0)+1}–C${(s.cfg.fieldOffset||0)+(s.cfg.fields||1)}</span></span>`:''}
@@ -6730,37 +6788,51 @@ function mmPunti(nome){
 }
 
 function computeStats(names,matches,conMM){
-  const st={};names.forEach(n=>st[n]={team:n,pl:0,w:0,d:0,l:0,gf:0,ga:0,dr:0,
+  const st={};names.forEach(n=>st[n]={team:n,pl:0,w:0,d:0,l:0,gf:0,ga:0,dr:0,rgf:0,rga:0,
     mm:conMM?mmPunti(n):0, pts:conMM?mmPunti(n):0});
   matches.forEach(m=>{
     if(m.annullata)return;               // gara non disputata per ritiro: non conta
     if(m.hs==null||m.as==null)return;
     const H=st[m.home],A=st[m.away];if(!H||!A)return;
-    H.pl++;A.pl++;H.gf+=m.hs;H.ga+=m.as;A.gf+=m.as;A.ga+=m.hs;
-    if(m.hs>m.as){H.w++;A.l++;H.pts+=S.cfg.ptsW;A.pts+=S.cfg.ptsL;}
-    else if(m.hs<m.as){A.w++;H.l++;A.pts+=S.cfg.ptsW;H.pts+=S.cfg.ptsL;}
+    const[hs,as]=fistfScarto(m.hs,m.as);  // FISTF giovanili e Ladies: in classifica al massimo 5-0
+    H.pl++;A.pl++;H.gf+=hs;H.ga+=as;A.gf+=as;A.ga+=hs;
+    // a squadre: reti delle partite individuali (criteri FISTF 7-10)
+    if(Array.isArray(m.sub)){const e=encounterWins(m.sub);H.rgf+=e.gh;H.rga+=e.ga;A.rgf+=e.ga;A.rga+=e.gh;}
+    if(hs>as){H.w++;A.l++;H.pts+=S.cfg.ptsW;A.pts+=S.cfg.ptsL;}
+    else if(hs<as){A.w++;H.l++;A.pts+=S.cfg.ptsW;H.pts+=S.cfg.ptsL;}
     else{H.d++;A.d++;H.pts+=S.cfg.ptsD;A.pts+=S.cfg.ptsD;}
   });
   Object.values(st).forEach(x=>x.dr=x.gf-x.ga);
   return st;
 }
-function resolveTie(cluster,matches,st){
-  if(cluster.length<2)return cluster;
+/* chiave di confronto fra i pari punti: i criteri attivi, nell'ordine */
+function tieKeyFn(cluster,matches,st){
   const sub=computeStats(cluster,matches.filter(m=>cluster.includes(m.home)&&cluster.includes(m.away)));
-  const key=n=>{
+  const tb=tbAttivi();
+  return n=>{
     const k=[];
-    S.cfg.tb.forEach(c=>{
+    tb.forEach(c=>{
       if(c==='h2h')k.push(sub[n].pts,sub[n].dr,sub[n].gf);
       else if(c==='dr')k.push(st[n].dr);
       else if(c==='gf')k.push(st[n].gf);
       else if(c==='gs')k.push(-st[n].ga);
       else if(c==='v')k.push(st[n].w);
+      else if(c==='h2hr')k.push(sub[n].rgf-sub[n].rga,sub[n].rgf);
+      else if(c==='rd')k.push(st[n].rgf-st[n].rga);
+      else if(c==='rf')k.push(st[n].rgf);
+      else if(c==='rk')k.push(-fistfRango(n));
     });
     return k;
   };
+}
+function resolveTie(cluster,matches,st){
+  if(cluster.length<2)return cluster;
+  const key=tieKeyFn(cluster,matches,st);
   return [...cluster].sort((a,b)=>{
     const ka=key(a),kb=key(b);
     for(let i=0;i<ka.length;i++)if(kb[i]!==ka[i])return kb[i]-ka[i];
+    // FISTF: a pari merito assoluto decide lo shoot-out, registrato nei gironi
+    if(S.cfg.fistf){const c=fistfSOcmp(a,b);if(c)return c;}
     return a.localeCompare(b,'it');
   });
 }
@@ -6768,6 +6840,7 @@ function rankTeams(names,matches){
   // il punteggio di partenza McMahon entra SOLO qui: dentro resolveTie si
   // confrontano gli scontri diretti, e sommarcelo falserebbe il paragone
   const st=computeStats(names,matches,true);
+  fistfRiposi(st,matches);
   const arr=[...names].sort((a,b)=>st[b].pts-st[a].pts);
   const order=[];let i=0;
   while(i<arr.length){
@@ -7076,7 +7149,7 @@ function estCfg(){
 /* conta partite e turni della formula impostata (anche prima dell'avvio) */
 function estStructure(){
   const n=S.started?S.teams.length:Math.max(2,parseInt(($('#s-nteams')||{}).value)||8);
-  const f=S.started?S.cfg.format:(($('#s-format')||{}).value||'gironi-ko');
+  const f=S.started?S.cfg.format:setupFormato();
   const perG=S.started?(S.cfg.perGroup||4):Math.max(2,parseInt(($('#s-pergroup')||{}).value)||4);
   const ret=S.started?!!S.cfg.ritorno:!!(($('#s-ritorno')||{}).checked);
   const qual=S.started?(S.cfg.qualify||2):Math.max(1,parseInt(($('#s-qualify')||{}).value)||2);
@@ -7089,7 +7162,9 @@ function estStructure(){
   const groupsOf=(tot,per)=>{const g=Math.max(1,Math.round(tot/per));return groupSizesFor(tot,g);};
   const rrRounds=s=>s<2?0:(s%2===0?s-1:s);            // giornate di un girone all'italiana
   const koSizes=K=>{const o=[];for(let k=K/2;k>=1;k/=2)o.push(k);return o;};
-  if(f==='planisfero'){sizes=plEstimate(n);note=plText('Confini + Spedizioni + Capitali; durata indicativa, recuperi inclusi','Borders + Expeditions + Capitals; estimated duration including recovery rounds');
+  const fx=S.started?null:setupFistf();
+  if(fx){sizes=fistfStima(n,fx);note=L(FISTF_NOMI[fx]);}
+  else if(f==='planisfero'){sizes=plEstimate(n);note=plText('Confini + Spedizioni + Capitali; durata indicativa, recuperi inclusi','Borders + Expeditions + Capitals; estimated duration including recovery rounds');
   }else if(S.started&&(allGroups().length||allKOs().length)){
     // torneo già generato: si contano le partite vere, turno per turno
     const byRound={};
@@ -7151,7 +7226,7 @@ function estStructure(){
 }
 function estCompute(){
   const e=estCfg(),st=estStructure();
-  const sq=(S.started?S.cfg.format:(($('#s-format')||{}).value))==='squadre';
+  const sq=(S.started?S.cfg.format:setupFormato())==='squadre';
   const fields=Math.max(1,(S.started?S.cfg.fields:parseInt(($('#s-fields')||{}).value))||2);
   const slots=Math.max(1,sq?Math.floor(fields/4):fields);   // nel CdT un incontro occupa 4 tavoli
   // durata di una partita: fasi × minuti (dal primo tabellone o dal Setup)
@@ -7262,6 +7337,7 @@ function renderRitiro(){
       <select id="rit-chi">${liberi.map(t=>`<option>${esc(t)}</option>`).join('')}</select></label>
     <label class="est-f" style="margin-top:12px"><span>${L('Che fine fanno le partite che restano')}</span>
       <select id="rit-modo">
+        ${S.cfg.fistf?`<option value="fistf" selected>${L(S.cfg.fistf==='squadre'?'Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati':S.cfg.fistf==='svizzero'?'Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti':'Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate')}</option>`:''}
         <option value="tavolino">${L('Vittoria a tavolino all’avversario (3–0)')}</option>
         <option value="annulla">${L('Gare non disputate (non contano in classifica)')}</option>
         <option value="zero">${L('0–0 a tavolino (un punto a testa)')}</option>
@@ -7278,12 +7354,15 @@ function applicaRitiro(){
   let tocc=0;
   const segna=(m,home)=>{                       // home = il ritirato gioca in casa
     if(modo==='annulla'){m.annullata=true;m.hs=null;m.as=null;m.done=true;m.live=false;}
+    else if(modo==='fistf')fistfForfait(m,home);
     else if(modo==='zero'){m.hs=0;m.as=0;m.done=true;m.live=false;m.annullata=false;}
     else{m.hs=home?0:3;m.as=home?3:0;m.done=true;m.live=false;m.annullata=false;}
     tocc++;
   };
+  // FISTF: chi lascia il torneo durante i gironi perde 0-3 anche le gare già giocate
+  const tuttoGirone=modo==='fistf'&&S.cfg.fistf!=='svizzero'&&S.phase==='groups';
   allGroups().forEach(g=>g.matches.forEach(m=>{
-    if(m.done||m.live)return;
+    if(!tuttoGirone&&(m.done||m.live))return;
     if(m.home===chi)segna(m,true); else if(m.away===chi)segna(m,false);
   }));
   allKOs().forEach(k=>{
@@ -7522,6 +7601,18 @@ function adviseFormats(n){
      phases:[`${L('Fase campionato')}: ${r} ${L('giornate svizzere')}`,`${L('Fase 2 — eliminazione diretta a').replace('Fase 2 — ','')} ${q}`],
      tot:Math.floor(n/2)*r+q, a:{format:'champions',swissr:r,chq:q}});}
   if(n>=13&&n<=24)P.push({fmt:'planisfero',title:'🌍 Coppa Planisfero',tag:plText('Sei confederazioni, due coppe, nessuna eliminazione.','Six confederations, two trophies, no elimination.'),phases:[plText('4 Confini + 2 Spedizioni a testa','4 Borders + 2 Expeditions each'),plText('Finale e bronzo per i primi quattro','Cup and bronze finals for the top four')],tot:3*n+2,a:{format:'planisfero'}});
+  /* --- regolamento FISTF --- */
+  {const G=fistfGironiAuto(n);
+   if(G){const T=FISTF_KO[G];
+    P.push({fmt:'fistf-gironi',title:`🌐 ${L('FISTF — Gironi + tabellone ufficiale')}`,
+      tag:L('Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.'),
+      phases:[`${G} ${L('gironi')} (${fistfTaglieTesto(fistfTaglie(n,G))}), ${L('passano i primi due')}`,
+              (T.b.length?`${T.b.length} ${L('spareggi')} → `:'')+L(fistfTurnoPrincipale(T.m.length))+' → '+L('Finale')],
+      tot:null,a:{format:'fistf-gironi'}});}}
+  if(n>=8)P.push({fmt:'fistf-svizzero',title:`🌐 ${L('FISTF — Sistema svizzero + fase finale')}`,
+      tag:L('Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.'),
+      phases:[`4 ${L('turni')}, ${Math.floor(n/2)*4} ${L('partite')}`,`${L('Tabellone a')} ${n>=16?16:8}`],
+      tot:Math.floor(n/2)*4+(n>=16?15:7),a:{format:'fistf-svizzero',swissr:4,fistfko:n>=16?16:8}});
   /* --- re del tavolo --- */
   if(n>=3)P.push({fmt:'kingofcourt',title:L('👑 Re del Tavolo (chi vince resta)'),
     tag:L('Serata veloce e spettacolare: si gioca a catena, il re difende il tavolo.'),
@@ -7573,6 +7664,7 @@ function applyReal(i){
   if(a.extra!=null&&$('#s-extra'))$('#s-extra').value=a.extra;
   if(a.swissr!=null&&$('#s-swissr'))$('#s-swissr').value=a.swissr;
   if(a.chq!=null&&$('#s-chq'))$('#s-chq').value=a.chq;
+  if(a.fistfko&&$('#s-fistf-ko')){$('#s-fistf-ko').value=String(a.fistfko);fistfSetupInfo();}
   $('#s-ritorno').checked=!!a.ritorno;
   if(a.third!=null)$('#s-third').checked=!!a.third;
   if(!$('#s-name').value.trim())$('#s-name').value=c.nome;
@@ -7613,6 +7705,7 @@ function applyAdvice(i){
   if(a.poutn!=null&&$('#s-poutn'))$('#s-poutn').value=a.poutn;
   if(a.pofffmt&&$('#s-pofffmt'))$('#s-pofffmt').value=a.pofffmt;
   if(a.chq!=null&&$('#s-chq'))$('#s-chq').value=a.chq;
+  if(a.fistfko&&$('#s-fistf-ko')){$('#s-fistf-ko').value=String(a.fistfko);fistfSetupInfo();}
   if(a.ritorno!=null)$('#s-ritorno').checked=a.ritorno;
   if(a.consb!=null&&$('#s-consb'))$('#s-consb').checked=a.consb;
   if(a.kohtarget!=null&&$('#s-kohtarget'))$('#s-kohtarget').value=a.kohtarget;
@@ -8550,6 +8643,469 @@ function recomputeKO(ko){
 }
 
 /* =========================================================
+   REGOLAMENTO FISTF — Tournament Organisers Handbook v2.1
+   (Federation of International Sports Table Football, 26/08/2023)
+   Tre formule, ciascuna appoggiata a un motore che esiste già:
+     'gironi'   → gironi + tabellone ufficiale        (§2.1, §2.3, §2.4)
+     'svizzero' → turni svizzeri + tabellone a 8 o 16  (§2.5)
+     'squadre'  → torneo a squadre, gironi + tabellone (§2.2, §2.3, §2.4)
+   Quello che il regolamento fissa, qui è fisso: punti 3-1-0, criteri di
+   classifica, ordine delle gare nel girone, primi due qualificati, incroci
+   del tabellone. Le tabelle sono trascritte dal documento e verificate una
+   per una: ogni 1° e 2° di girone compare una volta sola, gli spareggi
+   M1…Mn sono tutti usati, il turno principale è una potenza di due, e
+   primo e secondo dello stesso girone stanno sempre in metà opposte.
+   Nota: nella tabella per 29 gironi il documento scrive «M8 14A – 19B», ma
+   il 19B gioca già M14 e il 9B non compare altrove: è un refuso per 9B, e
+   con 9B torna anche la regola delle metà opposte.
+   ========================================================= */
+// §2.3.1 — ordine delle gare per girone da 3 a 10: turni di [casa, ospite]
+const FISTF_ORDINE={3:[[[3,1]],[[2,3]],[[1,2]]],4:[[[1,4],[2,3]],[[3,1],[4,2]],[[1,2],[3,4]]],5:[[[2,3],[5,1]],[[2,4],[3,5]],[[4,1],[5,2]],[[1,3],[4,5]],[[1,2],[3,4]]],6:[[[1,5],[2,3],[4,6]],[[2,4],[3,5],[6,1]],[[1,4],[5,2],[6,3]],[[2,6],[3,1],[4,5]],[[1,2],[3,4],[5,6]]],7:[[[1,3],[4,7],[5,6]],[[1,5],[2,4],[6,7]],[[2,6],[3,5],[7,1]],[[1,2],[3,7],[4,6]],[[2,3],[4,1],[7,5]],[[3,4],[5,2],[6,1]],[[5,4],[6,3],[7,2]]],8:[[[1,3],[2,8],[4,7],[5,6]],[[1,5],[2,4],[3,8],[6,7]],[[3,5],[6,2],[7,1],[8,4]],[[1,2],[4,6],[5,8],[7,3]],[[1,4],[2,3],[5,7],[8,6]],[[3,4],[5,2],[6,1],[7,8]],[[2,7],[3,6],[4,5],[8,1]]],9:[[[1,3],[4,9],[5,8],[6,7]],[[1,5],[2,4],[7,8],[9,6]],[[2,6],[3,5],[7,1],[8,9]],[[1,9],[6,4],[7,3],[8,2]],[[2,1],[4,8],[5,7],[9,3]],[[1,4],[3,2],[5,9],[8,6]],[[2,5],[4,3],[6,1],[9,7]],[[3,6],[5,4],[7,2],[8,1]],[[3,8],[4,7],[6,5],[9,2]]],10:[[[1,3],[2,10],[4,9],[5,8],[6,7]],[[2,4],[3,10],[5,1],[7,8],[9,6]],[[3,5],[4,10],[6,2],[7,1],[8,9]],[[1,9],[2,8],[3,7],[4,6],[10,5]],[[1,2],[5,7],[8,4],[9,3],[10,6]],[[1,4],[2,3],[5,9],[6,8],[7,10]],[[1,6],[2,5],[3,4],[8,10],[9,7]],[[4,5],[6,3],[7,2],[8,1],[10,9]],[[3,8],[4,7],[5,6],[9,2],[10,1]]]};
+// §2.3.2 — ordini speciali quando nel girone ci sono compagni di club o nazione
+const FISTF_SPECIALI={
+  3:[[[[1,2]],[[2,3]],[[3,1]]],                     // compagni 1 e 2
+     [[[2,3]],[[3,1]],[[1,2]]]],                    // compagni 2 e 3
+  4:[[[[1,2],[3,4]],[[1,4],[2,3]],[[3,1],[4,2]]],   // compagni 1-2 oppure 3-4
+     [[[3,1],[4,2]],[[1,4],[2,3]],[[1,2],[3,4]]]]   // compagni 1-3 oppure 2-4
+};
+// §2.4 — tabellone per 2…32 gironi. b = spareggi M1, M2… [X, Y];
+// m = turno principale nell'ordine del documento (i vincenti si incontrano
+// a coppie nello stesso ordine). «3A» = primo del girone 3, «3B» = secondo.
+const FISTF_KO={2:{b:[],m:[["1A","2B"],["1B","2A"]]},3:{b:[["3A","1B"],["2B","3B"]],m:[["1A","M2"],["M1","2A"]]},4:{b:[],m:[["1A","3B"],["2B","4A"],["3A","1B"],["4B","2A"]]},5:{b:[["2B","3B"],["4B","5B"]],m:[["1A","M1"],["5A","4A"],["3A","1B"],["M2","2A"]]},6:{b:[["5A","3B"],["6A","4B"],["1B","5B"],["2B","6B"]],m:[["1A","M4"],["M1","4A"],["3A","M2"],["M3","2A"]]},7:{b:[["3A","5B"],["4A","7B"],["5A","6B"],["6A","4B"],["7A","1B"],["2B","3B"]],m:[["1A","M6"],["M3","M2"],["M1","M4"],["M5","2A"]]},8:{b:[],m:[["1A","7B"],["2B","8A"],["5A","3B"],["6B","4A"],["3A","5B"],["4B","6A"],["7A","1B"],["8B","2A"]]},9:{b:[["8B","9B"],["6B","7B"]],m:[["1A","M2"],["9A","8A"],["5A","2B"],["3B","4A"],["3A","5B"],["4B","6A"],["7A","1B"],["M1","2A"]]},10:{b:[["3B","7B"],["4B","8B"],["5B","9B"],["6B","10B"]],m:[["1A","M4"],["9A","8A"],["5A","2B"],["M1","4A"],["3A","M2"],["1B","6A"],["7A","10A"],["M3","2A"]]},11:{b:[["11A","4B"],["2B","6B"],["1B","8B"],["3B","11B"],["7B","10B"],["5B","9B"]],m:[["1A","M5"],["9A","8A"],["5A","M2"],["M4","4A"],["3A","M3"],["M1","6A"],["7A","10A"],["M6","2A"]]},12:{b:[["9A","2B"],["10A","1B"],["11A","4B"],["12A","3B"],["12B","9B"],["6B","7B"],["10B","11B"],["8B","5B"]],m:[["1A","M7"],["M1","8A"],["5A","M4"],["M6","4A"],["3A","M5"],["M3","6A"],["7A","M2"],["M8","2A"]]},13:{b:[["7A","4B"],["8A","6B"],["9A","7B"],["10A","5B"],["11A","8B"],["12A","2B"],["13A","10B"],["1B","13B"],["9B","12B"],["3B","11B"]],m:[["1A","M10"],["M3","M2"],["5A","M6"],["M7","4A"],["3A","M8"],["M5","6A"],["M1","M4"],["M9","2A"]]},14:{b:[["5A","3B"],["6A","4B"],["7A","5B"],["8A","6B"],["9A","7B"],["10A","8B"],["11A","9B"],["12A","10B"],["13A","11B"],["14A","12B"],["1B","13B"],["2B","14B"]],m:[["1A","M12"],["M5","M4"],["M1","M8"],["M9","4A"],["3A","M10"],["M7","M2"],["M3","M6"],["M11","2A"]]},15:{b:[["3A","12B"],["4A","14B"],["5A","11B"],["6A","13B"],["7A","9B"],["8A","10B"],["9A","7B"],["10A","8B"],["11A","5B"],["12A","6B"],["13A","3B"],["14A","4B"],["15A","1B"],["2B","15B"]],m:[["1A","M14"],["M7","M6"],["M3","M10"],["M11","M2"],["M1","M12"],["M9","M4"],["M5","M8"],["M13","2A"]]},16:{b:[],m:[["1A","15B"],["2B","16A"],["9A","7B"],["10B","8A"],["5A","11B"],["6B","12A"],["13A","3B"],["14B","4A"],["3A","13B"],["4B","14A"],["11A","5B"],["12B","6A"],["7A","9B"],["8B","10A"],["15A","1B"],["16B","2A"]]},17:{b:[["17B","16B"],["15B","14B"]],m:[["1A","M2"],["17A","16A"],["9A","6B"],["7B","8A"],["5A","10B"],["3B","12A"],["13A","2B"],["11B","4A"],["3A","13B"],["4B","14A"],["11A","5B"],["12B","6A"],["7A","9B"],["8B","10A"],["15A","1B"],["M1","2A"]]},18:{b:[["11B","15B"],["12B","16B"],["13B","17B"],["14B","18B"]],m:[["1A","M4"],["17A","16A"],["9A","6B"],["7B","8A"],["5A","10B"],["3B","12A"],["13A","2B"],["M1","4A"],["3A","M2"],["1B","14A"],["11A","4B"],["9B","6A"],["7A","8B"],["5B","10A"],["15A","18A"],["M3","2A"]]},19:{b:[["8B","12B"],["11B","15B"],["10B","19B"],["9B","17B"],["14B","18B"],["13B","16B"]],m:[["1A","M5"],["17A","16A"],["9A","6B"],["7B","8A"],["5A","M2"],["3B","12A"],["13A","2B"],["M3","4A"],["3A","M4"],["19A","14A"],["11A","1B"],["5B","6A"],["7A","4B"],["M1","10A"],["15A","18A"],["M6","2A"]]},20:{b:[["6B","14B"],["5B","13B"],["8B","16B"],["7B","15B"],["10B","18B"],["9B","17B"],["12B","20B"],["11B","19B"]],m:[["1A","M8"],["17A","16A"],["9A","3B"],["M1","8A"],["5A","M4"],["2B","12A"],["13A","20A"],["M5","4A"],["3A","M6"],["19A","14A"],["11A","1B"],["M3","6A"],["7A","M2"],["4B","10A"],["15A","18A"],["M7","2A"]]},21:{b:[["4B","12B"],["3B","10B"],["2B","14B"],["5B","17B"],["8B","16B"],["7B","15B"],["6B","18B"],["9B","20B"],["13B","21B"],["11B","19B"]],m:[["1A","M10"],["17A","16A"],["9A","M2"],["M3","8A"],["5A","M6"],["21A","12A"],["13A","20A"],["M7","4A"],["3A","M8"],["19A","14A"],["11A","1B"],["M5","6A"],["7A","M4"],["M1","10A"],["15A","18A"],["M9","2A"]]},22:{b:[["21A","11B"],["22A","12B"],["1B","13B"],["2B","14B"],["3B","15B"],["4B","16B"],["5B","17B"],["6B","18B"],["7B","19B"],["8B","20B"],["9B","21B"],["10B","22B"]],m:[["1A","M12"],["17A","16A"],["9A","M4"],["M5","8A"],["5A","M8"],["M1","12A"],["13A","20A"],["M9","4A"],["3A","M10"],["19A","14A"],["11A","M2"],["M7","6A"],["7A","M6"],["M3","10A"],["15A","18A"],["M11","2A"]]},23:{b:[["19A","1B"],["20A","2B"],["21A","3B"],["22A","4B"],["23A","5B"],["23B","6B"],["22B","7B"],["21B","8B"],["20B","9B"],["19B","10B"],["18B","11B"],["17B","12B"],["16B","13B"],["15B","14B"]],m:[["1A","M14"],["17A","16A"],["9A","M6"],["M7","8A"],["5A","M10"],["M3","12A"],["13A","M2"],["M11","4A"],["3A","M12"],["M1","14A"],["11A","M4"],["M9","6A"],["7A","M8"],["M5","10A"],["15A","18A"],["M13","2A"]]},24:{b:[["17A","10B"],["18A","9B"],["19A","12B"],["20A","11B"],["21A","14B"],["22A","13B"],["23A","16B"],["24A","15B"],["2B","18B"],["1B","17B"],["4B","20B"],["3B","19B"],["6B","22B"],["5B","21B"],["8B","24B"],["7B","23B"]],m:[["1A","M16"],["M1","16A"],["9A","M8"],["M9","8A"],["5A","M12"],["M5","12A"],["13A","M4"],["M13","4A"],["3A","M14"],["M3","14A"],["11A","M6"],["M11","6A"],["7A","M10"],["M7","10A"],["15A","M2"],["M15","2A"]]},25:{b:[["16A","23B"],["17A","22B"],["20A","19B"],["21A","18B"],["24A","15B"],["25A","14B"],["2B","11B"],["3B","10B"],["6B","7B"],["15A","25B"],["18A","24B"],["19A","21B"],["22A","20B"],["23A","17B"],["1B","16B"],["4B","13B"],["5B","12B"],["8B","9B"]],m:[["1A","M9"],["M1","M2"],["9A","M5"],["8A","M6"],["5A","M7"],["12A","M4"],["13A","M3"],["4A","M8"],["3A","M17"],["14A","M12"],["11A","M13"],["6A","M16"],["7A","M15"],["10A","M14"],["M10","M11"],["2A","M18"]]},26:{b:[["13A","7B"],["14A","8B"],["15A","9B"],["16A","10B"],["17A","11B"],["18A","12B"],["19A","13B"],["20A","14B"],["21A","15B"],["22A","16B"],["23A","17B"],["24A","18B"],["25A","19B"],["26A","20B"],["1B","21B"],["2B","22B"],["3B","23B"],["4B","24B"],["5B","25B"],["6B","26B"]],m:[["1A","M20"],["M5","M4"],["9A","M12"],["M13","8A"],["5A","M16"],["M9","12A"],["M1","M8"],["M17","4A"],["3A","M18"],["M7","M2"],["11A","M10"],["M15","6A"],["7A","M14"],["M11","10A"],["M3","M6"],["M19","2A"]]},27:{b:[["12A","27B"],["13A","26B"],["16A","23B"],["17A","22B"],["20A","19B"],["21A","18B"],["24A","15B"],["25A","14B"],["2B","11B"],["3B","10B"],["6B","7B"],["11A","25B"],["14A","24B"],["15A","21B"],["18A","20B"],["19A","17B"],["22A","16B"],["23A","13B"],["26A","12B"],["27A","9B"],["1B","8B"],["4B","5B"]],m:[["1A","M11"],["M3","M4"],["9A","M7"],["8A","M8"],["5A","M9"],["M1","M6"],["M2","M5"],["4A","M10"],["3A","M21"],["M13","M16"],["M12","M17"],["6A","M20"],["7A","M19"],["10A","M18"],["M14","M15"],["2A","M22"]]},28:{b:[["9A","27B"],["12A","26B"],["13A","23B"],["16A","22B"],["17A","19B"],["20A","18B"],["21A","15B"],["24A","14B"],["25A","11B"],["28A","10B"],["2B","7B"],["3B","6B"],["10A","28B"],["11A","25B"],["14A","24B"],["15A","21B"],["18A","20B"],["19A","17B"],["22A","16B"],["23A","13B"],["26A","12B"],["27A","9B"],["1B","8B"],["4B","5B"]],m:[["1A","M12"],["M4","M5"],["M1","M8"],["8A","M9"],["5A","M10"],["M2","M7"],["M3","M6"],["4A","M11"],["3A","M23"],["M15","M18"],["M14","M19"],["6A","M22"],["7A","M21"],["M13","M20"],["M16","M17"],["2A","M24"]]},29:{b:[["7A","5B"],["8A","3B"],["9A","6B"],["10A","25B"],["11A","8B"],["12A","11B"],["13A","14B"],["14A","9B"],["15A","12B"],["16A","15B"],["17A","10B"],["18A","16B"],["19A","13B"],["20A","19B"],["21A","18B"],["22A","17B"],["23A","20B"],["24A","23B"],["25A","22B"],["26A","24B"],["27A","21B"],["28A","26B"],["29A","7B"],["1B","28B"],["4B","29B"],["2B","27B"]],m:[["1A","M26"],["M11","M10"],["M3","M18"],["M19","M2"],["5A","M22"],["M15","M6"],["M7","M14"],["M23","4A"],["3A","M24"],["M13","M8"],["M5","M16"],["M21","6A"],["M1","M20"],["M17","M4"],["M9","M12"],["M25","2A"]]},30:{b:[["5A","3B"],["6A","4B"],["7A","5B"],["8A","6B"],["9A","7B"],["10A","8B"],["11A","9B"],["12A","10B"],["13A","11B"],["14A","12B"],["15A","13B"],["16A","14B"],["17A","15B"],["18A","16B"],["19A","17B"],["20A","18B"],["21A","19B"],["22A","20B"],["23A","21B"],["24A","22B"],["25A","23B"],["26A","24B"],["27A","25B"],["28A","26B"],["29A","27B"],["30A","28B"],["1B","29B"],["2B","30B"]],m:[["1A","M28"],["M13","M12"],["M5","M20"],["M21","M4"],["M1","M24"],["M17","M8"],["M9","M16"],["M25","4A"],["3A","M26"],["M15","M10"],["M7","M18"],["M23","M2"],["M3","M22"],["M19","M6"],["M11","M14"],["M27","2A"]]},31:{b:[["3A","1B"],["4A","3B"],["5A","6B"],["6A","5B"],["7A","4B"],["8A","7B"],["9A","10B"],["10A","9B"],["11A","8B"],["12A","11B"],["13A","14B"],["14A","13B"],["15A","12B"],["16A","15B"],["17A","18B"],["18A","17B"],["19A","16B"],["20A","19B"],["21A","22B"],["22A","21B"],["23A","20B"],["24A","23B"],["25A","26B"],["26A","25B"],["27A","24B"],["28A","27B"],["29A","30B"],["30A","29B"],["31A","28B"],["2B","31B"]],m:[["1A","M30"],["M15","M14"],["M7","M22"],["M23","M6"],["M3","M26"],["M19","M10"],["M11","M18"],["M27","M2"],["M1","M28"],["M17","M12"],["M9","M20"],["M25","M4"],["M5","M24"],["M21","M8"],["M13","M16"],["M29","2A"]]},32:{b:[],m:[["1A","31B"],["2B","32A"],["17A","15B"],["18B","16A"],["9A","23B"],["10B","24A"],["25A","7B"],["26B","8A"],["5A","27B"],["6B","28A"],["21A","11B"],["22B","12A"],["13A","19B"],["14B","20A"],["29A","3B"],["30B","4A"],["3A","29B"],["4B","30A"],["19A","13B"],["20B","14A"],["11A","21B"],["12B","22A"],["27A","5B"],["28B","6A"],["7A","25B"],["8B","26A"],["23A","9B"],["24B","10A"],["15A","17B"],["16B","18A"],["31A","1B"],["32B","2A"]]}};
+// §2.5 — fase finale dello svizzero: [partita, posizione, posizione], già
+// nell'ordine del tabellone (quarti a-b, c-d, e-f, g-h; semifinali A-D, B-C)
+const FISTF_SV16=[['A',1,16],['B',8,9],['C',4,13],['D',5,12],['E',3,14],['F',6,11],['G',7,10],['H',2,15]];
+const FISTF_SV8=[['A',1,8],['D',4,5],['B',2,7],['C',3,6]];
+const FISTF_NOMI={gironi:'FISTF — Gironi + tabellone ufficiale',svizzero:'FISTF — Sistema svizzero + fase finale',squadre:'FISTF — Torneo a squadre'};
+Object.assign(TB_LABELS,{rk:'Ranking mondiale (ordine di iscrizione)',h2hr:'Scontri diretti: reti delle partite individuali',
+  rd:'Differenza reti delle partite individuali',rf:'Reti fatte nelle partite individuali'});
+
+/* La formula FISTF si sceglie dal menu come voce a sé, ma sotto usa il motore
+   di una formula esistente: il menu porta «fistf-…», la configurazione porta
+   il formato di base più S.cfg.fistf. */
+const FISTF_OPT={'fistf-gironi':'gironi-ko','fistf-svizzero':'champions','fistf-squadre':'squadre'};
+function fmtSelBase(v){return FISTF_OPT[v]||v;}
+function fmtSelFistf(v){return FISTF_OPT[v]?String(v).slice(6):null;}
+function fmtSelValore(c){return c&&c.fistf&&FISTF_OPT['fistf-'+c.fistf]?'fistf-'+c.fistf:((c&&c.format)||'gironi-ko');}
+function setupFormato(){return fmtSelBase((($('#s-format')||{}).value)||'gironi-ko');}
+function setupFistf(){return fmtSelFistf((($('#s-format')||{}).value)||'');}
+function fmtNomeCfg(c){return c&&c.fistf&&FISTF_NOMI[c.fistf]?FISTF_NOMI[c.fistf]:(FMT_LABELS[c&&c.format]||'');}
+
+/* ---------- criteri di classifica (§2.1.2, §2.2.2, §2.5) ---------- */
+function tbAttivi(){
+  const x=S.cfg&&S.cfg.fistf;
+  if(x==='gironi')return ['h2h','dr','gf'];
+  if(x==='svizzero')return ['dr','gf','rk'];
+  if(x==='squadre')return ['h2h','dr','gf','h2hr','rd','rf'];
+  return S.cfg.tb;
+}
+function tbNome(c){
+  if(S.cfg&&S.cfg.fistf==='squadre'){
+    const m={h2h:'Scontri diretti (punti, differenza e numero di vittorie individuali)',dr:'Differenza vittorie individuali',gf:'Vittorie individuali'};
+    if(m[c])return m[c];
+  }
+  return TB_LABELS[c]||c;
+}
+function fistfRango(n){const r=S.fistfRank||S.teams||[];const i=r.indexOf(n);return i<0?9999:i;}
+// U12, U16, U20 e Ladies: nei gironi lo scarto massimo è 5-0 (§2.1.2 c)
+function fistfTetto(){return !!(S.cfg&&S.cfg.fistfCap&&(S.cfg.fistf==='gironi'||S.cfg.fistf==='svizzero'));}
+function fistfScarto(hs,as){
+  if(fistfTetto()&&Math.abs(hs-as)>=5)return hs>as?[5,0]:[0,5];
+  return [hs,as];
+}
+function fistfCapMark(m){
+  if(!fistfTetto()||!m.done||m.hs==null||m.as==null)return '';
+  const [h,a]=fistfScarto(m.hs,m.as);
+  return (h!==m.hs||a!==m.as)?`<span class="chip fistf-cap" title="${L('FISTF U12/U16/U20/Ladies: in classifica lo scarto massimo è 5–0')}">= ${h}–${a}</span> `:'';
+}
+// ordine deciso ai tiri piazzati fra chi è a pari merito assoluto
+function fistfSOcmp(a,b){
+  const so=S.fistfSO||{};
+  for(const k in so){
+    const l=k.split('¦');if(!l.includes(a)||!l.includes(b))continue;
+    const o=so[k]||[],ia=o.indexOf(a),ib=o.indexOf(b);
+    if(ia<0&&ib<0)return 0; if(ia<0)return 1; if(ib<0)return -1; return ia-ib;
+  }
+  return 0;
+}
+/* Pari merito assoluti di un girone concluso: stessi punti e stessi valori in
+   tutti i criteri. Il regolamento li decide con lo shoot-out (criterio 7 o 11). */
+function fistfPari(g){
+  if(!S.cfg.fistf||S.cfg.fistf==='svizzero'||!g||g.swiss)return [];
+  if(!(S.groups||[]).includes(g))return [];
+  if(!g.matches.length||!g.matches.every(m=>m.done))return [];
+  const{order,stats}=rankTeams(g.teams,g.matches);
+  const out=[];let i=0;
+  while(i<order.length){
+    const cl=order.filter(n=>stats[n].pts===stats[order[i]].pts);
+    const key=tieKeyFn(cl,g.matches,stats),k0=key(order[i]).join('|');
+    let j=i+1;
+    while(j<order.length&&stats[order[j]].pts===stats[order[i]].pts&&key(order[j]).join('|')===k0)j++;
+    if(j-i>1){
+      const membri=order.slice(i,j),chiave=membri.slice().sort().join('¦');
+      out.push({membri,pos:i+1,chiave,ordine:((S.fistfSO||{})[chiave]||[]).filter(n=>membri.includes(n))});
+    }
+    i=j;
+  }
+  return out;
+}
+function fistfPariHTML(g){
+  const gi=(S.groups||[]).indexOf(g);
+  return fistfPari(g).map(c=>{
+    const rimasti=c.membri.filter(n=>!c.ordine.includes(n));
+    const fatto=rimasti.length<=1;
+    return `<div class="fistf-so${fatto?' ok':''}">⚖️ <b>${L('Parità assoluta')}</b> ${L('dal')} ${fistfPosto(c.pos)}: ${c.membri.map(esc).join(', ')}. ${L('Decide lo shoot-out (regolamento FISTF).')}
+      ${c.ordine.length?`<div style="margin-top:4px">${L('Esito dello shoot-out')}: ${c.ordine.concat(fatto?rimasti:[]).map((n,k)=>`${LANG==='en'?(c.pos+k)+ordSuffix(c.pos+k):(c.pos+k)+'°'} <b>${esc(n)}</b>`).join(' · ')}
+        <button class="btn sec mini" onclick="fistfSOAzzera(${gi},${c.pos})">↺ ${L('rifai')}</button></div>`:''}
+      ${fatto?'':`<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:6px">${rimasti.map((n,k)=>
+        `<button class="btn mini" onclick="fistfSOVince(${gi},${c.pos},${c.membri.indexOf(n)})">🥅 ${fistfPosto(c.pos+c.ordine.length)}: ${esc(n)}</button>`).join('')}</div>`}
+    </div>`;
+  }).join('');
+}
+function fistfSOVince(gi,pos,mi){
+  const g=S.groups[gi];const c=fistfPari(g).find(x=>x.pos===pos);if(!c)return;
+  const n=c.membri[mi];if(!n||c.ordine.includes(n))return;
+  S.fistfSO=S.fistfSO||{};
+  const o=(S.fistfSO[c.chiave]=c.ordine.concat([n]));
+  const rimasti=c.membri.filter(x=>!o.includes(x));
+  if(rimasti.length===1)o.push(rimasti[0]);
+  refreshStandingsEverywhere();renderGironiActions();persist();
+}
+function fistfSOAzzera(gi,pos){
+  const g=S.groups[gi];const c=fistfPari(g).find(x=>x.pos===pos);if(!c)return;
+  if(S.fistfSO)delete S.fistfSO[c.chiave];
+  refreshStandingsEverywhere();renderGironiActions();persist();
+}
+function fistfPosto(k){return LANG==='en'?k+ordSuffix(k)+' place':k+'° posto';}
+function standingsBloccoHTML(g,qual){return standingsHTML(g,{qual})+fistfPariHTML(g);}
+
+/* ---------- composizione dei gironi (§1.1.2.7, §2.3.3) ---------- */
+function fistfTaglie(N,G){const b=Math.floor(N/G),r=N%G;return Array.from({length:G},(_,i)=>b+(i<r?1:0));}
+function fistfTaglieTesto(t){const c={};t.forEach(x=>{c[x]=(c[x]||0)+1;});return Object.keys(c).sort((a,b)=>b-a).map(k=>`${c[k]}×${k}`).join(' + ');}
+function fistfGironiValidi(N){const v=[];for(let G=2;G<=32;G++)if(Math.floor(N/G)>=3&&Math.ceil(N/G)<=10)v.push(G);return v;}
+// gironi da 3 a 10, meglio da 4 che da 3: il numero di gironi che più avvicina
+// tutti a 4; a pari distanza, quello con meno gironi da 3
+function fistfGironiAuto(N){
+  let best=0,bs=null;
+  fistfGironiValidi(N).forEach(G=>{
+    const t=fistfTaglie(N,G),s=[t.reduce((a,x)=>a+Math.abs(x-4),0),t.filter(x=>x===3).length];
+    if(!bs||s[0]<bs[0]||(s[0]===bs[0]&&s[1]<bs[1])){best=G;bs=s;}
+  });
+  return best;
+}
+function fistfTurnoPrincipale(k){return k===2?'Semifinali':k===4?'Quarti di finale':k===8?'Ottavi di finale':k===16?'Sedicesimi di finale':'Turno dei 64';}
+// club, o in mancanza la nazione: il regolamento separa entrambi
+function fistfClubRaw(n){const p=S.paesi&&S.paesi[n];return (S.clubs&&S.clubs[n])||(p?(typeof p==='string'?p:(p.iso||'')):'');}
+function fistfClubDi(n){return clubNorm(fistfClubRaw(n));}
+/* L'ordine di iscrizione è il ranking mondiale: le prime G teste di serie
+   formano la prima fascia, le G seguenti la seconda, e così via. Ogni fascia
+   dà un giocatore a ogni girone: estratto a sorte se «Sorteggio casuale» è
+   attivo, altrimenti a serpentina. */
+function fistfComponi(names,G,casuale){
+  const gr=Array.from({length:G},()=>[]);
+  for(let p=0;p*G<names.length;p++){
+    const fascia=names.slice(p*G,(p+1)*G);
+    const dest=Array.from({length:G},(_,i)=>i);
+    if(casuale)shuffle(dest);else if(p%2)dest.reverse();
+    fascia.forEach((n,i)=>gr[dest[i]].push(n));
+  }
+  return gr;
+}
+/* Numerazione e ordine delle gare di un girone. Con due compagni di club nei
+   gironi da 3 e da 4 si usa l'ordine speciale che li fa incontrare al primo
+   turno; da 5 a 10 si rinumera il girone perché due compagni non si
+   incontrino all'ultimo turno (col minimo di scambi di numero). */
+function fistfOrdine(teams){
+  const n=teams.length,base=FISTF_ORDINE[n];
+  if(!base)return null;
+  const k=teams.map(fistfClubDi);
+  const comp=(a,b)=>!!k[a-1]&&k[a-1]===k[b-1];
+  const conta=(rd,p)=>rd.filter(([a,b])=>comp(p[a-1],p[b-1])).length;
+  const id=teams.map((_,i)=>i+1);
+  if(n<=4){
+    const cand=[base,...FISTF_SPECIALI[n]];
+    let bi=0,bv=conta(base[0],id);
+    cand.forEach((o,i)=>{const v=conta(o[0],id);if(v>bv){bv=v;bi=i;}});
+    return{teams:teams.slice(),turni:cand[bi],tipo:bi?'club':'std'};
+  }
+  const valuta=(p,s)=>[conta(base[base.length-1],p),-conta(base[0],p),s];
+  const meglio=(a,b)=>{for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]<b[i];return false;};
+  const sc=(p,i,j)=>{const q=p.slice();[q[i],q[j]]=[q[j],q[i]];return q;};
+  let best=id,bs=valuta(id,0);
+  if(bs[0]>0){
+    const cop=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)cop.push([i,j]);
+    cop.forEach(([i,j])=>{const p=sc(id,i,j),v=valuta(p,1);if(meglio(v,bs)){best=p;bs=v;}});
+    if(bs[0]>0)cop.forEach(([i,j],x)=>cop.slice(x+1).forEach(([a,b])=>{
+      const p=sc(sc(id,i,j),a,b),v=valuta(p,2);if(meglio(v,bs)){best=p;bs=v;}}));
+  }
+  return{teams:best.map(i=>teams[i-1]),turni:base,tipo:best===id?'std':'club'};
+}
+function fistfMakeGroup(name,teamNames){
+  const o=fistfOrdine(teamNames);
+  if(!o)return makeGroup(name,teamNames);
+  const matches=[];
+  o.turni.forEach((rd,ri)=>rd.forEach(([h,a])=>matches.push({
+    id:uid(),home:o.teams[h-1],away:o.teams[a-1],hs:null,as:null,done:false,live:false,
+    round:ri+1,field:null,ref:null})));
+  return{name,teams:o.teams,matches,fistfOrd:o.tipo};
+}
+function fistfCreaGironi(names,composed){
+  let gr=composed;
+  if(!gr){
+    gr=fistfComponi(names,S.cfg.fistfG||fistfGironiAuto(names.length),!!S.cfg.shuffle);
+    // stesso club o stessa nazione in gironi diversi, per quanto possibile:
+    // si scambiano soltanto giocatori della stessa fascia di ranking
+    if(names.some(n=>fistfClubDi(n))){
+      const r=clubSepara(gr,fistfClubRaw,(n,gi,pos)=>pos);
+      clubAvviso(r,r.gruppi,fistfClubRaw);gr=r.gruppi;
+    }
+  }
+  return gr.filter(g=>g.length).map((t,i)=>fistfMakeGroup(String(i+1),t));
+}
+function fistfVerificaSetup(names,composed){
+  const x=S.cfg.fistf,N=names.length;
+  if(x==='svizzero'){
+    const Q=S.cfg.chQ===8?8:16;
+    if(N<Q)return L('FISTF, sistema svizzero: per il tabellone a')+' '+Q+' '+L('servono almeno')+' '+Q+' '+L('partecipanti.');
+    return '';
+  }
+  const G=composed?composed.filter(g=>g.length).length:(S.cfg.fistfG||fistfGironiAuto(N));
+  if(!G)return L('FISTF: con')+' '+N+' '+L('partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).');
+  if(G<2||G>32)return L('FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.');
+  const t=composed?composed.filter(g=>g.length).map(g=>g.length):fistfTaglie(N,G);
+  if(t.some(s=>s<3||s>10))return L('FISTF: ogni girone deve avere da 3 a 10 partecipanti.');
+  return '';
+}
+
+/* ---------- tabellone (§2.4, §2.5) ---------- */
+function fistfKODaCoppie(title,coppie,nomePrimo,withThird){
+  const mk=(t1,t2,lbl)=>({id:uid(),t1:t1||null,t2:t2||null,s1:null,s2:null,p1:null,p2:null,live:false,lbl:lbl||''});
+  const rounds=[{name:nomePrimo||roundName(coppie.length),matches:coppie.map(c=>mk(c[0],c[1],c[2]))}];
+  for(let cnt=coppie.length/2;cnt>=1;cnt/=2)
+    rounds.push({name:roundName(cnt),matches:Array.from({length:cnt},()=>mk())});
+  const ko={id:'ko_'+uid(),title,rounds,third:null,champion:null,fistf:true};
+  if(withThird&&rounds.length>=2)ko.third={id:uid(),t1:null,t2:null,s1:null,s2:null,p1:null,p2:null,live:false,isThird:true};
+  recomputeKO(ko);
+  return ko;
+}
+/* Primo turno = gli spareggi M1…Mn (chi è qualificato direttamente ha
+   «accesso diretto» e aspetta al turno principale); se la tabella non ha
+   spareggi, il primo turno è già quello principale. */
+function fistfTabellone(title){
+  const G=S.groups.length,T=FISTF_KO[G];
+  if(!T){toast('⚠️ '+L('FISTF: non esiste un tabellone ufficiale per')+' '+G+' '+L('gironi.'));return null;}
+  const fuori=new Set(S.ritirati||[]),pos={};
+  S.groups.forEach((g,i)=>{
+    const o=rankTeams(g.teams,g.matches).order.filter(n=>!fuori.has(n));
+    pos[(i+1)+'A']=o[0]||null;pos[(i+1)+'B']=o[1]||null;
+  });
+  const nm=c=>pos[c]||BYE;
+  let coppie,primo=null;
+  if(!T.b.length)coppie=T.m.map(([x,y])=>[nm(x),nm(y),x+' – '+y]);
+  else{
+    primo='Spareggi';coppie=[];
+    T.m.forEach(p=>p.forEach(c=>{
+      if(c[0]==='M'){const[x,y]=T.b[+c.slice(1)-1];coppie.push([nm(x),nm(y),c+' · '+x+' – '+y]);}
+      else coppie.push([nm(c),BYE,c]);
+    }));
+  }
+  const ko=fistfKODaCoppie(title,coppie,primo,S.cfg.third);
+  if(T.b.length)ko.rounds[1].matches.forEach((m,j)=>{m.lbl=T.m[j].join(' – ');});
+  return ko;
+}
+function fistfSpareggiAperti(){
+  const out=[];
+  S.groups.forEach(g=>fistfPari(g).forEach(c=>{
+    if(c.pos<=2&&c.membri.length-c.ordine.length>1)out.push(L('Girone ')+g.name+': '+c.membri.join(', '));
+  }));
+  return out;
+}
+function fistfFaseFinale(){
+  const aperti=fistfSpareggiAperti();
+  if(aperti.length){toast('⚖️ '+L('Prima serve lo shoot-out per i pari merito assoluti')+' — '+aperti.join(' · '));return false;}
+  const sq=S.cfg.fistf==='squadre';
+  const ko=fistfTabellone(sq?'Tabellone Principale':'Fase a Eliminazione Diretta');
+  if(!ko)return false;
+  if(sq){S.ko=null;S.tiersPhases=[{name:'Tabellone Principale',type:'ko',ko}];}
+  else S.ko=ko;
+  return true;
+}
+function fistfSvizzeroFinale(){
+  const fuori=new Set(S.ritirati||[]);
+  const order=rankTeams(S.groups[0].teams,S.groups[0].matches).order.filter(n=>!fuori.has(n));
+  const Q=S.cfg.chQ===8?8:16;
+  if(order.length<Q){toast('⚠️ '+L('Per il tabellone a')+' '+Q+' '+L('servono almeno')+' '+Q+' '+L('partecipanti in classifica.'));return false;}
+  const P=Q===16?FISTF_SV16:FISTF_SV8;
+  S.ko=fistfKODaCoppie('Fase a Eliminazione Diretta',P.map(([t,a,b])=>[order[a-1],order[b-1],t+' · '+a+'° – '+b+'°']),null,S.cfg.third);
+  return true;
+}
+
+/* ---------- sistema svizzero (§2.5) ---------- */
+/* Primo turno sorteggiato; poi 1° contro 2°, 3° contro 4°… Se due si sono già
+   incontrati, il primo scende al successivo libero (19–21, poi 20–22).
+   Con un numero dispari chi resta senza avversario vince 3–0, una volta
+   sola nel torneo: riposa il più basso in classifica che non ha già riposato. */
+function fistfSwissNext(g,first){
+  const fuori=new Set(S.ritirati||[]);
+  let order=first?shuffle(g.teams.filter(n=>!fuori.has(n)))
+                 :rankTeams(g.teams,g.matches).order.filter(n=>!fuori.has(n));
+  const played=new Set(g.matches.map(m=>pairKey(m.home,m.away)));
+  g.byes=g.byes||[];
+  const riposati=new Set(g.byes.map(b=>b.n));
+  const aCoppie=l=>{const p=[];for(let i=0;i+1<l.length;i+=2)p.push([l[i],l[i+1]]);return p;};
+  let riposo=null,pairs=null;
+  if(order.length%2){
+    const cand=order.slice().reverse().filter(n=>!riposati.has(n));
+    for(const c of cand){const p=pairUp(order.filter(n=>n!==c),played);if(p){riposo=c;pairs=p;break;}}
+    if(!pairs){riposo=cand[0]||order[order.length-1];pairs=aCoppie(order.filter(n=>n!==riposo));}
+  }else pairs=pairUp(order,played)||aCoppie(order);
+  g.swissRound++;
+  if(riposo)g.byes.push({n:riposo,round:g.swissRound});
+  pairs.forEach(p=>g.matches.push({id:uid(),home:p[0],away:p[1],hs:null,as:null,done:false,live:false,
+    round:g.swissRound,field:null,ref:null}));
+}
+// il riposo vale una vittoria 3-0 in classifica
+function fistfRiposi(st,matches){
+  if(!S.cfg||S.cfg.fistf!=='svizzero')return;
+  const g=(S.groups||[]).find(x=>x.matches===matches);
+  (g&&g.byes||[]).forEach(b=>{const x=st[b.n];if(x){x.pl++;x.w++;x.gf+=3;x.dr+=3;x.pts+=S.cfg.ptsW;}});
+}
+function fistfRiposoHTML(g,r){
+  return (g.byes||[]).filter(b=>String(b.round)===String(r)).map(b=>
+    `<div class="match fistf-bye"><span class="fld">—</span><span class="tm home win">${esc(b.n)}</span>
+     <span class="sc"><b>3</b><span class="dash">–</span><b>0</b></span><span class="tm muted">${L('riposo')}</span><span class="st"></span></div>`).join('');
+}
+
+/* ---------- ritiro (§2.1.2 d, §2.2.2 c) ---------- */
+// chi lascia il torneo perde 0-3 TUTTE le gare del girone, anche quelle già
+// giocate; a squadre 0-4, con 0-3 in ogni partita individuale
+function fistfForfait(m,casa){
+  if(S.cfg.format==='squadre'){
+    m.sub=[0,1,2,3].map(i=>{const o=(m.sub&&m.sub[i])||{};return{ph:o.ph||'',pa:o.pa||'',h:casa?0:3,a:casa?3:0};});
+    m.hs=casa?0:4;m.as=casa?4:0;
+  }else{m.hs=casa?0:3;m.as=casa?3:0;}
+  m.done=true;m.live=false;m.annullata=false;
+}
+
+/* ---------- squadre: abbinamento (§2.2.3) e sostituzioni (§2.2.4) ---------- */
+/* Chi perde il sorteggio è l'allenatore A, chi lo vince è B. Gara 1: A poi B;
+   gara 2: B poi A; gara 3: A poi B; gara 4: B poi A. Una squadra di tre
+   giocatori inizia per forza la procedura (è A) e perde a tavolino la
+   quarta gara; se lo sono entrambe, la quarta gara non si gioca. */
+const FISTF_PAIR_SEQ=[['L',0],['W',0],['W',1],['L',1],['L',2],['W',2],['W',3],['L',3]];
+function fistfTre(f,side){return distintaOf(f,side).filter(Boolean).length<4;}
+function fistfPairState(f){
+  const done=(f.m.pair&&f.m.pair.moves)||[];
+  const occ=[0,1,2,3].map(()=>[null,null]);
+  done.forEach(x=>{if(occ[x.t])occ[x.t][x.side-1]=x.p;});
+  const seq=FISTF_PAIR_SEQ.filter(([r,t])=>!(t===3&&fistfTre(f,pairRoleSide(f,r))));
+  if(done.length>=seq.length)return{complete:true,occ,moves:done};
+  const[role,t]=seq[done.length];
+  const side=pairRoleSide(f,role),opp=side===1?2:1;
+  const used=done.filter(x=>x.side===side).map(x=>x.p);
+  const exposed=[0,1,2,3].filter(k=>occ[k][opp-1]&&!occ[k][side-1]);
+  return{complete:false,occ,moves:done,step:{mv:done.length+1,who:role,n:1},idx:done.length,side,opp,need:1,
+    exposed,free:[t],mustCover:exposed.includes(t),tables:[t],gara:t+1,tot:seq.length,
+    avail:distintaOf(f,side).filter(p=>p&&!used.includes(p))};
+}
+function fistfDistinta(righe){
+  if(S.cfg.fistf!=='squadre')return righe;
+  // tre giocatori: la gara senza il proprio giocatore è persa 0-3;
+  // se mancano entrambi (tutte e due le squadre in tre) la gara è nulla
+  return righe.map(g=>{
+    if(!g.ph&&!g.pa)return Object.assign({},g,{h:null,a:null,nulla:true});
+    if(!g.ph)return Object.assign({},g,{h:0,a:3});
+    if(!g.pa)return Object.assign({},g,{h:3,a:0});
+    return g;
+  });
+}
+
+/* ---------- Setup ---------- */
+function fistfPreset(){
+  const x=setupFistf();if(!x)return;
+  if(x==='svizzero'&&$('#s-swissr'))$('#s-swissr').value=4;   // «l'ottimo sono quattro turni»
+  if($('#s-ritorno'))$('#s-ritorno').checked=false;
+}
+function fistfSetupUI(f){
+  const w=$('#w-fistf');if(!w)return;
+  const x=setupFistf();
+  w.style.display=x?'':'none';
+  if(!S.started){
+    S.cfg.fistf=x;
+    if(!x&&(S.cfg.tb||[]).some(c=>['rk','h2hr','rd','rf'].includes(c)))S.cfg.tb=['h2h','dr','gf','v','gs'];
+  }
+  const rit=$('#s-ritorno')&&$('#s-ritorno').closest('div');
+  if(rit)rit.style.display=x?'none':'';
+  if(!x){renderTbEditor('tb-editor');renderTbEditor('tb-editor2');return;}
+  ['#w-pergroup','#w-qualify','#w-extra','#w-champs','#w-mm','#w-mmf','#w-rip','#w-doppio','#w-doppiof','#w-consb']
+    .forEach(s=>{const e=$(s);if(e)e.style.display='none';});
+  $('#w-swiss').style.display=x==='svizzero'?'':'none';
+  $('#w-fistf-g').style.display=x==='svizzero'?'none':'';
+  $('#w-fistf-ko').style.display=x==='svizzero'?'':'none';
+  $('#w-fistf-cap').style.display=x==='squadre'?'none':'';
+  $('#s-ptsw').value=3;$('#s-ptsd').value=1;$('#s-ptsl').value=0;
+  renderTbEditor('tb-editor');renderTbEditor('tb-editor2');
+  fistfSetupInfo();
+}
+function fistfSetupInfo(){
+  const x=setupFistf(),box=$('#fistf-info');
+  if(!box||!x)return;
+  const N=Math.max(2,parseInt(($('#s-nteams')||{}).value)||8);
+  const chi=L(x==='squadre'?'squadre':'partecipanti');
+  let h='';
+  if(x==='svizzero'){
+    const Q=parseInt(($('#s-fistf-ko')||{}).value)===8?8:16;
+    h=L('Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.')
+      +' '+L(Q===16?'Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.':'Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.');
+    if(N<Q)h+=` <b class="fistf-err">${L('Servono almeno')} ${Q} ${chi}.</b>`;
+  }else{
+    const sel=$('#s-fistf-g'),v=fistfGironiValidi(N),auto=fistfGironiAuto(N);
+    if(sel){
+      const cur=sel.value||String(S.cfg.fistfG||0);
+      sel.innerHTML=`<option value="0">${L('Automatico')}${auto?` (${auto})`:''}</option>`
+        +v.map(G=>`<option value="${G}">${G} ${L('gironi')} · ${fistfTaglieTesto(fistfTaglie(N,G))}</option>`).join('');
+      sel.value=[...sel.options].some(o=>o.value===cur)?cur:'0';
+    }
+    const manuale=($('#s-compose')||{}).value&&$('#s-compose').value!=='auto';
+    const G=manuale?Math.max(1,parseInt(($('#s-ngroups')||{}).value)||2):((sel&&parseInt(sel.value))||auto);
+    const T=FISTF_KO[G];
+    if(!G||!T||(!manuale&&!v.includes(G)))
+      h=`<b class="fistf-err">${L('Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.')}</b>`;
+    else h=`<b>${G} ${L('gironi')}</b>${manuale?'':` (${fistfTaglieTesto(fistfTaglie(N,G))})`} · ${L('passano i primi due')}: ${2*G} ${L('qualificati')}`
+      +(T.b.length?` · ${T.b.length} ${L('spareggi')} (M1–M${T.b.length})`:'')+` · ${L(fistfTurnoPrincipale(T.m.length))} → ${L('Finale')}. `
+      +L('L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.');
+  }
+  box.innerHTML=h;
+}
+function fistfLeggiSetup(){
+  const x=S.cfg.fistf;
+  S.cfg.ptsW=3;S.cfg.ptsD=1;S.cfg.ptsL=0;
+  S.cfg.ritorno=false;S.cfg.doppio=false;S.cfg.doppioFinale=false;S.cfg.repechage=false;S.cfg.mcmahon=false;
+  S.cfg.qualify=2;S.cfg.extraQ=0;
+  S.cfg.fistfG=parseInt(($('#s-fistf-g')||{}).value)||0;
+  S.cfg.fistfCap=x!=='squadre'&&!!(($('#s-fistf-cap')||{}).checked);
+  if(x==='svizzero')S.cfg.chQ=parseInt(($('#s-fistf-ko')||{}).value)===8?8:16;
+  S.cfg.tb=tbAttivi().slice();
+}
+function fistfStima(n,x){
+  const sizes=[];
+  if(x==='svizzero'){
+    const r=Math.max(1,parseInt(($('#s-swissr')||{}).value)||4),Q=parseInt(($('#s-fistf-ko')||{}).value)===8?8:16;
+    for(let i=0;i<r;i++)sizes.push(Math.floor(n/2));
+    for(let k=Q/2;k>=1;k/=2)sizes.push(k);
+    return sizes;
+  }
+  const G=parseInt(($('#s-fistf-g')||{}).value)||fistfGironiAuto(n);
+  if(!G||!FISTF_KO[G])return [Math.max(1,Math.floor(n/2))];
+  const t=fistfTaglie(n,G),R=Math.max(...t.map(s=>(FISTF_ORDINE[s]||[]).length));
+  for(let i=0;i<R;i++)sizes.push(t.reduce((a,s)=>a+(((FISTF_ORDINE[s]||[])[i]||[]).length),0));
+  const T=FISTF_KO[G];
+  if(T.b.length)sizes.push(T.b.length);
+  for(let k=T.m.length;k>=1;k/=2)sizes.push(k);
+  return sizes;
+}
+
+/* =========================================================
    TABELLONI "A SCRIPT" — incroci arbitrari fra partite
    (perdente di X vs vincente di Y): base per Doppia
    Eliminazione, Formula Page e altri formati speciali.
@@ -9136,7 +9692,7 @@ function renderComposeGrid(){
   box.innerHTML=h; box.style.display='';
   document.querySelectorAll('#team-inputs select.asel').forEach((sel,i)=>{sel.value=String(setupGroupOf[i]??0);});
 }
-function isTeamModeSetup(){return $('#s-format')&&$('#s-format').value==='squadre';}
+function isTeamModeSetup(){return $('#s-format')&&setupFormato()==='squadre';}
 function setCaptain(i,k){setupCaptains[i]=k;renderTeamInputs();}
 function renderTeamInputs(){
   const sq=isTeamModeSetup();
@@ -9595,7 +10151,7 @@ function setupFmtChanged(){
   }else{
     const sel=$('#s-format');if(sel)[...sel.options].forEach(o=>{o.disabled=false;});
   }
-  const f=$('#s-format').value;
+  const f=setupFormato();
   const sq=f==='squadre';
   if(f==='planisfero'){const el=$('#s-nteams');el.value=Math.min(24,Math.max(13,parseInt(el.value)||18));$('#s-ptsw').value=3;$('#s-ptsd').value=1;$('#s-ptsl').value=0;}
   $('#w-pergroup').style.display=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp'||sq)?'':'none';
@@ -9644,6 +10200,7 @@ function setupFmtChanged(){
     if(S.cfg.tiersAuto!==false){S.cfg.tiers=avulsaTiersAuto(tot);}
     renderTierRows();
   }
+  fistfSetupUI(f);
   renderTeamInputs();
 }
 function composeChanged(){
@@ -9685,6 +10242,14 @@ function delTierRow(i){S.cfg.tiersAuto=false;S.cfg.tiers.splice(i,1);renderTierR
 function renderTbEditor(targetId){
   const box=document.getElementById(targetId);if(!box)return;
   box.innerHTML='';
+  if(S.cfg.fistf){
+    // FISTF: i criteri sono quelli del regolamento, nell'ordine del regolamento
+    const tb=tbAttivi();
+    box.innerHTML=tb.map((c,i)=>`<div class="tb-item"><span class="idx">${i+1}</span><span class="nm">${L(tbNome(c))}</span></div>`).join('')
+      +(S.cfg.fistf==='svizzero'?'':`<div class="tb-item"><span class="idx">${tb.length+1}</span><span class="nm">${L('Shoot-out')}</span></div>`)
+      +`<p class="small muted" style="margin:6px 0 0">${L('Criteri fissati dal regolamento FISTF.')}</p>`;
+    return;
+  }
   S.cfg.tb.forEach((c,i)=>{
     const d=document.createElement('div');d.className='tb-item';
     d.innerHTML=`<span class="idx">${i+1}</span><span class="nm">${L(TB_LABELS[c])}</span>
@@ -9714,7 +10279,8 @@ function readSetup(){
   S.cfg.date=$('#s-date').value;
   S.cfg.loc=$('#s-loc').value.trim();
   S.cfg.fields=Math.max(1,Math.min(52,parseInt($('#s-fields').value)||1));
-  S.cfg.format=$('#s-format').value;
+  S.cfg.format=setupFormato();
+  S.cfg.fistf=setupFistf();
   S.cfg.perGroup=Math.max(2,parseInt($('#s-pergroup').value)||4);
   S.cfg.f2size=Math.max(2,Math.min(8,parseInt(($('#s-f2size')||{}).value)||4));
   S.cfg.f2streams=Math.max(1,Math.min(4,parseInt(($('#s-f2streams')||{}).value)||2));
@@ -9753,6 +10319,7 @@ function readSetup(){
   if($('#s-consb'))S.cfg.consB=$('#s-consb').checked;
   if($('#s-onehalf'))S.cfg.oneHalf=$('#s-onehalf').checked;
   if($('#s-noantic'))S.cfg.noAnticipo=$('#s-noantic').checked;
+  if(S.cfg.fistf)fistfLeggiSetup();
 }
 function setupError(msg){$('#setup-error').textContent=msg||'';}
 /* --- Setup a torneo in corso: mostra «Applica variazioni» e blocca i campi
@@ -9764,7 +10331,7 @@ function updateSetupButton(){
   if(ab)ab.style.display=on?'':'none';
   if(ah)ah.style.display=on?'':'none';
   ['#s-format','#s-nteams','#s-pergroup','#s-compose','#s-ngroups','#s-npots','#s-swissr',
-   '#s-poffn','#s-poutn','#s-pofffmt','#s-chq'].forEach(sel=>{
+   '#s-poffn','#s-poutn','#s-pofffmt','#s-chq','#s-fistf-g','#s-fistf-ko'].forEach(sel=>{
     const el=$(sel);if(el)el.disabled=on;
   });
   $('#team-inputs').querySelectorAll('input.tmain,input.tplayers').forEach(i=>i.disabled=on);
@@ -9781,6 +10348,7 @@ function applyChanges(){
   S.cfg.ptsW=parseInt($('#s-ptsw').value)||0;
   S.cfg.ptsD=parseInt($('#s-ptsd').value)||0;
   S.cfg.ptsL=parseInt($('#s-ptsl').value)||0;
+  if(S.cfg.fistf){S.cfg.ptsW=3;S.cfg.ptsD=1;S.cfg.ptsL=0;S.cfg.fistfCap=S.cfg.fistf!=='squadre'&&!!(($('#s-fistf-cap')||{}).checked);}
   if($('#s-penshots'))S.cfg.penShots=parseInt($('#s-penshots').value)||5;
   S.cfg.refs=$('#s-refs').checked;
   S.cfg.refSource=$('#s-refsource')?$('#s-refsource').value:'players';
@@ -9809,7 +10377,7 @@ function startTournament(){
   const seen={};names=names.map(n=>{if(seen[n]){seen[n]++;return `${n} (${seen[n]})`;}seen[n]=1;return n;});
   if(names.length<2){setupError('Servono almeno 2 giocatori.');return;}
   const f=S.cfg.format;
-  if((f==='svizzero'||f==='champions')&&names.length%2!==0){setupError('Gli abbinamenti svizzeri richiedono un numero pari di giocatori.');return;}
+  if((f==='svizzero'||f==='champions')&&!S.cfg.fistf&&names.length%2!==0){setupError('Gli abbinamenti svizzeri richiedono un numero pari di giocatori.');return;}
   if(f==='doppiaelim'&&names.length<3){setupError('La doppia eliminazione richiede almeno 3 giocatori.');return;}
   if(f==='planisfero'&&(names.length<13||names.length>24)){setupError('Coppa Planisfero: da 13 a 24 partecipanti.');return;}
   if(f==='rosa'&&(names.length<8||names.length>12)){setupError('La Rosa dei Venti va da 8 a 12 iscritti.');return;}
@@ -9828,8 +10396,8 @@ function startTournament(){
       return raw[k]||rostersByIdx[i][0]||null; // se lo slot capitano è vuoto → primo atleta
     });
     for(let i=0;i<names.length;i++){
-      if((rostersByIdx[i]||[]).length<4){
-        setupError(`La squadra «${names[i]}» ha meno di 4 atleti a referto (servono 4 titolari, fino a 6 totali).`);
+      if((rostersByIdx[i]||[]).length<(S.cfg.fistf?3:4)){
+        setupError(S.cfg.fistf?`${L('La squadra')} «${names[i]}» ${L('ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).')}`:`La squadra «${names[i]}» ha meno di 4 atleti a referto (servono 4 titolari, fino a 6 totali).`);
         return;
       }
     }
@@ -9853,6 +10421,7 @@ function startTournament(){
                  ||f==='multifase'||f==='duecomp'||f==='squadre');
   const composed=groupFmt?composeGroupsList(names.map((n,i)=>({n,grp:setupGroupOf[i],pot:setupPotOf[i]}))):null;
   const potDiNome={}; names.forEach((n,i)=>{potDiNome[n]=setupPotOf[i];});
+  if(S.cfg.fistf){const e=fistfVerificaSetup(names,composed);if(e){setupError(e);return;}}
   // giocatori reali per squadra (torneo individuale) → usati come arbitri.
   // leggo i valori CORRENTI dal DOM (l'utente può aver digitato senza re-render)
   const playerInputs=[...$('#team-inputs').querySelectorAll('input.tplayers')];
@@ -9867,7 +10436,8 @@ function startTournament(){
   // e mescolarlo significherebbe dare il vantaggio iniziale a caso.
   const ordineForza=names.slice();
   // il sorteggio globale NON si applica se la composizione gironi è manuale/fasce/da elenco
-  if(S.cfg.shuffle&&!composed)shuffle(entries);
+  // FISTF: l'ordine è il ranking e serve intatto per le fasce (il sorteggio è dentro le fasce)
+  if(S.cfg.shuffle&&!composed&&!(S.cfg.fistf==='gironi'||S.cfg.fistf==='squadre'))shuffle(entries);
   names=entries.map(e=>e.n);
   S.logos={};entries.forEach(e=>{if(e.logo)S.logos[e.n]=e.logo;});
   S.paesi={};entries.forEach(e=>{if(e.paese)S.paesi[e.n]=e.paese;});
@@ -9885,6 +10455,7 @@ function startTournament(){
   // il successivo si troverebbe S.stage=2 e salterebbe la seconda fase a gironi
   // senza dire niente, mandando i gironi di partenza diritti alle finali.
   S.stage=1;S.phase1=null;S.plan=null;
+  S.fistfRank=ordineForza.slice();S.fistfSO={};
 
   if(f==='campionato'){
     S.groups=[makeGroup('Classifica Generale',names)];
@@ -9895,7 +10466,7 @@ function startTournament(){
     if(S.cfg.mcmahon)S.groups[0].mm=mmCalcola(ordineForza,S.cfg.mmFasce);
     swissNext(true);
   }else if(f==='champions'){
-    S.groups=[{name:'Fase Campionato',teams:names,matches:[],swiss:true,swissRound:0}];
+    S.groups=[{name:S.cfg.fistf==='svizzero'?'Sistema Svizzero FISTF':'Fase Campionato',teams:names,matches:[],swiss:true,swissRound:0}];
     if(S.cfg.mcmahon)S.groups[0].mm=mmCalcola(ordineForza,S.cfg.mmFasce);
     swissNext(true);
   }else if(f==='doppiaelim'){
@@ -9918,6 +10489,8 @@ function startTournament(){
     // col ripescaggio olimpico i terzi posti sono DUE e li assegna il ripescaggio:
     // una finale 3°/4° in più sarebbe un terzo terzo posto
     S.ko=makeKO('Tabellone Principale',names,S.cfg.third&&!S.cfg.repechage);
+  }else if(S.cfg.fistf==='gironi'||S.cfg.fistf==='squadre'){
+    S.groups=fistfCreaGironi(names,composed);
   }else if(composed){
     // composizione manuale / sorteggio da elenco / sorteggio per fasce
     let gr=composed;
@@ -9991,6 +10564,12 @@ function swissNext(first=false){
   const g=S.groups[0];if(!g||!g.swiss)return;
   if(!first&&g.matches.some(m=>!m.done)){toast('Completa prima tutte le partite del turno corrente.');return;}
   if(g.swissRound>=S.cfg.swissRounds)return;
+  if(S.cfg.fistf==='svizzero'){
+    fistfSwissNext(g,first);
+    assignReferees();assignFields();
+    if(!first){renderGironi();renderBoards();renderClassifica();renderTicker();persist();}
+    return;
+  }
   const played=new Set(g.matches.map(m=>pairKey(m.home,m.away)));
   let order;
   if(mmAttivo()){
@@ -10951,7 +11530,9 @@ function goToFinal(){
   // Rosa dei Venti: Contrade → Orizzonti (fase 1→2) → Finali (fase 2→finali)
   if(S.cfg.format==='planisfero')return plAdvance();
   if(S.cfg.format==='rosa')return (S.stage||1)<2?rosaBuildOrizzonti():rosaBuildFinali();
-  if(S.cfg.format==='gironi-ko'){
+  if(S.cfg.fistf==='gironi'||S.cfg.fistf==='squadre'){
+    if(!fistfFaseFinale())return;
+  }else if(S.cfg.format==='gironi-ko'){
     const ranks=Array.from({length:S.cfg.qualify},(_,i)=>i+1);
     let seeds=qualifiersByRanks(ranks);
     const diretti=seeds.length;
@@ -11022,6 +11603,8 @@ function goToFinal(){
     }
   }else if(S.cfg.format==='champions'){
     if(!S.swissDone){toast('Completa prima tutti i turni della fase campionato.');return;}
+    if(S.cfg.fistf==='svizzero'){if(!fistfSvizzeroFinale())return;}
+    else{
     const order=rankTeams(S.groups[0].teams,S.groups[0].matches).order;
     const Q=Math.min(Math.max(2,S.cfg.chQ||8),order.length);
     // come nei sorteggi UEFA: si scambiano solo teste di serie vicine (1ª-2ª, 3ª-4ª…)
@@ -11029,11 +11612,12 @@ function goToFinal(){
     S.ko=makeKO('Fase a Eliminazione Diretta',seeds,S.cfg.third);
     // con qualificate non "tonde" il 1° turno è lo spareggio (le prime hanno il bye)
     if(Math.pow(2,Math.round(Math.log2(Q)))!==Q)S.ko.rounds[0].name='Spareggi di accesso';
+    }
   }else{
     // rete di sicurezza: se un domani si aggiunge una formula a gironi e ci si
     // dimentica di gestirla qui, il torneo restava bloccato IN SILENZIO — nessun
     // messaggio, nessun errore, solo il pulsante che non fa nulla. Meglio dirlo.
-    toast('⚠️ '+L('Passaggio alla fase successiva non gestito per la formula')+' «'+L(FMT_LABELS[S.cfg.format]||S.cfg.format)+'» — '+L('segnalalo.'));
+    toast('⚠️ '+L('Passaggio alla fase successiva non gestito per la formula')+' «'+L(fmtNomeCfg(S.cfg)||S.cfg.format)+'» — '+L('segnalalo.'));
     return;
   }
   S.phase='final';
@@ -11143,7 +11727,7 @@ function updateHeader(){
   $('#hdr-title').textContent=S.started?(S.cfg.name||L('Torneo Subbuteo')):L('Nuovo Torneo');
   const meta=[];
   if(S.started){
-    meta.push(L(FMT_LABELS[S.cfg.format]));
+    meta.push(L(fmtNomeCfg(S.cfg)));
     if(S.cfg.loc)meta.push(S.cfg.loc);
     if(S.cfg.date)meta.push(new Date(S.cfg.date+'T00:00').toLocaleDateString(LANG==='en'?'en-GB':'it-IT'));
     meta.push(`${S.teams.length} ${L('giocatori')}`);
@@ -11748,20 +12332,41 @@ function rowZone(pos,total,qual){
     if(PO>0&&pos>total-PO)return 'pout';
     return null;
   }
+  // FISTF svizzero: i primi 8 o 16 vanno al tabellone, nessuno spareggio
+  if(f==='champions'&&S.cfg.fistf==='svizzero')return pos<=(S.cfg.chQ===8?8:16)?'up':null;
   if(f==='champions'){
-    const q=S.cfg.chQ||8,half=nextPow2(q)/2,spar=Math.max(0,2*(q-half)),dir=q-spar;
-    if(pos<=dir)return 'up';
-    if(pos<=q)return 'po';
-    return 'down';
+    // tabellone pieno (8, 16, 32…): tutti i qualificati entrano direttamente.
+    // Altrimenti le prime teste di serie hanno il bye (avanzano) e le altre
+    // giocano gli spareggi d'accesso. Chi resta fuori è eliminato, non
+    // retrocede: niente colore, come nei gironi.
+    const q=S.cfg.chQ||8,P=nextPow2(q);
+    if(pos>q)return null;
+    if(P===q)return 'up';
+    return pos<=P-q?'up':'po';
   }
   return null;
 }
-function zonesLegendHTML(){
-  return `<div class="qleg zleg">
-    <span class="zl-up">■ ${L('Avanza')}</span>
-    <span class="zl-po">■ ${L('Playoff / Spareggi')}</span>
-    <span class="zl-pout">■ ${L('Playout')}</span>
-    <span class="zl-down">■ ${L('Retrocede')}</span></div>`;
+/* quanti passano da un girone, secondo la formula: uguale per la sezione
+   Gironi, le Classifiche e la Presentazione */
+function qualDi(g){
+  if((S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g))return 0;
+  return S.cfg.format==='gironi-ko'?(S.cfg.qualify||0):(S.cfg.format==='squadre'?2:0);
+}
+/* le zone che compaiono DAVVERO in una classifica */
+function zoneDelGirone(g,qual){
+  const n=(g.teams||[]).length,z=new Set();
+  for(let p=1;p<=n;p++){const x=rowZone(p,n,qual);if(x)z.add(x);}
+  return z;
+}
+/* La legenda elenca solo le zone presenti, con lo stesso colore e lo stesso
+   simbolo delle righe: una voce che non corrisponde a nessuna riga sarebbe
+   una promessa falsa (prima comparivano sempre tutte e quattro). */
+function zonesLegendHTML(zs){
+  const voci=[['up','Avanza'],['po','Playoff / Spareggi'],['pout','Playout'],['down','Retrocede']]
+    .filter(([k])=>!zs||zs.has(k));
+  if(!voci.length)return '';
+  return `<div class="qleg zleg">${voci.map(([k,t])=>
+    `<span class="zl-${k}">${S.cfg.zoneSym!==false?ZONE_SIMB[k]:'■'} ${L(t)}</span>`).join('')}</div>`;
 }
 /* =========================================================
    ORNAMENTI DA TABELLONE — forma, movimento, filigrana
@@ -11909,10 +12514,12 @@ function standingsHTML(g,{qual=0}={}){
   const gKey=(g.name||'')+'|'+order.length;
   // I METALLI DEL PODIO: oro, argento, bronzo alle prime tre. Solo a torneo
   // avviato — a tabellone vergine l'ordine è quello del sorteggio e premiare
-  // un podio che non esiste ancora sarebbe una bugia. Il colore della zona
-  // (avanza/playoff/playout/retrocede) non si perde: resta sul bordo, sulla
-  // fascia della riga, sul simbolo e sul numero di posizione.
-  const podioVivo=order.length>=3&&g.matches.some(m=>m.done||m.live);
+  // un podio che non esiste ancora sarebbe una bugia. E solo nelle classifiche
+  // SENZA zone: dove c'è una legenda, ogni riga deve avere il colore che la
+  // legenda dichiara (un bronzo sul 3° sembrava un arancio «playout», un
+  // argento sul 2° un celeste «playoff»).
+  const conZone=zoneDelGirone(g,qual).size>0;
+  const podioVivo=!conZone&&order.length>=3&&g.matches.some(m=>m.done||m.live);
   order.forEach((n,i)=>{
     const s=stats[n];
     let star='';
@@ -11923,7 +12530,7 @@ function standingsHTML(g,{qual=0}={}){
     const mov=movimentoHTML(gKey,n,i+1);
     const capo=(i===0&&s.pl>0)?'<span class="nastro" aria-hidden="true"></span>':'';
     const pod=(podioVivo&&i<3)?' pod'+(i+1):'';
-    h+=`<tr class="${zn?'z-'+zn:''}${pod}${i===0&&s.pl>0?' r-capo':''}" data-tn="${esc(n)}"><td class="pos">${capo}${i+1}${zsym}${mov}</td><td class="l">${logoImg(n)}<span class="tn-wrap">${esc(n)}${star}${liveMark}${playersSub(n)}</span></td>
+    h+=`<tr class="${zn?'z-'+zn:(conZone?'z-no':'')}${pod}${i===0&&s.pl>0?' r-capo':''}" data-tn="${esc(n)}"><td class="pos">${capo}${i+1}${zsym}${mov}</td><td class="l">${logoImg(n)}<span class="tn-wrap">${esc(n)}${star}${liveMark}${playersSub(n)}</span></td>
       ${mm?`<td class="mmp">${s.mm||0}</td>`:''}<td class="pts">${s.pts}</td>${rosaStar?`<td class="rosastar">${s.stelle||0}</td>`:''}<td>${s.pl}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
       <td>${s.gf}</td><td>${s.ga}</td><td>${s.dr>0?'+':''}${s.dr}</td><td class="c-forma">${formaHTML(n,g.matches)}</td></tr>`;
   });
@@ -11946,7 +12553,7 @@ function matchRowHTML(m){
       <input type="number" min="0" value="${m.as??''}" ${dis} oninput="setScore('${m.id}','a',this.value)">
     </span>
     <span class="tm${aWin?' win':''}">${esc(m.away)}</span>
-    <span class="st">${S.cfg.format==='squadre'?`<button class="btn-distinta" onclick="openDistinta('${m.id}')" title="Distinta delle 4 partite individuali">🧾</button> `:''}${st}${m.done&&!onBoard?`<button class="btn-ann" onclick="openAnnulla('${m.id}')" title="${L('Annulla il risultato: la gara torna da giocare')}">↩</button>`:''}</span>
+    <span class="st">${fistfCapMark(m)}${S.cfg.format==='squadre'?`<button class="btn-distinta" onclick="openDistinta('${m.id}')" title="Distinta delle 4 partite individuali">🧾</button> `:''}${st}${m.done&&!onBoard?`<button class="btn-ann" onclick="openAnnulla('${m.id}')" title="${L('Annulla il risultato: la gara torna da giocare')}">↩</button>`:''}</span>
     ${m.ref?`<span class="ref">${L('arbitro:')} ${esc(m.ref)}</span>`:''}
   </div>`;
 }
@@ -11964,17 +12571,19 @@ function groupCardHTML(g,{qual=0,idPrefix='g'}={}){
     if(half>0)lbl=i<half?`${LANG==='en'?'Home':'Andata'} — ${L('Giornata')} ${r}`:`${LANG==='en'?'Away':'Ritorno'} — ${L('Giornata')} ${r-half}`;
     mh+=`<div class="round-label">${lbl}</div>`;
     byRound[r].forEach(m=>mh+=matchRowHTML(m));
+    if(g.byes)mh+=fistfRiposoHTML(g,r);
   });
   const done=g.matches.filter(m=>m.done).length;
   return `<div class="card group-card">
     <div class="ghead"><h3>${g.swiss||S.cfg.format==='campionato'?'':L('Girone ')}<span>${esc(g.name)}</span></h3>
       <span class="chip">${g.teams.length} ${L('squadre')}</span>
       <span class="chip">${done}/${g.matches.length} ${L('gare')}</span>
+      ${g.fistfOrd?`<span class="chip" title="${L('Ordine delle gare della tabella FISTF')}">${L(g.fistfOrd==='club'?'Ordine FISTF · compagni di club':'Ordine FISTF')}</span>`:''}
       ${g.matches.some(m=>m.live)?'<span class="chip live">LIVE</span>':''}
     </div>
     <div class="gbody">
       <div class="matches">${mh||'<p class="muted small">'+L('Nessuna partita generata.')+'</p>'}</div>
-      <div><h3 class="subt" style="font-size:.85rem">${L('Classifica')}</h3><div id="st-${idPrefix}-${cssId(g.name)}">${standingsHTML(g,{qual})}</div></div>
+      <div><h3 class="subt" style="font-size:.85rem">${L('Classifica')}</h3><div id="st-${idPrefix}-${cssId(g.name)}">${standingsBloccoHTML(g,qual)}</div></div>
     </div>
   </div>`;
 }
@@ -11982,7 +12591,7 @@ function renderGironi(){
   const box=$('#gironi-box');
   if(!S.groups.length){box.innerHTML='<div class="card"><p class="muted">'+L('Nessun girone: la formula scelta non li prevede.')+'</p></div>';renderGironiActions();return;}
   const f=S.cfg.format;
-  $('#gironi-title').textContent=L(f==='campionato'?'Campionato':f==='svizzero'?'Sistema Svizzero':f==='squadre'?'Fase a Gironi — Squadre':'Fase a Gironi');
+  $('#gironi-title').textContent=L(f==='campionato'?'Campionato':(f==='svizzero'||S.cfg.fistf==='svizzero')?'Sistema Svizzero':f==='squadre'?'Fase a Gironi — Squadre':'Fase a Gironi');
   const qual=f==='gironi-ko'?S.cfg.qualify:(f==='squadre'?2:0);
   box.innerHTML=S.groups.map(g=>groupCardHTML(g,{qual})).join('');
   renderGironiActions();
@@ -12003,7 +12612,7 @@ function renderGironiActions(){
     // davvero l'ultima: nella multifase, dopo i primi gironi, si va invece
     // ai gironi della seconda fase, e chiamarla "finale" sarebbe falso.
     const etichetta=primaDiDue?L('Chiudi Prima Fase e genera i Gironi della Seconda')
-      :L('Chiudi Gironi e genera')+' '+(f==='squadre'?L('Tabellone Principale + Consolazione'):nomeFaseSuccessiva());
+      :L('Chiudi Gironi e genera')+' '+(f==='squadre'?L(S.cfg.fistf?'Tabellone Principale':'Tabellone Principale + Consolazione'):nomeFaseSuccessiva());
     h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ ${etichetta}</button>`;
   }
   if(f==='playoff'&&S.phase==='groups'){
@@ -12035,7 +12644,7 @@ function refreshStandingsEverywhere(){
     const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
     const qual=(!isTier&&S.cfg.format==='gironi-ko')?S.cfg.qualify:(!isTier&&S.cfg.format==='squadre'?2:0);
     const el=document.getElementById(`st-g-${cssId(g.name)}`)||document.getElementById(`st-t-${cssId(g.name)}`);
-    if(el)el.innerHTML=standingsHTML(g,{qual});
+    if(el)el.innerHTML=standingsBloccoHTML(g,qual);
   });
   renderClassifica();
   renderCronache();
@@ -12081,17 +12690,18 @@ function openDistinta(mid){
 }
 function closeDistinta(){$('#distinta').classList.remove('on');distintaMid=null;}
 function distintaRead(){
-  return [...document.querySelectorAll('#d-rows .drow')].map(r=>({
+  return fistfDistinta([...document.querySelectorAll('#d-rows .drow')].map(r=>({
     ph:r.querySelector('.d-ph').value,
     pa:r.querySelector('.d-pa').value,
     h:r.querySelector('.d-h').value===''?null:Math.max(0,parseInt(r.querySelector('.d-h').value)||0),
     a:r.querySelector('.d-a').value===''?null:Math.max(0,parseInt(r.querySelector('.d-a').value)||0)
-  }));
+  })));
 }
 function distintaTotals(){
   const sub=distintaRead();
   let hw=0,aw=0,gh=0,ga=0,filled=0;
   sub.forEach(g=>{
+    if(g.nulla){filled++;return;}   // FISTF: gara nulla fra due squadre di tre
     if(g.h==null||g.a==null)return;
     filled++;gh+=g.h;ga+=g.a;
     if(g.h>g.a)hw++;else if(g.a>g.h)aw++;
@@ -12286,10 +12896,11 @@ function distintaOf(f,side){
   const ros=(S.rosters&&S.rosters[teamOfSide(f,side)])||[];
   return ros.slice(0,4);
 }
-function distintaReady(f){return distintaOf(f,1).filter(Boolean).length>=4&&distintaOf(f,2).filter(Boolean).length>=4;}
+function distintaReady(f){const k=S.cfg.fistf==='squadre'?3:4;return distintaOf(f,1).filter(Boolean).length>=k&&distintaOf(f,2).filter(Boolean).length>=k;}
 /* fotografia della procedura: di chi è la mossa, quanti ne restano,
    quali tavoli sono ammessi e quali giocatori sono ancora in mano */
 function pairState(f){
+  if(S.cfg.fistf==='squadre')return fistfPairState(f);
   const done=(f.m.pair&&f.m.pair.moves)||[];
   const occ=[0,1,2,3].map(()=>[null,null]);
   done.forEach(x=>{if(occ[x.t])occ[x.t][x.side-1]=x.p;});
@@ -12310,8 +12921,10 @@ function pairState(f){
 function tossDo(f,mode){
   const auto=mode==='home'||(mode==null&&!!S.cfg.ritorno);
   // andata/ritorno: la squadra di casa è d'ufficio vincitrice del sorteggio
-  const win=auto?1:(Math.random()<.5?1:2);
-  f.m.toss={win,mode:auto?'home':'coin',at:Date.now()};
+  let win=auto?1:(Math.random()<.5?1:2),modo=auto?'home':'coin';
+  // FISTF: la squadra di tre giocatori inizia la procedura, cioè è l'allenatore A
+  if(S.cfg.fistf==='squadre'&&fistfTre(f,1)!==fistfTre(f,2)){win=fistfTre(f,1)?2:1;modo='fistf3';}
+  f.m.toss={win,mode:modo,at:Date.now()};
   f.m.pair={moves:[]};
   persist();
   return f.m.toss;
@@ -12344,6 +12957,14 @@ function pairApply(f){
     if(st.occ[t][0])sub[t].ph=st.occ[t][0];
     if(st.occ[t][1])sub[t].pa=st.occ[t][1];
   });
+  if(S.cfg.fistf==='squadre'){
+    // quarta gara: persa 0-3 da chi ha solo tre giocatori, nulla se lo sono entrambe
+    const v1=fistfTre(f,1),v2=fistfTre(f,2),g4=sub[3];
+    if(v1)g4.ph='';if(v2)g4.pa='';
+    if(v1&&v2){g4.h=null;g4.a=null;g4.nulla=true;}
+    else if(v1){g4.h=0;g4.a=3;}
+    else if(v2){g4.h=3;g4.a=0;}
+  }
   f.m.pair.applied=true;
   renderAll&&renderAll();
 }
@@ -12351,6 +12972,11 @@ function pairDescribe(f){
   const st=pairState(f);
   const en=LANG==='en';
   if(st.complete)return en?'Line-up complete: the four pairings are set.':'Abbinamento completato: i quattro incroci sono definiti.';
+  if(S.cfg.fistf==='squadre'){
+    const coach=pairRoleOf(f,st.side)==='W'?'B':'A';
+    return `${en?'Game':'Gara'} ${st.gara} — ${en?'Coach':'Allenatore'} ${coach}, ${teamOfSide(f,st.side)}: `
+      +(st.mustCover?(en?'choose who faces the player already named':'scegli chi affronta il giocatore già schierato'):(en?'name the player':'schiera il giocatore'));
+  }
   const team=teamOfSide(f,st.side),role=pairRoleOf(f,st.side);
   const rl=role==='W'?(en?'won the toss':'ha vinto il sorteggio'):(en?'lost the toss':'ha perso il sorteggio');
   const cov=st.exposed.length&&st.need>0
@@ -12369,8 +12995,11 @@ function subwState(f){
 function subwOpen(f){
   if(!tossWinner(f))return null;                 // senza sorteggio non c'è priorità
   if(f.m.subw&&f.m.subw.step!=='closed')return f.m.subw;
-  f.m.subw={step:'L',done:{1:[],2:[]},at:Date.now()};
+  const fi=S.cfg.fistf==='squadre';
+  f.m.subw={step:fi?'W':'L',done:{1:[],2:[]},at:Date.now()};
   persist();
+  // FISTF: una sostituzione per squadra, dichiara per primo chi ha vinto il sorteggio
+  if(fi){toast(`🔁 ${LANG==='en'?'Half-time substitutions: ':'Sostituzioni all\'intervallo: '}${esc(teamOfSide(f,pairRoleSide(f,'W')))} ${LANG==='en'?'declares first (won the toss). One substitution per team.':'dichiara per prima (ha vinto il sorteggio). Una sostituzione per squadra.'}`);return f.m.subw;}
   const L=teamOfSide(f,pairRoleSide(f,'L'));
   toast(`🔁 ${LANG==='en'?'Half-time substitutions: ':'Sostituzioni all\'intervallo: '}${esc(L)} ${LANG==='en'?'declares first (lost the toss).':'dichiara per prima (ha perso il sorteggio).'}`);
   return f.m.subw;
@@ -12380,7 +13009,7 @@ function subwDeclare(f,side,list,bi){
   const st=subwState(f);
   if(!st.open)return{ok:false,err:LANG==='en'?'Substitution window closed.':'Finestra delle sostituzioni chiusa.'};
   if(side!==st.side)return{ok:false,err:(LANG==='en'?'Wait your turn: ':'Attendi il tuo turno: ')+teamOfSide(f,st.side)};
-  const arr=(list||[]).slice(0,2);
+  const arr=(list||[]).slice(0,S.cfg.fistf==='squadre'?1:2);
   const team=teamOfSide(f,side);
   const ros=(S.rosters&&S.rosters[team])||[];
   const sub=ensureSub(f);
@@ -12399,11 +13028,11 @@ function subwDeclare(f,side,list,bi){
     applied.push({t,out,into});
   }
   f.m.subw.done[side]=applied;
-  f.m.subw.step=st.step==='L'?'W':'closed';
+  f.m.subw.step=S.cfg.fistf==='squadre'?(st.step==='W'?'L':'closed'):(st.step==='L'?'W':'closed');
   persist();renderAll&&renderAll();
   const nx=f.m.subw.step;
   toast(`🔁 ${esc(team)}: ${applied.length?applied.map(a=>`${esc(a.out)}→${esc(a.into)}`).join(', '):(LANG==='en'?'no substitution':'nessuna sostituzione')}`
-    +(nx==='W'?` · ${LANG==='en'?'now':'ora'} ${esc(teamOfSide(f,pairRoleSide(f,'W')))} (${LANG==='en'?'toss winner':'vincente del sorteggio'})`:''));
+    +(nx!=='closed'?` · ${LANG==='en'?'now':'ora'} ${esc(teamOfSide(f,pairRoleSide(f,nx)))} (${nx==='W'?(LANG==='en'?'toss winner':'vincente del sorteggio'):(LANG==='en'?'toss loser':'perdente del sorteggio')})`:''));
   return{ok:true,closed:nx==='closed'};
 }
 function boardGoalSub(i,t,side,delta){
@@ -12539,7 +13168,7 @@ let prBoard=null,prSel=null;
 function openPairing(i){
   const b=S.boards[i];if(!b||!b.matchId){toast(L('Assegna prima un incontro al campo.'));return;}
   const f=findMatch(b.matchId);if(!f)return;
-  if(!distintaReady(f)){toast('📋 '+L('Servono prima le distinte: 4 titolari per squadra (dal Setup o dall’App Capitano).'));return;}
+  if(!distintaReady(f)){toast('📋 '+L(S.cfg.fistf==='squadre'?'Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).':'Servono prima le distinte: 4 titolari per squadra (dal Setup o dall’App Capitano).'));return;}
   prBoard=i;prSel=null;renderPairing();
   $('#pairing').classList.add('on');
 }
@@ -12568,7 +13197,7 @@ function renderPairing(){
     return;
   }
   const st=pairState(f);
-  tossBox.innerHTML=`<p class="small muted">🪙 ${f.m.toss.mode==='home'?L('Sorteggio d’ufficio alla squadra di casa'):L('Sorteggio effettuato')} — <b style="color:var(--accent)">${esc(teamOfSide(f,w))}</b> ${L('ha il vantaggio tattico')}</p>`;
+  tossBox.innerHTML=`<p class="small muted">🪙 ${f.m.toss.mode==='home'?L('Sorteggio d’ufficio alla squadra di casa'):f.m.toss.mode==='fistf3'?L('Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)'):L('Sorteggio effettuato')} — <b style="color:var(--accent)">${esc(teamOfSide(f,w))}</b> ${L('ha il vantaggio tattico')}</p>`;
   let h='';
   if(st.complete){
     h+=`<div class="pr-done">✔ ${L('Abbinamento completato')}</div>`;
@@ -12646,8 +13275,10 @@ function renderSubWindowBody(f){
   const ros=(S.rosters&&S.rosters[team])||[];
   const onT=[0,1,2,3].map(k=>side===1?sub[k].ph:sub[k].pa);
   const bench=ros.filter(p=>p&&!onT.includes(p));
-  const role=st.step==='L'?L('ha perso il sorteggio: dichiara per prima'):L('ha vinto il sorteggio: risponde');
-  $('#pr-toss').innerHTML=`<p class="small muted">🔁 ${L('Sostituzioni all’intervallo')} — ${L('massimo 2 per squadra')}</p>`;
+  const fi=S.cfg.fistf==='squadre';
+  const role=fi?(st.step==='W'?L('ha vinto il sorteggio: dichiara per prima'):L('ha perso il sorteggio: risponde'))
+    :(st.step==='L'?L('ha perso il sorteggio: dichiara per prima'):L('ha vinto il sorteggio: risponde'));
+  $('#pr-toss').innerHTML=`<p class="small muted">🔁 ${L('Sostituzioni all’intervallo')} — ${L(fi?'una per squadra (FISTF)':'massimo 2 per squadra')}</p>`;
   $('#pr-body').innerHTML=`
     <div class="pr-step">${esc(team)} — ${role}
       <small>${L('Scegli il subentrante accanto al titolare da sostituire (lascia «—» per non cambiare).')}</small></div>
@@ -12667,15 +13298,22 @@ function swDeclare(none){
   const f=prMatch();if(!f)return;
   const st=subwState(f);if(!st.open)return;
   const list=none?[]:[0,1,2,3].map(k=>({t:k,into:($('#sw-'+k)||{}).value||''})).filter(x=>x.into);
-  if(list.length>2){toast('⛔ '+L('Massimo 2 sostituzioni per squadra.'));return;}
+  const mx=S.cfg.fistf==='squadre'?1:2;
+  if(list.length>mx){toast('⛔ '+L(mx===1?'FISTF: una sola sostituzione per squadra.':'Massimo 2 sostituzioni per squadra.'));return;}
   const r=subwDeclare(f,st.side,list,prBoard);
   if(!r.ok){toast('⛔ '+r.err);return;}
   if(r.closed){closePairing();renderBoards();toast('✔ '+L('Sostituzioni registrate a referto.'));}
   else renderSubWindow();
 }
 function koMatchHTML(ko,m,tag){
+  // FISTF: chi è qualificato direttamente aspetta al turno principale — nessun
+  // punteggio da inserire, nessun risultato da annullare
+  if(ko&&ko.fistf&&m.t1&&m.t1!==BYE&&m.t2===BYE)
+    return `<div class="komatch fistf-dir">${tag?`<span class="ktag">${tag}</span>`:''}
+      <div class="krow"><span class="kt win">${logoImg(m.t1)}${esc(m.t1)}</span></div>
+      <div class="krow"><span class="kt"><span class="tbd">${L('Accesso diretto')} →</span></span></div></div>`;
   const w=koWinner(m);
-  const tbd=n=>n==null?`<span class="tbd">— ${L('da definire')} —</span>`:n===BYE?`<span class="tbd">${L('Riposo')}</span>`:logoImg(n)+esc(n);
+  const tbd=n=>n==null?`<span class="tbd">— ${L('da definire')} —</span>`:n===BYE?`<span class="tbd">${L(ko&&ko.fistf?'Accesso diretto':'Riposo')}</span>`:logoImg(n)+esc(n);
   const canEdit=m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE;
   const onBoard=isOnBoard(m.id);
   const dis=(!canEdit||onBoard)?'disabled':'';
@@ -12715,7 +13353,7 @@ function koHTML(ko){
   </div><div class="bracket">`;
   ko.rounds.forEach(rd=>{
     h+=`<div class="kround"><h4>${esc(L(rd.name))}</h4><div class="kmatches">`;
-    rd.matches.forEach(m=>h+=koMatchHTML(ko,m,m.piaz||''));
+    rd.matches.forEach(m=>h+=koMatchHTML(ko,m,m.piaz||m.lbl||''));
     h+='</div></div>';
   });
   if(ko.third)h+=`<div class="kround"><h4>${L('Finale 3° posto')}</h4><div class="kmatches">${koMatchHTML(ko,ko.third,'3°/4°')}</div></div>`;
@@ -12751,21 +13389,22 @@ function renderClassifica(){
   if(!S.started){box.innerHTML='';return;}
   let h=`<div class="card" style="margin-bottom:16px"><div class="row spread">
     <div><h3 class="subt" style="margin:0">${esc(S.cfg.name||L('Torneo Subbuteo'))}</h3>
-    <p class="small muted">${L(FMT_LABELS[S.cfg.format])} · ${S.teams.length} ${L('giocatori')} · ${LANG==='en'?'Points':'Punti'}: V ${S.cfg.ptsW} / P ${S.cfg.ptsD} / S ${S.cfg.ptsL}${S.cfg.format==='gironi-ko'&&S.cfg.extraQ>0?` · ${LANG==='en'?`Best losers: top ${S.cfg.extraQ} ranked ${S.cfg.qualify+1}`+ordSuffix(S.cfg.qualify+1):`Ripescaggi: le migliori ${S.cfg.extraQ} classificate al ${S.cfg.qualify+1}° posto`}`:''}</p></div>
-    <div class="row">${S.cfg.tb.map((c,i)=>`<span class="chip">${i+1}. ${L(TB_LABELS[c].split(' (')[0])}</span>`).join('')}</div>
+    <p class="small muted">${L(fmtNomeCfg(S.cfg))} · ${S.teams.length} ${L('giocatori')} · ${LANG==='en'?'Points':'Punti'}: V ${S.cfg.ptsW} / P ${S.cfg.ptsD} / S ${S.cfg.ptsL}${S.cfg.format==='gironi-ko'&&S.cfg.extraQ>0?` · ${LANG==='en'?`Best losers: top ${S.cfg.extraQ} ranked ${S.cfg.qualify+1}`+ordSuffix(S.cfg.qualify+1):`Ripescaggi: le migliori ${S.cfg.extraQ} classificate al ${S.cfg.qualify+1}° posto`}`:''}</p></div>
+    <div class="row">${tbAttivi().map((c,i)=>`<span class="chip">${i+1}. ${L(tbNome(c)).split(' (')[0]}</span>`).join('')}</div>
   </div>${S.champion?`<p style="margin-top:10px;font-size:1.1rem">🏆 ${L('Campione del torneo:')} <b style="color:var(--gold)">${esc(S.champion)}</b></p>`:''}</div>`;
   if(S.cfg.format==='planisfero'&&S.plan)h+=`<button class="btn" onclick="plOpen()">🌍 Coppa Planisfero</button>`+plSummary();
   const gs=allGroups();
   if(gs.length){
-    const zonesOn=!!S.cfg.zones||['playoff','champions'].includes(S.cfg.format)||(S.cfg.format==='gironi-ko'&&S.cfg.qualify>0);
+    const zoneTutte=new Set();
     h+='<div class="grid g2 cl-griglia">';
     gs.forEach(g=>{
       const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
-      const qual=(!isTier&&S.cfg.format==='gironi-ko')?S.cfg.qualify:0;
+      const qual=qualDi(g);
+      zoneDelGirone(g,qual).forEach(z=>zoneTutte.add(z));
       h+=`<div class="card"><h3 class="subt">${g.swiss||isTier?'':L('Girone ')}${esc(g.name)}</h3>${standingsHTML(g,{qual})}</div>`;
     });
     h+='</div>';
-    if(zonesOn)h+=zonesLegendHTML();
+    h+=zonesLegendHTML(zoneTutte);
   }
   allKOs().forEach(ko=>{
     const fin=ko.rounds[ko.rounds.length-1].matches[0];
@@ -12882,7 +13521,7 @@ function buildCronacheHTML(){
   const list=collectCronache();
   let h=`<div class="rhead">${S.cfg.logo?`<img class="rlogo-big" src="${S.cfg.logo}" alt="">`:''}
     <div><h1>${esc(S.cfg.name||L('Torneo Subbuteo'))} — ${L('Cronache')}</h1>
-    <p>${FMT_LABELS[S.cfg.format]||''}${S.cfg.loc?' · '+esc(S.cfg.loc):''}${S.cfg.date?' · '+new Date(S.cfg.date+'T00:00').toLocaleDateString('it-IT'):''}</p></div></div>`;
+    <p>${fmtNomeCfg(S.cfg)}${S.cfg.loc?' · '+esc(S.cfg.loc):''}${S.cfg.date?' · '+new Date(S.cfg.date+'T00:00').toLocaleDateString('it-IT'):''}</p></div></div>`;
   if(!list.length){ h+=`<p class="rnone">${L('Nessuna partita giocata finora.')}</p>`; return h; }
   let last=null;
   list.forEach(c=>{
@@ -12929,7 +13568,7 @@ function buildReportHTML(){
   let h=`<div class="rhead">
     ${S.cfg.logo?`<img class="rlogo-big" src="${S.cfg.logo}" alt="">`:''}
     <div><h1>${esc(S.cfg.name||'Torneo Subbuteo')}</h1>
-    <p>${FMT_LABELS[S.cfg.format]||''}${S.cfg.loc?' · '+esc(S.cfg.loc):''}${S.cfg.date?' · '+new Date(S.cfg.date+'T00:00').toLocaleDateString('it-IT'):''} · ${S.teams.length} squadre</p></div>
+    <p>${fmtNomeCfg(S.cfg)}${S.cfg.loc?' · '+esc(S.cfg.loc):''}${S.cfg.date?' · '+new Date(S.cfg.date+'T00:00').toLocaleDateString('it-IT'):''} · ${S.teams.length} squadre</p></div>
   </div>`;
   if(S.champion)h+=`<div class="rchamp">🏆 Campione del torneo: <b>${esc(S.champion)}</b></div>`;
 
@@ -13035,7 +13674,7 @@ function buildProgramHTML(){
   let h=`<div class="rhead">
     ${S.cfg.logo?`<img class="rlogo-big" src="${S.cfg.logo}" alt="">`:''}
     <div><h1>${esc(S.cfg.name||'Torneo Subbuteo')} — Programma</h1>
-    <p>${FMT_LABELS[S.cfg.format]||''}${S.cfg.loc?' · '+esc(S.cfg.loc):''}${S.cfg.date?' · '+new Date(S.cfg.date+'T00:00').toLocaleDateString('it-IT'):''} · ${S.teams.length} ${sq?'squadre':'giocatori'}</p></div>
+    <p>${fmtNomeCfg(S.cfg)}${S.cfg.loc?' · '+esc(S.cfg.loc):''}${S.cfg.date?' · '+new Date(S.cfg.date+'T00:00').toLocaleDateString('it-IT'):''} · ${S.teams.length} ${sq?'squadre':'giocatori'}</p></div>
   </div>`;
   // composizione gironi (serpentone) + rose
   if(S.groups.length){
@@ -13836,7 +14475,7 @@ function boardHTML(b,i){
         const st=cur.m.toss?pairState(cur):null;
         const sw=subwState(cur);
         const lbl=!cur.m.toss?`⚖️ ${L('Sorteggio & abbinamento')}`
-          :(st&&!st.complete)?`⚖️ ${L('Abbinamento')} <span style="color:var(--accent)">${st.step.mv}/5</span>`
+          :(st&&!st.complete)?`⚖️ ${L('Abbinamento')} <span style="color:var(--accent)">${st.step.mv}/${st.tot||5}</span>`
           :`⚖️ ${L('Abbinamento')} ✔`;
         return `<button class="btn${(!cur.m.toss||(st&&!st.complete))?'':' sec'}" onclick="openPairing(${i})">${lbl}</button>`
           +(sw.open?`<button class="btn" onclick="openSubWindow(${i})">🔁 ${L('Sostituzioni')} <span style="color:var(--accent2)">●</span></button>`:'')
@@ -14508,14 +15147,12 @@ function standingsPresentHTML(onlyLive,onlyGroup){
   if(onlyGroup)gs=gs.filter(g=>g===onlyGroup);      // AUTO LIVE: un girone alla volta
   else if(liveTeams)gs=gs.filter(g=>g.teams.some(n=>liveTeams.has(n)));
   if(!gs.length)return `<div class="pcard"><div class="pf">Classifiche</div><p class="muted">${onlyLive?'Le squadre in campo giocano la fase a eliminazione diretta.':'Nessuna classifica disponibile per questa formula.'}</p></div>`;
-  const leg=zonesLegendHTML();
-  const zonesOn=!!S.cfg.zones||['playoff','champions'].includes(S.cfg.format);
   return `<div class="pgrid">`+gs.map(g=>{
     const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
-    const qual=isTier?0:(S.cfg.format==='gironi-ko'?S.cfg.qualify:(S.cfg.format==='squadre'?2:0));
+    const qual=qualDi(g),leg=zonesLegendHTML(zoneDelGirone(g,qual));
     const capo=rankTeams(g.teams,g.matches).order[0];
     const filo=(capo&&S.logos&&S.logos[capo])?`<img class="filigrana" src="${S.logos[capo]}" alt="" aria-hidden="true">`:'';
-    return `<div class="pcard tclass">${filo}<div class="pf">${g.swiss||isTier||S.cfg.format==='campionato'?'':'Girone '}${esc(g.name)}</div>${standingsHTML(g,{qual})}${(qual>0||zonesOn)?leg:''}</div>`;
+    return `<div class="pcard tclass">${filo}<div class="pf">${g.swiss||isTier||S.cfg.format==='campionato'?'':'Girone '}${esc(g.name)}</div>${standingsHTML(g,{qual})}${leg}</div>`;
   }).join('')+`</div>`;
 }
 /* auto-fit: rimpicciolisce i nomi troppo lunghi finché stanno su una riga */
@@ -20050,7 +20687,7 @@ function renderAll(){
 }
 function renderSetupFromState(){
   $('#s-name').value=S.cfg.name;$('#s-date').value=S.cfg.date||'';$('#s-loc').value=S.cfg.loc;
-  $('#s-fields').value=S.cfg.fields;$('#s-format').value=S.cfg.format;
+  $('#s-fields').value=S.cfg.fields;$('#s-format').value=fmtSelValore(S.cfg);
   $('#s-nteams').value=S.teams.length||8;
   if($('#s-presentsec'))$('#s-presentsec').value=S.cfg.presentSec||9;
   if($('#s-tickervel')){$('#s-tickervel').value=S.cfg.tickerVel||5;tickerRitmo();}
@@ -20073,6 +20710,8 @@ function renderSetupFromState(){
   if($('#s-poutn'))$('#s-poutn').value=S.cfg.poutN||0;
   if($('#s-pofffmt'))$('#s-pofffmt').value=S.cfg.poffFmt||'ko';
   if($('#s-chq'))$('#s-chq').value=S.cfg.chQ||8;
+  if($('#s-fistf-cap'))$('#s-fistf-cap').checked=!!S.cfg.fistfCap;
+  if($('#s-fistf-ko'))$('#s-fistf-ko').value=S.cfg.chQ===8?'8':'16';
   if($('#s-kohtarget'))$('#s-kohtarget').value=S.cfg.kohTarget??5;
   if($('#s-consb'))$('#s-consb').checked=!!S.cfg.consB;
   if($('#s-onehalf'))$('#s-onehalf').checked=!!S.cfg.oneHalf;
@@ -20104,6 +20743,69 @@ function renderSetupFromState(){
 }
 function tickClock(){const d=new Date();$('#hdr-clock').textContent=pad(d.getHours())+':'+pad(d.getMinutes());}
 setInterval(tickClock,1000);
+
+/* =========================================================
+   NOVITÀ DELLA VERSIONE — si apre da sola al primo avvio di ogni
+   versione principale (9.0, 9.1…), poi resta a portata di un pulsante.
+   Non compare sulla seconda finestra del proiettore.
+   ========================================================= */
+const NOVITA_VER='9.0', NOVITA_KEY='stc_novita_vista';
+const NOVITA={
+  it:{tit:'Il regolamento FISTF entra nel programma',
+    intro:'Le formule dei tornei internazionali, così come le scrive la federazione mondiale: ordine delle gare, criteri di classifica, spareggi e incroci del tabellone presi dal Tournament Organisers Handbook FISTF (v2.1), senza adattamenti.',
+    card:[
+      {big:1,t:'🌐 Tre nuove formule FISTF',p:'Nel menu Formula del Setup, gruppo «🌐 FISTF»:',li:['<b>Gironi + tabellone ufficiale</b> — gironi da 3 a 10, passano i primi due, tabellone delle tabelle ufficiali','<b>Sistema svizzero + fase finale</b> — quattro turni, poi tabellone a 16 o a 8','<b>Torneo a squadre</b> — incontri su quattro tavoli con le regole FISTF']},
+      {t:'🏆 Tabelloni ufficiali da 2 a 32 gironi',li:['Spareggi M1, M2… e accessi diretti come nella tabella','Primo e secondo dello stesso girone sempre in metà opposte','Corretto un refuso del documento (29 gironi: M8 = 14A–9B)']},
+      {t:'🎲 Gironi e sorteggio FISTF',li:['Ordine di iscrizione = ranking mondiale, fasce di teste di serie','Sorteggio dentro le fasce, compagni di club o nazione separati','Il numero di gironi propone solo le scelte regolamentari']},
+      {t:'📋 Ordine delle gare',li:['Tabelle FISTF per i gironi da 3 a 10 giocatori','Ordini speciali quando due compagni di club sono nello stesso girone','Etichetta «Ordine FISTF» su ogni girone']},
+      {t:'⚖️ Classifica e shoot-out',li:['Punti 3–1–0, poi scontri diretti, differenza reti, gol','Pari merito assoluto: riquadro per registrare lo shoot-out','Categorie U12 · U16 · U20 · Ladies: scarto massimo 5–0']},
+      {t:'🔁 Svizzero FISTF',li:['Primo turno a sorteggio, poi 1° contro 2° senza rivincite','Con iscritti dispari: riposo che vale 3–0, una volta a testa','Tabellone A 1–16 … H 2–15, oppure a 8']},
+      {t:'🏟 Squadre FISTF',li:['Abbinamento degli allenatori A e B, gara per gara','Squadra di tre giocatori: inizia la procedura, quarta gara 0–3','Una sostituzione, dichiara per primo chi vince il sorteggio']},
+      {wide:1,t:'🚪 Ritiri, classifiche e manuale',li:['Ritiro con la regola FISTF: 0–3 in tutte le gare del girone','Classifiche nella Presentazione e in AUTO LIVE: ogni riga ha il colore della sua zona e la legenda elenca solo le zone presenti, con gli stessi simboli','Stima della durata e Formule consigliate conoscono le formule FISTF; nuovo capitolo A14d nel manuale']}
+    ],
+    prova:'🌐 Prova una formula FISTF',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 9.0» nel Setup.'},
+  en:{tit:'The FISTF regulations come to the program',
+    intro:'The formats of international tournaments exactly as the world federation writes them: match order, ranking criteria, barrages and bracket pairings taken from the FISTF Tournament Organisers Handbook (v2.1), with no adaptations.',
+    card:[
+      {big:1,t:'🌐 Three new FISTF formats',p:'In the Setup Format menu, «🌐 FISTF» group:',li:['<b>Groups + official bracket</b> — groups of 3 to 10, the top two qualify, bracket from the official tables','<b>Swiss system + final stage</b> — four rounds, then a 16- or 8-player bracket','<b>Team tournament</b> — ties on four tables with the FISTF rules']},
+      {t:'🏆 Official brackets for 2 to 32 groups',li:['Barrages M1, M2… and direct entries as in the table','Winner and runner-up of a group always in opposite halves','A misprint in the document fixed (29 groups: M8 = 14A–9B)']},
+      {t:'🎲 FISTF groups and draw',li:['Entry order = world ranking, pots of seeds','Draw within the pots, club-mates or compatriots kept apart','The number of groups offers only regulation choices']},
+      {t:'📋 Match order',li:['FISTF tables for groups of 3 to 10 players','Special orders when two club-mates share a group','«FISTF order» label on every group']},
+      {t:'⚖️ Standings and shoot-out',li:['Points 3–1–0, then head-to-head, goal difference, goals','Complete tie: a box to record the shoot-out','U12 · U16 · U20 · Ladies categories: maximum margin 5–0']},
+      {t:'🔁 FISTF Swiss system',li:['First round by blind draw, then 1st v 2nd with no rematches','Odd number of entrants: a bye worth 3–0, once per player','Bracket A 1–16 … H 2–15, or of 8']},
+      {t:'🏟 FISTF teams',li:['Coach A and Coach B selection, game by game','Three-player team: starts the procedure, fourth game 0–3','One substitution, the toss winner declares first']},
+      {wide:1,t:'🚪 Withdrawals, standings and manual',li:['Withdrawal with the FISTF rule: 0–3 in all group matches','Standings in the Presentation and AUTO LIVE: every row has the colour of its zone and the key lists only the zones present, with the same symbols','Duration estimate and Suggested formats know the FISTF formats; new chapter A14d in the manual']}
+    ],
+    prova:'🌐 Try a FISTF format',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 9.0» button in the Setup.'}
+};
+function novitaApri(){
+  const t=NOVITA[LANG==='en'?'en':'it'];
+  $('#nv-hero').innerHTML=`<div class="nv-ver">✨ ${LANG==='en'?'Version':'Versione'} ${NOVITA_VER}</div>
+    <div class="nv-tit" id="nv-titolo">${t.tit}</div><p>${t.intro}</p>`;
+  $('#nv-body').innerHTML=t.card.map(c=>`<div class="nv-card${c.big?' big':''}${c.wide?' wide':''}"><h4>${c.t}</h4>${c.p?`<p>${c.p}</p>`:''}<ul>${c.li.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  $('#nv-foot').innerHTML=`<span class="small muted">${t.nota}</span>`
+    +(S.started?'':`<button class="btn sec" onclick="novitaProva()">${t.prova}</button>`)
+    +`<button class="btn" onclick="novitaChiudi()">${t.ok}</button>`;
+  $('#novita').classList.add('on');
+}
+function novitaChiudi(){
+  $('#novita').classList.remove('on');
+  try{localStorage.setItem(NOVITA_KEY,NOVITA_VER);}catch(e){}
+}
+function novitaProva(){
+  novitaChiudi();
+  if(S.started)return;
+  tabTo('setup');
+  const sel=$('#s-format');if(!sel)return;
+  sel.value='fistf-gironi';S.cfg.zones=null;fistfPreset();setupFmtChanged();
+  const w=$('#w-fistf');if(w)w.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function novitaAllAvvio(){
+  if(typeof isSchermoTabellone==='function'&&isSchermoTabellone())return;
+  let vista='';try{vista=localStorage.getItem(NOVITA_KEY)||'';}catch(e){}
+  if(vista!==NOVITA_VER)setTimeout(novitaApri,700);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#novita')&&$('#novita').classList.contains('on'))novitaChiudi();});
 
 (function boot(){
   let restored=false;
@@ -20152,6 +20854,7 @@ setInterval(tickClock,1000);
   }
   // seconda finestra sul proiettore: parte subito in modalità tabellone
   if(isSchermoTabellone())avviaModalitaTabellone();
+  novitaAllAvvio();   // «Novità della versione» al primo avvio della 9.0
 })();
 </script>
 </body>
