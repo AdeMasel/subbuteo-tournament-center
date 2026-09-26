@@ -1,7 +1,7 @@
 {
- "content": "9.0.0",
- "minShell": "8.3.0",
- "notes": "9.0.0 — Regolamento FISTF: tre nuove formule (gironi con tabellone ufficiale da 2 a 32 gironi, svizzero con fase finale, torneo a squadre), shoot-out, categorie giovanili e Ladies; colori delle classifiche coerenti con la legenda; schermata delle novità all'avvio. Richiede la 8.3.0 o successiva.",
+ "content": "9.2.0",
+ "minShell": "9.2.0",
+ "notes": "9.2.0 — Diretta su YouTube e TikTok dalla Regia, cronometro delle partite in Presentazione e AUTO LIVE, stampe A4 senza tagli, arbitri e abbinamento FISTF nei tornei a squadre, apertura senza password di sistema né licenza da reinserire. Richiede l'installer 9.2.0.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -13,8 +13,8 @@
    "size": 52865
   },
   "capitano.html": {
-   "sha256": "47820fe4399c0339cf80aea4efa111904ef96eec85da3499daf142b494a7fe97",
-   "size": 26250
+   "sha256": "4b4add46a7ee1674e3e0f259c73feac64e1d823fc479233e25bc30bfc3470bce",
+   "size": 27539
   },
   "figurine_motore.js": {
    "sha256": "445d9b0c1f42b744b976642d6659f82ac98391b622f2589cf5cee6da8c3bf93a",
@@ -25,8 +25,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "b7ab8eecf7be8871099a23356a4574daef332d137de4bc37b7d23a4c482d16a9",
-   "size": 4229267
+   "sha256": "8eb3fa9b4f5de2798874bdd757edf68e62fe36fcbb8f1cc1a0511cdcaa390fab",
+   "size": 4299008
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",

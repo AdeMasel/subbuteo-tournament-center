@@ -351,9 +351,12 @@ function renderPair(m,b){
     return;
   }
   const ioVinco=pr.win===side;
-  const head=`<div class="${ioVinco?'okbox':'waitbox'}">🪙 ${ioVinco
+  const head=`<div class="${ioVinco?'okbox':'waitbox'}">🪙 ${pr.fistf?(ioVinco
+      ?'<b>Hai vinto il sorteggio</b>: sei l’<b>Allenatore B</b>. Si schiera gara per gara, a turno con l’avversario.'
+      :'<b>Hai perso il sorteggio</b>: sei l’<b>Allenatore A</b> e schieri per primo alla gara 1; poi si alterna gara per gara.')
+      :(ioVinco
       ?'<b>Hai vinto il sorteggio</b>: rispondi alle mosse avversarie e scegli gli incroci.'
-      :'<b>Hai perso il sorteggio</b>: scopri per primo, l’avversario risponde.'}
+      :'<b>Hai perso il sorteggio</b>: scopri per primo, l’avversario risponde.')}
       ${pr.mode==='home'?' <span class="small">(assegnato d’ufficio alla squadra di casa)</span>':''}</div>`;
   const tavoli=(hi)=>`<div class="prtbl">${[0,1,2,3].map(k=>{
       const mine=side===1?pr.occ[k][0]:pr.occ[k][1];
@@ -371,7 +374,7 @@ function renderPair(m,b){
     return;
   }
   if(pr.side!==side){
-    box.innerHTML=head+`<div class="waitbox">⏳ Mossa ${pr.mv}/5 — tocca all’avversario (${pr.need} da schierare). Attendi…</div>`+tavoli(false);
+    box.innerHTML=head+`<div class="waitbox">⏳ ${passo(pr)} — tocca all’avversario${pr.fistf?'':` (${pr.need} da schierare)`}. Attendi…</div>`+tavoli(false);
     return;
   }
   if(prPending){   // una mossa è in viaggio: si attende la conferma della Direzione
@@ -383,14 +386,17 @@ function renderPair(m,b){
   const dist=(luDraft[m.id]||[]).filter(Boolean);
   const avail=(dist.length>=4?dist:roster()).filter(p=>!placed.includes(p));
   box.innerHTML=head+
-    `<div class="prstep">🎯 <b>Mossa ${pr.mv}/5 — tocca a te</b>: schiera ${pr.need} giocator${pr.need===1?'e':'i'}
-      <div class="small">${pr.cover?'Devi <b>coprire</b> il tavolo dove l’avversario è scoperto.'
-        :((pr.exp||[]).length?'Uno dei tuoi deve coprire il tavolo scoperto dell’avversario.':'Scegli un tavolo libero.')}</div></div>
+    `<div class="prstep">🎯 <b>${passo(pr)} — tocca a te</b>: ${pr.fistf?`scegli il giocatore del tavolo ${pr.gara}`:`schiera ${pr.need} giocator${pr.need===1?'e':'i'}`}
+      <div class="small">${pr.fistf?(pr.cover?'Scegli chi affronta il giocatore avversario già schierato su questo tavolo.':'Schieri tu per primo su questo tavolo: l’avversario risponderà.')
+        :(pr.cover?'Devi <b>coprire</b> il tavolo dove l’avversario è scoperto.'
+        :((pr.exp||[]).length?'Uno dei tuoi deve coprire il tavolo scoperto dell’avversario.':'Scegli un tavolo libero.'))}</div></div>
     <div class="prpick">${avail.map(p=>
       `<span class="pch${prSel===p?' on':''}" onclick="prPick('${esc(p).replace(/'/g,'&#39;')}')">${esc(p)}</span>`).join('')}</div>`
     +tavoli(true)
     +`<p class="small muted" style="margin-top:6px">${prSel?'Ora tocca il tavolo evidenziato.':'Scegli prima un giocatore.'}</p>`;
 }
+/* FISTF: la procedura va gara per gara (allenatori A e B), non in 5 mosse */
+function passo(pr){return pr.fistf?`Gara ${pr.gara} di 4 · scelta ${pr.mv}/${pr.tot||8}`:`Mossa ${pr.mv}/${pr.tot||5}`;}
 function prPick(p){prSel=(prSel===p?null:p);renderMatch();}
 function prPlaceMine(mid,t){
   if(!prSel||prPending)return;
@@ -414,7 +420,7 @@ function renderSubs(m,b){
   const sw=m.pr&&m.pr.sw;
   const bench=roster().filter(p=>!onT.includes(p));
   if(!sw){
-    box.innerHTML=`<p class="small muted">La finestra delle sostituzioni si apre <b>al termine del 1° tempo</b>: sono consentiti fino a <b>2 cambi</b> per squadra.</p>`;
+    box.innerHTML=`<p class="small muted">La finestra delle sostituzioni si apre <b>al termine del 1° tempo</b>: ${fistfM(m)?'è consentito <b>1 cambio</b> per squadra (FISTF).':'sono consentiti fino a <b>2 cambi</b> per squadra.'}</p>`;
     return;
   }
   if(sw.side!==side){
@@ -422,8 +428,9 @@ function renderSubs(m,b){
     box.innerHTML=`<div class="waitbox">⏳ Sta dichiarando ${chi}. Attendi il tuo turno…</div>`;
     return;
   }
-  const io=m.pr.win===side?'Hai vinto il sorteggio: <b>rispondi</b> alle sostituzioni avversarie.'
-                          :'Hai perso il sorteggio: <b>dichiari per primo</b>.';
+  const io=fistfM(m)?(m.pr.win===side?'Hai vinto il sorteggio: <b>dichiari per primo</b>.':'Hai perso il sorteggio: <b>rispondi</b> alla sostituzione avversaria.')
+    :(m.pr.win===side?'Hai vinto il sorteggio: <b>rispondi</b> alle sostituzioni avversarie.'
+                          :'Hai perso il sorteggio: <b>dichiari per primo</b>.');
   box.innerHTML=`<div class="okbox">🔁 <b>Finestra sostituzioni aperta</b> — ${io}</div>
     ${onT.map((p,k)=>p?`
       <div class="lu-row"><span class="tno">T${k+1}</span>
@@ -437,11 +444,14 @@ function renderSubs(m,b){
       <button class="btn" onclick="subwSend('${m.id}')">✔ Dichiara</button>
       <button class="btn sec" onclick="subwSend('${m.id}',true)">Nessuna</button>
     </div>
-    <p class="small muted" style="margin-top:6px">Massimo <b>2</b> sostituzioni per squadra, da effettuare prima del 2° tempo.</p>`;
+    <p class="small muted" style="margin-top:6px">Massimo <b>${maxCambi(m)}</b> ${maxCambi(m)===1?'sostituzione':'sostituzioni'} per squadra, da effettuare prima del 2° tempo.</p>`;
 }
+/* FISTF: una sola sostituzione e la prima dichiarazione tocca a chi vince il sorteggio */
+function fistfM(m){return !!((m&&m.pr&&m.pr.fistf)||(snap&&snap.fi));}
+function maxCambi(m){return fistfM(m)?1:2;}
 function subwSend(mid,none){
   const list=none?[]:[0,1,2,3].map(k=>{const s=$('#sub-in-'+k);return{t:k,into:s?s.value:''};}).filter(x=>x.into);
-  if(list.length>2){toast('Massimo 2 sostituzioni.');return;}
+  if(list.length>maxCambi(findM(mid))){toast(maxCambi(findM(mid))===1?'Massimo 1 sostituzione (FISTF).':'Massimo 2 sostituzioni.');return;}
   send({type:'csubw',mid,list});
   toast(list.length?`🔁 ${list.length} sostituzione/i dichiarate`:'🔁 Nessuna sostituzione');
   setTimeout(poll,700);setTimeout(poll,1800);

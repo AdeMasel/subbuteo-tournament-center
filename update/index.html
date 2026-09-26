@@ -621,7 +621,7 @@ h3.subt{font-family:'Oswald',sans-serif;letter-spacing:.12em;text-transform:uppe
 .muted{color:var(--muted)} .small{font-size:.8rem}
 
 label.f{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
-input[type=text],input[type=date],input[type=number],select,textarea{
+input[type=text],input[type=password],input[type=date],input[type=number],select,textarea{
   width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--text);
   border-radius:10px;padding:10px 12px;font-family:inherit;font-size:.95rem;transition:border .2s,box-shadow .2s;
 }
@@ -1388,6 +1388,25 @@ body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass
 #tv .tv-field{transition:opacity .5s ease}
 #present-close:hover{color:#fff}
 
+/* ---------- TIMER DELLE PARTITE IN CORSO (Presentazione / Auto Live) ----------
+   Sta nella fascia vuota sopra il titolo (il padding alto di #present, 5vh):
+   non copre titolo, pulsanti o schede, e resta a sinistra della ✕. */
+#present-timer{position:fixed;top:calc(2.5vh - 17px);right:84px;z-index:6;pointer-events:none;
+  display:flex;align-items:center;gap:12px;height:34px;padding:0 14px;border-radius:999px;
+  background:rgba(4,10,24,.72);border:1px solid rgba(255,255,255,.14);box-shadow:0 4px 18px rgba(0,0,0,.35);
+  font-family:'Chakra Petch',monospace;color:#e8f6ff;white-space:nowrap;max-width:calc(100vw - 110px);overflow:hidden}
+#present-timer[hidden]{display:none}
+#present-timer .ptm{display:flex;align-items:baseline;gap:6px}
+#present-timer .ptm+.ptm{border-left:1px solid rgba(255,255,255,.16);padding-left:12px}
+#present-timer .pt-c{font-family:'Oswald',sans-serif;font-size:.78rem;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+#present-timer .pt-t{font-size:1.25rem;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:#7ee0ff}
+#present-timer .pt-f{font-family:'Oswald',sans-serif;font-size:.72rem;letter-spacing:.16em;color:#9fb3c8;text-transform:uppercase}
+#present-timer .pt-p .pt-t{color:#9fb3c8}
+#present-timer .pt-u .pt-t{color:#ff5a5a}
+#present-timer .pt-live{width:8px;height:8px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 8px #ff3b3b;animation:ptlive 1.4s ease-in-out infinite}
+@keyframes ptlive{50%{opacity:.35}}
+body.no-anim #present-timer .pt-live{animation:none}
+
 /* ---------- LA PAGINA DEL VINCITORE ---------- */
 #champion{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;
   overflow:hidden;background:radial-gradient(120% 90% at 50% 108%,#1a1206 0%,#0a0d18 42%,#03050c 100%)}
@@ -2046,6 +2065,37 @@ body.solo-tabellone #present .pclose,body.solo-tabellone #present-modes{display:
 .btn-ann:hover{color:#e24848;background:rgba(226,72,72,.14)}
 #estim .adv-box{width:min(760px,94vw)}
 #ritiro .adv-box{width:min(520px,94vw)}
+/* ---- diretta YouTube / TikTok ---- */
+#hdr-onair{display:inline-flex;align-items:center;gap:8px;background:#c8102e;color:#fff;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.06em;font-size:.82rem;padding:5px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;box-shadow:0 0 0 3px rgba(200,16,46,.25)}
+#hdr-onair i{width:9px;height:9px;border-radius:50%;background:#fff;animation:dirlamp 1.1s steps(2,start) infinite}
+@keyframes dirlamp{to{visibility:hidden}}
+.dir-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px}
+.dir-pf{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;transition:border-color .3s,box-shadow .3s}
+.dir-pf.onair{border-color:#e0262f;box-shadow:0 0 0 2px rgba(224,38,47,.35)}
+.dir-hd{display:flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;font-size:1.15rem;letter-spacing:.04em}
+.dir-logo{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:9px;font-size:1rem;color:#fff}
+.dir-logo.dir-youtube{background:#ff0033}.dir-logo.dir-tiktok{background:#111;box-shadow:inset 2px 0 0 #25f4ee,inset -2px 0 0 #fe2c55}
+.dir-stato{margin-left:auto;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.dir-stato.live{background:#e0262f;border-color:#e0262f;color:#fff}.dir-stato.conn{border-color:#f5c542;color:#f5c542}.dir-stato.err{border-color:#ff6b6b;color:#ff6b6b}
+.dir-acc summary{cursor:pointer;font-weight:600}.dir-acc[open]{background:rgba(255,255,255,.03);border-radius:10px;padding:8px 10px}
+.dir-opz{display:flex;gap:10px;flex-wrap:wrap}.dir-opz>div{flex:1;min-width:150px}
+.dir-prev{background:#050a18;border:1px solid var(--line);border-radius:10px;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden}
+.dir-prev.vert{aspect-ratio:auto;height:340px}
+.dir-prev canvas{display:block;max-width:100%;max-height:100%}
+.dir-prev:not(.vert) canvas{width:100%}
+.dir-prev.vert canvas{height:100%}
+.dir-vuota{color:var(--muted);font-size:.8rem;padding:10px;text-align:center}
+.dir-mon{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dir-mon div{background:rgba(255,255,255,.035);border-radius:8px;padding:6px 8px;display:flex;flex-direction:column}
+.dir-mon span{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dir-mon b{font-family:'Chakra Petch',monospace;font-size:1rem}
+.dir-rete{height:6px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.dir-rete i{display:block;height:100%;width:0;background:#2ee06b;transition:width .6s}.dir-rete i.medio{background:#f5c542}.dir-rete i.basso{background:#ff6b6b}
+.dir-go{font-weight:700}.dir-go.stop{background:#c8102e;border-color:#c8102e;color:#fff}
+.dir-audio{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.dir-vu{width:140px;height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}.dir-vu i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2ee06b,#f5c542 70%,#ff6b6b);transition:width .15s}
+.dir-check{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:.84rem}.dir-check .no{color:#f5c542}
+.dir-log{margin-top:12px;max-height:150px;overflow:auto;font-family:'Chakra Petch',monospace;font-size:.74rem;color:var(--muted);background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px}
 /* ---- schermata «Novità della versione» (9.0) ---- */
 #novita{position:fixed;inset:0;z-index:140;display:none;align-items:center;justify-content:center;background:rgba(4,7,18,.86);backdrop-filter:blur(8px)}
 #novita.on{display:flex}
@@ -2659,7 +2709,7 @@ body.no-anim #cer-confetti i{animation:none;opacity:0}
 [data-theme="stadium"] :is(header.topbar,#mt-sel,#ticker-wrap){background:#081d29;color:var(--text)}
 [data-theme="atelier"] :is(header.topbar,#mt-sel,#ticker-wrap){background:#fcfaf3;color:var(--text)}
 [data-theme="atelier"] :is(header.topbar h1,#hdr-clock,#ticker){color:var(--text)}
-[data-theme="atelier"] :is(input[type=text],input[type=number],input[type=date],select,textarea){background:#fffef9;color:var(--text)}
+[data-theme="atelier"] :is(input[type=text],input[type=password],input[type=number],input[type=date],select,textarea){background:#fffef9;color:var(--text)}
 [data-theme="atelier"] .btn:not(.sec):not(.ok):not(.danger){background:linear-gradient(135deg,#f4d9a3,#d6b875);color:#263b30}
 [data-theme="atelier"] #ticker-label{background:#245641;color:#fff}
 [data-theme="atelier"] .bg-fx::after{animation-duration:26s}
@@ -3105,6 +3155,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
   <div style="flex:1;min-width:150px"><div id="hdr-title" class="goldtxt">Nuovo Torneo</div><div id="hdr-meta"></div></div>
   <select id="mt-sel" onchange="switchTournament(this.value)" title="Torneo attivo (fino a 4 simultanei)"></select>
   <button id="lang-btn" onclick="toggleLang()" title="Italiano / International (English)">🌐 EN</button>
+  <span id="hdr-onair" onclick="dirVai()" style="display:none"></span>
   <span id="hdr-mic" title="Speaker attivo — microfono in onda">🎙<i></i></span>
   <span id="hdr-tun" onclick="tabTo('audio')" title="Tunnel Internet"><i></i><span class="tl">Tunnel</span></span>
   <button id="lic-btn" onclick="openLicense()" title="Licenza">🔑</button>
@@ -3197,7 +3248,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
         </div>
         <div class="row" style="gap:10px;margin-top:2px">
           <button class="btn sec" onclick="openAdvisor()">💡 Formule consigliate</button>
-          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 9.0</button>
+          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 9.2</button>
         <button class="btn sec" onclick="openRealTorneo()">🏆 Torneo Reale</button>
           <button class="btn sec" onclick="openEstimate()">⏱ Stima durata</button>
           <button class="btn sec" id="seed-btn" onclick="seedDaRanking()" title="Compila le fasce in base alla classifica perpetua dell'archivio">🎖 Teste di serie dall'archivio</button>
@@ -3236,6 +3287,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
           <div id="w-ngroups"><label class="f">Numero gironi</label><input type="number" id="s-ngroups" value="2" min="1" max="16" onchange="composeNGroupsChanged()"></div>
           <div id="w-npots"><label class="f">Numero fasce</label><input type="number" id="s-npots" value="2" min="2" max="8" onchange="renderTeamInputs()"></div>
           <div style="grid-column:1/-1"><label class="ck" title="Dopo il sorteggio i giocatori dello stesso club vengono distribuiti in gironi diversi, scambiandoli solo con partecipanti della stessa fascia o della stessa posizione"><input type="checkbox" id="s-sepclub" onchange="clubSepSet(this.checked)"> 🏠 Separa i giocatori dello stesso club (uno per girone, finché possibile)</label></div>
+          <div style="grid-column:1/-1"><label class="ck" title="Se due o più compagni di club finiscono nello stesso girone, il loro scontro diretto si gioca alla prima giornata, prima di sapere quale risultato converrebbe al club"><input type="checkbox" id="s-clubprima" onchange="clubPrimaSet(this.checked)"> ⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata</label></div>
         </div>
         <div class="grid g3" style="gap:10px">
           <div id="w-qualify"><label class="f">Qualificati per girone</label><input type="number" id="s-qualify" value="2" min="1" max="8"></div>
@@ -3322,8 +3374,9 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
           <p class="small muted" style="margin-top:4px">L'arbitro è scelto tra i disponibili che non giocano quel turno (e, quando possibile, non dello stesso girone dei due contendenti), bilanciando il numero di gare arbitrate.</p>
           <label class="ck" style="margin-top:6px"><input type="checkbox" id="s-showrefboard" checked> Mostra il tabellone arbitri sotto le classifiche</label>
         </div>
-        <div id="w-squadre" style="display:none">
-          <p class="small" style="background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;line-height:1.6">
+ <div id="w-squadre" style="display:none">
+          <p class="small" id="w-squadre-fistf" style="display:none;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;line-height:1.6">🌐 Regolamento FISTF: ogni squadra ha da 3 a 6 giocatori, 4 in campo e 2 riserve. Ogni incontro = 4 partite individuali in contemporanea; il risultato è il numero di vittorie individuali (es. 3–1). Punti girone 3-1-0. L’abbinamento è alternato fra gli allenatori A (chi perde il sorteggio) e B, gara per gara; una sola sostituzione all’intervallo. Arbitra una squadra a riposo: i suoi primi quattro giocatori, uno per tavolo. Dopo i gironi passano le prime due al tabellone ufficiale.</p>
+          <p class="small" id="w-squadre-fisct" style="background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;line-height:1.6">
             🏟 <b>Modalità FISCT</b>: ogni squadra ha fino a <b>6 atleti a referto</b>, di cui <b>4 titolari</b>
             in campo (max 2 sostituzioni all'intervallo). Ogni incontro = <b>4 partite individuali in contemporanea</b>;
             il risultato dell'incontro è il numero di vittorie individuali (es. 3–1). Punti girone: <b>3-1-0</b>.
@@ -3874,6 +3927,14 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
   </div>
 
   <!-- ---------- le app sui telefoni ---------- -->
+  <!-- ---------- diretta su YouTube e TikTok ---------- -->
+  <h3 class="rgband" id="dir-sez">🔴 Diretta su YouTube e TikTok</h3>
+  <div class="card" style="margin-bottom:18px">
+    <p class="muted small" style="margin-top:0">Il torneo in diretta sui canali del club, direttamente dal programma: su YouTube in orizzontale, su TikTok in verticale con la Regia e la Presentazione una sopra l’altra. Per ogni account serve la chiave di trasmissione che la piattaforma rilascia al titolare: inseriscila qui prima del torneo, resta cifrata su questo computer e non viaggia mai con i dati del torneo. La diretta convive con l’App Campo, l’App Capitano e l’App Replay: se la rete rallenta, la qualità scende da sola invece di fermare i telefoni.</p>
+    <div id="dir-nodesk" class="ann-blocco" style="display:none">La diretta funziona nell’app installata sul computer, non nella versione per browser.</div>
+    <div id="dir-box"></div>
+  </div>
+
   <h3 class="rgband">📡 Le app sui telefoni</h3>
   <div class="rggrid">
     <div class="card rgcard">
@@ -4236,6 +4297,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
     <span class="fball f1">⚽</span><span class="fball f2">⚽</span><span class="fball f3">⚽</span>
   </div>
   <button id="present-close" onclick="closePresent()">✕</button>
+  <div id="present-timer" aria-live="off" hidden></div>
   <button class="rp-rivedi" onclick="rpUltimaInOnda()" hidden></button>
   <div style="display:flex;align-items:center;justify-content:center;gap:18px">
     <img id="present-logo" style="display:none" alt="">
@@ -4335,7 +4397,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
       <h3 class="subt" style="margin:0">🧢 Formazioni — scelta dei capitani</h3>
       <button style="font-size:1.6rem;background:none;border:none;color:var(--muted);cursor:pointer" onclick="closeLineup()">✕</button>
     </div>
-    <p class="small muted" style="margin-bottom:12px">Trascina (o clicca due caselle per scambiarle) gli atleti tra i <b>Tavoli 1–4</b> e la <b>panchina</b>. A incontro iniziato, uno scambio campo↔panchina è una <b>sostituzione</b> (FISCT: max 2 per squadra, all'intervallo).</p>
+    <p class="small muted" style="margin-bottom:12px" id="lu-nota">Trascina (o clicca due caselle per scambiarle) gli atleti tra i <b>Tavoli 1–4</b> e la <b>panchina</b>. A incontro iniziato, uno scambio campo↔panchina è una <b>sostituzione</b> (FISCT: max 2 per squadra, all'intervallo).</p>
     <div class="lcols" id="lu-cols"></div>
     <div class="row" style="justify-content:center;margin-top:14px">
       <button class="btn" onclick="confirmLineup()">✔ Conferma formazioni</button>
@@ -4534,7 +4596,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='9.0.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='9.2.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -5535,8 +5597,15 @@ Object.assign(TR,{"Serve l’aggiornamento completo":"A full update is required"
 Object.assign(TR,{"Fase a Gironi — Squadre":"Group Stage — Teams","Classifica":"Standings","gare":"matches","Nessuna partita generata.":"No matches generated."});
 /* Kit online (figurine): testi del pannello aggiunto in 8.3 */
 Object.assign(TR,{"🌐 Kit online · ChatGPT": "🌐 Online kit · ChatGPT", "Descrivi squadra, stagione e divisa oppure inventa il tuo kit. La modifica si esegue su ChatGPT nel browser; poi importa qui il risultato.": "Describe team, season and kit, or invent your own. The edit is done on ChatGPT in the browser; then import the result here.", "Squadra o descrizione della maglia": "Team or shirt description", "Es. Italia 2006, maglia azzurra; oppure strisce blu e oro, colletto bianco": "E.g. Italy 2006, blue shirt; or blue and gold stripes, white collar", "Istruzioni da incollare in ChatGPT": "Instructions to paste into ChatGPT", "1 · Scarica foto": "1 · Download photo", "2 · Copia istruzioni": "2 · Copy instructions", "3 · Apri ChatGPT": "3 · Open ChatGPT", "4 · Importa risultato": "4 · Import result", "Accedi sul sito ufficiale, allega la foto scaricata e incolla le istruzioni. Nessuna foto viene inviata automaticamente. Dopo l’importazione controlla l’anteprima e premi Salva; Annulla conserva la foto precedente.": "Sign in on the official site, attach the downloaded photo and paste the instructions. No photo is sent automatically. After importing, check the preview and press Save; Cancel keeps the previous photo.", "Descrivi prima la maglia desiderata.": "Describe the shirt you want first.", "Istruzioni copiate. Apri ChatGPT e allega la foto.": "Instructions copied. Open ChatGPT and attach the photo.", "Seleziona e copia le istruzioni con il comando Copia del dispositivo.": "Select and copy the instructions with your device's Copy command.", "Scegli un’immagine inferiore a 25 MB.": "Choose an image smaller than 25 MB.", "Preparazione anteprima…": "Preparing preview…", "Anteprima pronta. Premi Salva per applicare la nuova maglia.": "Preview ready. Press Save to apply the new shirt.", "Attendi la preparazione dell’anteprima.": "Wait for the preview to be ready.", "Importazione non riuscita. La foto precedente è conservata.": "Import failed. The previous photo has been kept."});
+// Timer delle partite in corso in Presentazione (9.2)
+Object.assign(TR,{"1° T": "1st H", "2° T": "2nd H", "Tempo unico": "Single half", "Suppl.": "Extra time", "incontri": "ties", "campi": "fields"});
+// Arbitri e abbinamento a squadre FISTF (9.1)
+Object.assign(TR,{"Il sorteggio stabilisce gli allenatori: chi lo perde è l’Allenatore A e schiera per primo alla gara 1, chi lo vince è l’Allenatore B. Poi si alterna gara per gara (A-B, B-A, A-B, B-A). All’intervallo chi ha vinto il sorteggio dichiara per primo la sostituzione.": "The toss decides the coaches: the loser is Coach A and selects first for game 1, the winner is Coach B. Then selection alternates game by game (A-B, B-A, A-B, B-A). At half-time the toss winner declares the substitution first.", "è l’Allenatore B": "is Coach B"});
+Object.assign(TR,{"arbitri:": "referees:", "Arbitri": "Referees", "Sostituzioni effettuate": "Substitutions made", "ammessa (FISTF)": "allowed (FISTF)", "consigliate (FISCT)": "recommended (FISCT)", "FISTF: la formazione nasce dall’abbinamento alternato degli allenatori A e B (Sorteggio & abbinamento). Qui si registrano le sostituzioni: una per squadra, all’intervallo; prima dichiara chi ha vinto il sorteggio.": "FISTF: the line-up comes from the alternating selection by Coach A and Coach B (Toss & pairing). Here you record the substitutions: one per team, at half-time; the toss winner declares first.", "🌐 Regolamento FISTF: ogni squadra ha da 3 a 6 giocatori, 4 in campo e 2 riserve. Ogni incontro = 4 partite individuali in contemporanea; il risultato è il numero di vittorie individuali (es. 3–1). Punti girone 3-1-0. L’abbinamento è alternato fra gli allenatori A (chi perde il sorteggio) e B, gara per gara; una sola sostituzione all’intervallo. Arbitra una squadra a riposo: i suoi primi quattro giocatori, uno per tavolo. Dopo i gironi passano le prime due al tabellone ufficiale.": "🌐 FISTF regulations: each team has 3 to 6 players, 4 on the tables and 2 reserves. Each tie = 4 individual games at the same time; the result is the number of individual wins (e.g. 3–1). Group points 3-1-0. Selection alternates between Coach A (toss loser) and Coach B, game by game; only one substitution at half-time. A resting team referees: its first four players, one per table. After the groups the top two go into the official bracket."});
+// Diretta YouTube / TikTok (9.1)
+Object.assign(TR,{"Il torneo in diretta sui canali del club, direttamente dal programma: su YouTube in orizzontale, su TikTok in verticale con la Regia e la Presentazione una sopra l’altra. Per ogni account serve la chiave di trasmissione che la piattaforma rilascia al titolare: inseriscila qui prima del torneo, resta cifrata su questo computer e non viaggia mai con i dati del torneo. La diretta convive con l’App Campo, l’App Capitano e l’App Replay: se la rete rallenta, la qualità scende da sola invece di fermare i telefoni.": "The tournament live on the club's channels, straight from the program: on YouTube in landscape, on TikTok in portrait with the Control Desk and the Presentation one above the other. Each account needs the stream key the platform gives to its owner: enter it here before the tournament; it stays encrypted on this computer and never travels with the tournament data. Streaming works alongside the Table App, the Captain App and the Replay App: if the network slows down, the quality drops by itself instead of holding up the phones.", "🔴 Diretta su YouTube e TikTok": "🔴 Live on YouTube and TikTok", "La diretta funziona nell’app installata sul computer, non nella versione per browser.": "Streaming works in the app installed on the computer, not in the browser version.", "(con l’audio del programma)": "(with the program's sound)", "Account e chiave di trasmissione": "Account and stream key", "Account salvato": "Account saved", "Apri ora": "Open now", "Audio del programma non disponibile": "Program sound not available", "Audio del programma non disponibile su questo sistema": "Program sound not available on this system", "Audio della diretta": "Stream audio", "Avvia la diretta su": "Go live on", "Chiave di trasmissione": "Stream key", "Chiave salvata": "Key saved", "Codifica audio AAC": "AAC audio encoding", "Codifica video H.264": "H.264 video encoding", "Dimentica la chiave": "Forget the key", "Dimenticare la chiave di trasmissione salvata per": "Forget the stream key saved for", "Diretta in corso": "Live stream in progress", "Dove si trova": "Where to find it", "Errore nel motore della diretta": "Error in the streaming engine", "Ferma la diretta su": "Stop the stream on", "Fotogrammi al secondo": "Frames per second", "Fotogrammi scartati": "Dropped frames", "Il secondo schermo non si è aperto": "The second screen did not open", "Il torneo sta per cominciare": "The tournament is about to start", "In attesa di invio": "Waiting to send", "In onda da": "On air for", "In onda su": "Live on", "Intere (con fasce sopra e sotto)": "Whole (with bands above and below)", "La qualità nuova vale dalla prossima partenza della diretta.": "The new quality applies from the next time the stream starts.", "Le due schermate": "The two screens", "Livello dell’audio che va in onda": "Level of the audio going on air", "L’anteprima compare quando la diretta parte": "The preview appears when the stream starts", "L’audio cambia alla prossima partenza della diretta.": "The audio changes the next time the stream starts.", "Microfono": "Microphone", "Microfono dello speaker": "Announcer's microphone", "Microfono in onda": "Microphone on air", "Microfono predefinito": "Default microphone", "Mostra o nascondi": "Show or hide", "Nessuna chiave salvata": "No key saved", "PRESENTAZIONE": "PRESENTATION", "Pannello pronto": "Panel ready", "Più grandi (tagliati i lati)": "Larger (sides cropped)", "Presentazione / AUTO LIVE": "Presentation / AUTO LIVE", "Presentazione con la Regia in riquadro": "Presentation with the Control Desk in a corner box", "Presentazione sopra, Regia sotto": "Presentation on top, Control Desk below", "Prima inserisci la chiave di trasmissione di": "First enter the stream key for", "Pronta": "Ready", "Qualità": "Quality", "REGIA": "CONTROL DESK", "Regia sopra, Presentazione sotto": "Control Desk on top, Presentation below", "Riconnessioni": "Reconnections", "Salva": "Save", "Secondo schermo aperto": "Second screen open", "Secondo schermo chiuso: si apre da solo alla partenza": "Second screen closed: it opens by itself when the stream starts", "Server RTMP": "RTMP server", "Solo Presentazione": "Presentation only", "Solo Regia": "Control Desk only", "Suoni del programma (musica, inni, annunci, fischi)": "Program sound (music, anthems, announcements, whistles)", "TikTok LIVE Center o LIVE Studio → URL del server e Chiave di trasmissione. La chiave di TikTok cambia a ogni diretta: incollala nuova prima di partire.": "TikTok LIVE Center or LIVE Studio → Server URL and Stream key. The TikTok key changes with every stream: paste the new one before going live.", "Velocità di invio": "Upload speed", "YouTube Studio → Crea → Trasmetti dal vivo → Chiave stream (e URL dello stream)": "YouTube Studio → Create → Go live → Stream key (and Stream URL)", "account salvato": "account saved", "attenzione: questo sistema non offre la cifratura, il file è leggibile solo dal tuo utente": "note: this system offers no encryption; the file is readable only by your user", "chiave dimenticata": "key forgotten", "chiave pronta": "key ready", "cifrata su questo computer": "encrypted on this computer", "collegamento al server…": "connecting to the server…", "collegamento in corso": "connecting", "collegamento non riuscito": "connection failed", "connessione persa, riprovo": "connection lost, retrying", "di nuovo in onda": "back on air", "diretta chiusa": "stream closed", "errore": "error", "incolla qui la chiave": "paste the key here", "incolla qui per sostituirla": "paste here to replace it", "inquadratura cambiata in diretta": "layout changed while live", "manca la chiave": "key missing", "non partita": "did not start", "salvata": "saved", "Inquadratura": "Layout", "IN ONDA": "ON AIR", "Collegamento…": "Connecting…", "Riconnessione…": "Reconnecting…", "Errore": "Error", "Ferma": "Stopped", "Cattura della Regia attiva": "Control Desk capture on", "Cattura del secondo schermo attiva": "Second screen capture on", "Cattura della Regia interrotta": "Control Desk capture stopped", "Cattura del secondo schermo interrotta": "Second screen capture stopped", "rete lenta, qualità ridotta a": "slow network, quality reduced to", "rete di nuovo libera, qualità a": "network clear again, quality back to", "Microfono non disponibile": "Microphone not available", "Codifica video": "Video encoding", "Codifica audio": "Audio encoding", "Torneo Subbuteo": "Subbuteo Tournament"});
 // Regolamento FISTF (9.0)
-Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Ladies (scarto massimo 5–0)": "U12 · U16 · U20 · Ladies category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Ladies: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Ladies: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "✨ Novità della 9.0": "✨ What’s new in 9.0", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
+Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Ladies (scarto massimo 5–0)": "U12 · U16 · U20 · Ladies category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Ladies: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Ladies: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.2": "✨ What’s new in 9.2", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
 
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
 TR['Token amministratore relay HTTPS']='HTTPS relay administrator token';TR['Solo per un server remoto']='For a remote server only';
@@ -5597,7 +5666,7 @@ function applyLang(){
     const tl=$('#tts-voice-lbl');if(tl)tl.textContent=ttsListLabel()||'—';
   }catch(e){}
 }
-function toggleLang(){ LANG=LANG==='en'?'it':'en'; try{localStorage.setItem('subbuteo_lang',LANG);}catch(e){} applyLang(); }
+function toggleLang(){ LANG=LANG==='en'?'it':'en'; try{localStorage.setItem('subbuteo_lang',LANG);}catch(e){} applyLang(); try{if(!Object.keys(DIR.out).length)dirRender();}catch(e){} }
 
 /* =========================================================
    MULTI-TORNEO — fino a 4 tornei simultanei e indipendenti
@@ -7059,12 +7128,16 @@ const DEMO_LOCKS={
   pre:'sezione Pre-Torneo',
   qr:'collegamento dei dispositivi mobili',
   arc:'archivio storico',
-  fmt:'formule diverse dal girone unico'
+  fmt:'formule diverse dal girone unico',
+  diretta:'la diretta su YouTube e TikTok'
 };
 function licFree(){return LIC.ok;}
 /* restituisce true se si può proseguire; in demo avvisa e blocca */
 function licGate(k){
   if(LIC.ok)return true;
+  // verifica della licenza salvata ancora in corso (primi istanti dell'avvio):
+  // niente finestra della licenza a chi l'ha già attivata
+  if(!LIC.checked)return false;
   const en=LANG==='en';
   toast('🔒 '+(en?'Demo version: this feature requires the full licence':'Versione dimostrativa: '+(DEMO_LOCKS[k]||'questa funzione')+' è riservata alla versione completa'));
   openLicense();
@@ -8420,8 +8493,42 @@ function closeCeremony(){
   const cf=$('#cer-confetti');if(cf)cf.innerHTML='';
   updateWakeLock&&updateWakeLock();
 }
+/* COMPAGNI DI CLUB ALLA PRIMA GIORNATA (S.cfg.clubPrima)
+   Due compagni di club che si incontrano all'ultima giornata sanno già quale
+   risultato conviene al club: è l'occasione per un accordo. Giocandolo per
+   primo, nessuno sa ancora che cosa gli servirà. Il calendario all'italiana
+   resta lo stesso: si cambia solo CHI occupa ogni posto, così le coppie di
+   compagni cadono nelle gare della prima giornata (tante quante ne stanno,
+   senza sovrapporsi), e le giornate con altri derby di club vengono prima
+   delle altre. Dentro ogni giornata il derby è la prima gara in calendario. */
+function clubCoppie(names){
+  const k=names.map(n=>clubNorm((S.clubs&&S.clubs[n])||'')),out=[];
+  for(let i=0;i<names.length;i++)for(let j=i+1;j<names.length;j++)if(k[i]&&k[i]===k[j])out.push([names[i],names[j]]);
+  return out;
+}
+function clubPrimaGiornata(teamNames,rounds){
+  const coppie=clubCoppie(teamNames);
+  if(!coppie.length||!rounds.length||!rounds[0].length)return rounds;
+  const usati=new Set(),scelte=[];
+  for(const [a,b] of coppie){
+    if(scelte.length>=rounds[0].length)break;
+    if(usati.has(a)||usati.has(b))continue;
+    scelte.push([a,b]);usati.add(a);usati.add(b);
+  }
+  const posto=new Map();            // posto nel calendario → partecipante
+  scelte.forEach(([x,y],k)=>{const m=rounds[0][k];posto.set(m.home,x);posto.set(m.away,y);});
+  const liberiPosti=teamNames.filter(n=>!posto.has(n)),liberiNomi=teamNames.filter(n=>!usati.has(n));
+  liberiPosti.forEach((p,i)=>posto.set(p,liberiNomi[i]));
+  const derby=new Set(coppie.map(([a,b])=>pairKey(a,b)));
+  const eDerby=m=>derby.has(pairKey(m.home,m.away));
+  let r=rounds.map(rd=>rd.map(m=>({home:posto.get(m.home),away:posto.get(m.away)})));
+  r=[r[0],...r.slice(1).map((rd,i)=>({rd,i,n:rd.filter(eDerby).length}))
+       .sort((a,b)=>(b.n>0)-(a.n>0)||a.i-b.i).map(x=>x.rd)];
+  return r.map(rd=>[...rd.filter(eDerby),...rd.filter(m=>!eDerby(m))]);
+}
 function makeGroup(name,teamNames){
   let rounds=rrSchedule(teamNames);
+  if(S.cfg.clubPrima)rounds=clubPrimaGiornata(teamNames,rounds);
   if(S.cfg.ritorno)rounds=rounds.concat(rounds.map(r=>r.map(m=>({home:m.away,away:m.home}))));
   const matches=[];
   rounds.forEach((rd,ri)=>rd.forEach(m=>matches.push({
@@ -8472,6 +8579,7 @@ function assignFields(){
     }
     if(slot===0)break;
   }
+  if(sq)refRiparaSquadre();
 }
 /* etichetta campo/tavoli in base alla modalità */
 function fieldLabel(start){
@@ -8516,7 +8624,8 @@ function collectRefMatches(){
 }
 function assignReferees(reset){
   const list=collectRefMatches();
-  if(!S.cfg.refs){list.forEach(x=>{x.m.ref=null;});return;}
+  if(!S.cfg.refs){list.forEach(x=>{x.m.ref=null;x.m.refs=null;x.m.refTeam=null;});return;}
+  if(S.cfg.format==='squadre'&&S.cfg.refSource!=='pool')return assignRefereesSquadre(list,reset);
   const pool=refereePool();
   if(!pool.length){list.forEach(x=>{x.m.ref=null;});return;}
   if(reset)list.forEach(x=>{x.m.ref=null;});
@@ -8543,6 +8652,80 @@ function assignReferees(reset){
       x.m.ref=chosen.name;cnt[chosen.name]++;
     });
   });
+}
+/* ARBITRI NEI TORNEI A SQUADRE — un incontro si gioca su quattro tavoli e
+   vuole quattro arbitri (FISTF: «any of the four referees»). L'arbitraggio
+   tocca a una squadra a riposo, a rotazione e se possibile di un altro
+   girone: i suoi primi quattro giocatori in elenco arbitrano i tavoli 1–4, e
+   il primo è l'arbitro che si vede nei tabelloni e negli annunci. Prima si
+   pescavano i «giocatori reali» dei tornei individuali, che qui non esistono,
+   e al posto delle persone comparivano i nomi delle squadre. */
+function refSquadra(team){
+  const r=((S.rosters&&S.rosters[team])||[]).filter(Boolean).slice(0,4);
+  return r.length?r:[team];
+}
+function assignRefereesSquadre(list,reset){
+  const teams=[],grpOf={};
+  if(S.groups&&S.groups.length)S.groups.forEach(g=>g.teams.forEach(t=>{teams.push(t);grpOf[t]=g.name;}));
+  else (S.teams||[]).forEach(t=>teams.push(t));
+  const pulisci=x=>{x.m.ref=null;x.m.refs=null;x.m.refTeam=null;};
+  if(!teams.length){list.forEach(pulisci);return;}
+  if(reset)list.forEach(pulisci);
+  // tornei salvati prima della correzione: l'arbitro era il nome della squadra
+  list.forEach(x=>{if(x.m.ref&&!x.m.refTeam&&teams.includes(x.m.ref)){
+    if(x.m.ref===x.t1||x.m.ref===x.t2){pulisci(x);return;}
+    const r=refSquadra(x.m.ref);x.m.refTeam=x.m.ref;x.m.refs=r;x.m.ref=r[0];}});
+  // e una squadra non arbitra mai il proprio incontro
+  list.forEach(x=>{if(x.m.refTeam&&(x.m.refTeam===x.t1||x.m.refTeam===x.t2))pulisci(x);});
+  const cnt={};teams.forEach(t=>{cnt[t]=0;});
+  list.forEach(x=>{if(x.m.refTeam&&cnt[x.m.refTeam]!=null)cnt[x.m.refTeam]++;});
+  // fascia oraria: l'ondata di campi del calendario (se i tavoli non bastano
+  // per tutti, chi gioca nella seconda ondata può arbitrare la prima)
+  const slot=refFascia;
+  const byRound={};list.forEach(x=>{const k=slot(x);(byRound[k]=byRound[k]||[]).push(x);});
+  Object.keys(byRound).forEach(rd=>{
+    const grp=byRound[rd];
+    if(!grp.some(x=>!x.m.refTeam))return;
+    const busy=new Set();grp.forEach(x=>{busy.add(x.t1);busy.add(x.t2);});
+    const occupate=new Set(grp.filter(x=>x.m.refTeam).map(x=>x.m.refTeam));   // una squadra arbitra un incontro alla volta
+    grp.forEach(x=>{
+      if(x.m.refTeam)return;
+      const libere=teams.filter(t=>!busy.has(t)&&!occupate.has(t));
+      let cand=libere.filter(t=>x.group==null||grpOf[t]==null||grpOf[t]!==x.group);
+      if(!cand.length)cand=libere;
+      if(!cand.length)cand=teams.filter(t=>t!==x.t1&&t!==x.t2&&!occupate.has(t));
+      if(!cand.length){pulisci(x);return;}
+      const minC=Math.min(...cand.map(t=>cnt[t]));
+      const best=cand.filter(t=>cnt[t]===minC);
+      const t=best[Math.floor(Math.random()*best.length)];
+      const r=refSquadra(t);x.m.refTeam=t;x.m.refs=r;x.m.ref=r[0];cnt[t]++;occupate.add(t);
+    });
+  });
+}
+function refFascia(x){
+  if(x.group==null)return x.round;
+  if(x.m.done)return 'D'+x.round;
+  if(x.m.live)return 'LIVE';
+  return x.m.wave!=null?'W'+x.m.wave:x.round;
+}
+/* dopo ogni ricalcolo del calendario: una squadra che nella nuova ondata
+   deve giocare (o arbitrare altrove) lascia l'arbitraggio a un'altra */
+function refRiparaSquadre(){
+  if(!S.cfg.refs||S.cfg.format!=='squadre'||S.cfg.refSource==='pool')return;
+  const list=collectRefMatches();
+  const perF={};list.forEach(x=>{if(x.m.done||x.m.live||x.group==null)return;const k=refFascia(x);(perF[k]=perF[k]||[]).push(x);});
+  Object.values(perF).forEach(grp=>{
+    const busy=new Set();grp.forEach(x=>{busy.add(x.t1);busy.add(x.t2);});
+    const visti=new Set();
+    grp.forEach(x=>{const t=x.m.refTeam;if(!t)return;
+      if(busy.has(t)||visti.has(t)){x.m.ref=null;x.m.refs=null;x.m.refTeam=null;}else visti.add(t);});
+  });
+  assignRefereesSquadre(list,false);
+}
+/* l'arbitro come si scrive: nei tornei a squadre i quattro arbitri dei tavoli */
+function refTesto(m){
+  if(m&&Array.isArray(m.refs)&&m.refs.length>1)return m.refs.join(', ')+(m.refTeam?' ('+m.refTeam+')':'');
+  return (m&&m.ref)||'';
 }
 function seedOrder(n){let r=[1,2];while(r.length<n){const m=r.length*2+1;r=r.flatMap(x=>[x,m-x]);}return r;}
 /* I nomi dei turni finiscono DENTRO i dati del tabellone, quindi restano
@@ -8838,13 +9021,33 @@ function fistfOrdine(teams){
     if(bs[0]>0)cop.forEach(([i,j],x)=>cop.slice(x+1).forEach(([a,b])=>{
       const p=sc(sc(id,i,j),a,b),v=valuta(p,2);if(meglio(v,bs)){best=p;bs=v;}}));
   }
+  if(S.cfg.clubPrima){
+    // con l'opzione attiva i compagni occupano i numeri delle gare del primo
+    // turno (tante coppie quante ne stanno); la regola FISTF sull'ultimo
+    // turno resta il secondo criterio
+    const usati=new Set(),p=new Array(n).fill(0);
+    let k=0;
+    for(let i=1;i<=n&&k<base[0].length;i++)for(let j=i+1;j<=n&&k<base[0].length;j++){
+      if(usati.has(i)||usati.has(j)||!comp(i,j))continue;
+      const [a,b]=base[0][k++];p[a-1]=i;p[b-1]=j;usati.add(i);usati.add(j);
+    }
+    if(k){
+      const resto=id.filter(x=>!usati.has(x));let r=0;
+      for(let q=0;q<n;q++)if(!p[q])p[q]=resto[r++];
+      const vp=[-conta(base[0],p),conta(base[base.length-1],p)],vb=[-conta(base[0],best),conta(base[base.length-1],best)];
+      if(vp[0]<vb[0]||(vp[0]===vb[0]&&vp[1]<vb[1]))best=p;
+    }
+  }
   return{teams:best.map(i=>teams[i-1]),turni:base,tipo:best===id?'std':'club'};
 }
 function fistfMakeGroup(name,teamNames){
   const o=fistfOrdine(teamNames);
   if(!o)return makeGroup(name,teamNames);
   const matches=[];
-  o.turni.forEach((rd,ri)=>rd.forEach(([h,a])=>matches.push({
+  // con l'opzione dei compagni di club, il derby è la prima gara del suo turno
+  const k=n=>fistfClubDi(n),derby=([h,a])=>{const x=k(o.teams[h-1]);return !!x&&x===k(o.teams[a-1]);};
+  const turni=S.cfg.clubPrima?o.turni.map(rd=>[...rd.filter(derby),...rd.filter(m=>!derby(m))]):o.turni;
+  turni.forEach((rd,ri)=>rd.forEach(([h,a])=>matches.push({
     id:uid(),home:o.teams[h-1],away:o.teams[a-1],hs:null,as:null,done:false,live:false,
     round:ri+1,field:null,ref:null})));
   return{name,teams:o.teams,matches,fistfOrd:o.tipo};
@@ -9036,13 +9239,14 @@ function fistfSetupUI(f){
   }
   const rit=$('#s-ritorno')&&$('#s-ritorno').closest('div');
   if(rit)rit.style.display=x?'none':'';
-  if(!x){renderTbEditor('tb-editor');renderTbEditor('tb-editor2');return;}
+  if(!x){{const a=$('#w-squadre-fistf'),b=$('#w-squadre-fisct');if(a&&b){a.style.display='none';b.style.display='';}}renderTbEditor('tb-editor');renderTbEditor('tb-editor2');return;}
   ['#w-pergroup','#w-qualify','#w-extra','#w-champs','#w-mm','#w-mmf','#w-rip','#w-doppio','#w-doppiof','#w-consb']
     .forEach(s=>{const e=$(s);if(e)e.style.display='none';});
   $('#w-swiss').style.display=x==='svizzero'?'':'none';
   $('#w-fistf-g').style.display=x==='svizzero'?'none':'';
   $('#w-fistf-ko').style.display=x==='svizzero'?'':'none';
   $('#w-fistf-cap').style.display=x==='squadre'?'none':'';
+  {const a=$('#w-squadre-fistf'),b=$('#w-squadre-fisct');if(a&&b){a.style.display=x==='squadre'?'':'none';b.style.display=x==='squadre'?'none':'';}}
   $('#s-ptsw').value=3;$('#s-ptsd').value=1;$('#s-ptsl').value=0;
   renderTbEditor('tb-editor');renderTbEditor('tb-editor2');
   fistfSetupInfo();
@@ -9464,7 +9668,7 @@ let setupDaStato=false;
    gironi con due giocatori dello stesso club vengono solo segnalati.
    ========================================================= */
 function clubNorm(c){ return String(c||'').trim().toLowerCase().replace(/\s+/g,' '); }
-function clubMostra(){ return !!(S.cfg&&(S.cfg.showClubs||S.cfg.sepClub)); }
+function clubMostra(){ return !!(S.cfg&&(S.cfg.showClubs||S.cfg.sepClub||S.cfg.clubPrima)); }
 /* coppie dello stesso club nello stesso girone: il numero da portare a zero */
 function clubConflitti(gruppi,clubOf){
   const out=[];
@@ -9539,6 +9743,11 @@ function clubListaAggiorna(){
 function clubInput(i,v){ setupClubs[i]=v; renderComposeGrid(); }
 function clubSepSet(v){
   S.cfg.sepClub=!!v;
+  if(v&&!S.cfg.showClubs){ S.cfg.showClubs=true; const b=$('#s-showclubs'); if(b)b.checked=true; }
+  persist(); renderTeamInputs();
+}
+function clubPrimaSet(v){
+  S.cfg.clubPrima=!!v;
   if(v&&!S.cfg.showClubs){ S.cfg.showClubs=true; const b=$('#s-showclubs'); if(b)b.checked=true; }
   persist(); renderTeamInputs();
 }
@@ -10296,6 +10505,7 @@ function readSetup(){
   S.cfg.penShots=parseInt($('#s-penshots').value)||5;
   S.cfg.compose=$('#s-compose')?$('#s-compose').value:'auto';
   S.cfg.sepClub=!!($('#s-sepclub')&&$('#s-sepclub').checked);
+  S.cfg.clubPrima=!!($('#s-clubprima')&&$('#s-clubprima').checked);
   S.cfg.nGroups=composeGroupsN();
   S.cfg.nPots=composePotsN();
   S.cfg.swissRounds=Math.max(1,parseInt($('#s-swissr').value)||5);
@@ -11730,7 +11940,7 @@ function updateHeader(){
     meta.push(L(fmtNomeCfg(S.cfg)));
     if(S.cfg.loc)meta.push(S.cfg.loc);
     if(S.cfg.date)meta.push(new Date(S.cfg.date+'T00:00').toLocaleDateString(LANG==='en'?'en-GB':'it-IT'));
-    meta.push(`${S.teams.length} ${L('giocatori')}`);
+    meta.push(`${S.teams.length} ${L(S.cfg.format==='squadre'?'squadre':'giocatori')}`);
   }
   $('#hdr-meta').textContent=meta.join(' · ');
 }
@@ -11782,7 +11992,7 @@ function tickerProssimo(){
   try{ wave=nextWaveByField()||[]; }catch(e){ return []; }
   return wave.map(w=>{
     const campo=`<b class="tsc">${esc(fieldLabel(w.field))}</b>`;
-    const arb=w.ref?` <span class="tarb">🧑‍⚖️ ${esc(w.ref)}</span>`:'';
+    const arb=w.ref?` <span class="tarb">🧑‍⚖️ ${esc(w.refTeam||w.ref)}</span>`:'';
     return `<span class="titem">${campo} ${esc(w.home)} <span class="tvs2">–</span> ${esc(w.away)}${arb}</span>`;
   });
 }
@@ -12554,7 +12764,7 @@ function matchRowHTML(m){
     </span>
     <span class="tm${aWin?' win':''}">${esc(m.away)}</span>
     <span class="st">${fistfCapMark(m)}${S.cfg.format==='squadre'?`<button class="btn-distinta" onclick="openDistinta('${m.id}')" title="Distinta delle 4 partite individuali">🧾</button> `:''}${st}${m.done&&!onBoard?`<button class="btn-ann" onclick="openAnnulla('${m.id}')" title="${L('Annulla il risultato: la gara torna da giocare')}">↩</button>`:''}</span>
-    ${m.ref?`<span class="ref">${L('arbitro:')} ${esc(m.ref)}</span>`:''}
+    ${m.ref?`<span class="ref">${L(Array.isArray(m.refs)&&m.refs.length>1?'arbitri:':'arbitro:')} ${esc(refTesto(m))}</span>`:''}
   </div>`;
 }
 function cssId(s){return String(s).replace(/[^a-zA-Z0-9]/g,'_');}
@@ -12673,8 +12883,9 @@ function openDistinta(mid){
   if(!t.t1||!t.t2||t.t1===BYE||t.t2===BYE){toast('Squadre non ancora definite.');return;}
   distintaMid=mid;
   const rh=(S.rosters&&S.rosters[t.t1])||[],ra=(S.rosters&&S.rosters[t.t2])||[];
-  if(!Array.isArray(f.m.sub)||f.m.sub.length!==4)
-    f.m.sub=[0,1,2,3].map(i=>({ph:rh[i]||'',pa:ra[i]||'',h:null,a:null}));
+  if(!Array.isArray(f.m.sub)||f.m.sub.length!==4){
+    const fi=S.cfg.fistf==='squadre';
+    f.m.sub=[0,1,2,3].map(i=>({ph:fi?'':(rh[i]||''),pa:fi?'':(ra[i]||''),h:null,a:null}));}
   $('#d-teams').innerHTML=`${logoImg(t.t1,'tlogo tb')}${esc(t.t1)} <span class="muted">vs</span> ${esc(t.t2)}${logoImg(t.t2,'tlogo tb')}`;
   $('#d-rows').innerHTML=f.m.sub.map((g,i)=>`
     <div class="drow" data-i="${i}">
@@ -12847,8 +13058,10 @@ function capMark(team,player){return (S.captains&&S.captains[team]===player)?' <
 function ensureSub(f){
   const t=matchTeams(f);
   const rh=(S.rosters&&S.rosters[t.t1])||[],ra=(S.rosters&&S.rosters[t.t2])||[];
+  // FISTF: i tavoli restano da schierare finché l'abbinamento A/B non è fatto
+  const fi=S.cfg.fistf==='squadre';
   if(!Array.isArray(f.m.sub)||f.m.sub.length!==4)
-    f.m.sub=[0,1,2,3].map(i=>({ph:rh[i]||'',pa:ra[i]||'',h:null,a:null}));
+    f.m.sub=[0,1,2,3].map(i=>({ph:fi?'':(rh[i]||''),pa:fi?'':(ra[i]||''),h:null,a:null}));
   if(!Array.isArray(f.m.subsLog))f.m.subsLog=[];
   return f.m.sub;
 }
@@ -13087,6 +13300,7 @@ function openLineup(i){
 function closeLineup(){$('#lineup').classList.remove('on');lineupBoard=null;lineupWork=null;lineupSel=null;}
 function renderLineup(){
   if(lineupBoard==null||!lineupWork)return;
+  {const n=$('#lu-nota');if(n&&S.cfg.fistf==='squadre')n.textContent=L('FISTF: la formazione nasce dall’abbinamento alternato degli allenatori A e B (Sorteggio & abbinamento). Qui si registrano le sostituzioni: una per squadra, all’intervallo; prima dichiara chi ha vinto il sorteggio.');}
   const f=findMatch(S.boards[lineupBoard].matchId);if(!f)return;
   const t=matchTeams(f);
   const luBase=S.boards[lineupBoard]?.field||1; // tavolo iniziale del blocco
@@ -13106,7 +13320,8 @@ function renderLineup(){
              onclick="luClick(${side},${k})">${p?esc(p)+capMark(team,p):'— vuoto —'}</div>
       </div>`;
     });
-    h+=`<div class="lsubs">Sostituzioni effettuate: ${subsCount(side)>2?'<b>':''}${subsCount(side)}${subsCount(side)>2?'</b>':''} / 2 consigliate (FISCT)</div>
+    const maxS=S.cfg.fistf==='squadre'?1:2;
+    h+=`<div class="lsubs">${L('Sostituzioni effettuate')}: ${subsCount(side)>maxS?'<b>':''}${subsCount(side)}${subsCount(side)>maxS?'</b>':''} / ${maxS} ${L(S.cfg.fistf==='squadre'?'ammessa (FISTF)':'consigliate (FISCT)')}</div>
     </div>`;
     return h;
   };
@@ -13190,14 +13405,14 @@ function renderPairing(){
   if(w!=null&&pairState(f).complete&&subwState(f).open){renderSubWindowBody(f);return;}
   if(w==null){
     tossBox.innerHTML=`<div class="coin" id="pr-coin">🪙</div>
-      <p class="small muted">${L('Il sorteggio assegna il vantaggio tattico: chi vince risponde alle mosse dell’avversario e sceglie gli incroci. Nelle gare di andata e ritorno il sorteggio spetta d’ufficio alla squadra di casa.')}</p>`;
+      <p class="small muted">${S.cfg.fistf==='squadre'?L('Il sorteggio stabilisce gli allenatori: chi lo perde è l’Allenatore A e schiera per primo alla gara 1, chi lo vince è l’Allenatore B. Poi si alterna gara per gara (A-B, B-A, A-B, B-A). All’intervallo chi ha vinto il sorteggio dichiara per primo la sostituzione.'):L('Il sorteggio assegna il vantaggio tattico: chi vince risponde alle mosse dell’avversario e sceglie gli incroci. Nelle gare di andata e ritorno il sorteggio spetta d’ufficio alla squadra di casa.')}</p>`;
     body.innerHTML='';
     ctrl.innerHTML=`<button class="btn" onclick="prToss('coin')">🪙 ${L('Lancia la moneta')}</button>
       <button class="btn sec" onclick="prToss('home')">🏠 ${L('Fattore campo')} (${esc(t.t1)})</button>`;
     return;
   }
   const st=pairState(f);
-  tossBox.innerHTML=`<p class="small muted">🪙 ${f.m.toss.mode==='home'?L('Sorteggio d’ufficio alla squadra di casa'):f.m.toss.mode==='fistf3'?L('Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)'):L('Sorteggio effettuato')} — <b style="color:var(--accent)">${esc(teamOfSide(f,w))}</b> ${L('ha il vantaggio tattico')}</p>`;
+  tossBox.innerHTML=`<p class="small muted">🪙 ${f.m.toss.mode==='home'?L('Sorteggio d’ufficio alla squadra di casa'):f.m.toss.mode==='fistf3'?L('Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)'):L('Sorteggio effettuato')} — <b style="color:var(--accent)">${esc(teamOfSide(f,w))}</b> ${L(S.cfg.fistf==='squadre'?'è l’Allenatore B':'ha il vantaggio tattico')}</p>`;
   let h='';
   if(st.complete){
     h+=`<div class="pr-done">✔ ${L('Abbinamento completato')}</div>`;
@@ -13341,7 +13556,7 @@ function koMatchHTML(ko,m,tag){
     <div class="krow"><span class="kt${w===m.t2&&w?' win':''}">${tbd(m.t2)}</span>
       <input type="number" min="0" value="${m.b2??''}" ${dis} oninput="setKoScore('${ko.id}','${m.id}','b2',this.value)"></div>
     ${koCompleta(m)?`<div class="ktot">${L('Totale')} <b>${tot[0]}–${tot[1]}</b></div>`:''}`:''}
-    ${m.ref?`<div class="kref">🧑‍⚖️ ${L('arbitro:')} ${esc(m.ref)}</div>`:''}
+    ${m.ref?`<div class="kref">🧑‍⚖️ ${L(Array.isArray(m.refs)&&m.refs.length>1?'arbitri:':'arbitro:')} ${esc(refTesto(m))}</div>`:''}
     ${shoot}
     ${w&&w!==BYE&&!onBoard?`<div style="text-align:right;margin-top:2px"><button class="btn-ann" onclick="openAnnulla('${m.id}')" title="Annulla il risultato: la gara torna da giocare e chi era passato torna indietro">↩</button></div>`:''}
   </div>`;
@@ -13423,9 +13638,10 @@ function refBoardHTML(){
   // conta, per ciascun arbitro: partite GIA' DIRETTE (concluse) e totali assegnate
   const done={},tot={};
   const add=(ref,isDone)=>{if(!ref)return;tot[ref]=(tot[ref]||0)+1;if(isDone)done[ref]=(done[ref]||0)+1;};
-  allGroups().forEach(g=>g.matches.forEach(m=>add(m.ref,!!m.done)));
+  const addM=(m,f)=>{if(Array.isArray(m.refs)&&m.refs.length>1)m.refs.forEach(r=>add(r,f));else add(m.ref,f);};
+  allGroups().forEach(g=>g.matches.forEach(m=>addM(m,!!m.done)));
   allKOs().forEach(ko=>{
-    ko.rounds.forEach(rd=>rd.matches.forEach(m=>{const w=koWinner(m);add(m.ref,!!(w&&w!==BYE));}));
+    ko.rounds.forEach(rd=>rd.matches.forEach(m=>{const w=koWinner(m);addM(m,!!(w&&w!==BYE));}));
     if(ko.third)add(ko.third.ref,!!(koWinner(ko.third)&&koWinner(ko.third)!==BYE));
   });
   (refereePool()||[]).forEach(p=>{if(tot[p.name]==null){tot[p.name]=0;done[p.name]=0;}});
@@ -13701,7 +13917,7 @@ function buildProgramHTML(){
     });
   });
   // fogli segnapunti (uno per incontro della fase a gironi)
-  h+='<h2 class="rbreak">Fogli segnapunti</h2>';
+  h+='<h2 class="rbreak" style="break-before:page;page-break-before:always">Fogli segnapunti</h2>';
   allGroups().forEach(g=>{
     const pre=g.swiss||S.cfg.format==='campionato'?'':`Girone ${g.name} · `;
     g.matches.forEach(m=>{
@@ -13804,22 +14020,27 @@ const BK_CSS = `
   .bk-big{page-break-inside:avoid;break-inside:avoid;margin-bottom:8mm;border:.6pt solid #e3d7b4;
     border-radius:2.5mm;overflow:hidden;background:linear-gradient(180deg,#fffdf6,#faf5e6)}
   .bk-big .imgs{display:flex;gap:0}
-  .bk-big .imgs img{width:100%;object-fit:cover;max-height:74mm;display:block}
+  /* prima e dopo affiancate a metà esatta (con width:100% ciascuna, la seconda finiva fuori dal riquadro) */
+  .bk-big .imgs img{flex:1 1 0;min-width:0;width:100%;object-fit:cover;height:74mm;display:block}
   .bk-big .imgs img+img{border-left:.8pt solid #fff}
   .bk-big .cap{display:flex;align-items:center;justify-content:center;gap:4mm;padding:3mm 4mm 1mm}
-  .bk-big .cap b{font-family:'Oswald',sans-serif;font-size:13.5pt;text-transform:uppercase;color:#2a2418}
+  .bk-big .cap b{font-family:'Oswald',sans-serif;font-size:13.5pt;text-transform:uppercase;color:#2a2418;flex:1 1 0;min-width:0;overflow-wrap:anywhere}
+  .bk-big .cap b:first-child{text-align:right}
+  .bk-big .cap .ris{flex:0 0 auto}
   .bk-big .cap .ris{font-family:'Chakra Petch',monospace;font-size:19pt;color:#fff;
     background:linear-gradient(180deg,#c9a227,#a8821a);border-radius:1.6mm;padding:.4mm 3mm;
     box-shadow:0 .5mm 1.4mm rgba(0,0,0,.22)}
   .bk-big .meta{text-align:center;font-size:8.5pt;color:#7c7460;padding:0 4mm 2mm}
-  .bk-tab{display:grid;grid-template-columns:1fr auto 1fr;gap:0 3mm;padding:2.5mm 4mm 4mm;
+  .bk-tab{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:0 3mm;padding:2.5mm 4mm 4mm;
     border-top:.5pt dashed #ddd0aa;margin-top:1mm;align-content:start}
   .bk-tab .col{font-size:8.6pt;line-height:1.5;color:#3a3427}
   .bk-tab .col.r{text-align:right}
   /* «marcature» sta sulla stessa riga dei primi gol, non al centro del vuoto */
   .bk-tab .mid{font-family:'Oswald',sans-serif;font-size:7pt;letter-spacing:.14em;text-transform:uppercase;
     color:#b09a5e;align-self:start;white-space:nowrap;padding-top:.6mm}
-  .bk-tab .g{white-space:nowrap;display:block}
+  .bk-tab .col{min-width:0;overflow-wrap:anywhere}
+  .bk-tab .g{display:block}
+  .bk-tab .g .mn{white-space:nowrap}
   .bk-tab .g .mn{font-family:'Chakra Petch',monospace;color:#a8821a;font-size:8pt}
   .bk-tab .none{font-size:8pt;color:#9a927e;font-style:italic;grid-column:1/-1;text-align:center}
   .bk-cards{padding:0 4mm 3mm;font-size:8pt;color:#7c7460;text-align:center}
@@ -13841,7 +14062,9 @@ const BK_CSS = `
   .bk-q .c .ph img{flex:1 1 0;min-width:0;width:auto;height:100%;object-fit:cover;display:block}
   .bk-q .c .ph img+img{border-left:.8pt solid #fff}
   .bk-q .c .cap{display:flex;align-items:center;justify-content:center;gap:2.5mm;padding:2.2mm 3mm .8mm}
-  .bk-q .c .cap b{font-family:'Oswald',sans-serif;font-size:10.5pt;text-transform:uppercase;color:#2a2418}
+  .bk-q .c .cap b{font-family:'Oswald',sans-serif;font-size:10.5pt;line-height:1.15;text-transform:uppercase;color:#2a2418;flex:1 1 0;min-width:0;overflow-wrap:anywhere}
+  .bk-q .c .cap b:first-child{text-align:right}
+  .bk-q .c .cap .ris{flex:0 0 auto}
   .bk-q .c .cap .ris{font-family:'Chakra Petch',monospace;font-size:13pt;color:#fff;
     background:linear-gradient(180deg,#c9a227,#a8821a);border-radius:1.4mm;padding:.2mm 2.2mm}
   .bk-q .c .meta{text-align:center;font-size:7.4pt;color:#8c8570;padding:0 3mm 1.5mm}
@@ -14061,8 +14284,10 @@ function boardAssign(i,mid){
     }
   }
   renderGironi();renderFinale();renderBoards();refreshStandingsEverywhere();renderTicker();presentRender();updateTabs();persist();
-  // in modalità squadre i capitani schierano subito le formazioni
-  if(openedTeam)openLineup(i);
+  // in modalità squadre i capitani schierano subito le formazioni; con la FISTF
+  // la formazione nasce dall'abbinamento alternato A/B, quindi si apre quello
+  if(openedTeam){const f=findMatch(b.matchId);
+    if(S.cfg.fistf==='squadre'&&f&&!(f.m.pair&&f.m.pair.applied))openPairing(i);else openLineup(i);}
 }
 function boardGoal(i,side,delta){
   const b=S.boards[i];if(!b.matchId)return;
@@ -14399,7 +14624,8 @@ function teamBoardHTML(f,i){
       <div class="vs">VS</div>
       <div><div class="tname">${logoImg(t.t2,'tlogo tb')}${esc(t.t2)}</div><div class="goals" id="bg-${i}-2">${aw}</div></div>
     </div>
-    <div class="tgrid" id="tg-${i}">${rows}</div>`;
+    <div class="tgrid" id="tg-${i}">${rows}</div>
+    ${Array.isArray(f.m.refs)&&f.m.refs.length>1?`<div class="small muted" style="text-align:center;margin-top:4px">🧑‍⚖️ ${L('Arbitri')}: ${f.m.refs.map((r,k)=>`T${base+k} ${esc(r)}`).join(' · ')}${f.m.refTeam?' ('+esc(f.m.refTeam)+')':''}</div>`:''}`;
 }
 function boardGoalSubUndo(i,k){
   const b=S.boards[i];if(!b||!b.matchId)return;
@@ -14429,7 +14655,9 @@ function boardHTML(b,i){
       ${cur&&fraNazionali(matchTeams(cur).t1,matchTeams(cur).t2)
         ?`<button class="btn-inno" onclick="apriInni('${esc(matchTeams(cur).t1).replace(/'/g,"\\'")}','${esc(matchTeams(cur).t2).replace(/'/g,"\\'")}')" title="Suona i due inni prima del fischio d'inizio">🎺 ${L('Inni')}</button>`:''}
     </div>
-    ${curRef?`<div class="brefline">🧑‍⚖️ ${L('arbitro:')} <b>${esc(curRef)}</b></div>`:''}`;
+    ${curRef?(cur.m.refTeam&&Array.isArray(cur.m.refs)&&cur.m.refs.length>1
+      ?`<div class="brefline">🧑‍⚖️ ${L('arbitri:')} <b>${esc(cur.m.refTeam)}</b></div>`
+      :`<div class="brefline">🧑‍⚖️ ${L('arbitro:')} <b>${esc(curRef)}</b></div>`):''}`;
   if(!cur){
     const idle=LANG==='en'?'Free board.<br>Select a match to manage it live<br><span class="small">live score · timer 1–60 min per half · extra time · TV mode</span>':'Tabellone libero.<br>Seleziona una partita per gestirla in diretta<br><span class="small">punteggio live · timer 1–60 min per tempo · supplementari · modalità TV</span>';
     h+=`<div class="idlemsg">${idle}</div>`;
@@ -14795,7 +15023,7 @@ function nextMatchesToShow(){
     if(!b.matchId)return;
     const f=findMatch(b.matchId);if(!f)return;
     const t=matchTeams(f);
-    live.push({f1:t.t1,f2:t.t2,field:fieldLabel(b.field),ref:f.kind==='group'?f.m.ref:null,live:true});
+    live.push({f1:t.t1,f2:t.t2,field:fieldLabel(b.field),ref:f.kind==='group'?(f.m.refTeam||f.m.ref):null,live:true});
   });
   if(live.length)return{title:'In corso adesso',list:live};
   for(const g of allGroups()){
@@ -14803,7 +15031,7 @@ function nextMatchesToShow(){
     for(const r of Object.keys(byRound).sort((a,b)=>a-b)){
       const un=byRound[r].filter(m=>!m.done);
       if(un.length)return{title:`${g.swiss?'Turno':'Giornata'} ${r}${S.groups.length>1?' — Girone '+g.name:''}`,
-        list:un.map(m=>({f1:m.home,f2:m.away,field:fieldLabel(m.field||1),ref:m.ref}))};
+        list:un.map(m=>({f1:m.home,f2:m.away,field:fieldLabel(m.field||1),ref:m.refTeam||m.ref}))};
     }
   }
   for(const ko of allKOs()){
@@ -15056,13 +15284,13 @@ function crestEl(name){
   return `<span class="pcrest pcrest-ph">${esc(ini)}</span>`;
 }
 /* una PARTITA su una riga orizzontale: nome+stemma | risultato/VS | stemma+nome */
-function prow(a,b,midHtml,{field='',evs='',live=false,ref=''}={}){
+function prow(a,b,midHtml,{field='',evs='',live=false,ref='',refSq=false}={}){
   return `<div class="prow${live?' plive':''}">
     ${field?`<span class="pfld">${esc(field)}</span>`:''}
     <span class="pteam h"><span class="pn goldtxt">${esc(a)}</span>${crestEl(a)}</span>
     <span class="pmid">${midHtml}</span>
     <span class="pteam">${crestEl(b)}<span class="pn goldtxt">${esc(b)}</span></span>
-    ${ref?`<span class="pref">🧑‍⚖️ ${L('arbitro:')} ${esc(ref)}</span>`:''}
+    ${ref?`<span class="pref">🧑‍⚖️ ${L(refSq?'arbitri:':'arbitro:')} ${esc(ref)}</span>`:''}
     ${evs?`<span class="pevs">⚽ ${esc(evs)}</span>`:''}
   </div>`;
 }
@@ -15097,7 +15325,7 @@ function fullCalendarHTML(paginato){
       const m=x.m,played=m.hs!=null&&m.as!=null;
       const mid=played?scoreMid(m.hs,m.as,m.live):(m.live?scoreMid(m.hs??0,m.as??0,true):`<span class="pvs goldtxt">VS</span>`);
       out+=prow(m.home,m.away,mid,{field:(!played&&!m.live&&m.field)?fieldLabel(m.field):'',live:m.live,
-                                   evs:played?evStr(m.events,m.home,m.away):'',ref:(!played&&m.ref)?m.ref:''});
+                                   evs:played?evStr(m.events,m.home,m.away):'',ref:(!played&&m.ref)?(m.refTeam||m.ref):'',refSq:!!m.refTeam});
     });
     if(fetta.__pagine>1)out+=`<div class="ppag">${fetta.__pagina} / ${fetta.__pagine}</div>`;
     return out;
@@ -15113,7 +15341,7 @@ function fullCalendarHTML(paginato){
       byRound[r].forEach(m=>{
         const played=m.hs!=null&&m.as!=null;
         const mid=played?scoreMid(m.hs,m.as,m.live):(m.live?scoreMid(m.hs??0,m.as??0,true):`<span class="pvs goldtxt">VS</span>`);
-        h+=prow(m.home,m.away,mid,{field:(!played&&!m.live&&m.field)?fieldLabel(m.field):'',live:m.live,evs:played?evStr(m.events,m.home,m.away):'',ref:(!played&&m.ref)?m.ref:''});
+        h+=prow(m.home,m.away,mid,{field:(!played&&!m.live&&m.field)?fieldLabel(m.field):'',live:m.live,evs:played?evStr(m.events,m.home,m.away):'',ref:(!played&&m.ref)?(m.refTeam||m.ref):'',refSq:!!m.refTeam});
       });
     });
   });
@@ -15125,7 +15353,7 @@ function fullCalendarHTML(paginato){
       list.forEach(m=>{
         const played=m.s1!=null&&m.s2!=null;
         const mid=played?scoreMid(m.s1,m.s2,m.live):(m.live?scoreMid(m.s1??0,m.s2??0,true):`<span class="pvs goldtxt">VS</span>`);
-        h+=prow(m.t1,m.t2,mid,{live:m.live,evs:played?evStr(m.events,m.t1,m.t2):'',ref:(!played&&m.ref)?m.ref:''});
+        h+=prow(m.t1,m.t2,mid,{live:m.live,evs:played?evStr(m.events,m.t1,m.t2):'',ref:(!played&&m.ref)?(m.refTeam||m.ref):'',refSq:!!m.refTeam});
       });
     });
     if(ko.third&&ko.third.t1&&ko.third.t2){
@@ -15483,6 +15711,36 @@ function avviaModalitaTabellone(){
 }
 let schermoUltimo='';
 let schermoInReplay=false;   // durante la moviola la rotazione si ferma
+/* TIMER DELLE PARTITE IN CORSO — legge i tabelloni (anche sul secondo schermo,
+   dove il tempo arriva con lo stato): un solo orologio se tutti i campi sono
+   allineati, altrimenti campo per campo; sparisce quando non si gioca. */
+function presentTimerPezzi(){
+  const now=Date.now(),out=[];
+  (S.boards||[]).forEach(b=>{
+    if(!b.matchId||!(b.started||b.running))return;
+    const ph=boardPhases(b)[b.phaseIdx];if(!ph)return;
+    const rem=b.running&&b.lastTs?Math.max(0,b.remaining-(now-b.lastTs)/1000):Math.max(0,b.remaining||0);
+    const f=ph.label==='1° Tempo'?L('1° T'):ph.label==='2° Tempo'?L('2° T'):ph.label==='Tempo Unico'?L('Tempo unico'):L('Suppl.');
+    out.push({campo:S.cfg.format==='squadre'?fieldLabelShort(b.field):L('Campo')+' '+b.field,rem,f,run:!!b.running});
+  });
+  return out;
+}
+function presentTimerAggiorna(){
+  const el=$('#present-timer');if(!el)return;
+  const ps=presentOpen?presentTimerPezzi():[];
+  if(!ps.length){if(!el.hidden){el.hidden=true;el.innerHTML='';}return;}
+  const pezzo=(p,campo)=>`<span class="ptm${p.run?'':' pt-p'}${p.run&&p.rem<=10?' pt-u':''}">`
+    +(campo?`<span class="pt-c">${esc(campo)}</span>`:'')
+    +`<span class="pt-t">${p.run?'':'⏸ '}${fmtClock(p.rem)}</span><span class="pt-f">${esc(p.f)}</span></span>`;
+  const allineati=ps.every(p=>p.f===ps[0].f&&p.run===ps[0].run&&Math.abs(p.rem-ps[0].rem)<3);
+  let h=`<span class="pt-live"></span>`;
+  if(allineati)h+=pezzo(ps[0],ps.length>1?ps.length+' '+L(S.cfg.format==='squadre'?'incontri':'campi'):ps[0].campo);
+  else{h+=ps.slice(0,3).map(p=>pezzo(p,p.campo)).join('');
+    if(ps.length>3)h+=`<span class="ptm"><span class="pt-f">+${ps.length-3}</span></span>`;}
+  if(el.innerHTML!==h)el.innerHTML=h;
+  el.hidden=false;
+}
+setInterval(()=>{try{presentTimerAggiorna();}catch(e){}},500);
 function closePresent(){presentOpen=false;stopAutoLive();$('#present').classList.remove('on');if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});updateWakeLock();}
 function presentShow(v){const changed=presentView!==v;presentView=v;presentRender();if(changed)stcEnter(document.getElementById('present-stage'));}
 /* prossimo turno: SOLO le partite da giocare, in ordine di campo,
@@ -15497,7 +15755,7 @@ function nextRoundHTML(){
   return '<div class="plist">'+wave.map(w=>{
     // squadre: mostra anche i 4 incontri individuali, tavolo per tavolo
     const evs=(w.games||[]).map((g,k)=>g.ph&&g.pa?`T${w.field+k}: ${g.ph} – ${g.pa}`:'').filter(Boolean).join('  ·  ');
-    return prow(w.home,w.away,'<span class="pvs goldtxt">VS</span>',{field:fieldLabel(w.field),evs,ref:w.ref||''});
+    return prow(w.home,w.away,'<span class="pvs goldtxt">VS</span>',{field:fieldLabel(w.field),evs,ref:w.refTeam||w.ref||'',refSq:!!w.refTeam});
   }).join('')+'</div>';
 }
 /* ---------- al massimo QUATTRO risultati alla volta ----------
@@ -16712,6 +16970,8 @@ function speakOra(text,varco,rate){
 function encounterPairings(m,home,away){
   if(Array.isArray(m&&m.sub)&&m.sub.length===4)
     return m.sub.map(g=>({ph:g.ph||'',pa:g.pa||''}));
+  // FISTF: prima dell'abbinamento non esistono accoppiamenti da annunciare
+  if(S.cfg.fistf==='squadre')return [0,1,2,3].map(()=>({ph:'',pa:''}));
   const rh=(S.rosters&&S.rosters[home])||[],ra=(S.rosters&&S.rosters[away])||[];
   return [0,1,2,3].map(k=>({ph:rh[k]||'',pa:ra[k]||''}));
 }
@@ -16762,7 +17022,7 @@ function nextWaveByField(){
   // se i campi hanno già partite assegnate, annuncia quelle (in ordine di campo)
   const assigned=S.boards.filter(b=>b.matchId).map(b=>{
     const f=findMatch(b.matchId);const tt=f?matchTeams(f):null;
-    return tt?{field:b.field,home:tt.t1,away:tt.t2,ref:(f.m&&f.m.ref)||null,games:sq?encounterPairings(f.m,tt.t1,tt.t2):null}:null;
+    return tt?{field:b.field,home:tt.t1,away:tt.t2,ref:(f.m&&f.m.ref)||null,refs:(f.m&&f.m.refs)||null,refTeam:(f.m&&f.m.refTeam)||null,games:sq?encounterPairings(f.m,tt.t1,tt.t2):null}:null;
   }).filter(Boolean).sort((a,b)=>a.field-b.field);
   if(assigned.length)return assigned;
   /* Altrimenti si calcola l'ondata imminente. Questo blocco DEVE ragionare
@@ -16794,7 +17054,7 @@ function nextWaveByField(){
       campo=off+1; while(presi.has(campo))campo+=span;
     }
     presi.add(campo);
-    wave.push({field:campo,home:p.home,away:p.away,ref:(p.m&&p.m.ref)||null,
+    wave.push({field:campo,home:p.home,away:p.away,ref:(p.m&&p.m.ref)||null,refs:(p.m&&p.m.refs)||null,refTeam:(p.m&&p.m.refTeam)||null,
       games:sq?encounterPairings(p.m,p.home,p.away):null});
     busy.add(p.home);busy.add(p.away);
   }
@@ -16818,7 +17078,8 @@ function announceNextRound(){
     }else{
       txt+=en?` On field ${w.field}, ${w.home} versus ${w.away}.`:` Sul campo ${w.field}, ${w.home} contro ${w.away}.`;
     }
-    if(w.ref)txt+=en?` Referee: ${w.ref}.`:` Arbitro: ${w.ref}.`;
+    if(sq&&Array.isArray(w.refs)&&w.refs.length>1)txt+=en?` Referees${w.refTeam?' from '+w.refTeam:''}: ${w.refs.join(', ')}.`:` Arbitri${w.refTeam?' della squadra '+w.refTeam:''}: ${w.refs.join(', ')}.`;
+    else if(w.ref)txt+=en?` Referee: ${w.ref}.`:` Arbitro: ${w.ref}.`;
   });
   speakIt(txt);
   toast(en?'📢 Announcing the round…':'📢 Annuncio turno in corso…');
@@ -18149,10 +18410,10 @@ async function figAlbum(){
     .alb-cop .ban{background:#f3d97a;border:.6mm solid #1b1b1b;padding:3mm 10mm;font-size:18pt;text-transform:uppercase;margin-top:6mm}
     .alb-sez{display:flex;align-items:center;gap:4mm;border-bottom:.6mm solid #1b1b1b;margin:0 0 4mm;padding-bottom:2mm;font-size:16pt;text-transform:uppercase;letter-spacing:.06em}
     .alb-sez img{height:12mm}
-    .alb-pag{display:grid;grid-template-columns:repeat(3,53mm);gap:5mm 6mm;justify-content:center;page-break-inside:avoid;margin-bottom:6mm}
-    .alb-c{position:relative;width:53mm;height:75.5mm}
+    .alb-pag{display:grid;grid-template-columns:repeat(3,52mm);gap:5mm 5mm;justify-content:center;page-break-inside:avoid;margin-bottom:6mm}
+    .alb-c{position:relative;width:52mm;height:74mm}
     .alb-c img{width:100%;height:100%;display:block;box-shadow:0 .4mm 1.2mm #0004}
-    .alb-c .n{position:absolute;left:-1.5mm;top:-1.5mm;background:#1b1b1b;color:#fff;font-size:8pt;padding:.4mm 1.6mm;border-radius:1mm}
+    .alb-c .n{position:absolute;left:0;top:0;background:#1b1b1b;color:#fff;font-size:8pt;padding:.4mm 1.6mm;border-radius:1mm}
     .alb-v{width:100%;height:100%;border:.5mm dashed #9b9483;background:#f6f1e3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#8a8373}
     .alb-v b{font-size:22pt;color:#b9b19e}.alb-v span{font-size:9pt;margin:2mm 3mm 0;text-transform:uppercase}
     .alb-brk{page-break-before:always}
@@ -18826,7 +19087,9 @@ function arcBook(id){
       .bk-sec{font-family:'Oswald',sans-serif;font-size:13pt;letter-spacing:.16em;text-transform:uppercase;color:#8a6a12;border-bottom:1.5pt solid #d8c690;padding-bottom:1.5mm;margin:0 0 5mm}
       .bk-big{page-break-inside:avoid;break-inside:avoid;margin-bottom:9mm}
       .bk-big .imgs{display:flex;gap:3mm}
-      .bk-big .imgs img{width:100%;border-radius:2mm;object-fit:cover;max-height:78mm}
+      .bk-big .imgs img{flex:1 1 0;min-width:0;width:100%;border-radius:2mm;object-fit:cover;height:74mm}
+      .bk-big .cap b{flex:1 1 0;min-width:0;overflow-wrap:anywhere}.bk-big .cap b:first-child{text-align:right}
+      .bk-gr .c .cap{overflow-wrap:anywhere}
       .bk-big .cap{display:flex;align-items:baseline;justify-content:center;gap:4mm;margin-top:3mm}
       .bk-big .cap b{font-family:'Oswald',sans-serif;font-size:14pt;text-transform:uppercase}
       .bk-big .cap .ris{font-family:'Chakra Petch',monospace;font-size:19pt;color:#8a6a12}
@@ -19672,7 +19935,8 @@ function prStat(m,kind){
   const f={m,kind:kind||'group'};
   const st=pairState(f);
   const w=subwState(f);
-  return{win:m.toss.win,mode:m.toss.mode,
+  return{win:m.toss.win,mode:m.toss.mode,fistf:S.cfg.fistf==='squadre'||undefined,
+    tot:st.complete?undefined:(st.tot||5),gara:st.complete?undefined:st.gara,
     occ:st.occ.map(x=>[x[0]||null,x[1]||null]),
     done:!!st.complete,
     mv:st.complete?null:st.step.mv,
@@ -19711,7 +19975,7 @@ function syncCardsOf(m){
 function syncSnapshot(){
   const sq=S.cfg.format==='squadre';
   return{
-    v:2,fieldCount:S.cfg.fields,fieldOffset:S.cfg.fieldOffset||0,ts:Date.now(),n:S.cfg.name||'Torneo Subbuteo',loc:S.cfg.loc||'',date:S.cfg.date||'',sq,
+    v:2,fieldCount:S.cfg.fields,fieldOffset:S.cfg.fieldOffset||0,ts:Date.now(),n:S.cfg.name||'Torneo Subbuteo',loc:S.cfg.loc||'',date:S.cfg.date||'',sq,fi:(sq&&S.cfg.fistf==='squadre')||undefined,
     logo:S.cfg.logo||null,   // il logo del torneo, ben visibile anche sulle app mobili
     boards:S.boards.map(b=>{
       const ph=b.matchId?boardPhases(b)[b.phaseIdx]:null;
@@ -19722,7 +19986,7 @@ function syncSnapshot(){
     }),
     groups:allGroups().map(g=>({name:g.name,swiss:!!g.swiss,matches:g.matches.map(m=>({
       id:m.id,r:m.round||1,f:m.field,h:m.home,a:m.away,hs:m.hs,as:m.as,
-      done:!!m.done,live:!!m.live,ref:m.ref||null,sub:sq?syncSubOf(m):undefined,cards:syncCardsOf(m),
+      done:!!m.done,live:!!m.live,ref:m.ref||null,refs:(sq&&Array.isArray(m.refs)&&m.refs.length>1)?m.refs:undefined,sub:sq?syncSubOf(m):undefined,cards:syncCardsOf(m),
       slu:sq?sluStat(m):undefined,pr:sq?prStat(m,'group'):undefined}))})),
     kos:allKOs().map(ko=>{
       const rounds=ko.rounds.map(rd=>({name:rd.name,
@@ -20725,6 +20989,7 @@ function renderSetupFromState(){
   setupPlayers=S.teams.map(n=>((S.players&&S.players[n])||[]).join(', '));
   setupClubs=S.teams.map(n=>(S.clubs&&S.clubs[n])||'');
   if($('#s-sepclub'))$('#s-sepclub').checked=!!S.cfg.sepClub;
+  if($('#s-clubprima'))$('#s-clubprima').checked=!!S.cfg.clubPrima;
   if($('#s-showclubs'))$('#s-showclubs').checked=!!S.cfg.showClubs;
   setupLogos=S.teams.map(n=>(S.logos&&S.logos[n])||null);
   setupRosters=S.teams.map(n=>(S.rosters&&S.rosters[n])||[]);
@@ -20745,38 +21010,595 @@ function tickClock(){const d=new Date();$('#hdr-clock').textContent=pad(d.getHou
 setInterval(tickClock,1000);
 
 /* =========================================================
+   DIRETTA SU YOUTUBE E TIKTOK — la Regia compone e codifica
+   ---------------------------------------------------------
+   Si catturano due finestre del programma come si cattura una scheda del
+   browser: la Regia (con il suo audio: musica, inni, annunci, fischi) e il
+   secondo schermo (Presentazione / AUTO LIVE). Le immagini si compongono in
+   una tela per ciascuna piattaforma — 16:9 per YouTube, 9:16 per TikTok con
+   Regia e Presentazione una sopra l'altra — e si codificano in H.264 e AAC
+   con gli encoder del sistema. I pacchetti passano al processo principale,
+   che li spedisce in RTMP. Le chiavi di trasmissione non arrivano mai qui.
+   ========================================================= */
+const DIR_PIATT={
+  youtube:{nome:'YouTube',icona:'▶',
+    lay:[['present','Presentazione / AUTO LIVE'],['regia','Regia'],['pip','Presentazione con la Regia in riquadro']],
+    q:[['1080','1080p · 1920×1080 · 4,5 Mbps'],['720','720p · 1280×720 · 3 Mbps']],
+    dove:'YouTube Studio → Crea → Trasmetti dal vivo → Chiave stream (e URL dello stream)'},
+  tiktok:{nome:'TikTok',icona:'♪',
+    lay:[['regia-sopra','Regia sopra, Presentazione sotto'],['present-sopra','Presentazione sopra, Regia sotto'],['present','Solo Presentazione'],['regia','Solo Regia']],
+    q:[['1080','1080×1920 · 5 Mbps'],['720','720×1280 · 3 Mbps']],
+    dove:'TikTok LIVE Center o LIVE Studio → URL del server e Chiave di trasmissione. La chiave di TikTok cambia a ogni diretta: incollala nuova prima di partire.'}
+};
+const DIR={cfg:null,acc:null,cap:{},vid:{},out:{},audio:null,timer:null,mon:null,log:[],stato:{},cod:{},loghi:{},w:null,inviate:{}};
+function dirCfgCarica(){
+  let c={};try{c=JSON.parse(localStorage.getItem('stc_diretta_cfg')||'{}')||{};}catch(e){}
+  DIR.cfg=Object.assign({youtube:{lay:'present',q:'1080'},tiktok:{lay:'regia-sopra',q:'1080',riempi:'adatta'},audioApp:true,audioMic:false,micId:''},c);
+  DIR.cfg.youtube=Object.assign({lay:'present',q:'1080'},c.youtube||{});
+  DIR.cfg.tiktok=Object.assign({lay:'regia-sopra',q:'1080',riempi:'adatta'},c.tiktok||{});
+  return DIR.cfg;
+}
+function dirCfgSalva(){try{localStorage.setItem('stc_diretta_cfg',JSON.stringify(DIR.cfg));}catch(e){}}
+function dirImposta(pid,k,v){ if(!DIR.cfg)dirCfgCarica(); if(pid)DIR.cfg[pid][k]=v; else DIR.cfg[k]=v; dirCfgSalva(); dirControlli();
+  if(pid&&DIR.out[pid]&&!DIR.out[pid].avvio&&k!=='q'){
+    (async()=>{try{const serve=dirSorgenti(pid);if(serve.includes('tabellone'))await dirApriTabellone();
+      for(const q of serve){await dirCattura(q,q==='regia'&&DIR.cfg.audioApp);dirSorgenteAlMotore(q);}
+      dirMotore().postMessage({t:'panes',pid,panes:dirGeometria(pid).panes});dirBase(pid);dirLog(DIR_PIATT[pid].nome+': '+L('inquadratura cambiata in diretta'));}catch(e){toast('⚠️ '+e.message);}})();}
+  else if(pid&&DIR.out[pid]&&k==='q')toast(L('La qualità nuova vale dalla prossima partenza della diretta.'));
+}
+function dirDesktop(){return !!window.STCDiretta;}
+function dirLog(t){
+  const h=new Date().toTimeString().slice(0,8);
+  DIR.log.unshift(h+'  '+t); DIR.log=DIR.log.slice(0,14);
+  const el=$('#dir-log'); if(el)el.innerHTML=DIR.log.map(x=>`<div>${esc(x)}</div>`).join('');
+}
+function dirSpec(pid){
+  const q=DIR.cfg[pid].q==='720';
+  if(pid==='youtube')return q?{w:1280,h:720,fps:30,vb:3000000,codec:'avc1.64001f'}:{w:1920,h:1080,fps:30,vb:4500000,codec:'avc1.640028'};
+  return q?{w:720,h:1280,fps:30,vb:3000000,codec:'avc1.64001f'}:{w:1080,h:1920,fps:30,vb:5000000,codec:'avc1.640028'};
+}
+function dirSorgenti(pid){
+  const l=DIR.cfg[pid].lay;
+  if(l==='present')return['tabellone'];
+  if(l==='regia')return['regia'];
+  return['regia','tabellone'];
+}
+
+/* ------------------------- interfaccia ------------------------- */
+function dirRender(){
+  if(!DIR.cfg)dirCfgCarica();
+  const box=$('#dir-box'),no=$('#dir-nodesk');if(!box)return;
+  if(!dirDesktop()){box.style.display='none';
+    if(no){no.style.display='';
+      // app installata ma con un pacchetto precedente alla 9.1: manca il ponte della diretta
+      if(window.STCUpdate)no.innerHTML=L('Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.')
+        +` <button class="btn mini" onclick="window.open(SITO_DOWNLOAD,'_blank')">⬇ ${L('Scarica dal sito')}</button>`;}
+    return;}
+  if(no)no.style.display='none';
+  const pf=pid=>{const P=DIR_PIATT[pid],c=DIR.cfg[pid];
+    return `<div class="dir-pf" id="dir-pf-${pid}">
+      <div class="dir-hd"><span class="dir-logo dir-${pid}">${P.icona}</span><b>${P.nome}</b>
+        <span class="dir-stato" id="dir-st-${pid}">${L('Pronta')}</span></div>
+      <details class="dir-acc" id="dir-acc-${pid}"><summary>🔑 ${L('Account e chiave di trasmissione')}</summary>
+        <label class="f">${L('Server RTMP')}</label>
+        <input type="text" id="dir-srv-${pid}" spellcheck="false" autocomplete="off" placeholder="rtmp://…">
+        <label class="f" style="margin-top:8px">${L('Chiave di trasmissione')}</label>
+        <div class="row" style="gap:6px;flex-wrap:nowrap"><input type="password" id="dir-key-${pid}" spellcheck="false" autocomplete="off" style="flex:1">
+          <button class="btn sec mini" onclick="dirMostraChiave('${pid}')" title="${L('Mostra o nascondi')}">👁</button></div>
+        <p class="small muted" style="margin:6px 0">${L('Dove si trova')}: ${L(P.dove)}</p>
+        <div class="row" style="gap:8px"><button class="btn mini" onclick="dirSalvaAcc('${pid}')">💾 ${L('Salva')}</button>
+          <button class="btn sec mini" onclick="dirCancellaAcc('${pid}')">🗑 ${L('Dimentica la chiave')}</button></div>
+        <p class="small" id="dir-accinfo-${pid}" style="margin:8px 0 0"></p>
+      </details>
+      <div class="dir-opz">
+        <div><label class="f">${L('Inquadratura')}</label><select id="dir-lay-${pid}" onchange="dirImposta('${pid}','lay',this.value)">${P.lay.map(([v,t])=>`<option value="${v}"${c.lay===v?' selected':''}>${L(t)}</option>`).join('')}</select></div>
+        <div><label class="f">${L('Qualità')}</label><select id="dir-q-${pid}" onchange="dirImposta('${pid}','q',this.value)">${P.q.map(([v,t])=>`<option value="${v}"${c.q===v?' selected':''}>${t}</option>`).join('')}</select></div>
+        ${pid==='tiktok'?`<div><label class="f">${L('Le due schermate')}</label><select id="dir-riempi" onchange="dirImposta('tiktok','riempi',this.value)">
+          <option value="adatta"${c.riempi!=='riempi'?' selected':''}>${L('Intere (con fasce sopra e sotto)')}</option>
+          <option value="riempi"${c.riempi==='riempi'?' selected':''}>${L('Più grandi (tagliati i lati)')}</option></select></div>`:''}
+      </div>
+      <div class="dir-prev ${pid==='tiktok'?'vert':''}" id="dir-prev-${pid}"><span class="dir-vuota">${L('L’anteprima compare quando la diretta parte')}</span></div>
+      <div class="dir-mon">
+        <div><span>${L('In onda da')}</span><b id="dir-m-dur-${pid}">—</b></div>
+        <div><span>${L('Velocità di invio')}</span><b id="dir-m-kbps-${pid}">—</b></div>
+        <div><span>${L('Fotogrammi al secondo')}</span><b id="dir-m-fps-${pid}">—</b></div>
+        <div><span>${L('Fotogrammi scartati')}</span><b id="dir-m-persi-${pid}">—</b></div>
+        <div><span>${L('In attesa di invio')}</span><b id="dir-m-coda-${pid}">—</b></div>
+        <div><span>${L('Riconnessioni')}</span><b id="dir-m-ric-${pid}">—</b></div>
+      </div>
+      <div class="dir-rete"><i id="dir-m-bar-${pid}"></i></div>
+      <button class="btn dir-go" id="dir-go-${pid}" onclick="dirAvviaStop('${pid}')">● ${L('Avvia la diretta su')} ${P.nome}</button>
+    </div>`;};
+  box.innerHTML=`<div class="dir-grid">${pf('youtube')}${pf('tiktok')}</div>
+    <div class="dir-audio">
+      <b>🎚 ${L('Audio della diretta')}</b>
+      <label class="ck"><input type="checkbox" id="dir-aapp"${DIR.cfg.audioApp?' checked':''} onchange="dirImposta(null,'audioApp',this.checked)"> ${L('Suoni del programma (musica, inni, annunci, fischi)')}</label>
+      <label class="ck"><input type="checkbox" id="dir-amic"${DIR.cfg.audioMic?' checked':''} onchange="dirImposta(null,'audioMic',this.checked)"> ${L('Microfono dello speaker')}</label>
+      <select id="dir-micdev" onchange="dirImposta(null,'micId',this.value)"><option value="">${L('Microfono predefinito')}</option></select>
+      <span class="dir-vu" title="${L('Livello dell’audio che va in onda')}"><i id="dir-vu"></i></span>
+      <p class="small muted" style="margin:6px 0 0;flex-basis:100%">${L('L’audio cambia alla prossima partenza della diretta.')}</p>
+    </div>
+    <div class="dir-check" id="dir-check"></div>
+    <div class="dir-log" id="dir-log"></div>`;
+  dirAccount();dirMicrofoni();dirControlli();dirLog(L('Pannello pronto'));
+}
+async function dirAccount(){
+  if(!dirDesktop())return;
+  try{DIR.acc=await STCDiretta.account();}catch(e){return;}
+  for(const pid of Object.keys(DIR_PIATT)){
+    const a=DIR.acc[pid]||{};
+    const s=$('#dir-srv-'+pid);if(s&&document.activeElement!==s)s.value=a.server||'';
+    const k=$('#dir-key-'+pid);if(k){k.value='';k.placeholder=a.haChiave?L('salvata')+' '+a.finale+' — '+L('incolla qui per sostituirla'):L('incolla qui la chiave');}
+    const i=$('#dir-accinfo-'+pid);
+    if(i)i.innerHTML=a.haChiave
+      ?`✅ ${L('Chiave salvata')} ${a.finale}${a.salvataIl?' · '+new Date(a.salvataIl).toLocaleString(LANG==='en'?'en-GB':'it-IT'):''} · ${a.cifrata?L('cifrata su questo computer'):L('attenzione: questo sistema non offre la cifratura, il file è leggibile solo dal tuo utente')}`
+      :`⚠️ ${L('Nessuna chiave salvata')}`;
+    const d=$('#dir-acc-'+pid);if(d&&!a.haChiave)d.open=true;
+  }
+  dirControlli();
+}
+function dirMostraChiave(pid){const k=$('#dir-key-'+pid);if(k)k.type=k.type==='password'?'text':'password';}
+async function dirSalvaAcc(pid){
+  const srv=($('#dir-srv-'+pid)||{}).value||'',k=($('#dir-key-'+pid)||{}).value||'';
+  try{DIR.acc=await STCDiretta.salva(pid,srv.trim(),k.trim());toast('🔑 '+L('Account salvato')+' — '+DIR_PIATT[pid].nome);dirLog(DIR_PIATT[pid].nome+': '+L('account salvato'));}
+  catch(e){toast('⚠️ '+String(e&&e.message||e).replace(/^Error invoking remote method '[^']+': (Error: )?/,''));}
+  dirAccount();
+}
+function dirCancellaAcc(pid){
+  askConfirm(L('Dimenticare la chiave di trasmissione salvata per')+' '+DIR_PIATT[pid].nome+'?',async()=>{
+    try{DIR.acc=await STCDiretta.cancella(pid);}catch(e){}
+    dirLog(DIR_PIATT[pid].nome+': '+L('chiave dimenticata'));dirAccount();
+  });
+}
+async function dirMicrofoni(){
+  const sel=$('#dir-micdev');if(!sel||!navigator.mediaDevices||!navigator.mediaDevices.enumerateDevices)return;
+  try{const d=(await navigator.mediaDevices.enumerateDevices()).filter(x=>x.kind==='audioinput'&&x.deviceId&&x.deviceId!=='default');
+    sel.innerHTML=`<option value="">${L('Microfono predefinito')}</option>`+d.map((x,i)=>`<option value="${esc(x.deviceId)}"${DIR.cfg.micId===x.deviceId?' selected':''}>${esc(x.label||(L('Microfono')+' '+(i+1)))}</option>`).join('');}catch(e){}
+}
+async function dirControlli(){
+  const el=$('#dir-check');if(!el||!dirDesktop())return;
+  if(!DIR.cod.v){
+    try{DIR.cod.v=(await VideoEncoder.isConfigSupported({codec:'avc1.640028',width:1920,height:1080,bitrate:4500000,framerate:30,avc:{format:'avc'}})).supported;}catch(e){DIR.cod.v=false;}
+    try{DIR.cod.a=(await AudioEncoder.isConfigSupported({codec:'mp4a.40.2',sampleRate:48000,numberOfChannels:2,bitrate:128000})).supported;}catch(e){DIR.cod.a=false;}
+  }
+  let tab=false;try{tab=(await STCDiretta.schermi()).tabellone;}catch(e){}
+  const serveTab=Object.keys(DIR_PIATT).some(p=>dirSorgenti(p).includes('tabellone'));
+  const acc=DIR.acc||{};
+  const v=[
+    [DIR.cod.v,L('Codifica video H.264')],
+    [DIR.cod.a,L('Codifica audio AAC')],
+    [tab||!serveTab,tab?L('Secondo schermo aperto'):L('Secondo schermo chiuso: si apre da solo alla partenza'),!tab&&serveTab?`<button class="btn sec mini" onclick="apriSecondoSchermo();setTimeout(dirControlli,2500)">🖥 ${L('Apri ora')}</button>`:''],
+    [!!(acc.youtube&&acc.youtube.haChiave),'YouTube: '+(acc.youtube&&acc.youtube.haChiave?L('chiave pronta'):L('manca la chiave'))],
+    [!!(acc.tiktok&&acc.tiktok.haChiave),'TikTok: '+(acc.tiktok&&acc.tiktok.haChiave?L('chiave pronta'):L('manca la chiave'))]
+  ];
+  el.innerHTML=v.map(([ok,t,b])=>`<span class="${ok?'ok':'no'}">${ok?'✅':'⚠️'} ${esc(t)} ${b||''}</span>`).join('');
+}
+
+/* ------------------------- cattura ------------------------- */
+async function dirApriTabellone(){
+  let r={};try{r=await STCDiretta.schermi();}catch(e){}
+  if(r.tabellone)return;
+  apriSecondoSchermo();
+  for(let i=0;i<40;i++){await new Promise(z=>setTimeout(z,250));try{if((await STCDiretta.schermi()).tabellone){await new Promise(z=>setTimeout(z,1500));return;}}catch(e){}}
+  throw new Error(L('Il secondo schermo non si è aperto'));
+}
+async function dirCattura(quale,conAudio){
+  const vecchio=DIR.cap[quale];
+  if(vecchio&&vecchio.getVideoTracks().some(t=>t.readyState==='live')&&(!conAudio||vecchio.getAudioTracks().length))return vecchio;
+  if(vecchio)vecchio.getTracks().forEach(t=>t.stop());
+  const p=await STCDiretta.prepara(quale,conAudio);
+  if(!p.ok)throw new Error(p.errore);
+  const st=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30,width:{ideal:1920},height:{ideal:1080}},audio:!!conAudio});
+  DIR.cap[quale]=st;
+  st.getVideoTracks()[0].addEventListener('ended',()=>{if(DIR.cap[quale]===st){DIR.cap[quale]=null;DIR.inviate[quale]=null;dirLog(L(quale==='regia'?'Cattura della Regia interrotta':'Cattura del secondo schermo interrotta'));}});
+  dirLog(L(quale==='regia'?'Cattura della Regia attiva':'Cattura del secondo schermo attiva')+(conAudio?' '+L('(con l’audio del programma)'):''));
+  return st;
+}
+async function dirAudioAvvia(){
+  if(DIR.audio)return;
+  const ctx=new AudioContext({sampleRate:48000});
+  const dest=ctx.createMediaStreamDestination();dest.channelCount=2;
+  // un filo di silenzio tiene viva la traccia anche senza microfono né musica
+  const cs=ctx.createConstantSource(),g0=ctx.createGain();g0.gain.value=0;cs.connect(g0);g0.connect(dest);cs.start();
+  const A=DIR.audio={ctx,dest,mic:null,fermo:false};
+  if(DIR.cfg.audioApp){
+    try{const st=await dirCattura('regia',true);const t=st.getAudioTracks()[0];
+      if(t){const s=ctx.createMediaStreamSource(new MediaStream([t]));s.connect(dest);}
+      else dirLog(L('Audio del programma non disponibile su questo sistema'));}
+    catch(e){dirLog(L('Audio del programma non disponibile')+': '+e.message);}
+  }
+  if(DIR.cfg.audioMic){
+    try{A.mic=await navigator.mediaDevices.getUserMedia({audio:{deviceId:DIR.cfg.micId?{exact:DIR.cfg.micId}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+      const s=ctx.createMediaStreamSource(A.mic);s.connect(dest);dirLog(L('Microfono in onda'));}
+    catch(e){dirLog(L('Microfono non disponibile')+': '+e.message);}
+  }
+  if(ctx.state==='suspended')await ctx.resume();
+  const traccia=dest.stream.getAudioTracks()[0];
+  const rd=new MediaStreamTrackProcessor({track:traccia}).readable;
+  dirMotore().postMessage({t:'audio',rd},[rd]);A.traccia=traccia;
+}
+function dirAudioFerma(){
+  const A=DIR.audio;if(!A)return;A.fermo=true;
+  try{A.traccia&&A.traccia.stop();}catch(e){}
+  try{A.mic&&A.mic.getTracks().forEach(t=>t.stop());}catch(e){}
+  try{A.ctx.close();}catch(e){}
+  DIR.audio=null;
+}
+
+function dirTesto(h){const d=document.createElement('div');d.innerHTML=h||'';return (d.textContent||'').replace(/\s+/g,' ').trim();}
+function dirLogo(){
+  const src=S.cfg&&S.cfg.logo;if(!src)return null;
+  if(!DIR.loghi[src]){const i=new Image();i.src=src;DIR.loghi[src]=i;}
+  const i=DIR.loghi[src];return i.complete&&i.naturalWidth?i:null;
+}
+/* ------------------------- il motore (worker) -------------------------
+   Composizione e codifica stanno in un worker: la Regia resta libera per il
+   lavoro di sempre — punteggi dall'App Campo, formazioni dall'App Capitano,
+   clip dall'App Replay — anche con due dirette accese. I fotogrammi catturati
+   arrivano già in memoria in YUV (I420): si scalano e si affiancano lì, senza
+   passare dalla scheda grafica (in Electron un fotogramma preso dalla scheda
+   grafica ferma l'encoder). Fasce, scritte e orologio si disegnano una volta
+   al secondo nella pagina e arrivano qui come sfondo. */
+const DIR_MOTORE_SRC=`
+const SRC={},OUT={},MAPS=new Map();let livello=0;
+function planiI420(w,h,lay){return{Y:{o:lay[0].offset,s:lay[0].stride},U:{o:lay[1].offset,s:lay[1].stride},V:{o:lay[2].offset,s:lay[2].stride},inter:false};}
+function leggiSorgente(nome,rd){
+  const r=rd.getReader(),s={w:0,h:0,buf:null,n:0,r};
+  if(SRC[nome]&&SRC[nome].r){try{SRC[nome].r.cancel();}catch(e){}}
+  SRC[nome]=s;
+  (async()=>{for(;;){let x;try{x=await r.read();}catch(e){break;}if(x.done)break;const f=x.value;
+    try{const vr=f.visibleRect,w=vr.width&~1,h=vr.height&~1,rect={x:vr.x&~1,y:vr.y&~1,width:w,height:h};
+      if(f.format==='I420'||f.format==='I420A'||f.format==='NV12'){
+        const size=f.allocationSize({rect});if(!s.buf||s.buf.length<size)s.buf=new Uint8Array(size);
+        const lay=await f.copyTo(s.buf,{rect});
+        s.p=f.format==='NV12'?{Y:{o:lay[0].offset,s:lay[0].stride},UV:{o:lay[1].offset,s:lay[1].stride},inter:true}:planiI420(w,h,lay);
+      }else{
+        const n=w*h,rgba=new Uint8Array(n*4);await f.copyTo(rgba,{rect,format:'RGBA'});
+        const size=n+2*((w>>1)*(h>>1));if(!s.buf||s.buf.length<size)s.buf=new Uint8Array(size);
+        rgbaYuv(rgba,w,h,s.buf,0,w,0,0,w,h,w,h);s.p=planiI420(w,h,[{offset:0,stride:w},{offset:n,stride:w>>1},{offset:n+(w>>1)*(h>>1),stride:w>>1}]);
+      }
+      s.w=w;s.h=h;s.n++;}catch(e){}
+    f.close();}})();
+}
+function mappa(sx,sw,dw,step){
+  const k=sx+','+sw+','+dw+','+step;let m=MAPS.get(k);if(m)return m;
+  const a=new Int32Array(dw),b=new Int32Array(dw),f=new Int32Array(dw),last=sx+sw-1;
+  for(let i=0;i<dw;i++){let p=sx+(i+.5)*sw/dw-.5;if(p<sx)p=sx;let x0=Math.floor(p);if(x0>last)x0=last;const x1=Math.min(x0+1,last);
+    a[i]=x0*step;b[i]=x1*step;f[i]=Math.round((p-x0)*256);}
+  m={a,b,f};if(MAPS.size>64)MAPS.clear();MAPS.set(k,m);return m;
+}
+function scala(src,off,stride,step,sx,sy,sw,sh,dst,doff,dstride,dx,dy,dw,dh){
+  if(dw<=0||dh<=0||sw<=0||sh<=0)return;
+  const mx=mappa(sx,sw,dw,step),my=mappa(sy,sh,dh,1),xa=mx.a,xb=mx.b,xf=mx.f;
+  for(let j=0;j<dh;j++){
+    const r0=off+my.a[j]*stride,r1=off+my.b[j]*stride,fy=my.f[j],gy=256-fy;let o=doff+(dy+j)*dstride+dx;
+    for(let i=0;i<dw;i++){const f=xf[i],g=256-f,a0=xa[i],a1=xb[i];
+      dst[o+i]=((src[r0+a0]*g+src[r0+a1]*f)*gy+(src[r1+a0]*g+src[r1+a1]*f)*fy+32768)>>16;}
+  }
+}
+function incolla(o,s,dx,dy,dw,dh,sx,sy,sw,sh){
+  const W=o.W,H=o.H,fr=o.fr,U=W*H,V=U+(W>>1)*(H>>1),p=s.p,b=s.buf;
+  dx&=~1;dy&=~1;dw&=~1;dh&=~1;sx&=~1;sy&=~1;sw&=~1;sh&=~1;
+  scala(b,p.Y.o,p.Y.s,1,sx,sy,sw,sh,fr,0,W,dx,dy,dw,dh);
+  const c=[sx>>1,sy>>1,sw>>1,sh>>1],d=[dx>>1,dy>>1,dw>>1,dh>>1];
+  if(p.inter){scala(b,p.UV.o,p.UV.s,2,...c,fr,U,W>>1,...d);scala(b,p.UV.o+1,p.UV.s,2,...c,fr,V,W>>1,...d);}
+  else{scala(b,p.U.o,p.U.s,1,...c,fr,U,W>>1,...d);scala(b,p.V.o,p.V.s,1,...c,fr,V,W>>1,...d);}
+}
+function rgbaYuv(px,pw,ph,dst,x0,W,y0b,yy,ww,hh,DW,DH){
+  const U=DW*DH,V=U+(DW>>1)*(DH>>1);
+  for(let y=0;y<hh;y++){let i=y*pw*4,o=(y0b+y)*DW+x0;
+    for(let x=0;x<ww;x++,i+=4)dst[o+x]=((66*px[i]+129*px[i+1]+25*px[i+2]+128)>>8)+16;}
+  for(let y=0;y<hh;y+=2){for(let x=0;x<ww;x+=2){
+    let r=0,g=0,bl=0;for(const [dx,dy] of [[0,0],[1,0],[0,1],[1,1]]){const i=((y+dy)*pw+x+dx)*4;r+=px[i];g+=px[i+1];bl+=px[i+2];}
+    r>>=2;g>>=2;bl>>=2;const o=((y0b+y)>>1)*(DW>>1)+((x0+x)>>1);
+    dst[U+o]=((-38*r-74*g+112*bl+128)>>8)+128;dst[V+o]=((112*r-94*g-18*bl+128)>>8)+128;}}
+}
+function dentro(s,p){
+  // adatta: l'intera schermata nel riquadro; riempi: il riquadro pieno, lati tagliati
+  const rv=s.w/s.h,rd=p.w/p.h;
+  if(p.modo==='riempi'){let sw=s.w,sh=s.h,sx=0,sy=0;if(rv>rd){sw=Math.round(s.h*rd);sx=(s.w-sw)>>1;}else{sh=Math.round(s.w/rd);sy=(s.h-sh)>>1;}return[p.x,p.y,p.w,p.h,sx,sy,sw,sh];}
+  let dw=p.w,dh=p.h;if(rv>rd)dh=Math.round(p.w/rv);else dw=Math.round(p.h*rv);
+  return[p.x+((p.w-dw)>>1),p.y+((p.h-dh)>>1),dw,dh,0,0,s.w,s.h];
+}
+function giro(){
+  const ora=performance.now();
+  for(const pid in OUT){const o=OUT[pid];if(!o.enc||o.enc.state!=='configured')continue;
+    if(o.enc.encodeQueueSize>3){o.persi++;continue;}
+    o.fr.set(o.base);
+    for(const p of o.panes){const s=SRC[p.src];if(!s||!s.w)continue;const r=dentro(s,p);incolla(o,s,...r);}
+    const f=new VideoFrame(o.fr,{format:'I420',codedWidth:o.W,codedHeight:o.H,timestamp:Math.round((ora-o.t0)*1000)});
+    try{o.enc.encode(f,{keyFrame:o.n%(o.fps*2)===0});}catch(e){}
+    o.n++;o.fpsN++;
+    if(ora-o.ultimaAnteprima>500){o.ultimaAnteprima=ora;
+      createImageBitmap(f,{resizeWidth:o.W>o.H?384:216,resizeHeight:o.W>o.H?216:384}).then(bm=>postMessage({t:'anteprima',pid,bm},[bm])).catch(()=>{});}
+    f.close();
+  }
+}
+let timer=null;
+function avvia(m){
+  const o=OUT[m.pid]={W:m.spec.w,H:m.spec.h,fps:m.spec.fps,n:0,fpsN:0,persi:0,aCampioni:0,aT0:null,t0:performance.now(),panes:m.panes,ultimaAnteprima:0};
+  o.fr=new Uint8Array(o.W*o.H*3/2);o.base=new Uint8Array(o.W*o.H*3/2);o.base.fill(16,0,o.W*o.H);o.base.fill(128,o.W*o.H);
+  o.cfgV={codec:m.spec.codec,width:o.W,height:o.H,bitrate:m.spec.vb,framerate:o.fps,avc:{format:'avc'},latencyMode:'realtime',bitrateMode:'constant'};
+  o.enc=new VideoEncoder({output:(ch,meta)=>{
+      const d=meta&&meta.decoderConfig&&meta.decoderConfig.description;
+      if(d&&!o.vcfg){o.vcfg=true;const u=d.buffer?new Uint8Array(d.buffer,d.byteOffset,d.byteLength).slice():new Uint8Array(d).slice();postMessage({t:'cfg',pid:m.pid,tipo:'v',dati:u},[u.buffer]);}
+      const b=new Uint8Array(ch.byteLength);ch.copyTo(b);postMessage({t:'pk',pid:m.pid,tipo:'v',ts:Math.round(ch.timestamp/1000),key:ch.type==='key',dati:b},[b.buffer]);},
+    error:e=>postMessage({t:'err',pid:m.pid,msg:'video: '+e.message})});
+  o.enc.configure(o.cfgV);
+  o.aenc=new AudioEncoder({output:(ch,meta)=>{
+      if(!o.acfg){o.acfg=true;const d=meta&&meta.decoderConfig&&meta.decoderConfig.description;
+        const u=d?(d.buffer?new Uint8Array(d.buffer,d.byteOffset,d.byteLength).slice():new Uint8Array(d).slice()):new Uint8Array([0x11,0x90]);postMessage({t:'cfg',pid:m.pid,tipo:'a',dati:u},[u.buffer]);}
+      const b=new Uint8Array(ch.byteLength);ch.copyTo(b);postMessage({t:'pk',pid:m.pid,tipo:'a',ts:Math.round(ch.timestamp/1000),key:true,dati:b},[b.buffer]);},
+    error:e=>postMessage({t:'err',pid:m.pid,msg:'audio: '+e.message})});
+  o.aenc.configure({codec:'mp4a.40.2',sampleRate:48000,numberOfChannels:2,bitrate:128000});
+  if(!timer)timer=setInterval(giro,1000/30);
+}
+function ferma(pid){const o=OUT[pid];if(!o)return;try{o.enc.close();}catch(e){}try{o.aenc.close();}catch(e){}delete OUT[pid];
+  if(!Object.keys(OUT).length){clearInterval(timer);timer=null;}}
+function leggiAudio(rd){
+  const r=rd.getReader();
+  (async()=>{for(;;){let x;try{x=await r.read();}catch(e){break;}if(x.done)break;const ad=x.value;
+    const n=ad.numberOfFrames,ch=ad.numberOfChannels,sr=ad.sampleRate;let piani=null;
+    try{piani=new Float32Array(n*2);const t=new Float32Array(n);
+      for(let c=0;c<2;c++){ad.copyTo(t,{planeIndex:Math.min(c,ch-1),format:'f32-planar'});piani.set(t,c*n);}
+      let pk=0;for(let i=0;i<piani.length;i+=4){const v=Math.abs(piani[i]);if(v>pk)pk=v;}livello=Math.max(pk,livello*.85);
+      for(const pid in OUT){const o=OUT[pid];if(!o.aenc||o.aenc.state!=='configured')continue;
+        if(o.aT0==null)o.aT0=(performance.now()-o.t0)*1000;
+        const d=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(o.aT0+o.aCampioni/sr*1e6),data:piani});
+        o.aCampioni+=n;try{o.aenc.encode(d);}catch(e){}d.close();}
+    }catch(e){}
+    ad.close();}})();
+}
+setInterval(()=>{const st={};for(const pid in OUT){const o=OUT[pid];st[pid]={fps:o.fpsN,persi:o.persi,coda:o.enc?o.enc.encodeQueueSize:0};o.fpsN=0;}
+  postMessage({t:'stat',st,livello:Math.round(livello*100)/100});},1000);
+onmessage=async e=>{const m=e.data;
+  if(m.t==='sorgente')leggiSorgente(m.nome,m.rd);
+  else if(m.t==='audio')leggiAudio(m.rd);
+  else if(m.t==='avvia')avvia(m);
+  else if(m.t==='ferma')ferma(m.pid);
+  else if(m.t==='panes'){const o=OUT[m.pid];if(o)o.panes=m.panes;}
+  else if(m.t==='base'){const o=OUT[m.pid];if(o){const px=new Uint8Array(m.px);rgbaYuv(px,o.W,o.H,o.base,0,o.W,0,0,o.W,o.H,o.W,o.H);}}
+  else if(m.t==='bitrate'){const o=OUT[m.pid];if(o&&o.enc.state==='configured'){o.cfgV.bitrate=m.vb;try{o.enc.configure(o.cfgV);o.vcfg=false;}catch(x){}}}
+};`;
+function dirMotore(){
+  if(DIR.w)return DIR.w;
+  const w=DIR.w=new Worker(URL.createObjectURL(new Blob([DIR_MOTORE_SRC],{type:'text/javascript'})));
+  w.onmessage=e=>{const m=e.data;
+    if(m.t==='pk')STCDiretta.dati(m.pid,m.tipo,m.ts,m.key,m.dati);
+    else if(m.t==='cfg')STCDiretta.config(m.pid,m.tipo,m.dati);
+    else if(m.t==='stat'){for(const pid in m.st){const o=DIR.out[pid];if(o){o.fps=m.st[pid].fps;o.persi+=m.st[pid].persi;}}
+      const vu=$('#dir-vu');if(vu)vu.style.width=Math.min(100,Math.round(m.livello*140))+'%';}
+    else if(m.t==='anteprima'){const o=DIR.out[m.pid];if(o&&o.prev){o.prev.getContext('bitmaprenderer').transferFromImageBitmap(m.bm);}else m.bm.close();}
+    else if(m.t==='err')dirGuasto(m.pid,m.msg);
+  };
+  w.onerror=e=>dirLog(L('Errore nel motore della diretta')+': '+(e.message||''));
+  return w;
+}
+function dirSorgenteAlMotore(quale){
+  const st=DIR.cap[quale];if(!st||DIR.inviate[quale]===st)return;
+  const t=st.getVideoTracks()[0];if(!t)return;
+  const rd=new MediaStreamTrackProcessor({track:t}).readable;
+  dirMotore().postMessage({t:'sorgente',nome:quale,rd},[rd]);DIR.inviate[quale]=st;
+}
+/* riquadri delle schermate e sfondo (fasce, scritte, orologio) di ogni uscita */
+function dirGeometria(pid){
+  const spec=dirSpec(pid),W=spec.w,H=spec.h,c=DIR.cfg[pid],lay=c.lay,panes=[],etichette=[];
+  if(pid==='youtube'){
+    if(lay==='regia')panes.push({src:'regia',x:0,y:0,w:W,h:H,modo:'adatta'});
+    else{panes.push({src:'tabellone',x:0,y:0,w:W,h:H,modo:'adatta'});
+      if(lay==='pip'){const w=Math.round(W*.3)&~1,h=Math.round(w*9/16)&~1,m=Math.round(W*.02)&~1;
+        panes.push({src:'regia',x:W-w-m,y:H-h-m,w,h,modo:'adatta',cornice:true});}}
+    return{W,H,panes,testa:0,piede:0,etichette};
+  }
+  const k=W/1080,testa=Math.round(250*k)&~1,piede=Math.round(230*k)&~1,gap=Math.round(62*k)&~1,riempi=c.riempi==='riempi';
+  const area=H-testa-piede,lR=L('REGIA'),lT=L('PRESENTAZIONE');
+  if(lay==='present'||lay==='regia'){
+    const h=(riempi?area-2*gap:Math.round(W*9/16))&~1,y=(testa+((area-h)>>1))&~1;
+    panes.push({src:lay==='present'?'tabellone':'regia',x:0,y,w:W,h,modo:riempi?'riempi':'adatta'});
+  }else{
+    const h=(riempi?Math.round((area-3*gap)/2):Math.round(W*9/16))&~1,y0=(testa+((area-2*h-gap)>>1)+(gap>>1))&~1;
+    const ord=lay==='present-sopra'?[['tabellone',lT],['regia',lR]]:[['regia',lR],['tabellone',lT]];
+    ord.forEach(([src,et],i)=>{const y=(y0+i*(h+gap))&~1;panes.push({src,x:0,y,w:W,h,modo:riempi?'riempi':'adatta'});etichette.push([et,y]);});
+  }
+  return{W,H,panes,testa,piede,etichette};
+}
+function dirBase(pid){
+  const G=dirGeometria(pid),W=G.W,H=G.H,o=DIR.out[pid];if(!o)return;
+  if(!o.bc){o.bc=document.createElement('canvas');o.bg=o.bc.getContext('2d',{willReadFrequently:true});}
+  o.bc.width=W;o.bc.height=H;const g=o.bg;
+  if(pid==='youtube'){g.fillStyle='#000';g.fillRect(0,0,W,H);
+    const p=G.panes.find(x=>x.cornice);if(p){g.fillStyle='#f5c542';g.fillRect(p.x-6,p.y-6,p.w+12,p.h+12);g.fillStyle='#050a18';g.fillRect(p.x,p.y,p.w,p.h);}}
+  else{
+    const k=W/1080;
+    const sf=g.createLinearGradient(0,0,0,H);sf.addColorStop(0,'#0b1634');sf.addColorStop(.5,'#060c1f');sf.addColorStop(1,'#0b1634');g.fillStyle=sf;g.fillRect(0,0,W,H);
+    for(const p of G.panes){g.fillStyle='#050a18';g.fillRect(p.x,p.y,p.w,p.h);}
+    const logo=dirLogo();let tx=Math.round(48*k);
+    if(logo){const s=Math.round(150*k);g.drawImage(logo,tx,Math.round(50*k),s,s);tx+=s+Math.round(28*k);}
+    g.textAlign='left';g.textBaseline='alphabetic';g.fillStyle='#f5c542';g.font=`700 ${Math.round(64*k)}px Oswald, sans-serif`;
+    const nome=(S.cfg&&S.cfg.name)||L('Torneo Subbuteo');
+    g.fillText(nome.length>28?nome.slice(0,27)+'…':nome,tx,Math.round(125*k),W-tx-Math.round(270*k));
+    g.fillStyle='#c9d3e8';g.font=`500 ${Math.round(32*k)}px Oswald, sans-serif`;
+    const sub=[S.cfg&&S.cfg.loc,(S.cfg&&S.cfg.date)?new Date(S.cfg.date+'T00:00').toLocaleDateString(LANG==='en'?'en-GB':'it-IT'):''].filter(Boolean).join(' · ');
+    g.fillText(sub||'Subbuteo Tournament Center',tx,Math.round(178*k),W-tx-Math.round(270*k));
+    const lx=W-Math.round(230*k),ly=Math.round(34*k);
+    g.fillStyle='#e0262f';g.beginPath();g.roundRect(lx,ly,Math.round(190*k),Math.round(58*k),Math.round(12*k));g.fill();
+    g.fillStyle='#fff';g.font=`700 ${Math.round(34*k)}px Oswald, sans-serif`;g.textAlign='center';
+    g.fillText(((Math.floor(Date.now()/1000)%2)?'● ':'○ ')+'LIVE',lx+Math.round(95*k),ly+Math.round(42*k));
+    g.fillStyle='#c9d3e8';g.font=`500 ${Math.round(30*k)}px Oswald, sans-serif`;g.fillText(new Date().toTimeString().slice(0,5),lx+Math.round(95*k),ly+Math.round(100*k));
+    g.textAlign='left';g.font=`700 ${Math.round(28*k)}px Oswald, sans-serif`;
+    for(const [t,y] of G.etichette){g.fillStyle='#f5c542';g.fillText(t,Math.round(48*k),y-Math.round(16*k));}
+    const py=H-G.piede;g.fillStyle='#1d2334';g.fillRect(0,py,W,G.piede);g.fillStyle='#f5c542';g.fillRect(0,py,W,Math.max(2,Math.round(4*k)));
+    const ris=(S.results||[]).slice(-2).reverse().map(dirTesto).filter(Boolean);
+    g.fillStyle='#ffffff';g.font=`600 ${Math.round(40*k)}px Oswald, sans-serif`;
+    (ris.length?ris:[L('Il torneo sta per cominciare')]).forEach((r,i)=>g.fillText(r.length>40?r.slice(0,39)+'…':r,Math.round(48*k),py+Math.round((70+i*62)*k),W-Math.round(96*k)));
+    g.fillStyle='#8894ad';g.font=`500 ${Math.round(24*k)}px Oswald, sans-serif`;g.textAlign='right';g.fillText('SUBBUTEO TOURNAMENT CENTER',W-Math.round(40*k),H-Math.round(26*k));
+  }
+  const px=g.getImageData(0,0,W,H).data.buffer;
+  dirMotore().postMessage({t:'base',pid,px},[px]);
+}
+/* la rete non tiene il passo (tunnel dei telefoni, clip dell'App Replay, Wi-Fi
+   di sala affollato): si abbassa la qualità invece di accumulare ritardo, poi
+   quando torna il respiro si risale piano verso quella scelta */
+function dirAdatta(pid){
+  const o=DIR.out[pid],d=DIR.stato[pid];if(!o||!d||d.stato!=='inonda')return;
+  const vb=o.vb||o.spec.vb,sec=(d.coda||0)*8/vb;
+  if(sec>1.5){o.intasato=(o.intasato||0)+1;o.libero=0;}else if(sec<.2){o.libero=(o.libero||0)+1;o.intasato=0;}else{o.intasato=0;o.libero=0;}
+  let nuovo=null;
+  if(o.intasato>=3&&vb>1200000){nuovo=Math.max(1200000,Math.round(vb*.7));o.intasato=0;}
+  else if(o.libero>=20&&vb<o.spec.vb){nuovo=Math.min(o.spec.vb,Math.round(vb*1.2));o.libero=0;}
+  if(nuovo&&nuovo!==vb){o.vb=nuovo;dirMotore().postMessage({t:'bitrate',pid,vb:nuovo});
+    dirLog(DIR_PIATT[pid].nome+': '+L(nuovo<vb?'rete lenta, qualità ridotta a':'rete di nuovo libera, qualità a')+' '+(nuovo/1e6).toFixed(1)+' Mbps');}
+}
+
+/* ------------------------- avvio e arresto ------------------------- */
+function dirAvviaStop(pid){ if(DIR.out[pid])dirFerma(pid); else dirAvvia(pid); }
+async function dirAvvia(pid){
+  if(!dirDesktop()||DIR.out[pid])return;
+  if(!licGate('diretta'))return;
+  const P=DIR_PIATT[pid],a=(DIR.acc||{})[pid]||{};
+  if(!a.haChiave){toast('🔑 '+L('Prima inserisci la chiave di trasmissione di')+' '+P.nome);const d=$('#dir-acc-'+pid);if(d)d.open=true;return;}
+  const spec=dirSpec(pid),btn=$('#dir-go-'+pid);
+  if(btn){btn.disabled=true;btn.textContent='… '+L('collegamento in corso');}
+  const o=DIR.out[pid]={pid,spec,n:0,fpsN:0,fps:0,persi:0,aCampioni:0,aT0:null,t0:performance.now(),avvio:true};
+  try{
+    const serve=dirSorgenti(pid);
+    if(serve.includes('tabellone'))await dirApriTabellone();
+    for(const q of serve)await dirCattura(q,q==='regia'&&DIR.cfg.audioApp);
+    await dirAudioAvvia();
+    for(const q of serve)dirSorgenteAlMotore(q);
+    o.prev=document.createElement('canvas');o.prev.width=pid==='youtube'?384:216;o.prev.height=pid==='youtube'?216:384;
+    const prev=$('#dir-prev-'+pid);if(prev){prev.innerHTML='';prev.appendChild(o.prev);}
+    dirLog(P.nome+': '+L('collegamento al server…'));
+    const r=await STCDiretta.avvia(pid,{width:spec.w,height:spec.h,fps:spec.fps,vbitrate:spec.vb,abitrate:128000,audio:true});
+    if(!r||!r.ok)throw new Error(r&&r.errore||L('collegamento non riuscito'));
+    o.vb=spec.vb;
+    dirMotore().postMessage({t:'avvia',pid,spec,panes:dirGeometria(pid).panes});
+    dirBase(pid);
+    o.t0=performance.now();o.avvio=false;
+    dirLog(P.nome+': '+L('IN ONDA'));toast('🔴 '+L('In onda su')+' '+P.nome);
+    dirGiri();
+  }catch(e){
+    dirLog(P.nome+': '+L('non partita')+' — '+e.message);toast('⚠️ '+P.nome+': '+e.message);
+    dirPulisci(pid);
+  }
+  dirPulsanti();
+}
+function dirGuasto(pid,msg){dirLog(DIR_PIATT[pid].nome+': '+msg);toast('⚠️ '+DIR_PIATT[pid].nome+': '+msg);dirFerma(pid);}
+function dirPulisci(pid){
+  const o=DIR.out[pid];if(!o)return;
+  try{DIR.w&&DIR.w.postMessage({t:'ferma',pid});}catch(e){}
+  delete DIR.out[pid];
+  const prev=$('#dir-prev-'+pid);if(prev)prev.innerHTML=`<span class="dir-vuota">${L('L’anteprima compare quando la diretta parte')}</span>`;
+  if(!Object.keys(DIR.out).length){
+    clearInterval(DIR.timer);DIR.timer=null;clearInterval(DIR.mon);DIR.mon=null;
+    dirAudioFerma();
+    for(const q of Object.keys(DIR.cap)){try{DIR.cap[q]&&DIR.cap[q].getTracks().forEach(t=>t.stop());}catch(e){}DIR.cap[q]=null;DIR.inviate[q]=null;}
+  }
+  dirPulsanti();dirBadge();
+}
+async function dirFerma(pid){
+  const o=DIR.out[pid];if(!o)return;
+  try{await STCDiretta.ferma(pid);}catch(e){}
+  dirLog(DIR_PIATT[pid].nome+': '+L('diretta chiusa'));
+  dirPulisci(pid);
+}
+function dirFermaTutte(){Object.keys(DIR.out).forEach(dirFerma);}
+function dirGiri(){
+  if(!DIR.mon)DIR.mon=setInterval(()=>{
+    for(const pid in DIR.out){if(DIR.out[pid].avvio)continue;
+      if(pid==='tiktok')dirBase(pid);          // orologio, LIVE che lampeggia, ultimi risultati
+      dirAdatta(pid);}
+    dirMonitor();
+  },1000);
+}
+/* ------------------------- monitoraggio ------------------------- */
+const DIR_STATI={connessione:['Collegamento…','conn'],inonda:['IN ONDA','live'],riconnessione:['Riconnessione…','conn'],errore:['Errore','err'],ferma:['Ferma','idle']};
+function dirStato(d){
+  const prima=(DIR.stato[d.pid]||{}).stato;DIR.stato[d.pid]=d;
+  if(prima!==d.stato){
+    if(d.stato==='riconnessione'&&prima==='inonda')dirLog(DIR_PIATT[d.pid].nome+': '+L('connessione persa, riprovo'));
+    if(d.stato==='inonda'&&prima&&prima!=='inonda'&&d.riconnessioni>0)dirLog(DIR_PIATT[d.pid].nome+': '+L('di nuovo in onda'));
+  }
+  if(d.stato==='errore'&&DIR.out[d.pid]&&!DIR.out[d.pid].avvio){dirGuasto(d.pid,d.errore||L('errore'));return;}
+  dirMonitor();
+}
+function dirDurata(ms){const s=Math.floor(ms/1000);return [Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,'0')).join(':');}
+function dirMonitor(){
+  for(const pid of Object.keys(DIR_PIATT)){
+    const o=DIR.out[pid],d=DIR.stato[pid]||{},on=!!o;
+    const st=on?(d.stato||'connessione'):'ferma',[t,cls]=DIR_STATI[st]||DIR_STATI.ferma;
+    const el=$('#dir-st-'+pid);if(el){el.textContent=on?L(t):L('Pronta');el.className='dir-stato '+(on?cls:'idle');}
+    const set=(k,v)=>{const x=$('#dir-m-'+k+'-'+pid);if(x)x.textContent=v;};
+    if(!on){['dur','kbps','fps','persi','coda','ric'].forEach(k=>set(k,'—'));const b=$('#dir-m-bar-'+pid);if(b)b.style.width='0';continue;}
+    const tot=(d.persi||0)+(o.persi||0);
+    set('dur',d.durata?dirDurata(d.durata):'—');
+    set('kbps',d.kbps?(d.kbps>=1000?(d.kbps/1000).toFixed(1)+' Mbps':d.kbps+' kbps'):'—');
+    set('fps',(o.fps||0)+' / '+o.spec.fps);
+    set('persi',String(tot));
+    const sec=d.coda&&d.kbps?d.coda*8/1000/Math.max(1,d.kbps):0;
+    set('coda',d.coda?(sec>=0.1?sec.toFixed(1)+' s':'<0,1 s'):'0 s');
+    set('ric',String(d.riconnessioni||0));
+    const b=$('#dir-m-bar-'+pid);if(b){const r=Math.min(100,Math.round((d.kbps||0)*1000/(o.vb||o.spec.vb)*100));b.style.width=r+'%';b.className=r<60?'basso':r<85?'medio':'';}
+    const pf=$('#dir-pf-'+pid);if(pf)pf.classList.toggle('onair',st==='inonda');
+  }
+  dirBadge();
+}
+function dirPulsanti(){
+  for(const pid of Object.keys(DIR_PIATT)){const b=$('#dir-go-'+pid);if(!b)continue;const o=DIR.out[pid];
+    b.disabled=!!(o&&o.avvio);b.classList.toggle('stop',!!o&&!o.avvio);
+    b.textContent=o?(o.avvio?'… '+L('collegamento in corso'):'■ '+L('Ferma la diretta su')+' '+DIR_PIATT[pid].nome):'● '+L('Avvia la diretta su')+' '+DIR_PIATT[pid].nome;}
+}
+function dirBadge(){
+  const el=$('#hdr-onair');if(!el)return;
+  const on=Object.keys(DIR.out).filter(p=>!DIR.out[p].avvio);
+  if(!on.length){el.style.display='none';return;}
+  el.style.display='';
+  el.innerHTML='<i></i>'+on.map(p=>{const d=DIR.stato[p]||{};return `${p==='youtube'?'YT':'TT'} ${d.durata?dirDurata(d.durata):'00:00:00'}${d.stato==='riconnessione'?' ⟳':''}`;}).join(' · ');
+  el.title=L('Diretta in corso')+': '+on.map(p=>DIR_PIATT[p].nome).join(', ');
+}
+function dirVai(){tabTo('audio');const s=$('#dir-sez');if(s)s.scrollIntoView({behavior:'smooth',block:'start'});}
+if(window.STCDiretta)STCDiretta.suStato(dirStato);
+window.addEventListener('beforeunload',()=>{try{for(const p of Object.keys(DIR.out))STCDiretta.ferma(p);}catch(e){}});
+
+/* =========================================================
    NOVITÀ DELLA VERSIONE — si apre da sola al primo avvio di ogni
    versione principale (9.0, 9.1…), poi resta a portata di un pulsante.
    Non compare sulla seconda finestra del proiettore.
    ========================================================= */
-const NOVITA_VER='9.0', NOVITA_KEY='stc_novita_vista';
+const NOVITA_VER='9.2', NOVITA_KEY='stc_novita_vista';
 const NOVITA={
-  it:{tit:'Il regolamento FISTF entra nel programma',
-    intro:'Le formule dei tornei internazionali, così come le scrive la federazione mondiale: ordine delle gare, criteri di classifica, spareggi e incroci del tabellone presi dal Tournament Organisers Handbook FISTF (v2.1), senza adattamenti.',
+  it:{tit:'Il torneo in diretta, il cronometro sempre in vista',
+    intro:'Dalla Regia il torneo va in onda su YouTube e TikTok, senza programmi da installare. In sala la Presentazione e l’AUTO LIVE mostrano il tempo delle partite in corso. E poi stampe A4 senza tagli, arbitri veri nei tornei a squadre e un’apertura del programma senza domande inutili.',
     card:[
-      {big:1,t:'🌐 Tre nuove formule FISTF',p:'Nel menu Formula del Setup, gruppo «🌐 FISTF»:',li:['<b>Gironi + tabellone ufficiale</b> — gironi da 3 a 10, passano i primi due, tabellone delle tabelle ufficiali','<b>Sistema svizzero + fase finale</b> — quattro turni, poi tabellone a 16 o a 8','<b>Torneo a squadre</b> — incontri su quattro tavoli con le regole FISTF']},
-      {t:'🏆 Tabelloni ufficiali da 2 a 32 gironi',li:['Spareggi M1, M2… e accessi diretti come nella tabella','Primo e secondo dello stesso girone sempre in metà opposte','Corretto un refuso del documento (29 gironi: M8 = 14A–9B)']},
-      {t:'🎲 Gironi e sorteggio FISTF',li:['Ordine di iscrizione = ranking mondiale, fasce di teste di serie','Sorteggio dentro le fasce, compagni di club o nazione separati','Il numero di gironi propone solo le scelte regolamentari']},
-      {t:'📋 Ordine delle gare',li:['Tabelle FISTF per i gironi da 3 a 10 giocatori','Ordini speciali quando due compagni di club sono nello stesso girone','Etichetta «Ordine FISTF» su ogni girone']},
-      {t:'⚖️ Classifica e shoot-out',li:['Punti 3–1–0, poi scontri diretti, differenza reti, gol','Pari merito assoluto: riquadro per registrare lo shoot-out','Categorie U12 · U16 · U20 · Ladies: scarto massimo 5–0']},
-      {t:'🔁 Svizzero FISTF',li:['Primo turno a sorteggio, poi 1° contro 2° senza rivincite','Con iscritti dispari: riposo che vale 3–0, una volta a testa','Tabellone A 1–16 … H 2–15, oppure a 8']},
-      {t:'🏟 Squadre FISTF',li:['Abbinamento degli allenatori A e B, gara per gara','Squadra di tre giocatori: inizia la procedura, quarta gara 0–3','Una sostituzione, dichiara per primo chi vince il sorteggio']},
-      {wide:1,t:'🚪 Ritiri, classifiche e manuale',li:['Ritiro con la regola FISTF: 0–3 in tutte le gare del girone','Classifiche nella Presentazione e in AUTO LIVE: ogni riga ha il colore della sua zona e la legenda elenca solo le zone presenti, con gli stessi simboli','Stima della durata e Formule consigliate conoscono le formule FISTF; nuovo capitolo A14d nel manuale']}
+      {big:1,t:'🔴 Diretta su YouTube e TikTok',p:'In Regia, sezione «🔴 Diretta su YouTube e TikTok»:',li:['<b>YouTube</b> — Presentazione / AUTO LIVE, Regia, oppure la Presentazione con la Regia in un riquadro','<b>TikTok</b> — verticale: Regia sopra e Presentazione sotto, con la fascia del torneo, LIVE, l’ora e gli ultimi risultati','Tutte e due insieme, a 30 fotogrammi al secondo, in 1080 o in 720, con i suoni del programma e il microfono dello speaker']},
+      {t:'⏱ Cronometro in Presentazione',li:['In alto a destra, in Presentazione e in AUTO LIVE, mentre si gioca','Un solo orologio se i campi sono allineati, altrimenti campo per campo','Non copre nulla e sparisce a fine partita']},
+      {t:'🖨 Stampe A4 senza tagli',li:['Report, programma, segnapunti, cronache, libro dei ricordi, album, QR, ricevute','Nomi lunghi a capo, mai tagliati; foto intere, mai spezzate fra due pagine','Fogli segnapunti due per pagina, pronti da tagliare']},
+      {t:'🧑‍⚖️ Tornei a squadre',li:['Arbitra una squadra a riposo: i suoi primi quattro giocatori, uno per tavolo','FISTF: il sorteggio apre subito l’abbinamento alternato degli allenatori A e B','L’App Capitano segue la procedura gara per gara']},
+      {t:'🔑 Chiavi al sicuro',li:['Server e chiave di ogni account, inseriti prima del torneo','Cifrati su questo computer: mai nei dati del torneo, mai sui telefoni','Nel pannello solo le ultime quattro cifre']},
+      {t:'📊 Monitoraggio della diretta',li:['Stato, anteprima e tempo in onda per ogni piattaforma','Velocità di invio, fotogrammi, riconnessioni automatiche','L’indicatore rosso IN ONDA sempre visibile']},
+      {t:'📱 Insieme alle app dei telefoni',li:['App Campo, App Capitano e App Replay funzionano come sempre durante la diretta','Se la rete rallenta, la qualità scende da sola e poi risale','Composizione e codifica lavorano in un processo separato']},
+      {t:'⚔️ Compagni di club alla prima giornata',li:['Nuova casella nel Setup: due compagni nello stesso girone giocano il loro derby per primo','Nessuno sa ancora quale risultato conviene al club','Vale anche nei gironi FISTF']},
+      {t:'🎨 Classifiche coerenti',li:['Ogni riga ha il colore della sua zona','La legenda elenca solo le zone presenti, con gli stessi simboli','Oro, argento e bronzo solo dove non ci sono zone']},
+      {t:'🚀 Apertura senza domande',li:['Nessuna richiesta della password di sistema all’avvio','La licenza attiva non viene più richiesta','Si riparte dalla schermata dove si era rimasti, Regia compresa']},
+      {wide:1,t:'🌐 Dalla 9.0: il regolamento FISTF',li:['Tre formule: gironi con tabellone ufficiale da 2 a 32 gironi, svizzero con fase finale, torneo a squadre','Ordine delle gare, criteri, shoot-out, categorie giovanili e Ladies','Nuovi capitoli nel manuale, in italiano e in inglese']}
     ],
-    prova:'🌐 Prova una formula FISTF',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 9.0» nel Setup.'},
-  en:{tit:'The FISTF regulations come to the program',
-    intro:'The formats of international tournaments exactly as the world federation writes them: match order, ranking criteria, barrages and bracket pairings taken from the FISTF Tournament Organisers Handbook (v2.1), with no adaptations.',
+    prova:'🔴 Prepara la diretta',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 9.2» nel Setup.'},
+  en:{tit:'The tournament live, the clock always in sight',
+    intro:'From the Control Desk the tournament goes on air on YouTube and TikTok, with no software to install. In the hall the Presentation and AUTO LIVE show the time of the matches in progress. Plus A4 prints with nothing cut off, real referees in team events and a start-up with no needless questions.',
     card:[
-      {big:1,t:'🌐 Three new FISTF formats',p:'In the Setup Format menu, «🌐 FISTF» group:',li:['<b>Groups + official bracket</b> — groups of 3 to 10, the top two qualify, bracket from the official tables','<b>Swiss system + final stage</b> — four rounds, then a 16- or 8-player bracket','<b>Team tournament</b> — ties on four tables with the FISTF rules']},
-      {t:'🏆 Official brackets for 2 to 32 groups',li:['Barrages M1, M2… and direct entries as in the table','Winner and runner-up of a group always in opposite halves','A misprint in the document fixed (29 groups: M8 = 14A–9B)']},
-      {t:'🎲 FISTF groups and draw',li:['Entry order = world ranking, pots of seeds','Draw within the pots, club-mates or compatriots kept apart','The number of groups offers only regulation choices']},
-      {t:'📋 Match order',li:['FISTF tables for groups of 3 to 10 players','Special orders when two club-mates share a group','«FISTF order» label on every group']},
-      {t:'⚖️ Standings and shoot-out',li:['Points 3–1–0, then head-to-head, goal difference, goals','Complete tie: a box to record the shoot-out','U12 · U16 · U20 · Ladies categories: maximum margin 5–0']},
-      {t:'🔁 FISTF Swiss system',li:['First round by blind draw, then 1st v 2nd with no rematches','Odd number of entrants: a bye worth 3–0, once per player','Bracket A 1–16 … H 2–15, or of 8']},
-      {t:'🏟 FISTF teams',li:['Coach A and Coach B selection, game by game','Three-player team: starts the procedure, fourth game 0–3','One substitution, the toss winner declares first']},
-      {wide:1,t:'🚪 Withdrawals, standings and manual',li:['Withdrawal with the FISTF rule: 0–3 in all group matches','Standings in the Presentation and AUTO LIVE: every row has the colour of its zone and the key lists only the zones present, with the same symbols','Duration estimate and Suggested formats know the FISTF formats; new chapter A14d in the manual']}
+      {big:1,t:'🔴 Live on YouTube and TikTok',p:'In the Control Desk, «🔴 Live on YouTube and TikTok» section:',li:['<b>YouTube</b> — Presentation / AUTO LIVE, Control Desk, or the Presentation with the Control Desk in a corner box','<b>TikTok</b> — portrait: Control Desk on top and Presentation below, with the tournament band, LIVE, the time and the latest results','Both at once, at 30 frames per second, in 1080 or 720, with the program sound and the announcer’s microphone']},
+      {t:'⏱ Clock in the Presentation',li:['Top right, in the Presentation and AUTO LIVE, while matches are played','One clock when the fields are in step, otherwise field by field','It covers nothing and disappears at full time']},
+      {t:'🖨 A4 prints, nothing cut off',li:['Report, programme, score sheets, match reports, memory book, album, QR codes, receipts','Long names wrap instead of being cut; photos stay whole, never split across pages','Score sheets two per page, ready to cut']},
+      {t:'🧑‍⚖️ Team events',li:['A resting team referees: its first four players, one per table','FISTF: the toss opens the alternating selection of Coach A and Coach B straight away','The Captain App follows the procedure game by game']},
+      {t:'🔑 Keys kept safe',li:['Server and key for each account, entered before the tournament','Encrypted on this computer: never in the tournament data, never on the phones','The panel shows only the last four characters']},
+      {t:'📊 Stream monitoring',li:['State, preview and time on air for each platform','Upload speed, frames, automatic reconnections','The red ON AIR badge always visible']},
+      {t:'📱 Alongside the phone apps',li:['Table App, Captain App and Replay App work as usual while live','If the network slows down, the quality drops by itself and then rises again','Composition and encoding run in a separate process']},
+      {t:'⚔️ Club-mates on the first matchday',li:['New Setup box: two club-mates in the same group play their match first','Nobody yet knows which result suits the club','Works in FISTF groups too']},
+      {t:'🎨 Consistent standings',li:['Every row has the colour of its zone','The key lists only the zones present, with the same symbols','Gold, silver and bronze only where there are no zones']},
+      {t:'🚀 A start-up with no questions',li:['No system password prompt at start-up','An active licence is no longer asked for again','The program reopens where you left it, Control Desk included']},
+      {wide:1,t:'🌐 Since 9.0: the FISTF regulations',li:['Three formats: groups with the official bracket for 2 to 32 groups, Swiss with a final stage, team tournament','Match order, criteria, shoot-out, youth and Ladies categories','New chapters in the manual, in Italian and English']}
     ],
-    prova:'🌐 Try a FISTF format',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 9.0» button in the Setup.'}
+    prova:'🔴 Set up the stream',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 9.2» button in the Setup.'}
 };
 function novitaApri(){
   const t=NOVITA[LANG==='en'?'en':'it'];
@@ -20784,7 +21606,7 @@ function novitaApri(){
     <div class="nv-tit" id="nv-titolo">${t.tit}</div><p>${t.intro}</p>`;
   $('#nv-body').innerHTML=t.card.map(c=>`<div class="nv-card${c.big?' big':''}${c.wide?' wide':''}"><h4>${c.t}</h4>${c.p?`<p>${c.p}</p>`:''}<ul>${c.li.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
   $('#nv-foot').innerHTML=`<span class="small muted">${t.nota}</span>`
-    +(S.started?'':`<button class="btn sec" onclick="novitaProva()">${t.prova}</button>`)
+    +`<button class="btn sec" onclick="novitaProva()">${t.prova}</button>`
     +`<button class="btn" onclick="novitaChiudi()">${t.ok}</button>`;
   $('#novita').classList.add('on');
 }
@@ -20794,11 +21616,7 @@ function novitaChiudi(){
 }
 function novitaProva(){
   novitaChiudi();
-  if(S.started)return;
-  tabTo('setup');
-  const sel=$('#s-format');if(!sel)return;
-  sel.value='fistf-gironi';S.cfg.zones=null;fistfPreset();setupFmtChanged();
-  const w=$('#w-fistf');if(w)w.scrollIntoView({behavior:'smooth',block:'center'});
+  dirVai();
 }
 function novitaAllAvvio(){
   if(typeof isSchermoTabellone==='function'&&isSchermoTabellone())return;
@@ -20846,15 +21664,22 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#novita')&&$('#n
   spkUI();   // stato iniziale del pulsante speaker (modalità salvata)
   // licenza: verifica la firma del codice salvato e applica gli eventuali limiti
   applyFeatureFlags();
-  licLoad().then(()=>{setupFmtChanged();composeChanged&&composeChanged();});
+  /* si torna all'ultima schermata solo DOPO aver verificato la licenza: la
+     Regia, il Pre-Torneo, La Legge e l'Archivio sono della versione completa, e
+     aprirli mentre la verifica è ancora in corso faceva comparire la finestra
+     della licenza a chi l'aveva già attivata */
+  licLoad().catch(()=>{LIC.checked=true;applyLicenseUI();}).then(()=>{setupFmtChanged();composeChanged&&composeChanged();
+    if(restored&&S.started)tabTo(S.screen&&S.screen!=='setup'?S.screen:'gironi');});
   tickClock();
   if(restored&&S.started){
-    tabTo(S.screen&&S.screen!=='setup'?S.screen:'gironi');
+    const scr=S.screen&&S.screen!=='setup'?S.screen:'gironi';
+    if(!DEMO_TABS[scr])tabTo(scr);   // le altre schermate si aprono subito
     toast('Torneo ripristinato dal salvataggio automatico.');
   }
   // seconda finestra sul proiettore: parte subito in modalità tabellone
   if(isSchermoTabellone())avviaModalitaTabellone();
   novitaAllAvvio();   // «Novità della versione» al primo avvio della 9.0
+  try{dirRender();}catch(e){}   // pannello della diretta YouTube / TikTok
 })();
 </script>
 </body>
