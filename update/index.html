@@ -1388,6 +1388,22 @@ body.no-anim #present .tclass table.standings td.l,body.no-anim #present .tclass
 #tv .tv-field{transition:opacity .5s ease}
 #present-close:hover{color:#fff}
 
+/* ---------- IL RULLO IN PRESENTAZIONE ----------
+   A torneo avviato la barra dei comandi lascia il posto al rullo dei risultati:
+   sotto il titolo (resta agganciato mentre si scorre), in fondo come la fascia
+   di una diretta, o sospeso dove lo si lascia. I contenuti cedono lo spazio dal
+   bordo più vicino. La barra si richiama al volo dal bordo superiore o col
+   tasto M, e galleggia sopra tutto senza spostare nulla. */
+#present #ticker-wrap{flex:0 0 auto;width:100%;max-width:1640px;align-self:center;margin:0 auto 3vh;
+  position:sticky;top:5vh;z-index:6}
+#present #ticker-wrap.staccato{position:fixed;left:2vw;right:2vw;width:auto;max-width:none;margin:0;z-index:7;top:var(--tick-y,0px)}
+#present.con-rullo{padding-top:calc(5vh + var(--pt-sopra,0px));padding-bottom:calc(5vh + var(--pt-sotto,0px))}
+#present.con-rullo #present-modes{display:none}
+#present.con-rullo.comandi #present-modes{display:flex;position:fixed;top:8px;left:50%;transform:translateX(-50%);
+  z-index:9;margin:0;width:max-content;max-width:94vw;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+#present #tick-guida{z-index:6}
+body.solo-tabellone #present #ticker-wrap{display:flex!important}
+
 /* ---------- TIMER DELLE PARTITE IN CORSO (Presentazione / Auto Live) ----------
    Sta nella fascia vuota sopra il titolo (il padding alto di #present, 5vh):
    non copre titolo, pulsanti o schede, e resta a sinistra della ✕. */
@@ -4596,7 +4612,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='9.2.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='9.2.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -12413,6 +12429,8 @@ function barreAvvia(){
 const TICK_AGG=70;            // entro quanti pixel dal bordo si aggancia
 function tickAltezza(){const w=$('#ticker-wrap');return w?w.offsetHeight||68:68;}
 function tickLimiti(){
+  // in Presentazione: fra la fascia del cronometro (5vh) e il bordo inferiore
+  if(PRULLO.on)return {min:Math.round(window.innerHeight*.05), max:window.innerHeight-tickAltezza()-10};
   const t=document.querySelector('.topstack');
   const cima=t?t.getBoundingClientRect().bottom:0;
   return {min:Math.max(0,cima-tickAltezza()), max:window.innerHeight-tickAltezza()-10};
@@ -12420,6 +12438,7 @@ function tickLimiti(){
 /* applica la posizione salvata: 'alto' = dentro la pila, 'basso' = al fondo,
    un numero = pixel dal bordo superiore della finestra */
 function tickPosiziona(){
+  if(PRULLO.on)return presTickPosiziona();
   const w=$('#ticker-wrap'); if(!w)return;
   const p=(S.cfg&&S.cfg.tickerPos!=null)?S.cfg.tickerPos:'alto';
   const h=tickAltezza();
@@ -12440,7 +12459,75 @@ function tickPosiziona(){
   document.body.style.setProperty('--tick-sotto', versoIlBasso?(h+14)+'px':'0px');
   setTimeout(altezzaSopraMain,60);
 }
-function tickSalva(p){ if(!S.cfg)return; S.cfg.tickerPos=p; persist(); tickPosiziona(); }
+function tickSalva(p){
+  // la posizione in Presentazione è una preferenza di questo computer (vale anche per il secondo schermo)
+  if(PRULLO.on){ try{localStorage.setItem(PRULLO_KEY,String(p));}catch(e){} presTickPosiziona(); return; }
+  if(!S.cfg)return; S.cfg.tickerPos=p; persist(); tickPosiziona(); }
+/* ---------- IL RULLO IN PRESENTAZIONE ----------
+   Lo stesso rullo della finestra principale (contenuti, avvisi dei gol, cambio
+   d'argomento e trascinamento sono i suoi) si trasferisce nella Presentazione
+   quando si gioca, e torna al suo posto quando la si chiude. */
+const PRULLO={casa:null,dopo:null,on:false,t:null};
+const PRULLO_KEY='stc_rullo_pres';
+function presRulloPos(){
+  let v=null; try{v=localStorage.getItem(PRULLO_KEY);}catch(e){}
+  if(v==null||v==='alto')return 'alto';
+  if(v==='basso')return 'basso';
+  return isFinite(+v)?+v:'alto';
+}
+function presRulloAttivo(){ return !!(presentOpen&&S&&(S.started||S.autoLive)); }
+function presRulloSync(){
+  const w=$('#ticker-wrap'),p=$('#present'),m=$('#present-modes'); if(!w||!p||!m)return;
+  const guida=document.getElementById('tick-guida');
+  const on=presRulloAttivo();
+  if(on&&!PRULLO.on){
+    if(!PRULLO.casa){PRULLO.casa=w.parentNode;PRULLO.dopo=w.nextSibling;}
+    m.after(w); if(guida)p.appendChild(guida);   // anche a schermo intero (che mostra solo #present)
+    PRULLO.on=true; p.classList.add('con-rullo'); w.classList.remove('hidden');
+    try{renderTicker();}catch(e){}
+  }else if(!on&&PRULLO.on){
+    PRULLO.on=false; p.classList.remove('con-rullo','comandi');
+    p.style.removeProperty('--pt-sopra'); p.style.removeProperty('--pt-sotto');
+    if(PRULLO.casa)PRULLO.casa.insertBefore(w,(PRULLO.dopo&&PRULLO.dopo.parentNode===PRULLO.casa)?PRULLO.dopo:null);
+    if(guida)document.body.appendChild(guida);
+    w.classList.toggle('hidden',!S.started);
+    tickPosiziona(); return;
+  }
+  if(PRULLO.on){ try{renderTicker();}catch(e){} presTickPosiziona(); }
+}
+function presTickPosiziona(){
+  const w=$('#ticker-wrap'),p=$('#present'); if(!w||!p||!PRULLO.on)return;
+  const pos=presRulloPos(),h=tickAltezza(),vh=window.innerHeight;
+  const prima=[p.style.getPropertyValue('--pt-sopra'),p.style.getPropertyValue('--pt-sotto')].join();
+  if(pos==='alto'){
+    w.classList.remove('staccato','giu');
+    p.style.setProperty('--pt-sopra','0px'); p.style.setProperty('--pt-sotto','0px');
+  }else{
+    const {min,max}=tickLimiti();
+    const y=pos==='basso'?max:Math.max(min,Math.min(max,pos));
+    w.classList.add('staccato'); w.style.setProperty('--tick-y',y+'px');
+    const giu=(y+h/2)>vh/2; w.classList.toggle('giu',giu);
+    // il contenuto comincia sotto il rullo (se è in alto) o finisce sopra (se è in basso)
+    p.style.setProperty('--pt-sopra',giu?'0px':Math.max(0,Math.round(y+h+14-vh*.05))+'px');
+    p.style.setProperty('--pt-sotto',giu?Math.max(0,Math.round(vh-y+14-vh*.05))+'px':'0px');
+  }
+  if([p.style.getPropertyValue('--pt-sopra'),p.style.getPropertyValue('--pt-sotto')].join()!==prima)
+    setTimeout(()=>{try{presentFit();}catch(e){}},80);
+}
+/* la barra dei comandi a richiesta: bordo superiore dello schermo o tasto M */
+function presComandi(mostra){
+  const p=$('#present'); if(!p||!PRULLO.on)return;
+  p.classList.toggle('comandi',mostra==null?!p.classList.contains('comandi'):!!mostra);
+}
+document.addEventListener('mousemove',e=>{
+  if(!PRULLO.on)return;
+  const p=$('#present');
+  if(e.clientY<=6){ presComandi(true); clearTimeout(PRULLO.t); PRULLO.t=null; return; }
+  if(!p.classList.contains('comandi'))return;
+  const b=$('#present-modes').getBoundingClientRect();
+  if(e.clientY<=b.bottom+16){ clearTimeout(PRULLO.t); PRULLO.t=null; return; }
+  if(!PRULLO.t)PRULLO.t=setTimeout(()=>{presComandi(false);PRULLO.t=null;},900);
+});
 function tickAvvia(){
   const w=$('#ticker-wrap'); if(!w||w.__tickPronto)return;
   w.__tickPronto=true;
@@ -14884,6 +14971,10 @@ function tvCtl(what){
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){if(tvBoard!=null)tvClose();closePresent();closeStemmi();closeMusicLib();closeDistinta();closeLineup();closePdfPreview();closeShootout();}
   // scorrimento del tabellone Presentazione con le frecce / PagSu-PagGiù
+  if(presentOpen&&PRULLO.on&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'')){
+    if(e.key==='m'||e.key==='M'){presComandi();e.preventDefault();return;}
+    if(/^[1-9]$/.test(e.key)&&presentViste[+e.key-1]){presentShow(presentViste[+e.key-1]);e.preventDefault();return;}
+  }
   if(presentOpen){
     const el=$('#present');const h=el.clientHeight;
     if(e.key==='ArrowDown'){el.scrollBy({top:80,behavior:'smooth'});e.preventDefault();}
@@ -15393,7 +15484,7 @@ function fitPresentText(){
 }
 let presentOpen=false,presentView=null;
 function presentIsLive(){return S.boards.some(b=>b.matchId);}
-function openPresent(){presentOpen=true;presentView=null;$('#present').classList.add('on');presentRender();renderPresentFoto();if(S.autoLive)startAutoLive();updateWakeLock();}
+function openPresent(){presentOpen=true;presentView=null;$('#present').classList.add('on');presentRender();presRulloSync();renderPresentFoto();if(S.autoLive)startAutoLive();updateWakeLock();}
 
 /* =========================================================
    DUE SCHERMI — Regia sul portatile, tabellone sul proiettore
@@ -15741,7 +15832,7 @@ function presentTimerAggiorna(){
   el.hidden=false;
 }
 setInterval(()=>{try{presentTimerAggiorna();}catch(e){}},500);
-function closePresent(){presentOpen=false;stopAutoLive();$('#present').classList.remove('on');if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});updateWakeLock();}
+function closePresent(){presentOpen=false;stopAutoLive();presRulloSync();$('#present').classList.remove('on');if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});updateWakeLock();}
 function presentShow(v){const changed=presentView!==v;presentView=v;presentRender();if(changed)stcEnter(document.getElementById('present-stage'));}
 /* prossimo turno: SOLO le partite da giocare, in ordine di campo,
    fino alla disponibilità dei campi (le stesse che annuncia il TTS) */
@@ -15842,6 +15933,7 @@ function presentFinestra(items){
   fetta.__pagina=(presentPag%pagine)+1;fetta.__pagine=pagine;
   return fetta;
 }
+let presentViste=[];
 function presentRender(){
   if(!presentOpen)return;
   const live=presentIsLive();
@@ -15857,6 +15949,8 @@ function presentRender(){
     `<button class="btn ${vbase===v[0]||(v[0]==='classifiche'&&vbase==='stand')?'':'sec'}" onclick="presentShow('${v[0]}')">${v[1]}</button>`).join('')
     +`<button class="btn ${S.autoLive?'':'sec'}" onclick="toggleAutoLive()" title="${L('Slideshow automatico di risultati, classifiche e cronache')}">🔄 ${S.autoLive?'AUTO LIVE ●':'AUTO LIVE'}</button>`
     +`<button class="btn" onclick="announceNextRound()">🔊 ${L('Annuncia turno')}</button>`;
+  presentViste=views.map(v=>v[0]);
+  presRulloSync();
   const grid=$('#present-grid'),title=$('#present-title');
   grid.classList.remove('q-fit');       // la rimette solo il quadro completo
   const varg=String(presentView||'').split('#')[1];
