@@ -1,7 +1,7 @@
 {
- "content": "9.2.2",
+ "content": "9.3.0",
  "minShell": "9.2.0",
- "notes": "9.2.2 — App Campo e App Capitano: un aggiornamento rifiutato dalla Regia non blocca più la coda del telefono (le reti successive arrivano e il telefono spiega il motivo); problemi di rete e Regia in riavvio si ritentano con attese crescenti. Risolve le reti non registrate con il tunnel Internet.",
+ "notes": "App Giocatore, cartellino arancione, rullo in cima e nascosto nei replay, tema Antartide",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -9,8 +9,8 @@
    "size": 154284
   },
   "campo.html": {
-   "sha256": "46239112c511b220616702a820f026c8ab6d82e1e74b7ce4518585067fa46344",
-   "size": 54339
+   "sha256": "88f7fa5f050df12dca46296e7a55561d2bc41ae53bc1894bde66f25d2f39cd3f",
+   "size": 56067
   },
   "capitano.html": {
    "sha256": "c578c1becd6c5a9968fac8e5c4acab4f7a136391d08c3d0de234f0d58e9a51bd",
@@ -24,9 +24,17 @@
    "sha256": "d4abcba938a8ed397f8493c8473b32a73c0eb176c8e85c8498b69d8937ffea2b",
    "size": 14206
   },
+  "giocatore.html": {
+   "sha256": "e1fdd1e9e8d36849a0c6721e466ac2b957ed1174ce1b9dd80d8f321472c1d053",
+   "size": 424
+  },
+  "giocatore.js": {
+   "sha256": "9181c030022fdc96482ecb0086a3be88cd7b7f1f30b4510e06ad576bd2538e22",
+   "size": 56164
+  },
   "index.html": {
-   "sha256": "aeb575706a9203579ec9b38a9f5ca0e2963677359c2c1cbbf314c6de35b4fb5c",
-   "size": 4311406
+   "sha256": "906d4f955e6f255a7d4702709bb14e106ad43becf51e09eb1ee42d611c1b6691",
+   "size": 4668353
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",

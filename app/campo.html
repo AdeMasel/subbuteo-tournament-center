@@ -3,6 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<script>
+/* APP GIOCATORE — stessa porta d'ingresso dell'App Campo (/campo?app=giocatore):
+   i server installati prima della 9.3 non conoscono /giocatore ma servono i .js.
+   Si carica giocatore.js e il resto di questa pagina diventa testo inerte
+   (<plaintext>): niente App Campo, nessun collegamento al campo; giocatore.js
+   sostituisce il corpo della pagina con il suo. Non window.stop(): con la
+   lettura interrotta nell'<head> il browser non disegnava più la pagina. */
+if(/[?&]app=giocatore(&|$)/.test(location.search)){
+  document.write('<script src="giocatore.js"><\/script><plaintext style="display:none">');
+}
+</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#070d1f">
@@ -88,14 +99,23 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,0);user-
 .fotoslot .fsimg .car{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.55);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
 .fotoslot .btn{width:100%;padding:10px}
-.cardrow{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px}
-.cardrow .cgrp{display:flex;gap:8px}
-.cardrow button{width:46px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card2);font-size:1.05rem}
-.cardrow .lbl{font-size:.6rem;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+/* tre cartellini per lato (giallo, arancione CDT, rosso): i pulsanti si adattano
+   alla larghezza del telefono e, se proprio non ci stanno, la riga va a capo
+   invece di uscire dallo schermo */
+.cardrow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px clamp(6px,2.4vw,14px);margin-top:12px}
+.cardrow .cgrp{display:flex;gap:clamp(4px,1.4vw,8px)}
+.cardrow button{width:clamp(32px,10.4vw,46px);height:38px;padding:0;border-radius:10px;border:1px solid var(--line);background:var(--card2);font-size:1.05rem}
+.cardrow .lbl{font-size:.56rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;order:-1;flex-basis:100%;text-align:center}
+.cardrow{column-gap:clamp(14px,6vw,34px)}
 .cardsline{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px}
 .cardsline span{font-size:.7rem;border:1px solid var(--line);border-radius:999px;padding:2px 9px}
-.tcards{display:flex;gap:6px}
-.tcards button{width:34px;height:30px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);font-size:.8rem}
+.tcards{display:flex;gap:8px}
+/* sui tavoli le reti stanno ai due lati e, sotto, i cartellini della casa a
+   sinistra e dell'ospite a destra: con tre colori per lato su una sola riga
+   il «+1» dell'ospite usciva dallo schermo dei telefoni stretti */
+.tgb .tcards{order:3;flex-basis:100%;justify-content:space-between}
+.tcards .tcs{display:flex;gap:3px}
+.tcards button{width:34px;height:30px;padding:0;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);font-size:.8rem}
 .evline{font-size:.74rem;color:var(--muted);margin-top:10px;text-align:center;line-height:1.6;word-break:break-word}
 /* tavoli CdT */
 .tblrow{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--card2)}
@@ -104,7 +124,7 @@ button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,0);user-
 .tgrid .pn{font-size:.82rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tgrid .pn.r{text-align:right}
 .tgrid .ts{font-weight:800;color:var(--accent);font-size:1.05rem;white-space:nowrap}
-.tgb{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-top:8px}
+.tgb{display:flex;flex-wrap:wrap;gap:8px 6px;justify-content:space-between;align-items:center;margin-top:8px}
 .tgb .side{display:flex;gap:6px;align-items:center}
 .tgb button.plus{width:52px;height:42px;border-radius:10px;border:none;font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--accent),#ffd97a);color:#221703}
 .tgb button.minus{width:30px;height:26px;border-radius:7px;border:1px solid var(--line);font-size:.72rem;font-weight:700;background:rgba(0,0,0,.25);color:var(--muted);opacity:.75}
@@ -210,9 +230,9 @@ footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);let
       <div><div class="tn" id="m-t2"></div><div class="gl" id="m-g2">0</div><div class="gb"><button class="plus" onclick="goal(2,1)">+1</button><button class="minus" onclick="goal(2,-1)">−1</button></div></div>
     </div>
     <div class="cardrow" id="m-cardrow">
-      <span class="cgrp"><button onclick="card(1,'y')">🟨</button><button onclick="card(1,'r')">🟥</button></span>
+      <span class="cgrp"><button onclick="card(1,'y')">🟨</button><button onclick="card(1,'o')" title="CDT">🟧</button><button onclick="card(1,'r')">🟥</button></span>
       <span class="lbl" data-i>Cartellini</span>
-      <span class="cgrp"><button onclick="card(2,'y')">🟨</button><button onclick="card(2,'r')">🟥</button></span>
+      <span class="cgrp"><button onclick="card(2,'y')">🟨</button><button onclick="card(2,'o')" title="CDT">🟧</button><button onclick="card(2,'r')">🟥</button></span>
     </div>
     <div class="cardsline" id="m-cards"></div>
     <div class="evline" id="m-ref"></div>
@@ -491,7 +511,7 @@ function renderLeggeSos(){
 function cardsLine(m){
   const el=$('#m-cards');if(!el)return;
   el.innerHTML=(m.cards||[]).map(c=>
-    `<span>${c.col==='r'?'🟥':'🟨'} ${c.min}′ ${esc(c.p||(c.s===1?m.h:m.a))}</span>`).join('');
+    `<span>${CARD_E[c.col]||CARD_E.y} ${c.min}′ ${esc(c.p||(c.s===1?m.h:m.a))}</span>`).join('');
 }
 /* =========================================================
    FOTO DEGLI SFIDANTI
@@ -655,7 +675,7 @@ function renderMatch(){
         </div>
         <div class="tgb">
           <span class="side"><button class="plus" onclick="subGoal(${k},1,1)">+1</button><button class="minus" onclick="subGoal(${k},1,-1)">−1</button></span>
-          <span class="tcards"><button onclick="cardT(${k},1,'y')">🟨</button><button onclick="cardT(${k},1,'r')">🟥</button><button onclick="cardT(${k},2,'y')">🟨</button><button onclick="cardT(${k},2,'r')">🟥</button></span>
+          <span class="tcards"><span class="tcs"><button onclick="cardT(${k},1,'y')">🟨</button><button onclick="cardT(${k},1,'o')">🟧</button><button onclick="cardT(${k},1,'r')">🟥</button></span><span class="tcs"><button onclick="cardT(${k},2,'y')">🟨</button><button onclick="cardT(${k},2,'o')">🟧</button><button onclick="cardT(${k},2,'r')">🟥</button></span></span>
           <span class="side"><button class="minus" onclick="subGoal(${k},2,-1)">−1</button><button class="plus" onclick="subGoal(${k},2,1)">+1</button></span>
         </div>
       </div>`;}).join('')+lineupHTML(m);
@@ -724,12 +744,14 @@ function sendLineup(){
   send({type:'lineup',mid:curMid,h:names1,a:names2});
   toast(T('Inviato ✓'));
 }
+/* giallo, arancione (regolamento CDT: fuori il portierino) e rosso */
+const CARD_E={y:'🟨',o:'🟧',r:'🟥'};
 function card(side,col){
   const m=findM(curMid);if(!m)return;
   (m.cards=m.cards||[]).push({s:side,col,min:(boardOf(m.id)?boardClock(boardOf(m.id)).min:0)});
   cardsLine(m);
   send({type:'card',mid:curMid,side,col});
-  toast((col==='r'?'🟥 ':'🟨 ')+T('Inviato ✓'));
+  toast((CARD_E[col]||CARD_E.y)+' '+T('Inviato ✓'));
 }
 function cardT(k,side,col){
   const m=findM(curMid);if(!m||!m.sub||!m.sub[k])return;
@@ -737,7 +759,7 @@ function cardT(k,side,col){
   (m.cards=m.cards||[]).push({s:side,col,t:k,p,min:(boardOf(m.id)?boardClock(boardOf(m.id)).min:0)});
   cardsLine(m);
   send({type:'card',mid:curMid,side,col,t:k});
-  toast((col==='r'?'🟥 ':'🟨 ')+(p?p+' — ':'')+T('Inviato ✓'));
+  toast((CARD_E[col]||CARD_E.y)+' '+(p?p+' — ':'')+T('Inviato ✓'));
 }
 function sendPen(){
   const p1=parseInt($('#m-p1').value),p2=parseInt($('#m-p2').value);
