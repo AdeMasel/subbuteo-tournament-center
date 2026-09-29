@@ -1,7 +1,7 @@
 {
- "content": "9.2.1",
+ "content": "9.2.2",
  "minShell": "9.2.0",
- "notes": "9.2.1 — In Presentazione e AUTO LIVE, a torneo avviato, il rullo dei risultati prende il posto della barra dei comandi: si trascina in alto, in basso o dove si vuole e i contenuti si adattano; la barra si richiama dal bordo superiore o col tasto M.",
+ "notes": "9.2.2 — App Campo e App Capitano: un aggiornamento rifiutato dalla Regia non blocca più la coda del telefono (le reti successive arrivano e il telefono spiega il motivo); problemi di rete e Regia in riavvio si ritentano con attese crescenti. Risolve le reti non registrate con il tunnel Internet.",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -9,12 +9,12 @@
    "size": 154284
   },
   "campo.html": {
-   "sha256": "07004e1226b830661bf62fc20495595fa1c7364503c5059302c60947413aa7fb",
-   "size": 52865
+   "sha256": "46239112c511b220616702a820f026c8ab6d82e1e74b7ce4518585067fa46344",
+   "size": 54339
   },
   "capitano.html": {
-   "sha256": "4b4add46a7ee1674e3e0f259c73feac64e1d823fc479233e25bc30bfc3470bce",
-   "size": 27539
+   "sha256": "c578c1becd6c5a9968fac8e5c4acab4f7a136391d08c3d0de234f0d58e9a51bd",
+   "size": 28924
   },
   "figurine_motore.js": {
    "sha256": "445d9b0c1f42b744b976642d6659f82ac98391b622f2589cf5cee6da8c3bf93a",
@@ -25,8 +25,8 @@
    "size": 14206
   },
   "index.html": {
-   "sha256": "a6cc072d1b25c7d3d399c7dcbb1e20d6bb5167e843a9ca8567ef4a1d6c22574a",
-   "size": 4304501
+   "sha256": "aeb575706a9203579ec9b38a9f5ca0e2963677359c2c1cbbf314c6de35b4fb5c",
+   "size": 4311406
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",

@@ -257,6 +257,7 @@ footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);let
 'use strict';
 /* ---------- lingua ---------- */
 const I18N={
+ "Aggiornamento non accettato dalla Regia":"Update not accepted by the Control Desk",
  "Collegati alla Regia":"Connect to the Control Desk",
  "Indirizzo del server (mostrato nel gestionale)":"Server address (shown in the manager app)",
  "Chiave privata del torneo":"Tournament private key",
@@ -380,16 +381,39 @@ function send(ev){
   queue.push(ev);localStorage.setItem(LS+'_q',JSON.stringify(queue));
   status();flush();
 }
-let flushing=false;
+let flushing=false,retryAt=0,retryMs=1600;
+/* La coda degli eventi va in ordine, ma un evento che il server rifiuta per
+   sempre (partita di un altro campo, dati non validi) non deve bloccare quelli
+   dopo: prima veniva ritentato all'infinito ogni 1,6 secondi e nessuna rete
+   successiva arrivava più alla Regia. Col tunnel era peggio: tutti i telefoni
+   risultano allo stesso indirizzo e quei tentativi continui esaurivano il
+   limite di richieste di tutti. Ora il rifiuto definitivo si scarta e si
+   spiega; rete assente o server in difficoltà si ritentano con attese crescenti. */
 function flush(){
-  if(flushing||!queue.length)return;
+  if(flushing||!queue.length||Date.now()<retryAt)return;
   flushing=true;
   const ev=queue[0];
   fetch(api('/api/event'),{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({key:cfg.key,ev})})
-    .then(r=>{if(!r.ok)throw 0;return r.json();})
-    .then(()=>{queue.shift();localStorage.setItem(LS+'_q',JSON.stringify(queue));connected=true;status();flushing=false;if(queue.length)flush();})
-    .catch(()=>{connected=false;status();flushing=false;});
+    .then(async r=>{
+      let d={};try{d=await r.json();}catch(e){}
+      if(r.ok&&d.ok!==false)return;
+      const motivo=String(d.err||('HTTP '+r.status));
+      const e=new Error(motivo);
+      // 4xx = rifiuto definitivo, tranne «torneo non disponibile» (la Regia si sta riavviando), 408 e 429
+      e.scarta=r.status>=400&&r.status<500&&r.status!==408&&r.status!==429&&!/non disponibile/i.test(motivo);
+      e.raggiunto=true;throw e;
+    })
+    .then(()=>{queue.shift();localStorage.setItem(LS+'_q',JSON.stringify(queue));connected=true;retryMs=1600;retryAt=0;status();flushing=false;if(queue.length)flush();})
+    .catch(e=>{
+      flushing=false;
+      if(e&&e.scarta){
+        queue.shift();localStorage.setItem(LS+'_q',JSON.stringify(queue));connected=true;retryMs=1600;retryAt=0;
+        toast(T('Aggiornamento non accettato dalla Regia')+': '+e.message);status();if(queue.length)flush();return;
+      }
+      connected=!!(e&&e.raggiunto);status();
+      retryMs=Math.min(15000,Math.round(retryMs*1.6));retryAt=Date.now()+retryMs;
+    });
 }
 
 /* ---------- dati dallo snapshot ---------- */
