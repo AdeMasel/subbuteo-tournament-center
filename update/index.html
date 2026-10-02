@@ -657,6 +657,58 @@ input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);cursor:po
 .btn.big{font-size:1.15rem;padding:16px 40px;border-radius:14px}
 .btn.mini{padding:6px 12px;font-size:.72rem;border-radius:8px}
 
+/* LIVE — comandi in plastica retroilluminata. Le variabili del tema restano
+   la sorgente cromatica, quindi il rilievo funziona su ogni veste grafica. */
+#tab-live .btn{
+  --live-face:var(--accent);--live-edge:color-mix(in srgb,var(--accent) 58%,#07101d);
+  position:relative;isolation:isolate;overflow:hidden;border:1px solid color-mix(in srgb,var(--accent) 62%,#fff);
+  border-bottom-color:color-mix(in srgb,var(--live-edge) 80%,#000);border-radius:13px;
+  color:#07101d;
+  /* il testo segue la luminosità della faccia: nero sulle chiare, bianco sulle
+     scure (nei temi chiari l'accento è scuro e il nero non si leggeva) */
+  color:oklch(from var(--live-face) clamp(0,(.68 - l)*1000,1) 0 0);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.72) 0,rgba(255,255,255,.18) 27%,transparent 48%),
+    linear-gradient(145deg,color-mix(in srgb,var(--live-face) 84%,#fff),var(--live-face) 52%,var(--live-edge));
+  text-shadow:0 1px 0 rgba(255,255,255,.48);
+  text-shadow:0 1px 1px oklch(from var(--live-face) clamp(0,(l - .68)*1000,1) 0 0 / .5);
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.74),inset 0 -5px 8px rgba(0,0,0,.28),
+             0 5px 0 var(--live-edge),0 9px 18px rgba(0,0,0,.28);
+  transform:translateY(-2px);transition:transform .14s ease,filter .2s ease,box-shadow .22s ease,border-color .22s ease;
+}
+#tab-live .btn::after{
+  content:"";position:absolute;z-index:-1;pointer-events:none;left:7%;right:7%;top:3px;height:42%;
+  border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.04));opacity:.72;
+}
+#tab-live .btn.sec{
+  --live-face:color-mix(in srgb,var(--card2) 72%,var(--accent));
+  --live-edge:color-mix(in srgb,var(--card2) 74%,#020817);
+  color:var(--text);border-color:color-mix(in srgb,var(--line) 62%,var(--accent));
+  text-shadow:0 1px 1px rgba(0,0,0,.45);
+}
+#tab-live .btn.ok{--live-face:var(--ok);--live-edge:color-mix(in srgb,var(--ok) 56%,#062719)}
+#tab-live .btn.danger{--live-face:var(--danger);--live-edge:color-mix(in srgb,var(--danger) 55%,#37000b);color:#fff}
+#tab-live .btn:hover{transform:translateY(-4px);filter:brightness(1.1) saturate(1.08)}
+#tab-live .btn:active{transform:translateY(3px);box-shadow:inset 0 2px 5px rgba(0,0,0,.25),inset 0 -2px 4px rgba(255,255,255,.25),0 1px 0 var(--live-edge),0 3px 8px rgba(0,0,0,.24)}
+#tab-live .btn:disabled{transform:none;box-shadow:inset 0 1px 2px rgba(255,255,255,.2),0 2px 0 color-mix(in srgb,var(--line) 70%,#000);filter:saturate(.25)}
+#tab-live .live-guide{
+  --live-guide:var(--accent2);border-color:color-mix(in srgb,var(--live-guide) 76%,#fff)!important;
+  animation:liveGuideGlow 1.05s cubic-bezier(.4,0,.2,1) infinite;
+}
+#tab-live .live-guide.guide-assign{--live-guide:#36d7ff}
+#tab-live .live-guide.guide-start{--live-guide:#5dff9b}
+#tab-live .live-guide.guide-next{--live-guide:#ffd45c}
+#tab-live .live-guide.guide-finish{
+  --live-guide:#ff314f;--live-face:#ff415c;--live-edge:#740013;color:#fff;
+  text-shadow:0 1px 1px rgba(0,0,0,.55);
+}
+@keyframes liveGuideGlow{
+  0%,100%{filter:brightness(1);box-shadow:inset 0 2px 1px rgba(255,255,255,.8),inset 0 -5px 8px rgba(0,0,0,.3),0 5px 0 var(--live-edge),0 0 8px color-mix(in srgb,var(--live-guide) 45%,transparent),0 9px 18px rgba(0,0,0,.25)}
+  50%{filter:brightness(1.3) saturate(1.22);box-shadow:inset 0 2px 5px rgba(255,255,255,.95),inset 0 -5px 8px rgba(0,0,0,.2),0 5px 0 var(--live-edge),0 0 16px var(--live-guide),0 0 38px color-mix(in srgb,var(--live-guide) 82%,transparent),0 10px 22px rgba(0,0,0,.3)}
+}
+body.no-anim #tab-live .live-guide{animation:none;filter:brightness(1.18);box-shadow:inset 0 2px 2px rgba(255,255,255,.8),inset 0 -5px 8px rgba(0,0,0,.28),0 5px 0 var(--live-edge),0 0 22px var(--live-guide)}
+@media(prefers-reduced-motion:reduce){#tab-live .live-guide{animation:none;filter:brightness(1.18);box-shadow:inset 0 2px 2px rgba(255,255,255,.8),inset 0 -5px 8px rgba(0,0,0,.28),0 5px 0 var(--live-edge),0 0 22px var(--live-guide)}}
+
 .grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -3335,6 +3387,8 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
               <option value="fasce">Gironi + Fasce (Gold/Silver…)</option>
               <option value="speculare">Formula Speculare (tutti giocano fino in fondo)</option>
               <option value="avulsa">Gironi + Classifica Avulsa (tabelloni per merito)</option>
+              <option value="barrage">Gironi + Barrage (fasce, accesso al tabellone)</option>
+              <option value="ascensore">Fasce con Barrage (promozioni e retrocessioni)</option>
               <option value="multifase">Gironi + Seconda Fase a Gironi (tornei grandi)</option>
               <option value="duecomp">Due Competizioni + Finali Incrociate</option>
               <option value="campionato">Campionato (girone unico)</option>
@@ -3369,7 +3423,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
         </div>
         <div class="row" style="gap:10px;margin-top:2px">
           <button class="btn sec" onclick="openAdvisor()">💡 Formule consigliate</button>
-          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 9.3</button>
+          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 9.4</button>
         <button class="btn sec" onclick="openRealTorneo()">🏆 Torneo Reale</button>
           <button class="btn sec" onclick="openEstimate()">⏱ Stima durata</button>
           <button class="btn sec" id="seed-btn" onclick="seedDaRanking()" title="Compila le fasce in base alla classifica perpetua dell'archivio">🎖 Teste di serie dall'archivio</button>
@@ -3416,6 +3470,20 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
           <div id="w-swiss" style="display:none"><label class="f">Turni (svizzero)</label><input type="number" id="s-swissr" value="5" min="1" max="20"></div>
           <div style="display:flex;align-items:flex-end;padding-bottom:6px"><label class="ck"><input type="checkbox" id="s-ritorno"> Andata e ritorno</label></div>
           <div style="display:flex;align-items:flex-end;padding-bottom:6px"><label class="ck"><input type="checkbox" id="s-third" checked> Finale 3° posto</label></div>
+        </div>
+        <div id="w-barrage" style="display:none">
+          <div class="grid g3" style="gap:10px">
+            <div style="grid-column:span 2"><label class="f">Fasce: posti per fascia (es. 12, 12, 8 — vuoto = automatico)</label><input type="text" id="s-brfasce" placeholder="automatico" oninput="barrageAnteprima()"></div>
+          </div>
+          <p class="small muted" id="br-anteprima" style="margin-top:6px"></p>
+        </div>
+        <div id="w-asc" style="display:none">
+          <div class="grid g3" style="gap:10px">
+            <div><label class="f">Giocatori per fascia</label><input type="number" id="s-ascsize" value="4" min="3" max="12" oninput="ascAnteprima()"></div>
+            <div><label class="f">Cicli (turni di fasce)</label><input type="number" id="s-asccicli" value="3" min="1" max="10" oninput="ascAnteprima()"></div>
+            <div><label class="f">Posti in palio a ogni barrage</label><select id="s-ascposti" onchange="ascAnteprima()"><option value="1">1 — ultimo contro primo</option><option value="2">2 — ultimi due contro primi due</option></select></div>
+          </div>
+          <p class="small muted" id="asc-anteprima" style="margin-top:6px"></p>
         </div>
         <div class="grid g3" style="gap:10px;display:none" id="w-playoff">
           <div><label class="f">Squadre ai playoff</label><input type="number" id="s-poffn" value="4" min="2" max="16"></div>
@@ -3591,16 +3659,16 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
   </div>
   <div class="card" style="margin-bottom:18px">
     <div class="row spread">
-      <div class="row">
-        <button class="btn big" onclick="startAllBoards()">🟢 START TURNO</button>
-        <button class="btn" onclick="autoAssignBoards()">🎯 Assegna i campi</button>
+      <div class="row live-actions">
+        <button class="btn big" id="live-start-round" onclick="startAllBoards()">🟢 START TURNO</button>
+        <button class="btn" id="live-assign-fields" onclick="autoAssignBoards()">🎯 Assegna i campi</button>
         <button class="btn sec" id="autolive-btn" onclick="toggleAutoLive()" title="Slideshow automatico su schermo/proiettore">🔄 AUTO LIVE</button>
         <button class="btn sec" onclick="announceNextRound()">📢 Annuncia turno</button>
         <button class="btn sec" onclick="pauseAllBoards()">⏸ Pausa tutti</button>
         <button class="btn sec" onclick="openRitiro()" title="Un giocatore lascia il torneo">🚪 Ritiro</button>
         <span id="est-chip" class="est-chip" style="display:none" onclick="openEstimate()" title="Stima della durata"></span>
-        <button class="btn sec" onclick="nextPhaseAllBoards()">⏭ Fase succ. (tutti)</button>
-        <button class="btn ok" onclick="finishAllBoards()">🏁 Termina tutte</button>
+        <button class="btn sec" id="live-next-phase" onclick="nextPhaseAllBoards()">⏭ Fase Successiva</button>
+        <button class="btn ok" id="live-finish-all" onclick="finishAllBoards()">🏁 Termina tutte</button>
       </div>
       <div class="row" style="gap:20px">
         <span class="small muted">Countdown&nbsp;<input type="number" id="cd-secs" min="0" max="10" value="5" style="width:60px;padding:6px" onchange="setCdSecs(this.value)">&nbsp;sec</span>
@@ -4696,7 +4764,7 @@ body.no-anim #present.filmstrip-on .pfoto-run{animation:none;transform:none}
    ========================================================= */
 const BYE='__BYE__', LSKEY='subbuteo_tc_state_v1';
 const TB_LABELS={h2h:'Scontri diretti',dr:'Differenza reti',gf:'Gol fatti',gs:'Gol subiti (meno = meglio)',v:'Numero vittorie'};
-const FMT_LABELS={'gironi-ko':'Gironi + Eliminazione Diretta',fasce:'Gironi + Fasce',speculare:'Formula Speculare',avulsa:'Gironi + Classifica Avulsa',multifase:'Gironi + Seconda Fase a Gironi',duecomp:'Due Competizioni + Finali Incrociate',campionato:'Campionato',ko:'Eliminazione Diretta',svizzero:'Sistema Svizzero',playoff:'Campionato + Playoff',champions:'Formula Champions',doppiaelim:'Doppia Eliminazione',planisfero:'Coppa Planisfero',rosa:'La Rosa dei Venti',kingofcourt:'Re del Tavolo',squadre:'Torneo a Squadre (CdT)'};
+const FMT_LABELS={'gironi-ko':'Gironi + Eliminazione Diretta',fasce:'Gironi + Fasce',speculare:'Formula Speculare',avulsa:'Gironi + Classifica Avulsa',barrage:'Gironi + Barrage',ascensore:'Fasce con Barrage',multifase:'Gironi + Seconda Fase a Gironi',duecomp:'Due Competizioni + Finali Incrociate',campionato:'Campionato',ko:'Eliminazione Diretta',svizzero:'Sistema Svizzero',playoff:'Campionato + Playoff',champions:'Formula Champions',doppiaelim:'Doppia Eliminazione',planisfero:'Coppa Planisfero',rosa:'La Rosa dei Venti',kingofcourt:'Re del Tavolo',squadre:'Torneo a Squadre (CdT)'};
 
 let S=defaultState();
 
@@ -4705,7 +4773,7 @@ function defaultState(){return{
   celebrated:false, champion:null, phase:'groups',
   cfg:{name:'',date:'',loc:'',fields:2,fieldOffset:0,format:'gironi-ko',perGroup:4,qualify:2,extraQ:0,presentSec:9,tickerVel:5,ann:{rulloOn:false,rulloTxt:'',voceOn:false,voceTxt:'',voceMin:5},qrAddr:'',tickerPos:'alto',barreAuto:false,stagione:{attiva:false,dal:'',ogni:7},   // dove sta il rullo: 'alto', 'basso' o i pixel dall'alto
   
-       ritorno:false,third:true,swissRounds:5,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
+       ritorno:false,third:true,swissRounds:5,brFasce:'',ascSize:4,ascCicli:3,ascPosti:1,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
        refSource:'players',refPool:[],showPlayers:false,showRefBoard:true,fotoConsenso:true,
        poffN:4,poutN:0,poffFmt:'ko',chQ:8,kohTarget:5,consB:false,oneHalf:false,noAnticipo:false,
        cdSecs:5,logo:null,
@@ -4718,7 +4786,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='9.3.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='9.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -5065,7 +5133,7 @@ const TR={
   // gironi / live / classifiche / cronache
   "Fase a Gironi":"Group Stage","Match Center — Tabelloni Live":"Match Center — Live Boards",
   "🟢 START TURNO":"🟢 START ROUND","📢 Annuncia turno":"📢 Announce round","⏸ Pausa tutti":"⏸ Pause all",
-  "⏭ Fase succ. (tutti)":"⏭ Next phase (all)","🏁 Termina tutte":"🏁 End all","vs":"vs",
+  "⏭ Fase succ. (tutti)":"⏭ Next phase (all)","⏭ Fase Successiva":"⏭ Next Phase","🏁 Termina tutte":"🏁 End all","vs":"vs",
   "➕ Crea e assegna a un campo":"➕ Create and assign to a field",
   "Classifiche in Tempo Reale":"Live Standings","📄 Report completo (PDF A4)":"📄 Full report (A4 PDF)",
   "📋 Programma & Segnapunti (PDF)":"📋 Schedule & Scoresheets (PDF)","🖨 Stampa schermata":"🖨 Print screen",
@@ -5721,6 +5789,9 @@ Object.assign(TR,{"Fase a Gironi — Squadre":"Group Stage — Teams","Classific
 Object.assign(TR,{"🌐 Kit online · ChatGPT": "🌐 Online kit · ChatGPT", "Descrivi squadra, stagione e divisa oppure inventa il tuo kit. La modifica si esegue su ChatGPT nel browser; poi importa qui il risultato.": "Describe team, season and kit, or invent your own. The edit is done on ChatGPT in the browser; then import the result here.", "Squadra o descrizione della maglia": "Team or shirt description", "Es. Italia 2006, maglia azzurra; oppure strisce blu e oro, colletto bianco": "E.g. Italy 2006, blue shirt; or blue and gold stripes, white collar", "Istruzioni da incollare in ChatGPT": "Instructions to paste into ChatGPT", "1 · Scarica foto": "1 · Download photo", "2 · Copia istruzioni": "2 · Copy instructions", "3 · Apri ChatGPT": "3 · Open ChatGPT", "4 · Importa risultato": "4 · Import result", "Accedi sul sito ufficiale, allega la foto scaricata e incolla le istruzioni. Nessuna foto viene inviata automaticamente. Dopo l’importazione controlla l’anteprima e premi Salva; Annulla conserva la foto precedente.": "Sign in on the official site, attach the downloaded photo and paste the instructions. No photo is sent automatically. After importing, check the preview and press Save; Cancel keeps the previous photo.", "Descrivi prima la maglia desiderata.": "Describe the shirt you want first.", "Istruzioni copiate. Apri ChatGPT e allega la foto.": "Instructions copied. Open ChatGPT and attach the photo.", "Seleziona e copia le istruzioni con il comando Copia del dispositivo.": "Select and copy the instructions with your device's Copy command.", "Scegli un’immagine inferiore a 25 MB.": "Choose an image smaller than 25 MB.", "Preparazione anteprima…": "Preparing preview…", "Anteprima pronta. Premi Salva per applicare la nuova maglia.": "Preview ready. Press Save to apply the new shirt.", "Attendi la preparazione dell’anteprima.": "Wait for the preview to be ready.", "Importazione non riuscita. La foto precedente è conservata.": "Import failed. The previous photo has been kept."});
 // Pulsanti di Classifiche rimasti senza traduzione (9.3)
 Object.assign(TR,{"🪧 Segnaposto da tavolo (PDF)": "🪧 Table name cards (PDF)", "📱 Codici QR da tavolo (PDF)": "📱 Table QR codes (PDF)", "Segnaposto da tavolo": "Table name cards", "Codici QR da tavolo": "Table QR codes"});
+// Formule con barrage (9.4)
+Object.assign(TR,{"🚪 Ritiro": "🚪 Withdrawal", "Un giocatore lascia il torneo": "A player leaves the tournament"});
+Object.assign(TR,{"Gironi + Barrage (fasce, accesso al tabellone)": "Groups + Barrage (bands, access to the bracket)", "Fasce con Barrage (promozioni e retrocessioni)": "Bands with Barrage (promotion and relegation)", "Gironi + Barrage": "Groups + Barrage", "Fasce con Barrage": "Bands with Barrage", "Fasce: posti per fascia (es. 12, 12, 8 — vuoto = automatico)": "Bands: places per band (e.g. 12, 12, 8 — empty = automatic)", "Giocatori per fascia": "Players per band", "Cicli (turni di fasce)": "Cycles (rounds of bands)", "Posti in palio a ogni barrage": "Places at stake in each barrage", "1 — ultimo contro primo": "1 — last against first", "2 — ultimi due contro primi due": "2 — last two against first two", "al barrage": "to the barrage", "tabellone da": "bracket of", "senza barrage": "no barrage", "ciclo": "cycle", "cicli": "cycles", "dopo ogni ciclo, tranne l’ultimo": "after every cycle except the last", "gli ultimi due di ogni fascia sfidano i primi due di quella sotto": "the last two of each band play the first two of the band below", "l’ultimo di ogni fascia sfida il primo di quella sotto": "the last of each band plays the first of the band below", "chi vince sta sopra": "the winner stays above", "Fasce con barrage: servono almeno 6 giocatori (due fasce da 3).": "Bands with barrage: at least 6 players are needed (two bands of 3).", "Chiudi il ciclo": "Close cycle", "e genera i barrage": "and create the barrages", "Ultimo ciclo": "Last cycle", "il primo della fascia Gold è il campione": "the top of the Gold band is the champion", "Ci sono ancora partite da giocare nelle fasce.": "There are still matches to play in the bands.", "barrage da giocare": "barrages to play", "chi vince sta nella fascia più alta.": "the winner stays in the higher band.", "Barrage del": "Barrages of", "giocati": "played", "chi vince sta nella fascia più alta, chi perde in quella sotto.": "the winner stays in the higher band, the loser goes to the one below.", "Avvia il ciclo": "Start cycle", "Prima si completano tutti i barrage.": "Complete all the barrages first.", "Ciclo": "Cycle", "avviato": "started", "nessun cambio di fascia": "no band changes", "Barrage": "Barrage"});
 // App Giocatore: chiamate, diario, classifiche (9.2.3)
 Object.assign(TR,{"Quota pagata": "Fee paid", "App Giocatore": "Player app", "QR personale dell’App Giocatore": "Personal Player app QR", "Inquadrandolo, il telefono apre l’App Giocatore già con il suo nome: lo chiamerà quando tocca a lui giocare o arbitrare, e da lì può mandare la foto per la figurina.": "Scanning it opens the Player app with their name already set: it will call them when it is their turn to play or referee, and from there they can send the photo for their sticker.", "Senza un indirizzo di sala fisso, il giorno del torneo potrebbe servire il QR generale dell’App Giocatore.": "Without a fixed venue address, the general Player app QR may be needed on tournament day.", "Stampa il cartoncino": "Print the card", "Chiudi": "Close", "Quota ricevuta, grazie!": "Fee received, thank you!", "Ecco la tua App Giocatore: ti chiama quando tocca a te e ti tiene diario e classifiche.": "Here is your Player app: it calls you when it is your turn and keeps your diary and standings.", "Inquadra il codice con la fotocamera del telefono: l’App Giocatore ti chiama quando tocca a te giocare o arbitrare, tiene il tuo diario, le classifiche e il calendario, e ti fa mandare la foto per la figurina.": "Scan the code with your phone camera: the Player app calls you when it is your turn to play or referee, keeps your diary, standings and schedule, and lets you send the photo for your sticker.", "Foto dal telefono": "Photo from phone", "figurina pronta": "sticker ready", "Foto dal telefono in attesa nelle iscrizioni ricevute": "Phone photo waiting in the received registrations", "Nessun partecipante con questo nome: aggiungilo prima all’elenco.": "No participant with this name: add them to the list first.", "Foto dal telefono per la figurina": "Phone photo for the sticker", "Usa per la figurina": "Use for the sticker"});
 Object.assign(TR,{"Chiama sul telefono i giocatori e l’arbitro di questo campo (App Giocatore)": "Call the players and referee of this field on their phones (Player app)", "Chiamata inviata ai telefoni": "Call sent to the phones", "Accendi il collegamento telefoni: la chiamata arriva all’App Giocatore.": "Switch on the phone link: the call reaches the Player app.", "hanno visto la chiamata:": "saw the call:", "arbitro": "referee", "📣 QR personali — App Giocatore": "📣 Personal QR codes — Player app", "Un QR per ogni giocatore: inquadrandolo, l’App Giocatore si apre già con il suo nome e lo chiama sul telefono quando tocca a lui giocare o arbitrare. Si possono anche stampare e consegnare all’iscrizione.": "One QR per player: scanning it opens the Player app with their name already set, and the phone calls them when it is their turn to play or referee. They can also be printed and handed out at registration.", "⚠ Il server installato non rilascia ancora la chiave in sola lettura: questi QR contengono la chiave del torneo. Aggiorna l’installer per proteggerla.": "⚠ The installed server does not issue the read-only key yet: these QR codes carry the tournament key. Update the installer to protect it.", "Inquadra con la fotocamera: l’App Giocatore si apre con il tuo nome": "Scan with the camera: the Player app opens with your name", "🧢 QR dei Capitani — inquadra e sei collegato": "🧢 Captains' QR codes — scan and you are connected", "Un QR per ogni squadra: il capitano inquadra il proprio e l'App Capitano si apre già collegata (indirizzo, chiave e squadra inclusi). Tocca un QR per ingrandirlo a schermo intero.": "One QR per team: the captain scans their own and the Captain app opens already connected (address, key and team included). Tap a QR to enlarge it full screen.", "📣 QR personali dei giocatori": "📣 Players' personal QR codes"});
@@ -5734,7 +5805,7 @@ Object.assign(TR,{"arbitri:": "referees:", "Arbitri": "Referees", "Sostituzioni 
 // Diretta YouTube / TikTok (9.1)
 Object.assign(TR,{"Il torneo in diretta sui canali del club, direttamente dal programma: su YouTube in orizzontale, su TikTok in verticale con la Regia e la Presentazione una sopra l’altra. Per ogni account serve la chiave di trasmissione che la piattaforma rilascia al titolare: inseriscila qui prima del torneo, resta cifrata su questo computer e non viaggia mai con i dati del torneo. La diretta convive con l’App Campo, l’App Capitano e l’App Replay: se la rete rallenta, la qualità scende da sola invece di fermare i telefoni.": "The tournament live on the club's channels, straight from the program: on YouTube in landscape, on TikTok in portrait with the Control Desk and the Presentation one above the other. Each account needs the stream key the platform gives to its owner: enter it here before the tournament; it stays encrypted on this computer and never travels with the tournament data. Streaming works alongside the Table App, the Captain App and the Replay App: if the network slows down, the quality drops by itself instead of holding up the phones.", "🔴 Diretta su YouTube e TikTok": "🔴 Live on YouTube and TikTok", "La diretta funziona nell’app installata sul computer, non nella versione per browser.": "Streaming works in the app installed on the computer, not in the browser version.", "(con l’audio del programma)": "(with the program's sound)", "Account e chiave di trasmissione": "Account and stream key", "Account salvato": "Account saved", "Apri ora": "Open now", "Audio del programma non disponibile": "Program sound not available", "Audio del programma non disponibile su questo sistema": "Program sound not available on this system", "Audio della diretta": "Stream audio", "Avvia la diretta su": "Go live on", "Chiave di trasmissione": "Stream key", "Chiave salvata": "Key saved", "Codifica audio AAC": "AAC audio encoding", "Codifica video H.264": "H.264 video encoding", "Dimentica la chiave": "Forget the key", "Dimenticare la chiave di trasmissione salvata per": "Forget the stream key saved for", "Diretta in corso": "Live stream in progress", "Dove si trova": "Where to find it", "Errore nel motore della diretta": "Error in the streaming engine", "Ferma la diretta su": "Stop the stream on", "Fotogrammi al secondo": "Frames per second", "Fotogrammi scartati": "Dropped frames", "Il secondo schermo non si è aperto": "The second screen did not open", "Il torneo sta per cominciare": "The tournament is about to start", "In attesa di invio": "Waiting to send", "In onda da": "On air for", "In onda su": "Live on", "Intere (con fasce sopra e sotto)": "Whole (with bands above and below)", "La qualità nuova vale dalla prossima partenza della diretta.": "The new quality applies from the next time the stream starts.", "Le due schermate": "The two screens", "Livello dell’audio che va in onda": "Level of the audio going on air", "L’anteprima compare quando la diretta parte": "The preview appears when the stream starts", "L’audio cambia alla prossima partenza della diretta.": "The audio changes the next time the stream starts.", "Microfono": "Microphone", "Microfono dello speaker": "Announcer's microphone", "Microfono in onda": "Microphone on air", "Microfono predefinito": "Default microphone", "Mostra o nascondi": "Show or hide", "Nessuna chiave salvata": "No key saved", "PRESENTAZIONE": "PRESENTATION", "Pannello pronto": "Panel ready", "Più grandi (tagliati i lati)": "Larger (sides cropped)", "Presentazione / AUTO LIVE": "Presentation / AUTO LIVE", "Presentazione con la Regia in riquadro": "Presentation with the Control Desk in a corner box", "Presentazione sopra, Regia sotto": "Presentation on top, Control Desk below", "Prima inserisci la chiave di trasmissione di": "First enter the stream key for", "Pronta": "Ready", "Qualità": "Quality", "REGIA": "CONTROL DESK", "Regia sopra, Presentazione sotto": "Control Desk on top, Presentation below", "Riconnessioni": "Reconnections", "Salva": "Save", "Secondo schermo aperto": "Second screen open", "Secondo schermo chiuso: si apre da solo alla partenza": "Second screen closed: it opens by itself when the stream starts", "Server RTMP": "RTMP server", "Solo Presentazione": "Presentation only", "Solo Regia": "Control Desk only", "Suoni del programma (musica, inni, annunci, fischi)": "Program sound (music, anthems, announcements, whistles)", "TikTok LIVE Center o LIVE Studio → URL del server e Chiave di trasmissione. La chiave di TikTok cambia a ogni diretta: incollala nuova prima di partire.": "TikTok LIVE Center or LIVE Studio → Server URL and Stream key. The TikTok key changes with every stream: paste the new one before going live.", "Velocità di invio": "Upload speed", "YouTube Studio → Crea → Trasmetti dal vivo → Chiave stream (e URL dello stream)": "YouTube Studio → Create → Go live → Stream key (and Stream URL)", "account salvato": "account saved", "attenzione: questo sistema non offre la cifratura, il file è leggibile solo dal tuo utente": "note: this system offers no encryption; the file is readable only by your user", "chiave dimenticata": "key forgotten", "chiave pronta": "key ready", "cifrata su questo computer": "encrypted on this computer", "collegamento al server…": "connecting to the server…", "collegamento in corso": "connecting", "collegamento non riuscito": "connection failed", "connessione persa, riprovo": "connection lost, retrying", "di nuovo in onda": "back on air", "diretta chiusa": "stream closed", "errore": "error", "incolla qui la chiave": "paste the key here", "incolla qui per sostituirla": "paste here to replace it", "inquadratura cambiata in diretta": "layout changed while live", "manca la chiave": "key missing", "non partita": "did not start", "salvata": "saved", "Inquadratura": "Layout", "IN ONDA": "ON AIR", "Collegamento…": "Connecting…", "Riconnessione…": "Reconnecting…", "Errore": "Error", "Ferma": "Stopped", "Cattura della Regia attiva": "Control Desk capture on", "Cattura del secondo schermo attiva": "Second screen capture on", "Cattura della Regia interrotta": "Control Desk capture stopped", "Cattura del secondo schermo interrotta": "Second screen capture stopped", "rete lenta, qualità ridotta a": "slow network, quality reduced to", "rete di nuovo libera, qualità a": "network clear again, quality back to", "Microfono non disponibile": "Microphone not available", "Codifica video": "Video encoding", "Codifica audio": "Audio encoding", "Torneo Subbuteo": "Subbuteo Tournament"});
 // Regolamento FISTF (9.0)
-Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Ladies (scarto massimo 5–0)": "U12 · U16 · U20 · Ladies category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Ladies: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Ladies: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.3": "✨ What’s new in 9.3", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
+Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Ladies (scarto massimo 5–0)": "U12 · U16 · U20 · Ladies category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Ladies: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Ladies: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.4": "✨ What’s new in 9.4", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
 
 TR['🧊 Antartide · ghiaccio polare']='🧊 Antarctica · polar ice';
 function L(s){ if(LANG!=='en'||s==null) return s; const v=TR[s]; return v!=null?v:s; }
@@ -7402,6 +7473,16 @@ function estStructure(){
     const g=Math.max(n,(S.started?(S.cfg.kohTarget||5):5)*2+n);
     for(let i=0;i<g;i++)sizes.push(1);                 // si gioca una sfida per volta
     note=LANG==='en'?'chained challenges':'sfide a catena';
+  }else if(f==='ascensore'){
+    const k=S.started?(S.cfg.ascSize||4):Math.max(3,parseInt(($('#s-ascsize')||{}).value)||4);
+    const cic=S.started?(S.cfg.ascCicli||3):Math.max(1,parseInt(($('#s-asccicli')||{}).value)||3);
+    const po=S.started?(S.cfg.ascPosti||1):(parseInt(($('#s-ascposti')||{}).value)===2?2:1);
+    const fs=ascDimensioni(n,k),mx=Math.max(...fs);
+    for(let c=1;c<=cic;c++){
+      for(let i=0;i<rrRounds(mx);i++)sizes.push(fs.reduce((a,x)=>a+(i<rrRounds(x)?Math.floor(x/2):0),0));
+      if(c<cic)sizes.push((fs.length-1)*po);
+    }
+    note=`${fs.length} ${LANG==='en'?'bands':'fasce'} × ${cic} ${LANG==='en'?'cycles':'cicli'}`;
   }else{   // gironi-ko, fasce, squadre
     const gs=groupsOf(n,perG),mx=Math.max(...gs);
     const R=rrRounds(mx)*(ret?2:1);
@@ -7411,6 +7492,13 @@ function estStructure(){
     else if(f==='fasce'){for(let i=0;i<rrRounds(gs.length);i++)sizes.push(mx*Math.floor(gs.length/2));}
     else if(f==='duecomp'){                         // due tornei paralleli + incroci
       for(let i=0;i<4;i++)sizes.push(Math.floor(n/2));
+    }
+    else if(f==='barrage'){                         // fasce dalla classifica unica, barrage compreso
+      const tx=S.started?(S.cfg.brFasce||''):(($('#s-brfasce')||{}).value||'');
+      const fs=barrageFasceSizes(n,tx);
+      const R=Math.max(...fs.map(x=>Math.ceil(Math.log2(Math.max(2,x)))));
+      for(let i=0;i<R;i++)sizes.push(fs.reduce((a,x)=>{const t=Math.ceil(Math.log2(Math.max(2,x)));if(i>=t)return a;
+        const P=Math.pow(2,t),m=P/Math.pow(2,i+1);return a+(i===0?Math.floor(x-P/2):m);},0));
     }
     else if(f==='avulsa'){                          // tabelloni per merito: giocano tutti
       const R=Math.max(1,Math.ceil(Math.log2(8)));
@@ -10494,7 +10582,11 @@ function setupFmtChanged(){
   const f=setupFormato();
   const sq=f==='squadre';
   if(f==='planisfero'){const el=$('#s-nteams');el.value=Math.min(24,Math.max(13,parseInt(el.value)||18));$('#s-ptsw').value=3;$('#s-ptsd').value=1;$('#s-ptsl').value=0;}
-  $('#w-pergroup').style.display=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp'||sq)?'':'none';
+  $('#w-pergroup').style.display=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='barrage'||f==='multifase'||f==='duecomp'||sq)?'':'none';
+  if($('#w-barrage'))$('#w-barrage').style.display=f==='barrage'?'':'none';
+  if($('#w-asc'))$('#w-asc').style.display=f==='ascensore'?'':'none';
+  if(f==='barrage')barrageAnteprima();
+  if(f==='ascensore')ascAnteprima();
   $('#w-f2size').style.display=$('#w-f2streams').style.display=f==='multifase'?'':'none';
   $('#w-qualify').style.display=f==='gironi-ko'?'':'none';
   $('#w-extra').style.display=f==='gironi-ko'?'':'none';
@@ -10527,7 +10619,7 @@ function setupFmtChanged(){
     renderTbEditor('tb-editor');renderTbEditor('tb-editor2');
   }
   // composizione gironi disponibile per le formule con gironi
-  const groupFmt=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp'||sq);
+  const groupFmt=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='barrage'||f==='multifase'||f==='duecomp'||sq);
   $('#w-compose').style.display=groupFmt?'':'none';
   composeChanged();
   if(f==='fasce'&&!$('#tiers-box').children.length)renderTierRows();
@@ -10640,6 +10732,10 @@ function readSetup(){
   S.cfg.nGroups=composeGroupsN();
   S.cfg.nPots=composePotsN();
   S.cfg.swissRounds=Math.max(1,parseInt($('#s-swissr').value)||5);
+  S.cfg.brFasce=$('#s-brfasce')?$('#s-brfasce').value.trim():'';
+  S.cfg.ascSize=Math.max(3,Math.min(12,parseInt(($('#s-ascsize')||{}).value)||4));
+  S.cfg.ascCicli=Math.max(1,Math.min(10,parseInt(($('#s-asccicli')||{}).value)||3));
+  S.cfg.ascPosti=parseInt(($('#s-ascposti')||{}).value)===2?2:1;
   S.cfg.ptsW=parseInt($('#s-ptsw').value)||0;
   S.cfg.ptsD=parseInt($('#s-ptsd').value)||0;
   S.cfg.ptsL=parseInt($('#s-ptsl').value)||0;
@@ -10724,7 +10820,8 @@ function startTournament(){
   if(f==='rosa'&&(names.length<8||names.length>12)){setupError('La Rosa dei Venti va da 8 a 12 iscritti.');return;}
   if(f==='playoff'&&(S.cfg.poffN||4)>names.length){setupError('Squadre ai playoff superiori al totale dei partecipanti.');return;}
   if(f==='kingofcourt'&&names.length<2){setupError('Servono almeno 2 giocatori.');return;}
-  if((f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp'||f==='squadre')&&S.cfg.perGroup>names.length){setupError('Partecipanti per girone superiori al totale.');return;}
+  if(f==='ascensore'&&names.length<6){setupError(L('Fasce con barrage: servono almeno 6 giocatori (due fasce da 3).'));return;}
+  if((f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='barrage'||f==='multifase'||f==='duecomp'||f==='squadre')&&S.cfg.perGroup>names.length){setupError('Partecipanti per girone superiori al totale.');return;}
   // modalità squadre: raccogli rose (min 4 atleti a referto) e capitani
   let rostersByIdx=null,captainsByIdx=null;
   if(f==='squadre'){
@@ -10758,7 +10855,7 @@ function startTournament(){
      Avulsa, Multifase e Due Competizioni il programma mostrava la composizione
      manuale ma poi la buttava via, ricadendo nella distribuzione automatica
      senza dire nulla. */
-  const groupFmt=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'
+  const groupFmt=(f==='gironi-ko'||f==='fasce'||f==='speculare'||f==='avulsa'||f==='barrage'
                  ||f==='multifase'||f==='duecomp'||f==='squadre');
   const composed=groupFmt?composeGroupsList(names.map((n,i)=>({n,grp:setupGroupOf[i],pot:setupPotOf[i]}))):null;
   const potDiNome={}; names.forEach((n,i)=>{potDiNome[n]=setupPotOf[i];});
@@ -10825,6 +10922,10 @@ function startTournament(){
     // le posizioni sulla rosa = l'ordine (già sorteggiato); poi le Contrade
     S.rosaPos=names.slice();
     S.groups=[rosaContradeGroup(names)];
+  }else if(f==='ascensore'){
+    // fasce iniziali: l'ordine della lista è la forza (o il sorteggio, se «mescola»)
+    S.ascCiclo=1;
+    S.groups=ascGruppi(ascFasceIniziali(names),1);
   }else if(f==='ko'){
     S.phase='final';
     // col ripescaggio olimpico i terzi posti sono DUE e li assegna il ripescaggio:
@@ -11186,6 +11287,148 @@ function avulsaOrder(gs){
   const out=[];
   for(let r=1;r<=mx;r++)out.push(...bestOfRank(r,src.length,src));
   return out;
+}
+/* =========================================================
+   FORMULE CON BARRAGE
+   ---------------------------------------------------------
+   1. GIRONI + BARRAGE — i gironi all'italiana danno una classifica
+      unica (avulsa); la si divide in fasce di ampiezza scelta (Gold,
+      Silver, Bronze…). In ogni fascia i migliori entrano diretti nel
+      tabellone, gli altri giocano il turno di barrage per i posti che
+      restano: con 12 giocatori, 4 diretti ai quarti e 8 al barrage.
+   2. FASCE CON BARRAGE — i giocatori partono divisi in fasce (l'ordine
+      della lista è la forza) e a ogni ciclo ogni fascia gioca il suo
+      girone all'italiana. A fine ciclo l'ultimo di una fascia sfida il
+      primo di quella sotto (o gli ultimi due contro i primi due): chi
+      vince sta sopra. All'ultimo ciclo il primo della Gold è il campione.
+   ========================================================= */
+const FASCE_NOMI=['Gold','Silver','Bronze','Ferro','Rame','Legno','Pietra','Sabbia'];
+function fasciaNome(i){return FASCE_NOMI[i]||('Fascia '+(i+1));}
+/* ampiezze delle fasce: quelle scritte nel Setup, altrimenti fasce fino a 24
+   il più possibile uguali; chi avanza va nell'ultima, nessuno resta fuori */
+function barrageFasceSizes(tot,txt){
+  tot=Math.max(2,tot|0);
+  const v=String(txt||'').split(/[,;\s]+/).map(x=>parseInt(x)).filter(x=>x>=2);
+  if(v.length){
+    const out=[];let usati=0;
+    for(const x of v){if(usati>=tot)break;const q=Math.min(x,tot-usati);out.push(q);usati+=q;}
+    if(usati<tot)out.push(tot-usati);
+    // una fascia da uno non esiste: si unisce a quella sopra
+    for(let i=out.length-1;i>0;i--)if(out[i]<2){out[i-1]+=out[i];out.splice(i,1);}
+    return out;
+  }
+  const nF=Math.max(1,Math.ceil(tot/24)),base=Math.floor(tot/nF),rem=tot%nF;
+  return Array.from({length:nF},(_,i)=>base+(i<rem?1:0));
+}
+function barrageTiers(tot){
+  let da=1;
+  return barrageFasceSizes(tot,S.cfg.brFasce).map((n,i)=>{const t={name:fasciaNome(i),ranks:da+'-'+(da+n-1),fmt:'ko'};da+=n;return t;});
+}
+/* in una fascia di n: i primi «diretti» saltano il barrage, gli altri lo giocano */
+function barrageInfo(n){
+  const P=Math.pow(2,Math.ceil(Math.log2(Math.max(2,n)))),diretti=P-n;
+  return {P,diretti,barrage:n-diretti,dopo:roundName(P/4)};
+}
+/* «8 diretti agli ottavi», «4 diretti ai quarti»… con la preposizione giusta */
+function barrageVerso(turno){
+  if(LANG==='en')return 'direct to the '+String(L(turno)).toLowerCase();
+  const art={'Sedicesimi di finale':'ai sedicesimi di finale','Ottavi di finale':'agli ottavi di finale','Quarti di finale':'ai quarti di finale','Semifinali':'alle semifinali','Finale':'alla finale'};
+  return 'diretti '+(art[turno]||'al turno successivo');
+}
+function barrageAnteprima(){
+  const el=$('#br-anteprima');if(!el)return;
+  const tot=Math.max(2,parseInt(($('#s-nteams')||{}).value)||16);
+  const fs=barrageFasceSizes(tot,($('#s-brfasce')||{}).value);
+  let da=1;
+  el.innerHTML=fs.map((n,i)=>{
+    const b=barrageInfo(n),a=da,z=da+n-1;da+=n;
+    const cosa=b.diretti&&b.barrage
+      ?`${b.diretti} ${barrageVerso(b.dopo)}, ${b.barrage} ${L('al barrage')}`
+      :`${L('tabellone da')} ${b.P}, ${L('senza barrage')}`;
+    return `<b>${fasciaNome(i)}</b> ${a}–${z}: ${cosa}`;
+  }).join(' · ');
+}
+/* --- fasce con barrage: promozioni e retrocessioni --- */
+function ascDimensioni(tot,k){
+  const nF=Math.max(1,Math.round(tot/Math.max(3,k))),base=Math.floor(tot/nF),rem=tot%nF;
+  return Array.from({length:nF},(_,i)=>base+(i<rem?1:0));
+}
+function ascFasceIniziali(names){
+  const out=[];let i=0;
+  ascDimensioni(names.length,S.cfg.ascSize||4).forEach(n=>{out.push(names.slice(i,i+n));i+=n;});
+  return out;
+}
+/* «2° ciclo» / «cycle 2»: i nomi restano quelli della lingua in uso alla creazione */
+function ascCicloNome(c){return LANG==='en'?'cycle '+c:c+'° ciclo';}
+function ascGruppi(liste,ciclo){
+  return liste.map((l,i)=>{const g=makeGroup(fasciaNome(i)+' · '+ascCicloNome(ciclo),l);g.asc={ciclo,fascia:i};return g;});
+}
+function ascAnteprima(){
+  const el=$('#asc-anteprima');if(!el)return;
+  const tot=Math.max(2,parseInt(($('#s-nteams')||{}).value)||16);
+  const k=Math.max(3,parseInt(($('#s-ascsize')||{}).value)||4);
+  const cic=Math.max(1,parseInt(($('#s-asccicli')||{}).value)||3);
+  const po=parseInt(($('#s-ascposti')||{}).value)===2?2:1;
+  const fs=ascDimensioni(tot,k);
+  el.innerHTML=fs.map((n,i)=>`<b>${fasciaNome(i)}</b> ${n}`).join(' · ')
+    +` — ${cic} ${cic===1?L('ciclo'):L('cicli')}`
+    +(fs.length>1&&cic>1?`; ${L('dopo ogni ciclo, tranne l’ultimo')}, ${po===2?L('gli ultimi due di ogni fascia sfidano i primi due di quella sotto'):L('l’ultimo di ogni fascia sfida il primo di quella sotto')}: ${L('chi vince sta sopra')}.`:'.');
+}
+function ascBarrageDelCiclo(c){return (S.tiersPhases||[]).filter(t=>t.type==='ko'&&t.asc&&t.asc.ciclo===c);}
+function ascAvanza(){
+  if(!groupsComplete()){toast(L('Ci sono ancora partite da giocare nelle fasce.'));return;}
+  const c=S.ascCiclo||1,tot=S.cfg.ascCicli||3;
+  if(c>=tot){checkChampion();renderAll();persist();return;}
+  const posti=S.cfg.ascPosti===2?2:1;
+  const ord=S.groups.map(g=>rankTeams(g.teams,g.matches).order);
+  S.tiersPhases=S.tiersPhases||[];
+  let n=0;
+  for(let i=0;i<ord.length-1;i++){
+    const su=ord[i],giu=ord[i+1];
+    const p=Math.min(posti,Math.floor(su.length/2),Math.floor(giu.length/2));
+    for(let k=1;k<=p;k++){
+      const sopra=su[su.length-k],sotto=giu[k-1];
+      const nome='Barrage '+fasciaNome(i)+'–'+fasciaNome(i+1)+' · '+ascCicloNome(c)+(p>1?' ('+k+')':'');
+      const ko=makeKO(nome,[sopra,sotto],false);ko.rounds[0].name='Barrage';
+      S.tiersPhases.push({name:nome,type:'ko',ko,asc:{ciclo:c,su:i,sopra,sotto}});n++;
+    }
+  }
+  if(!n)return ascProssimoCiclo();
+  S.phase='final';
+  assignReferees();assignFields();updateTabs();renderAll();tabTo('finale');persist();
+  toast('⚔️ '+n+' '+(n===1?L('barrage da giocare'):L('barrage da giocare'))+': '+L('chi vince sta nella fascia più alta.'));
+}
+function ascBarrageBanner(){
+  if(S.cfg.format!=='ascensore'||S.phase!=='final')return '';
+  const c=S.ascCiclo||1,bar=ascBarrageDelCiclo(c);
+  if(!bar.length)return '';
+  const fatti=bar.filter(t=>t.ko.champion&&t.ko.champion!==BYE).length;
+  return `<div class="card" style="margin-bottom:14px"><div class="row spread">
+    <div><h3 class="subt" style="margin:0">⚔️ ${L('Barrage del')} ${c}° ${L('ciclo')}</h3>
+    <p class="small muted" style="margin:4px 0 0">${fatti}/${bar.length} ${L('giocati')} — ${L('chi vince sta nella fascia più alta, chi perde in quella sotto.')}</p></div>
+    <button class="btn" onclick="ascProssimoCiclo()" ${fatti===bar.length?'':'disabled'}>➜ ${L('Avvia il ciclo')} ${c+1}/${S.cfg.ascCicli||3}</button></div></div>`;
+}
+function ascProssimoCiclo(){
+  const c=S.ascCiclo||1,bar=ascBarrageDelCiclo(c);
+  if(bar.some(t=>!t.ko.champion||t.ko.champion===BYE)){toast(L('Prima si completano tutti i barrage.'));return;}
+  const liste=S.groups.map(g=>rankTeams(g.teams,g.matches).order.slice());
+  const mosse=[];
+  bar.forEach(t=>{
+    const {su,sopra,sotto}=t.asc;
+    if(t.ko.champion===sotto){
+      const A=liste[su],B=liste[su+1];
+      A[A.indexOf(sopra)]=sotto;B[B.indexOf(sotto)]=sopra;
+      const verso=LANG==='en'?'to':'in';
+      mosse.push(`⬆ ${sotto} ${verso} ${fasciaNome(su)} · ⬇ ${sopra} ${verso} ${fasciaNome(su+1)}`);
+    }
+  });
+  // le fasce del ciclo chiuso restano in classifica, come archivio
+  S.groups.forEach(g=>S.tiersPhases.push({name:g.name,type:'rr',group:g,asc:{ciclo:c,archivio:true}}));
+  S.ascCiclo=c+1;
+  S.groups=ascGruppi(liste,c+1);
+  S.phase='groups';
+  assignReferees();assignFields();updateTabs();renderAll();tabTo('gironi');persist();
+  toast('✅ '+L('Ciclo')+' '+(c+1)+' '+L('avviato')+(mosse.length?' — '+mosse.join(' · '):' — '+L('nessun cambio di fascia')));
 }
 /* «1-8» oppure «1,2,5» oppure «1-4,9» → elenco di posizioni */
 function parseRanks(txt){
@@ -11868,6 +12111,8 @@ function goToFinal(){
   if(!groupsComplete()){toast('Ci sono ancora partite da giocare nei gironi.');return;}
   // formula a più fasi: la prima chiusura porta ai gironi della seconda fase
   if(S.cfg.format==='multifase'&&(S.stage||1)<2)return buildPhase2();
+  // fasce con barrage: a fine ciclo si giocano gli spareggi fra le fasce
+  if(S.cfg.format==='ascensore')return ascAvanza();
   // Rosa dei Venti: Contrade → Orizzonti (fase 1→2) → Finali (fase 2→finali)
   if(S.cfg.format==='planisfero')return plAdvance();
   if(S.cfg.format==='rosa')return (S.stage||1)<2?rosaBuildOrizzonti():rosaBuildFinali();
@@ -11882,31 +12127,37 @@ function goToFinal(){
     const rg=koRanghi();
     seeds=koEvitaRivincite(seeds,(n,i)=>i<diretti?'r'+(rg[n]||0):'ripescati');
     S.ko=makeKO('Fase a Eliminazione Diretta',seeds,S.cfg.third);
-  }else if(S.cfg.format==='fasce'||S.cfg.format==='squadre'||S.cfg.format==='speculare'||S.cfg.format==='avulsa'||S.cfg.format==='multifase'){
+  }else if(S.cfg.format==='fasce'||S.cfg.format==='squadre'||S.cfg.format==='speculare'||S.cfg.format==='avulsa'||S.cfg.format==='barrage'||S.cfg.format==='multifase'){
     // squadre (FISCT): Tabellone Principale (1ᵉ+2ᵉ) + Tabellone Consolazione (3ᵉ+4ᵉ)
     const tiers=S.cfg.format==='squadre'
       ?[{name:'Tabellone Principale',ranks:'1,2',fmt:'ko'},{name:'Tabellone Consolazione',ranks:'3,4',fmt:'ko'}]
       :S.cfg.format==='speculare'?specTiers()
+      :S.cfg.format==='barrage'?barrageTiers(S.teams.length)
       :(S.cfg.format==='avulsa'||S.cfg.format==='multifase')?(S.cfg.tiersAuto!==false?avulsaTiersAuto(S.teams.length):S.cfg.tiers)
       :S.cfg.tiers;
     S.tiersPhases=[];
     tiers.forEach(t=>{
       const ranks=parseRanks(t.ranks);
       // avulsa = posizioni della graduatoria unica; altrimenti = posto nel girone
-      let teams=(S.cfg.format==='avulsa'||S.cfg.format==='multifase')?qualifiersByAvulsa(ranks):qualifiersByRanks(ranks);
+      let teams=(S.cfg.format==='avulsa'||S.cfg.format==='barrage'||S.cfg.format==='multifase')?qualifiersByAvulsa(ranks):qualifiersByRanks(ranks);
       if(teams.length<2)return;
       if(t.fmt==='ko'||t.fmt==='piaz'){
         const size=Math.pow(2,Math.ceil(Math.log2(teams.length)));
         teams=koEvitaRivincite(teams,koLivelloRango(),(t.fmt==='piaz'&&size===8)?PIAZ8:undefined);
       }
       if(t.fmt==='piaz')S.tiersPhases.push({name:t.name,type:'ko',ko:makePiazzamento(t.name,teams)});
-      else if(t.fmt==='ko')S.tiersPhases.push({name:t.name,type:'ko',ko:makeKO(t.name,teams,S.cfg.third)});
+      else if(t.fmt==='ko'){
+        const ko=makeKO(t.name,teams,S.cfg.third);
+        // con una fascia «non tonda» i migliori passano diretti: il primo turno è il barrage
+        if(S.cfg.format==='barrage'&&Math.pow(2,Math.ceil(Math.log2(teams.length)))>teams.length)ko.rounds[0].name='Barrage';
+        S.tiersPhases.push({name:t.name,type:'ko',ko});
+      }
       else S.tiersPhases.push({name:t.name,type:'rr',group:makeGroup(t.name,teams)});
     });
     if(!S.tiersPhases.length){toast('Nessuna fascia genera squadre sufficienti.');return;}
     // nessuno deve sparire per una svista nelle fasce: se qualcuno resta fuori
     // lo si dice, con il nome, invece di lasciarlo scoprire a torneo iniziato
-    if(S.cfg.format==='avulsa'||S.cfg.format==='multifase'){
+    if(S.cfg.format==='avulsa'||S.cfg.format==='barrage'||S.cfg.format==='multifase'){
       const dentro=new Set();
       S.tiersPhases.forEach(t=>(t.type==='ko'?t.ko.rounds[0].matches.flatMap(m=>[m.t1,m.t2]):t.group.teams)
         .forEach(x=>{if(x&&x!==BYE)dentro.add(x);}));
@@ -11974,7 +12225,12 @@ function checkChampion(){
     const fin=S.tiersPhases.find(t=>t.finale);
     champ=fin&&fin.ko?fin.ko.champion:null;
   }
-  else if((f==='fasce'||f==='squadre'||f==='speculare'||f==='avulsa'||f==='multifase')&&S.tiersPhases.length){
+  else if(f==='ascensore'){
+    // all'ultimo ciclo, chiuse le partite: il primo della fascia più alta
+    if((S.ascCiclo||1)>=(S.cfg.ascCicli||3)&&S.phase==='groups'&&groupsComplete()&&S.groups[0])
+      champ=rankTeams(S.groups[0].teams,S.groups[0].matches).order[0];
+  }
+  else if((f==='fasce'||f==='squadre'||f==='speculare'||f==='avulsa'||f==='barrage'||f==='multifase')&&S.tiersPhases.length){
     const t0=S.tiersPhases[0];
     if(t0.type==='ko')champ=t0.ko.champion;
     else if(t0.group.matches.length&&t0.group.matches.every(m=>m.done))champ=rankTeams(t0.group.teams,t0.group.matches).order[0];
@@ -12016,6 +12272,30 @@ function checkChampion(){
    NAVIGAZIONE / HEADER / TICKER
    ========================================================= */
 const DEMO_TABS={audio:'audio',pretorneo:'pre',legge:'legge',archivio:'arc'};
+const LIVE_GUIDE_IDS=['live-assign-fields','live-start-round','live-next-phase','live-finish-all'];
+/* Un solo comando LIVE indica il passo operativo successivo. Il criterio usa
+   lo stato effettivo dei tabelloni e non la schermata visibile, così resta
+   corretto anche dopo ripristino, pausa, assegnazione automatica o shootout. */
+function liveActionState(){
+  const els=LIVE_GUIDE_IDS.map(id=>document.getElementById(id));
+  els.forEach(el=>{if(el){el.classList.remove('live-guide','guide-assign','guide-start','guide-next','guide-finish');el.removeAttribute('aria-current');}});
+  const active=(S.boards||[]).filter(b=>b&&b.matchId);
+  if((typeof cdTimer!=='undefined'&&cdTimer)||active.some(b=>b.running))return '';
+  let kind='';
+  if(!active.length){
+    if(pendingMatches().length)kind='assign';
+  }else{
+    const allElapsed=active.every(b=>b.remaining<=0);
+    if(allElapsed){
+      kind=active.some(b=>b.phaseIdx<boardPhases(b).length-1)?'next':'finish';
+    }else if(active.some(b=>b.remaining>0))kind='start';
+  }
+  const map={assign:'live-assign-fields',start:'live-start-round',next:'live-next-phase',finish:'live-finish-all'};
+  const el=document.getElementById(map[kind]);
+  if(el){el.classList.add('live-guide','guide-'+kind);el.setAttribute('aria-current','step');}
+  const tab=document.getElementById('tab-live');if(tab)tab.dataset.nextAction=kind;
+  return kind;
+}
 function stcEnter(el){
   if(!el||!el.animate||document.body.classList.contains('no-anim')||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   if(el._stcEntry)el._stcEntry.cancel();
@@ -12030,7 +12310,7 @@ function tabTo(name){
   if(name==='replay')rpApri(); else if(typeof rpBadge==='function')rpBadge();
   if(name==='figurine')figApriSezione();
   if(name==='audio'){waPannelloUI();salaPannelloUI();try{ttsQualitaUI();}catch(e){}}   // rubrica, anteprima e indirizzo di sala
-  S.screen=name;persist();
+  S.screen=name;if(name==='live')liveActionState();persist();
 }
 /* "Fase Finale" o "Fase Successiva"? Di regola chiudere i gironi porta
    DIRETTAMENTE all'ultima fase del torneo (tabelloni o gironi di merito che
@@ -12063,6 +12343,7 @@ function updateTabs(){
   updateAutoLiveBtn();
   updateWakeLock();
   musicUpdateAuto();
+  liveActionState();
 }
 function updateHeader(){
   $('#hdr-title').textContent=S.started?(S.cfg.name||L('Torneo Subbuteo')):L('Nuovo Torneo');
@@ -12164,7 +12445,7 @@ function tickerNews(){
       if(!tot||fatte===tot)return;
       const restano=tot-fatte;
       if(restano<=2){
-        const pre=(g.swiss||S.cfg.format==='campionato')?'':L('Girone ');
+        const pre=(g.swiss||S.cfg.format==='campionato'||S.cfg.format==='ascensore')?'':L('Girone ');
         v.push(`<span class="titem">🏁 ${pre}${esc(g.name)}: ${restano===1?L('manca una gara alla chiusura'):L('mancano 2 gare alla chiusura')}</span>`);
       }
     });
@@ -12176,7 +12457,7 @@ function tickerNews(){
         if(!g.matches.some(m=>m.done))return;
         const rk=g.plan?plRank(g.teams):g.rosa?rosaRank(g):g.rosaSea?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
         if(!rk.order.length)return;
-        const pre=(g.swiss||S.cfg.format==='campionato')?'':L('Girone ');
+        const pre=(g.swiss||S.cfg.format==='campionato'||S.cfg.format==='ascensore')?'':L('Girone ');
         v.push(`<span class="titem">👑 ${pre}${esc(g.name)}: <b>${esc(rk.order[0])}</b> ${rk.stats[rk.order[0]].pts} pt</span>`);
       });
     }catch(err){}
@@ -12990,7 +13271,7 @@ function groupCardHTML(g,{qual=0,idPrefix='g'}={}){
   });
   const done=g.matches.filter(m=>m.done).length;
   return `<div class="card group-card">
-    <div class="ghead"><h3>${g.swiss||S.cfg.format==='campionato'?'':L('Girone ')}<span>${esc(g.name)}</span></h3>
+    <div class="ghead"><h3>${g.swiss||S.cfg.format==='campionato'||S.cfg.format==='ascensore'?'':L('Girone ')}<span>${esc(g.name)}</span></h3>
       <span class="chip">${g.teams.length} ${L('squadre')}</span>
       <span class="chip">${done}/${g.matches.length} ${L('gare')}</span>
       ${g.fistfOrd?`<span class="chip" title="${L('Ordine delle gare della tabella FISTF')}">${L(g.fistfOrd==='club'?'Ordine FISTF · compagni di club':'Ordine FISTF')}</span>`:''}
@@ -13021,7 +13302,12 @@ function renderGironiActions(){
       h+=`<button class="btn" onclick="swissNext()" ${g.matches.some(m=>!m.done)?'disabled':''}>➜ Genera Turno ${g.swissRound+1}/${S.cfg.swissRounds}</button>`;
     else h+=`<span class="chip acc">Tutti i turni generati</span>`;
   }
-  if((f==='gironi-ko'||f==='fasce'||f==='squadre'||f==='speculare'||f==='avulsa'||f==='multifase'||f==='duecomp')&&S.phase==='groups'){
+  if(f==='ascensore'&&S.phase==='groups'){
+    const c=S.ascCiclo||1,tot=S.cfg.ascCicli||3;
+    if(c<tot)h+=`<button class="btn" onclick="goToFinal()" ${groupsComplete()?'':'disabled'}>➜ ${L('Chiudi il ciclo')} ${c}/${tot} ${L('e genera i barrage')}</button>`;
+    else h+=`<span class="chip acc">${L('Ultimo ciclo')} ${c}/${tot} — ${L('il primo della fascia Gold è il campione')}</span>`;
+  }
+  if((f==='gironi-ko'||f==='fasce'||f==='squadre'||f==='speculare'||f==='avulsa'||f==='barrage'||f==='multifase'||f==='duecomp')&&S.phase==='groups'){
     const primaDiDue=(f==='multifase'&&(S.stage||1)<2);
     // "Fase Finale" è la parola giusta solo quando quella successiva è
     // davvero l'ultima: nella multifase, dopo i primi gironi, si va invece
@@ -13791,7 +14077,7 @@ function koHTML(ko){
 }
 function renderFinale(){
   const box=$('#finale-box');
-  let h='';
+  let h=ascBarrageBanner();
   if(S.ko)h+=koHTML(S.ko);
   (S.tiersPhases||[]).forEach(t=>{
     if(t.type==='ko')h+=koHTML(t.ko);
@@ -13821,7 +14107,7 @@ function renderClassifica(){
       const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
       const qual=qualDi(g);
       zoneDelGirone(g,qual).forEach(z=>zoneTutte.add(z));
-      h+=`<div class="card"><h3 class="subt">${g.swiss||isTier?'':L('Girone ')}${esc(g.name)}</h3>${standingsHTML(g,{qual})}</div>`;
+      h+=`<div class="card"><h3 class="subt">${g.swiss||isTier||g.asc?'':L('Girone ')}${esc(g.name)}</h3>${standingsHTML(g,{qual})}</div>`;
     });
     h+='</div>';
     h+=zonesLegendHTML(zoneTutte);
@@ -14646,11 +14932,11 @@ function startCountdown(idxs){
       updateTabs();persist();
     }
   };
-  tick();cdTimer=setInterval(tick,1000);
+  tick();cdTimer=setInterval(tick,1000);liveActionState();
 }
 function cancelCountdown(){
   if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
-  cdBoards=[];$('#countdown').classList.remove('on');
+  cdBoards=[];$('#countdown').classList.remove('on');liveActionState();
 }
 function addFreeMatch(){
   const a=$('#free-a').value.trim(),b=$('#free-b').value.trim();
@@ -14704,11 +14990,25 @@ function nextPhaseAllBoards(){
     toast(`Fase successiva impostata su ${n} campi${running?` (${running} ancora in corso: mettili in pausa)`:''}. Premi START TURNO per riprendere insieme.`);
   }else toast(running?'Ferma prima i cronometri in corso (⏸ Pausa tutti).':'Nessun campo pronto per la fase successiva.');
 }
+let LIVE_FINISH_RETURN=null;
+function liveReturnScreen(idxs){
+  if(!S.started)return null;
+  const ids=idxs.map(i=>S.boards[i]&&S.boards[i].matchId).filter(Boolean);
+  const inGironi=ids.some(id=>(S.groups||[]).some(g=>(g.matches||[]).some(m=>m.id===id)));
+  return inGironi?'gironi':'finale';
+}
+function liveFinishReturnMaybe(){
+  if(!LIVE_FINISH_RETURN||(S.boards||[]).some(b=>b&&b.matchId))return;
+  const target=LIVE_FINISH_RETURN;LIVE_FINISH_RETURN=null;
+  tabTo(target);
+}
 function finishAllBoards(){
   const act=S.boards.map((b,i)=>b.matchId?i:null).filter(x=>x!=null);
   if(!act.length){toast('Nessuna partita in corso sui campi.');return;}
   askConfirm(`Terminare TUTTE le ${act.length} partite in corso? I risultati attuali diventeranno definitivi (triplice fischio).`,()=>{
+    LIVE_FINISH_RETURN=liveReturnScreen(act);
     act.forEach(i=>{if(S.boards[i]&&S.boards[i].matchId)boardFinish(i);});
+    liveFinishReturnMaybe();
   });
 }
 function boardStartPause(i){
@@ -14807,6 +15107,7 @@ function finalizeBoardFinish(i){
   if(tvBoard===i)tvClose();
   checkChampion();
   renderGironi();renderFinale();renderBoards();renderClassifica();renderCronache();renderTicker();presentRender();updateTabs();persist();
+  liveFinishReturnMaybe();
   // brano casuale a fine sessione LIVE (dopo il triplice fischio)
   setTimeout(musicEndLiveTrigger,1600);
 }
@@ -14957,6 +15258,7 @@ function renderBoards(){
   syncBoards();
   $('#boards-box').innerHTML=S.boards.map((b,i)=>boardHTML(b,i)).join('');
   estChip();
+  liveActionState();
 }
 function updateBoardScore(i){
   const b=S.boards[i];if(!b.matchId)return;
@@ -15376,7 +15678,7 @@ function waClassificheTesto(){
   return gs.map(g=>{
     const{order,stats}=g.plan?plRank(g.teams):g.rosa?rosaRank(g):g.rosaSea?rosaCumRank(g.teams):rankTeams(g.teams,g.matches);
     const isTier=(S.tiersPhases||[]).some(t=>t.type==='rr'&&t.group===g);
-    const pre=(g.swiss||isTier||S.cfg.format==='campionato')?'':L('Girone ');
+    const pre=(g.swiss||isTier||S.cfg.format==='campionato'||S.cfg.format==='ascensore')?'':L('Girone ');
     const righe=order.map((n,i)=>{
       const st=stats[n];
       const medaglia=['🥇','🥈','🥉'][i]||`${i+1}.`;
@@ -16107,7 +16409,7 @@ function presentRender(){
     }else{
       const g=allGroups()[+varg];
       const items=presentFinestra(g?groupRoundItems(g):[]);
-      const pre=(g&&(g.swiss||S.cfg.format==='campionato'))?'':L('Girone ');
+      const pre=(g&&(g.swiss||S.cfg.format==='campionato'||S.cfg.format==='ascensore'))?'':L('Girone ');
       title.textContent=g?`${pre}${g.name} · ${(items[0]&&items[0].label)||''} · ${LANG==='en'?'RESULTS':'RISULTATI'}`:'';
       grid.innerHTML=items.length
         ?'<div class="plist">'+items.map(it=>prow(it.a,it.b,scoreMid(it.sa,it.sb,it.live),{live:it.live,evs:evStr(it.events,it.a,it.b)})).join('')+'</div>'
@@ -16115,7 +16417,7 @@ function presentRender(){
     }
   }else if(vbase==='stand'&&varg!=null){   // AUTO LIVE: classifica di UN girone
     const g=allGroups()[+varg];
-    const pre=(g&&(g.swiss||S.cfg.format==='campionato'))?'':L('Girone ');
+    const pre=(g&&(g.swiss||S.cfg.format==='campionato'||S.cfg.format==='ascensore'))?'':L('Girone ');
     title.textContent=g?`${pre}${g.name} · ${LANG==='en'?'STANDINGS':'CLASSIFICA'}`:'';
     grid.innerHTML=g?standingsPresentHTML(false,g):'';
   }else if(presentView==='prossimo'){
@@ -17428,7 +17730,7 @@ function fotoGiornata(){
   };
   allGroups().forEach(g=>{
     if(!g.matches||!g.matches.length)return;
-    const pre=(g.swiss||S.cfg.format==='campionato')?'':L('Girone ');
+    const pre=(g.swiss||S.cfg.format==='campionato'||S.cfg.format==='ascensore')?'':L('Girone ');
     const rounds=[...new Set(g.matches.map(m=>m.round))].sort((a,b)=>a-b);
     let cur=rounds.find(r=>g.matches.some(m=>m.round===r&&!m.done));
     if(cur==null)cur=rounds[rounds.length-1];
@@ -21397,6 +21699,10 @@ function renderSetupFromState(){
   $('#s-ritorno').checked=S.cfg.ritorno;$('#s-third').checked=S.cfg.third;
   if($('#s-penshots'))$('#s-penshots').value=S.cfg.penShots||5;
   $('#s-swissr').value=S.cfg.swissRounds;
+  if($('#s-brfasce'))$('#s-brfasce').value=S.cfg.brFasce||'';
+  if($('#s-ascsize'))$('#s-ascsize').value=S.cfg.ascSize||4;
+  if($('#s-asccicli'))$('#s-asccicli').value=S.cfg.ascCicli||3;
+  if($('#s-ascposti'))$('#s-ascposti').value=String(S.cfg.ascPosti||1);
   $('#s-ptsw').value=S.cfg.ptsW;$('#s-ptsd').value=S.cfg.ptsD;$('#s-ptsl').value=S.cfg.ptsL;
   $('#s-shuffle').checked=S.cfg.shuffle;$('#s-refs').checked=S.cfg.refs;
   if($('#s-refsource'))$('#s-refsource').value=S.cfg.refSource||'players';
@@ -22000,34 +22306,30 @@ window.addEventListener('beforeunload',()=>{try{for(const p of Object.keys(DIR.o
    versione principale (9.0, 9.1…), poi resta a portata di un pulsante.
    Non compare sulla seconda finestra del proiettore.
    ========================================================= */
-const NOVITA_VER='9.3', NOVITA_KEY='stc_novita_vista';
+const NOVITA_VER='9.4', NOVITA_KEY='stc_novita_vista';
 const NOVITA={
-  it:{tit:'Ogni giocatore ha la sua app',
-    intro:'Con l’App Giocatore il telefono di ciascuno suona e vibra quando tocca a lui giocare o arbitrare, e tiene diario, classifiche e calendario. Da lì si manda anche la foto per la figurina, e il QR personale compare da solo appena in Pre-Torneo la quota risulta pagata.',
+  it:{tit:'Due formule con barrage, e la regia LIVE che ti guida',
+    intro:'Il barrage arriva nel Setup in due modi: come turno di accesso ai tabelloni dopo i gironi, oppure come spareggio fra le fasce che fa salire e scendere i giocatori a ogni ciclo. E in LIVE i pulsanti diventano veri tasti retroilluminati: lampeggia sempre quello del passo successivo.',
     card:[
-      {big:1,t:'📣 App Giocatore',p:'In Regia, «QR per i telefoni» → «📣 App Giocatore», oppure «QR personali dei giocatori»:',li:['<b>La chiamata</b> — quando la partita va sul tabellone il telefono suona, vibra e mostra a tutto schermo campo e avversario; all’arbitro, il campo da arbitrare','<b>«Ho visto, arrivo»</b> — la conferma arriva sul tabellone della Regia; il tasto 📣 richiama chi non si è visto','<b>Diario, classifica e calendario</b> — partite giocate, gol, la propria riga nel girone, i prossimi incontri e arbitraggi; il diario resta sul telefono anche dopo il torneo']},
-      {t:'📸 La foto per la figurina',li:['Dall’App Giocatore: selfie al momento o foto dalla galleria','Arriva alla Regia e diventa la figurina da sola','Una figurina fatta a mano dalla Regia non viene mai sostituita']},
-      {t:'💶 Quota pagata, QR pronto',li:['In Pre-Torneo, segnando «pagato», compare il QR personale','Da inquadrare al banco, da mandare su WhatsApp o da stampare','Il tasto 📱 QR resta sulla riga pagata']},
-      {t:'🔒 Chiave in sola lettura',li:['I QR dei giocatori non contengono la chiave del torneo','Leggono lo stato, confermano le chiamate, mandano la foto: nient’altro','Punteggi e risultati restano della Regia e degli arbitri']},
-      {t:'🟧 Cartellino arancione (CDT)',li:['Fra il giallo e il rosso, sui tabelloni e nell’App Campo','Nelle cronache, nel libro dei ricordi e nei tabellini']},
-      {t:'📜 Ticker in Presentazione',li:['In cima, sopra il titolo della vista, con una leggera trasparenza','Nessun testo passa più sotto la striscia','Sparisce durante i replay e torna subito dopo']},
-      {t:'🧊 Tema Antartide',li:['Bianco e celeste, ghiaccio polare','Anche in Presentazione e sul secondo schermo']},
-      {wide:1,t:'🔴 Dalla 9.2: la diretta su YouTube e TikTok',li:['Dalla Regia, senza programmi da installare','Cronometro delle partite in corso in Presentazione e AUTO LIVE','Stampe A4 senza tagli, arbitri veri nei tornei a squadre']}
+      {big:1,t:'🏆 Gironi + Barrage',p:'Nel Setup, alla voce Formula:',li:['Dopo i gironi la classifica unica si divide in <b>fasce</b> — Gold, Silver, Bronze… — della misura che scegli («12, 12, 8») o automatiche','In ogni fascia i migliori entrano <b>diretti</b> nel tabellone, gli altri giocano il turno di <b>barrage</b>: con 12 giocatori, 4 diretti ai quarti e 8 al barrage','Un’anteprima sotto il campo dice subito chi passa diretto e chi va al barrage']},
+      {t:'⚖️ Fasce con Barrage',li:['Scegli giocatori per fascia, numero di cicli e posti in palio (1 o 2)','A ogni ciclo ogni fascia gioca il suo girone; poi l’ultimo sfida il primo della fascia sotto: chi vince sta sopra','All’ultimo ciclo il primo della Gold è il campione']},
+      {t:'🎛 Pulsanti LIVE in 3D',li:['In plastica retroilluminata, in tutti i temi','Testo sempre leggibile, anche nei temi chiari']},
+      {t:'💡 Il passo successivo lampeggia',li:['Assegna i campi → START TURNO → Fase Successiva → Termina tutte (in rosso)','Durante le gare non lampeggia nulla']},
+      {t:'↩️ Ritorno automatico',li:['Dopo «Termina tutte» si torna da soli a Gironi o a Fase Finale']},
+      {wide:1,t:'📣 Dalla 9.3: l’App Giocatore',li:['In Regia, «📱 Codice QR di collegamento» → «📣 App Giocatore», oppure «QR personali dei giocatori»','Chiamata al campo con suono e vibrazione, diario, classifiche, foto per le figurine','Il QR personale compare in Pre-Torneo quando la quota risulta pagata']}
     ],
-    prova:'📣 Apri il QR dell’App Giocatore',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 9.3» nel Setup.'},
-  en:{tit:'Every player has their own app',
-    intro:'With the Player app everyone’s phone rings and vibrates when it is their turn to play or referee, and keeps their diary, standings and schedule. From there they can also send the photo for their sticker, and the personal QR appears by itself as soon as the fee is marked as paid in Pre-Tournament.',
+    prova:'🏆 Vai alle formule',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 9.4» nel Setup.'},
+  en:{tit:'Two formats with barrage, and a LIVE desk that guides you',
+    intro:'The barrage comes to the Setup in two forms: as the access round to the brackets after the groups, or as a play-off between bands that moves players up and down every cycle. And in LIVE the buttons become real backlit keys: the one for the next step always blinks.',
     card:[
-      {big:1,t:'📣 Player app',p:'In the Control Desk, «QR for the phones» → «📣 Player app», or «Players’ personal QR codes»:',li:['<b>The call</b> — when the match goes on a board the phone rings, vibrates and shows field and opponent full screen; the referee sees the field to referee','<b>«Seen — on my way»</b> — the confirmation reaches the board in the Control Desk; the 📣 button calls again whoever has not shown up','<b>Diary, standings and schedule</b> — matches played, goals, their own row in the group, upcoming matches and refereeing; the diary stays on the phone after the tournament']},
-      {t:'📸 The photo for the sticker',li:['From the Player app: a selfie on the spot or a photo from the gallery','It reaches the Control Desk and becomes the sticker by itself','A sticker made by hand in the Control Desk is never replaced']},
-      {t:'💶 Fee paid, QR ready',li:['In Pre-Tournament, marking «paid» shows the personal QR','Scan it at the desk, send it on WhatsApp or print it','The 📱 QR button stays on the paid row']},
-      {t:'🔒 Read-only key',li:['Players’ QR codes do not carry the tournament key','They read the state, confirm calls, send the photo: nothing else','Scores and results stay with the Control Desk and the referees']},
-      {t:'🟧 Orange card (CDT)',li:['Between yellow and red, on the boards and in the Table App','In match reports, the memory book and the scoresheets']},
-      {t:'📜 Ticker in the Presentation',li:['At the top, above the view title, slightly see-through','No text ever slides under the strip','It disappears during replays and comes straight back']},
-      {t:'🧊 Antarctic theme',li:['White and sky blue, polar ice','In the Presentation and on the second screen too']},
-      {wide:1,t:'🔴 Since 9.2: live on YouTube and TikTok',li:['From the Control Desk, with no software to install','Clock of the matches in progress in the Presentation and AUTO LIVE','A4 prints with nothing cut off, real referees in team events']}
+      {big:1,t:'🏆 Groups + Barrage',p:'In the Setup, under Format:',li:['After the groups the overall ranking is split into <b>bands</b> — Gold, Silver, Bronze… — of the size you choose («12, 12, 8») or automatic','In each band the best go <b>straight</b> into the bracket, the others play the <b>barrage</b> round: with 12 players, 4 straight to the quarter-finals and 8 in the barrage','A preview under the field tells you at once who goes straight through and who plays the barrage']},
+      {t:'⚖️ Bands with Barrage',li:['Choose players per band, number of cycles and places at stake (1 or 2)','Each cycle every band plays its group; then the last plays the first of the band below: the winner stays above','At the last cycle the top of the Gold band is the champion']},
+      {t:'🎛 3D LIVE buttons',li:['Backlit plastic, in every theme','Always readable text, light themes included']},
+      {t:'💡 The next step blinks',li:['Assign tables → START ROUND → Next Phase → End all (in red)','Nothing blinks while the matches are being played']},
+      {t:'↩️ Automatic return',li:['After «End all» the program goes back to Groups or to the Knockout stage by itself']},
+      {wide:1,t:'📣 Since 9.3: the Player app',li:['In the Control Desk, «📱 Connection QR code» → «📣 Player app», or «Players’ personal QR codes»','Calls to the table with sound and vibration, diary, standings, photos for the stickers','The personal QR appears in Pre-Event as soon as the fee is paid']}
     ],
-    prova:'📣 Open the Player app QR',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 9.3» button in the Setup.'}
+    prova:'🏆 Go to the formats',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 9.4» button in the Setup.'}
 };
 function novitaApri(){
   const t=NOVITA[LANG==='en'?'en':'it'];
@@ -22045,11 +22347,10 @@ function novitaChiudi(){
 }
 function novitaProva(){
   novitaChiudi();
-  // la novità principale della 9.3: il QR dell'App Giocatore, in Regia
-  tabTo('audio');
-  const sel=$('#sy-qrtarget');
-  if(sel){renderSyncQR();if([...sel.options].some(o=>o.value==='G')){sel.value='G';renderSyncQR();}
-    sel.scrollIntoView({behavior:'smooth',block:'center'});}
+  // la novità principale della 9.4: le formule con barrage, nel Setup
+  tabTo('setup');
+  const sel=$('#s-format');
+  if(sel){sel.scrollIntoView({behavior:'smooth',block:'center'});try{sel.focus();}catch(e){}}
 }
 function novitaAllAvvio(){
   if(typeof isSchermoTabellone==='function'&&isSchermoTabellone())return;

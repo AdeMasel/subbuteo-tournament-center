@@ -1,7 +1,7 @@
 {
- "content": "9.3.0",
+ "content": "9.4.0",
  "minShell": "9.2.0",
- "notes": "App Giocatore, cartellino arancione, rullo in cima e nascosto nei replay, tema Antartide",
+ "notes": "Formule con barrage, regia LIVE che guida il turno",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -33,8 +33,8 @@
    "size": 56164
   },
   "index.html": {
-   "sha256": "906d4f955e6f255a7d4702709bb14e106ad43becf51e09eb1ee42d611c1b6691",
-   "size": 4668353
+   "sha256": "1b19623f00fcbb4af730d62adc1d13a3be2b6ea0a50265584422a99bb71f3388",
+   "size": 4688935
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
