@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Table Soccer Live Cam</title>
+<style>
+  :root{--bg:#0b0f1a;--card:#151b2b;--txt:#eef1f7;--muted:#9aa3b5;--gold:#f2c14e}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--txt);
+       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+  .card{max-width:460px;width:100%;background:var(--card);border-radius:18px;padding:26px 22px;box-shadow:0 10px 40px #0008}
+  h1{margin:0 0 4px;font-size:1.5rem;color:var(--gold);letter-spacing:.02em}
+  p{color:var(--muted);line-height:1.5}
+  a.btn{display:block;text-align:center;background:var(--gold);color:#0b0f1a;font-weight:800;text-decoration:none;
+        padding:16px;border-radius:14px;font-size:1.1rem;margin:18px 0 10px}
+  code{display:block;word-break:break-all;background:#0007;border-radius:8px;padding:10px;color:#cfd6e4;font-size:.8rem}
+  .campo{font-size:1.1rem;color:var(--txt);font-weight:700}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>📹 Table Soccer Live Cam</h1>
+  <div class="campo" id="campo"></div>
+  <p id="testo">Questo codice collega l'app <b>Table Soccer Live Cam</b> al gestionale: squadre, loghi e tempi della partita del campo arrivano da soli, il punteggio resta all'operatore e i replay vanno nella Sala Replay.</p>
+  <a class="btn" id="apri" href="#">Apri Table Soccer Live Cam</a>
+  <p id="nota">Se il pulsante non fa nulla, apri l'app e scegli <b>«Inquadra il QR del gestionale»</b>, oppure incolla questo collegamento:</p>
+  <code id="link"></code>
+</div>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  var k=q.get('k')||'', f=q.get('f')||'', u=q.get('u')||location.origin;
+  var en=/^en\b/i.test(navigator.language||'');
+  var par='u='+encodeURIComponent(u)+'&k='+encodeURIComponent(k)+(f?'&f='+encodeURIComponent(f):'');
+  // Chrome per Android apre l'app con intent://; gli altri browser con lo schema dell'app
+  var android=/android/i.test(navigator.userAgent);
+  var href=android
+    ?'intent://collega?'+par+'#Intent;scheme=subbuteolivecam;package=it.subbuteo.livecam;end'
+    :'subbuteolivecam://collega?'+par;
+  document.getElementById('apri').href=href;
+  document.getElementById('link').textContent=location.href;
+  if(f)document.getElementById('campo').textContent=(en?'Field ':'Campo ')+f;
+  if(en){
+    document.getElementById('testo').innerHTML='This code links the <b>Table Soccer Live Cam</b> app to the tournament manager: teams, logos and halves of the match on the field arrive by themselves, the score stays with the operator and replays go to the Replay Room.';
+    document.getElementById('apri').textContent='Open Table Soccer Live Cam';
+    document.getElementById('nota').innerHTML='If the button does nothing, open the app and choose <b>«Scan the tournament QR code»</b>, or paste this link:';
+  }
+})();
+</script>
+</body>
+</html>

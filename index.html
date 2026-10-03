@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Subbuteo Tournament Center — il gestionale per i tornei di Calcio da Tavolo</title>
-<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 19 formule di gioco (anche il regolamento FISTF), dirette su YouTube e TikTok, sorteggio spettacolare, app per arbitri e replay, doppio schermo e classifiche. Demo gratuita per macOS, Windows e Linux; licenze da 20 € e una nuova formula ogni mese.">
+<title>Table Soccer Tournament Center — il gestionale per i tornei di Calcio da Tavolo</title>
+<meta name="description" content="Organizza tornei di Subbuteo e Calcio da Tavolo con la regia di una diretta televisiva: 21 formule di gioco (anche il regolamento FISTF), dirette su YouTube e TikTok, sorteggio spettacolare, app per arbitri e replay, doppio schermo e classifiche. Demo gratuita per macOS, Windows e Linux; licenze da 20 € e una nuova formula ogni mese.">
 <meta name="author" content="Antonio de Masellis">
-<meta property="og:title" content="Subbuteo Tournament Center">
+<meta property="og:title" content="Table Soccer Tournament Center">
 <meta property="og:description" content="Il torneo di Calcio da Tavolo, dalla prima iscrizione all'ultima premiazione.">
 <meta property="og:image" content="assets/hero.webp">
 <meta property="og:type" content="website">
@@ -516,6 +516,43 @@ header.nav{top:var(--podh)}
 .license-contribution>summary:focus-visible{outline:3px solid #86e2c1;outline-offset:-5px}
 .license-contribution .mailcard{border:0;border-top:1px solid #dfbd7033;border-radius:0;box-shadow:none}
 </style>
+<style>
+/* ===== Table Soccer Live Cam: app Android gratuita ===== */
+.lcfree{display:flex;align-items:center;gap:20px;margin:0 0 26px;max-width:640px;padding:12px 18px 12px 12px;border-radius:18px;
+  background:linear-gradient(120deg,#0b2a6b,#071535 70%);border:1px solid #ffd65a66;box-shadow:0 18px 40px #0006;text-decoration:none;color:#fff;
+  transition:transform .2s,box-shadow .2s}
+.lcfree:hover{transform:translateY(-2px);box-shadow:0 22px 48px #0008}
+.lcfree img{width:230px;height:auto;flex-shrink:0;border-radius:12px}
+.lcfree .lck{display:inline-block;font:600 12px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:#1a0d00;background:#ffd65a;padding:5px 9px;border-radius:6px;margin-bottom:8px}
+.lcfree b{display:block;font:600 23px/1.15 var(--fh);margin-bottom:6px;color:#fff}
+.lcfree span.lct{display:block;font-size:15px;line-height:1.45;color:#cfe0f5}
+.lcfree span.lcgo{display:inline-block;margin-top:9px;font-weight:700;color:#ffd65a}
+#livecam{background:radial-gradient(900px 420px at 18% 10%,#123a8a55,transparent 70%),linear-gradient(180deg,#050c1c,#071328);color:#e9f0f8}
+#livecam h2{color:#fff}
+#livecam .lead{color:#b9cbe0}
+#livecam .lead b,#livecam .eyebrow{color:#ffd65a}
+.lc-top{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:44px;align-items:center;margin-top:34px}
+.lc-hero{border-radius:20px;overflow:hidden;box-shadow:0 26px 60px #000a;border:1px solid #ffffff1f}
+.lc-hero img,.lc-shots img{width:100%;height:auto}
+.lc-feat{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.lc-feat li{padding:12px 16px;border-radius:12px;background:#0f2242cc;border:1px solid #8cb4ff2b;font-size:16px;line-height:1.45;color:#e9f0f8}
+.lc-feat li b{color:#ffd65a}
+.lc-scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:40px}
+.lc-scenes figure{position:relative;margin:0;min-height:280px;border-radius:18px;overflow:hidden;border:1px solid #ffffff24;background:#061126;box-shadow:0 22px 46px #0008}
+.lc-scenes img{display:block;width:100%;height:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .7s cubic-bezier(.2,.75,.2,1),filter .4s}
+.lc-scenes figure:hover img{transform:scale(1.035);filter:brightness(1.08)}
+.lc-scenes figcaption{position:absolute;inset:auto 0 0;padding:48px 18px 16px;background:linear-gradient(transparent,#020814ed);color:#fff;font-size:15px;line-height:1.4}
+.lc-scenes figcaption b{display:block;color:#ffd65a;font-family:var(--fh);font-size:18px;margin-bottom:3px}
+.lc-shots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.lc-shots figure{margin:0;border-radius:12px;overflow:hidden;border:1px solid #ffffff1a;background:#0a1730}
+.lc-shots figcaption{font-size:13px;color:#9fb4cf;padding:9px 12px}
+.lc-dl{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:40px;padding:24px;border-radius:16px;background:#0e2147;border:1px solid #ffd65a55}
+.lc-dl .btn.pri{font-size:17px}
+.lc-dl small{color:#b9cbe0;font-size:14px;line-height:1.5;max-width:60ch}
+@media (max-width:860px){.lc-top,.lc-scenes{grid-template-columns:1fr}.lc-scenes figure{min-height:0}.lc-shots{grid-template-columns:1fr}}
+@media (max-width:560px){.lcfree{flex-direction:column;align-items:flex-start;padding:12px}.lcfree img{width:100%;height:auto}}
+</style>
+
 </head>
 <body>
 <div class="podbar" id="podbar">
@@ -538,11 +575,12 @@ header.nav{top:var(--podh)}
 </div>
 <header class="nav" id="nav">
   <div class="navin">
-    <a class="brand" href="#top"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
+    <a class="brand" href="#top"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Table Soccer</b> <span>TOURNAMENT CENTER</span></a>
     <button class="burger" id="burger" aria-label="Menu">☰</button>
     <nav class="links" id="links">
       <a href="#funzioni">Funzioni</a>
       <a href="#galleria">Galleria</a>
+      <a href="#livecam">Live Cam</a>
       <a href="#download">Scarica</a>
       <a href="#confronto">Demo o completa</a>
       <a href="#licenza">Licenza</a>
@@ -557,14 +595,15 @@ header.nav{top:var(--podh)}
   <div class="hero-img"><img src="assets/atelier-stage.jpg" alt="Miniature Subbuteo in un atelier luminoso" fetchpriority="high"></div>
   <div class="hero-in">
     <div class="wrap">
-      <div class="eyebrow">Versione 9.4.0 · Broadcast Edition</div>
-      <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Subbuteo Tournament Center"><h1>Il torneo<br>diventa<em>una diretta</em></h1>
+      <a class="lcfree" href="#livecam"><img src="assets/livecam/free-android-600.jpg" width="600" height="315" alt="Table Soccer Live Cam: app Android gratuita"><span><span class="lck">Novità · App Android</span><b>Table Soccer Live Cam è gratis per tutti</b><span class="lct">La telecamera di regia per il calcio da tavolo: grafica TV, replay, registrazione e dirette. Scaricala liberamente.</span><span class="lcgo">Scopri e scarica →</span></span></a>
+      <div class="eyebrow">Versione 10.0.0 · Broadcast Edition</div>
+      <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Table Soccer Tournament Center"><h1>Il torneo<br>diventa<em>una diretta</em></h1>
       <p class="hero-claim">Il software di gestione tornei più professionale e completo al mondo.</p>
-      <p class="sub">Dalla prima iscrizione all'ultima premiazione: <b>Subbuteo Tournament Center</b>
+      <p class="sub">Dalla prima iscrizione all'ultima premiazione: <b>Table Soccer Tournament Center</b>
       gestisce gironi, tabelloni, cronometri, arbitri e classifiche — e li racconta al pubblico
       con la regia di una trasmissione televisiva.</p>
       <div class="badges">
-        <span class="badge">19 formule di gioco</span>
+        <span class="badge">21 formule di gioco</span>
         <span class="badge">Regolamento FISTF ufficiale</span>
         <span class="badge">App per arbitri e capitani</span>
         <span class="badge">Diretta su YouTube e TikTok</span>
@@ -586,7 +625,7 @@ header.nav{top:var(--podh)}
         macOS · Windows · Linux — tre durate, aggiornamenti inclusi
       </div>
     </div>
-<aside class="broadcast-window" aria-label="Anteprima del programma"><div class="bw-top"><i aria-hidden="true"></i> SUBBUTEO TOURNAMENT CENTER</div><img src="assets/shots/48_light.webp" width="1440" height="1000" alt="Interfaccia del tema Atelier Subbuteo"><div class="bw-caption"><span>Atelier Subbuteo. Il gioco entra nella luce.</span><span>LIGHT EDITION</span></div></aside>
+<aside class="broadcast-window" aria-label="Anteprima del programma"><div class="bw-top"><i aria-hidden="true"></i> TABLE SOCCER TOURNAMENT CENTER</div><img src="assets/shots/48_light.webp" width="1440" height="1000" alt="Interfaccia del tema Atelier Subbuteo"><div class="bw-caption"><span>Atelier Subbuteo. Il gioco entra nella luce.</span><span>LIGHT EDITION</span></div></aside>
   </div>
   <div class="scrollhint">Scorri<i></i></div>
 </section>
@@ -594,17 +633,17 @@ header.nav{top:var(--podh)}
 <!-- ================================================================ NUMERI -->
 <section class="stats">
   <div class="statgrid">
-    <div class="stat"><b>19</b><span>Formule di gioco</span></div>
+    <div class="stat"><b>21</b><span>Formule di gioco</span></div>
     <div class="stat"><b>18</b><span>Tornei reali ufficiali</span></div>
     <div class="stat"><b>5.610</b><span>Stemmi di club</span></div>
     <div class="stat"><b>153</b><span>Inni nazionali</span></div>
     <div class="stat"><b>45</b><span>Brani della libreria musicale</span></div>
-    <div class="stat"><b>318</b><span>Pagine di manuale</span></div>
+    <div class="stat"><b>342</b><span>Pagine di manuale</span></div>
   </div>
 </section>
 
 <!-- ================================================================ INTRO -->
-<section class="night-story"><div class="eyebrow">SUBBUTEO · BROADCAST EXPERIENCE</div><h2 class="rv">Piccole miniature.<br>Grandi emozioni.</h2><p>La passione del calcio da tavolo incontra l’atmosfera di una grande diretta televisiva.</p><div class="night-stages"><a class="night-stage rv" href="#funzioni"><img src="assets/shots/04_sorteggio_studio.webp" alt="Il sorteggio diventa spettacolo" loading="lazy" width="1440" height="900"><div><small>01 / IL SIPARIO SI APRE</small><h3>Il sorteggio diventa spettacolo</h3><p>Ogni squadra ha il suo momento sotto i riflettori.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots/12_present.webp" alt="Il tuo torneo, al centro della scena" loading="lazy" width="1440" height="900"><div><small>02 / SI VA IN DIRETTA</small><h3>Il tuo torneo, al centro della scena</h3><p>Risultati, classifiche e replay. Un’esperienza connessa.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots/08_finale.webp" alt="Una finale da ricordare" loading="lazy" width="1440" height="900"><div><small>03 / IL MOMENTO DECISIVO</small><h3>Una finale da ricordare</h3><p>Dalla prima partita alla celebrazione del campione.</p></div></a></div></section>
+<section class="night-story"><div class="eyebrow">TABLE SOCCER · BROADCAST EXPERIENCE</div><h2 class="rv">Piccole miniature.<br>Grandi emozioni.</h2><p>La passione del calcio da tavolo incontra l’atmosfera di una grande diretta televisiva.</p><div class="night-stages"><a class="night-stage rv" href="#funzioni"><img src="assets/shots/04_sorteggio_studio.webp" alt="Il sorteggio diventa spettacolo" loading="lazy" width="1440" height="900"><div><small>01 / IL SIPARIO SI APRE</small><h3>Il sorteggio diventa spettacolo</h3><p>Ogni squadra ha il suo momento sotto i riflettori.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots/12_present.webp" alt="Il tuo torneo, al centro della scena" loading="lazy" width="1440" height="900"><div><small>02 / SI VA IN DIRETTA</small><h3>Il tuo torneo, al centro della scena</h3><p>Risultati, classifiche e replay. Un’esperienza connessa.</p></div></a><a class="night-stage rv" href="#funzioni"><img src="assets/shots/08_finale.webp" alt="Una finale da ricordare" loading="lazy" width="1440" height="900"><div><small>03 / IL MOMENTO DECISIVO</small><h3>Una finale da ricordare</h3><p>Dalla prima partita alla celebrazione del campione.</p></div></a></div></section>
 <section class="sec" id="cosa">
   <div class="wrap">
     <div class="eyebrow rv">Che cos'è</div>
@@ -631,7 +670,7 @@ header.nav{top:var(--podh)}
     <!-- 1 -->
     <div class="feat">
       <div class="ftxt rv">
-        <h3>Diciannove formule, e chi ti dice quale scegliere</h3>
+        <h3>Ventuno formule, e chi ti dice quale scegliere</h3>
         <p>Gironi con eliminazione diretta e ripescaggi, gironi a fasce, formula speculare,
         classifica avulsa, seconda fase a gironi, due competizioni con finali incrociate, campionato
         (anche andata e ritorno), eliminazione diretta con consolazione, sistema svizzero e McMahon,
@@ -852,7 +891,7 @@ header.nav{top:var(--podh)}
           <li>Nella Formula Speculare <b>tutti giocano lo stesso numero di partite</b></li>
           <li>Chi si è già incontrato nei gironi <b>non si rincontra</b> nella seconda fase</li>
           <li>Le fasce si adattano da sole agli iscritti: <b>nessuno resta fuori per una svista</b></li>
-          <li>Oggi le formule sono diciannove, dal girone unico al regolamento FISTF</li>
+          <li>Oggi le formule sono ventuno, dal girone unico al regolamento FISTF</li>
         </ul>
         <div class="tagrow"><span class="tag">Dalla 6.3</span><span class="tag">Formula Speculare</span><span class="tag">Classifica Avulsa</span><span class="tag">52 giocatori</span></div>
       </div>
@@ -1052,6 +1091,21 @@ header.nav{top:var(--podh)}
       <div class="shot rv" data-full="assets/shots/64_giocatore.webp"><img src="assets/shots/64_giocatore.webp" alt="L'App Giocatore: la chiamata al campo per il giocatore e per l'arbitro" loading="lazy" style="max-height:560px;width:auto;margin:0 auto;display:block"></div>
     </div>
 
+    <!-- 17: ranking ufficiali (9.5) -->
+    <div class="feat">
+      <div class="ftxt rv">
+        <h3>I ranking ufficiali, dentro il Setup</h3>
+        <p>Il pulsante <b>🏅 Ranking FISCT · FISTF · WASPA</b> apre le graduatorie ufficiali italiane, mondiali e del circuito WASPA, con tutte le categorie. L’app le scarica da sola e avvisa quando esce una nuova edizione; senza Internet si importa il file Excel ufficiale.</p>
+        <ul class="flist">
+          <li>Aggiungi al torneo i giocatori <b>selezionati</b> o i <b>primi N</b></li>
+          <li><b>Ordina il Setup per ranking</b>: le formule FISTF lo usano per le teste di serie</li>
+          <li><b>Fasce dal ranking</b> per il sorteggio, e la posizione sotto ogni nome riconosciuto</li>
+        </ul>
+        <div class="tagrow"><span class="tag n">Novità 9.5</span><span class="tag">FISCT</span><span class="tag">FISTF</span><span class="tag">WASPA</span></div>
+      </div>
+      <div class="shot rv" data-full="assets/shots/ranking.webp"><img src="assets/shots/ranking.webp" alt="La finestra dei ranking FISCT, FISTF e WASPA" loading="lazy"></div>
+    </div>
+
     <!-- 16: le novità della 9.4 -->
     <div class="feat rev">
       <div class="ftxt rv">
@@ -1181,6 +1235,9 @@ header.nav{top:var(--podh)}
     <div class="eyebrow rv">Galleria</div>
     <h2 class="rv">Schermate vere, dal manuale</h2>
     <div class="gal rv">
+<figure data-full="assets/shots/novita_100.webp"><img src="assets/shots/novita_100.webp" alt="La schermata delle novità della versione 10.0" loading="lazy"><figcaption>Novità della 10.0</figcaption></figure>
+<figure data-full="assets/shots/ranking.webp"><img src="assets/shots/ranking.webp" alt="I ranking FISCT, FISTF e WASPA nel Setup" loading="lazy"><figcaption>Ranking ufficiali</figcaption></figure>
+<figure data-full="assets/shots/qr_livecam.webp"><img src="assets/shots/qr_livecam.webp" alt="Il QR «📹 Live Cam — Campo 1» in Regia" loading="lazy"><figcaption>QR per Live Cam</figcaption></figure>
 <figure data-full="assets/shots/68_novita_94.webp"><img src="assets/shots/68_novita_94.webp" alt="La schermata delle novità della versione 9.4" loading="lazy"><figcaption>Novità della 9.4</figcaption></figure>
 <figure data-full="assets/shots/69_fasce_barrage.webp"><img src="assets/shots/69_fasce_barrage.webp" alt="Fasce con Barrage: i barrage fra le fasce a fine ciclo" loading="lazy"><figcaption>Fasce con barrage</figcaption></figure>
 <figure data-full="assets/shots/70_live_guida.webp"><img src="assets/shots/70_live_guida.webp" alt="I pulsanti LIVE retroilluminati: lampeggia il passo successivo" loading="lazy"><figcaption>Pulsanti LIVE</figcaption></figure>
@@ -1219,6 +1276,44 @@ header.nav{top:var(--podh)}
 </section>
 
 <!-- ================================================================ DOWNLOAD -->
+<!-- ================================================================ LIVE CAM -->
+<section class="sec" id="livecam">
+  <div class="wrap">
+    <div class="eyebrow rv">App Android gratuita</div>
+    <h2 class="rv">Table Soccer Live Cam</h2>
+    <p class="lead rv">Un telefono Android posizionato a bordo campo diventa la <b>telecamera televisiva</b> della partita: scoreboard, replay con rallenty, registrazione e dirette sui social. È <b>gratuita e liberamente scaricabile</b> da tutti — anche da chi non usa il gestionale — e con un QR si collega a Table Soccer Tournament Center.</p>
+    <div class="lc-top rv">
+      <div class="lc-hero"><img src="assets/livecam/free-android.jpg" width="1200" height="630" alt="Table Soccer Live Cam — FREE! per Android" loading="lazy"></div>
+      <ul class="lc-feat">
+        <li><b>Grafica TV</b> con squadre, loghi, punteggio, tempo di gioco e cronometro — quattro temi ed effetto vetro animato</li>
+        <li><b>REPLAY</b> con un tocco: dissolvenza, «R» lampeggiante e rallenty; animazione GOAL, didascalie e cartellini</li>
+        <li><b>Dirette</b> su YouTube, Facebook, Twitch, Instagram, TikTok, RTMP e SRT — anche più piattaforme insieme e in verticale 9:16</li>
+        <li><b>Registrazione</b> della partita, ripresa pulita e <b>highlights</b> automatici dei gol, in un archivio da condividere</li>
+        <li><b>Collegata al torneo</b>: dal QR «📹 Live Cam — Campo N» arrivano squadre, loghi e tempi; i replay vanno nella Sala Replay</li>
+        <li>Zoom, fuoco al tocco, otturatore 1/100 s contro lo sfarfallio, microfoni USB e Bluetooth, telecomando Bluetooth</li>
+      </ul>
+    </div>
+    <div class="lc-scenes rv" aria-label="Table Soccer Live Cam in azione">
+      <figure><img src="assets/livecam/livecam-campo.webp" width="1440" height="810" alt="Telefono fissato al bordo del campo mentre riprende una partita di Subbuteo" loading="lazy"><figcaption><b>La telecamera sul campo</b>Il telefono riprende le miniature e sovrappone la grafica televisiva in tempo reale.</figcaption></figure>
+      <figure><img src="assets/livecam/livecam-replay.webp" width="1440" height="810" alt="Replay di un gol in una partita di Subbuteo ripreso dal telefono" loading="lazy"><figcaption><b>Il gol torna in replay</b>Dissolvenza, rallenty e azione ravvicinata senza interrompere la regia.</figcaption></figure>
+    </div>
+    <div class="lc-shots rv">
+      <figure><img src="assets/livecam/it_partita.webp" width="1200" height="540" alt="La schermata iniziale di Table Soccer Live Cam" loading="lazy"><figcaption>La partita pronta, con il collegamento al gestionale</figcaption></figure>
+      <figure><img src="assets/livecam/it_grafica.webp" width="1200" height="540" alt="La scheda Grafica" loading="lazy"><figcaption>Quattro temi e l’effetto vetro</figcaption></figure>
+      <figure><img src="assets/livecam/it_diretta.webp" width="1200" height="540" alt="La scheda Diretta" loading="lazy"><figcaption>Dirette su più piattaforme insieme</figcaption></figure>
+    </div>
+    <div class="lc-dl rv">
+      <a class="btn pri" href="livecam/TableSoccerLiveCam-1.0.3.apk" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+        Scarica gratis l’APK · 1.0.3
+      </a>
+      <small>Per Android 10 e successivi · 3,8 MB. Alla prima installazione Android chiede di consentire l’installazione da questa fonte; poi l’app si aggiorna da sola. Nessuna pubblicità, nessun dato raccolto. Istruzioni complete nel capitolo «Table Soccer Live Cam» della Guida professionale.</small>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
 <section class="sec" id="download">
   <div class="wrap">
     <div class="eyebrow rv">Scarica</div>
@@ -1231,7 +1326,7 @@ header.nav{top:var(--podh)}
     una nuova formula di gioco</b>.</p>
 
     <div class="dgrid rv">
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/Subbuteo-Tournament-Center-9.4.0-macOS-AppleSilicon.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/Table-Soccer-Tournament-Center-10.0.0-macOS-AppleSilicon.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
@@ -1243,7 +1338,7 @@ header.nav{top:var(--podh)}
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/Subbuteo-Tournament-Center-9.4.0-macOS-Intel.dmg">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/Table-Soccer-Tournament-Center-10.0.0-macOS-Intel.dmg">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.1-.8-1.6 0-3 .9-3.8 2.4-1.7 2.9-.4 7.1 1.2 9.4.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.6-3.7zM14 5.6c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1 .1 2.1-.5 2.8-1.4z"/></svg>
           <b>macOS</b>
@@ -1255,48 +1350,48 @@ header.nav{top:var(--podh)}
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/Subbuteo-Tournament-Center-Setup-9.4.0-Windows-x64.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/Table-Soccer-Tournament-Center-Setup-10.0.0-Windows-x64.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
         </div>
         <small>Processore Intel o AMD a 64 bit<br>Windows 10 e 11</small>
-        <span class="sz">.exe · 337 MB</span>
+        <span class="sz">.exe · 338 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/Subbuteo-Tournament-Center-Setup-9.4.0-Windows-arm64.exe">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/Table-Soccer-Tournament-Center-Setup-10.0.0-Windows-arm64.exe">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l7.4-1v7.1H3V5.6zm8.5-1.2L21 3v8.7h-9.5V4.4zM3 12.8h7.4v7.1L3 18.6v-5.8zm8.5 0H21V21l-9.5-1.3v-6.9z"/></svg>
           <b>Windows</b>
         </div>
         <small>Processore ARM (Snapdragon)<br>Windows 10 e 11</small>
-        <span class="sz">.exe · 331 MB</span>
+        <span class="sz">.exe · 332 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
 
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/Subbuteo-Tournament-Center-9.4.0-Linux-x86_64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/Table-Soccer-Tournament-Center-10.0.0-Linux-x86_64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
         </div>
         <small>AppImage x86_64 — nessuna installazione<br>rendi eseguibile e apri</small>
-        <span class="sz">.AppImage · 356 MB</span>
+        <span class="sz">.AppImage · 357 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
       </a>
-      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/Subbuteo-Tournament-Center-9.4.0-Linux-arm64.AppImage">
+      <a class="dl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/Table-Soccer-Tournament-Center-10.0.0-Linux-arm64.AppImage">
         <div class="os">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1.9 0-3 1.6-3 3.4 0 .9-.1 1.9-.6 2.7C7.4 9.7 6 11.6 6 14c0 1-.5 1.8-1 2.6-.6.9-.5 2 .3 2.6.7.5 1.6.4 2.3.8.8.5 1.4 1.4 2.5 1.7 1.3.4 2.7.4 4 0 1.1-.3 1.7-1.2 2.5-1.7.7-.4 1.6-.3 2.3-.8.8-.6.9-1.7.3-2.6-.5-.8-1-1.6-1-2.6 0-2.4-1.4-4.3-2.4-5.9-.5-.8-.6-1.8-.6-2.7C15 3.6 13.9 2 12 2zm-1.4 3.3c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zm2.8 0c.4 0 .7.4.7 1s-.3 1-.7 1-.7-.4-.7-1 .3-1 .7-1zM12 7.8c.9 0 1.9.5 1.9 1 0 .3-.4.5-.8.8-.4.2-.7.5-1.1.5s-.8-.3-1.2-.5c-.4-.3-.7-.5-.7-.8 0-.5 1-1 1.9-1z"/></svg>
           <b>Linux</b>
         </div>
         <small>AppImage ARM64 — nessuna installazione<br>rendi eseguibile e apri</small>
-        <span class="sz">.AppImage · 356 MB</span>
+        <span class="sz">.AppImage · 357 MB</span>
         <span class="go">Scarica
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
         </span>
@@ -1307,7 +1402,7 @@ header.nav{top:var(--podh)}
       <p><b>Non vuoi installare niente?</b> La stessa versione dimostrativa gira anche nel browser,
       su qualsiasi sistema operativo — utile per dare un'occhiata prima di scaricare mezzo giga.</p>
       <a class="btn sec" href="app/" target="_blank" rel="noopener" style="font-size:14px;padding:12px 22px">Apri nel browser</a>
-      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v9.4.0/STC-Guida-Professionale-9.4.pdf"><img src="assets/copertina-manuale.jpg" alt="Guida professionale PDF" loading="lazy"><span class="mt"><b>Guida professionale PDF</b><span>334 pagine · procedure, esempi e formule</span></span></a>
+      <a class="manualdl" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v10.0.0/STC-Guida-Professionale-10.0.pdf"><img src="assets/copertina-manuale.jpg" alt="Guida professionale PDF" loading="lazy"><span class="mt"><b>Guida professionale PDF</b><span>342 pagine · procedure, esempi e formule</span></span></a>
       <a class="btn sec" href="https://github.com/AdeMasel/subbuteo-tournament-center/releases/download/v6.3.0/Inni-Nazionali-153.zip" style="font-size:14px;padding:12px 22px">🎵 Inni nazionali · 153 brani (393 MB)</a>
     </div>
   </div>
@@ -1325,7 +1420,7 @@ header.nav{top:var(--podh)}
     <table class="cmp rv">
       <thead><tr><th>Funzione</th><th>Demo</th><th>Completa</th></tr></thead>
       <tbody>
-        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 19</td></tr>
+        <tr><td>Formule di gioco</td><td class="lim">solo girone unico</td><td class="yes">tutte e 21</td></tr>
         <tr><td>Consigliere delle formule e Torneo Reale</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Salvataggio e richiamo dei tornei</td><td class="no">✕</td><td class="yes">✓</td></tr>
         <tr><td>Esportazione e importazione dei dati</td><td class="no">✕</td><td class="yes">✓</td></tr>
@@ -1443,7 +1538,7 @@ header.nav{top:var(--podh)}
         <strong>una nuova formula di gioco ogni mese</strong>.</div>
         <div class="minimo">Un solo pagamento con <b>PayPal</b> per la durata scelta, senza addebiti automatici</div>
         <ul>
-          <li>Tutte e <b>diciannove le formule</b>, Consigliere e Torneo Reale</li>
+          <li>Tutte e <b>ventuno le formule</b>, Consigliere e Torneo Reale</li>
           <li><b>Salvataggio</b>, richiamo ed esportazione dei tornei</li>
           <li><b>Gestione arbitrale</b> e assegnazione automatica dei campi</li>
           <li>Cerimonia di <b>sorteggio</b> e composizione dei gironi</li>
@@ -1455,7 +1550,7 @@ header.nav{top:var(--podh)}
           <li><b>Diretta su YouTube e TikTok</b> dalla Regia</li>
           <li><b>App Giocatore</b>: chiamate sul telefono, diario, classifiche e foto per le figurine</li>
           <li><b>Formule con barrage</b>: fasce con accesso al tabellone, promozioni e retrocessioni</li>
-          <li>Guida professionale da <b>334 pagine</b> in PDF</li>
+          <li>Guida professionale da <b>342 pagine</b> in PDF</li>
         </ul>
       </div>
 
@@ -1589,14 +1684,15 @@ header.nav{top:var(--podh)}
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <a class="brand" href="#top" style="margin-bottom:16px"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Subbuteo</b> <span>TOURNAMENT CENTER</span></a>
+        <a class="brand" href="#top" style="margin-bottom:16px"><img class="brand-mark" src="assets/stc-logo-256.png" width="42" height="42" alt=""><b>Table Soccer</b> <span>TOURNAMENT CENTER</span></a>
         <p style="max-width:44ch;margin-top:4px">Il gestionale per i tornei di Subbuteo e Calcio da
-        Tavolo. Versione 9.4.0 — ottobre 2026. Software e manuale di Antonio de Masellis.</p>
+        Tavolo. Versione 10.0.0 — ottobre 2026. Software e manuale di Antonio de Masellis.</p>
       </div>
       <div>
         <h5>Il programma</h5>
         <a href="#funzioni">Funzioni</a>
         <a href="#galleria">Galleria</a>
+      <a href="#livecam">Live Cam</a>
         <a href="#download">Scarica la demo</a>
         <a href="#confronto">Demo o completa</a>
       </div>

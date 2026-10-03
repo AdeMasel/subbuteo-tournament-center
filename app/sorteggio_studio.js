@@ -1,4 +1,4 @@
-/* Sorteggio in studio — dati del filmato (Subbuteo Tournament Center).
+/* Sorteggio in studio — dati del filmato (Table Soccer Tournament Center).
    Filmato 1280×720, 24 fotogrammi al secondo, con il cartoncino ripulito dalla
    scritta originale (anche sul biglietto piegato che esce dalla pallina); "traccia" dice, fotogramma per fotogramma, dove scrivere il
    nome sorteggiato: [x0, y0 (cima delle maiuscole), x1, y1 (linea di base), opacità].

@@ -1,4 +1,4 @@
-# Subbuteo Tournament Center — sito di presentazione
+# Table Soccer Tournament Center — sito di presentazione
 
 Landing page della versione 5.1, pronta per essere pubblicata su un hosting gratuito
 **senza pubblicità**. Autore: Antonio de Masellis.

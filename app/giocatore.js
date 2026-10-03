@@ -1,5 +1,5 @@
 /* =========================================================
-   SUBBUTEO TOURNAMENT CENTER — APP GIOCATORE
+   TABLE SOCCER TOURNAMENT CENTER — APP GIOCATORE
    ---------------------------------------------------------
    Il telefono del singolo giocatore: lo CHIAMA (suono, vibrazione,
    schermata a tutto campo) quando tocca a lui giocare o arbitrare,

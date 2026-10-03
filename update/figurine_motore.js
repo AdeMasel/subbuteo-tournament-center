@@ -1,4 +1,4 @@
-/* Motore delle figurine (Subbuteo Tournament Center): MediaPipe Tasks Vision 1.0.1
+/* Motore delle figurine (Table Soccer Tournament Center): MediaPipe Tasks Vision 1.0.1
    © Google, licenza Apache 2.0 — pacchetto, caricatore e motore WebAssembly (compresso gzip),
    modelli «selfie segmenter» e «blaze face short range». Caratteri della figurina: Oswald,
    © The Oswald Project Authors, SIL Open Font License 1.1. Caricato solo quando servono le figurine. */

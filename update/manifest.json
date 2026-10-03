@@ -1,7 +1,7 @@
 {
- "content": "9.4.0",
+ "content": "10.0.0",
  "minShell": "9.2.0",
- "notes": "Formule con barrage, regia LIVE che guida il turno",
+ "notes": "Table Soccer Tournament Center 10.0: nuovo nome, ranking FISCT·FISTF·WASPA, Table Soccer Live Cam, traduzioni inglesi completate",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -9,16 +9,16 @@
    "size": 154284
   },
   "campo.html": {
-   "sha256": "88f7fa5f050df12dca46296e7a55561d2bc41ae53bc1894bde66f25d2f39cd3f",
-   "size": 56067
+   "sha256": "da71f9ebab585d91598ac6774f016c85213a06d437a747a2437d4fd88a42e678",
+   "size": 56075
   },
   "capitano.html": {
    "sha256": "c578c1becd6c5a9968fac8e5c4acab4f7a136391d08c3d0de234f0d58e9a51bd",
    "size": 28924
   },
   "figurine_motore.js": {
-   "sha256": "445d9b0c1f42b744b976642d6659f82ac98391b622f2589cf5cee6da8c3bf93a",
-   "size": 6062740
+   "sha256": "e1480bf5b02cbca7ebba9011f260b5a8c01df3d669aadc331ffabae46c056a40",
+   "size": 6062744
   },
   "gifenc.js": {
    "sha256": "d4abcba938a8ed397f8493c8473b32a73c0eb176c8e85c8498b69d8937ffea2b",
@@ -29,12 +29,12 @@
    "size": 424
   },
   "giocatore.js": {
-   "sha256": "9181c030022fdc96482ecb0086a3be88cd7b7f1f30b4510e06ad576bd2538e22",
-   "size": 56164
+   "sha256": "abe1cf7a7eb95b1c5eabf6f884e19a100942679ce7a221a364442050b63107bc",
+   "size": 56168
   },
   "index.html": {
-   "sha256": "1b19623f00fcbb4af730d62adc1d13a3be2b6ea0a50265584422a99bb71f3388",
-   "size": 4688935
+   "sha256": "3c91eada30a8497bfaaba74ff65576808b89f52d3cee34fa9e046de7a35757ad",
+   "size": 4723113
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -43,6 +43,10 @@
   "legge.js": {
    "sha256": "e70a007c3cd8ea53128e28a1d360829373c8d9e70553413641dc615b2800418c",
    "size": 7787
+  },
+  "livecam.html": {
+   "sha256": "ba946ed8ab05379e5bb766c21ea37076c5ffc6ce73fb16aa06fcd580c3dcf657",
+   "size": 3028
   },
   "mp4enc.js": {
    "sha256": "eb2af863effc1334dcfc1b954bc0f8ec264d203b80824f63e69b49fd306ec414",
@@ -69,12 +73,12 @@
    "size": 390562
   },
   "replay.html": {
-   "sha256": "2de9554f062421aa094a8269096382b206fef63ab5e6f87ca3f6db85f8e0facd",
-   "size": 34902
+   "sha256": "252cee193e6d361daa06680861969fa2ff7df9c4cd77b0f4d5c4f023840def29",
+   "size": 34906
   },
   "sorteggio_studio.js": {
-   "sha256": "c3d800a39542e04cf10b089187ffbae3e1888f1156a866ccae2d5e81e1dd3792",
-   "size": 5960653
+   "sha256": "286a487eacdb57f3983e6930eeb963587a7bd1f7c64addbce5a4d81bb372b396",
+   "size": 5960657
   },
   "stemmi_club.js": {
    "sha256": "6f29cb55e901fdd1d299d1eca9310ba4cdc15375b82ff6cc16bb14109ca6ecca",
