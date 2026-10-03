@@ -1,7 +1,7 @@
 {
-  "versionCode": 13,
-  "versionName": "1.0.3",
-  "apk": "https://ademasel.github.io/subbuteo-tournament-center/livecam/TableSoccerLiveCam-1.0.3.apk",
-  "sha256": "9926cf9a4754085d49cc908e41fe0f4c880630240af3ee6107cd0928e488b193",
-  "note": "1.0.3: si collega a Table Soccer Tournament Center 10.0."
+  "versionCode": 14,
+  "versionName": "1.0.4",
+  "apk": "https://ademasel.github.io/subbuteo-tournament-center/livecam/TableSoccerLiveCam-1.0.4.apk",
+  "sha256": "035e92a9ba011e5845124eba82047e5fcb1e4b5de1b1fce10779f90e1b19316f",
+  "note": "1.0.4: cartellini giallo e rosso (tolto il verde)."
 }
