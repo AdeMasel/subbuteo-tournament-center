@@ -551,6 +551,29 @@ header.nav{top:var(--podh)}
 .lc-dl small{color:#b9cbe0;font-size:14px;line-height:1.5;max-width:60ch}
 @media (max-width:860px){.lc-top,.lc-scenes{grid-template-columns:1fr}.lc-scenes figure{min-height:0}.lc-shots{grid-template-columns:1fr}}
 @media (max-width:560px){.lcfree{flex-direction:column;align-items:flex-start;padding:12px}.lcfree img{width:100%;height:auto}}
+/* promozione: prova gratuita di un mese (si nasconde da sola dopo data-fino) */
+.promo{display:flex;align-items:center;gap:16px;margin:0 0 26px;max-width:640px;padding:14px 20px 14px 16px;border-radius:18px;
+  background:linear-gradient(120deg,#0e4a33,#0b2a22 45%,#0f1c2b);border:1px solid rgba(58,217,141,.55);
+  box-shadow:0 18px 40px #0007;color:#fff;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.promo:hover{transform:translateY(-2px);box-shadow:0 22px 48px #0008}
+.promo .pmn{flex:0 0 auto;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:var(--grn);color:#04180e;font:700 13px/1.05 var(--fh);letter-spacing:.04em;text-transform:uppercase}
+.promo .pmn b{display:block;font-size:30px;line-height:.9}
+.promo .pmk{display:inline-block;font:600 12px/1 var(--fh);letter-spacing:.14em;text-transform:uppercase;color:#04180e;background:var(--grn);padding:5px 9px;border-radius:6px;margin-bottom:7px}
+.promo .pmt{display:block;font:600 21px/1.15 var(--fh);margin-bottom:5px}
+.promo .pms{display:block;font-size:15px;line-height:1.45;color:#cfe0f5}
+.promo .pmgo{display:inline-block;margin-top:7px;font-weight:700;color:#7af5bd}
+.promo-card{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin:8px 0 38px;padding:24px 26px;border-radius:20px;
+  background:linear-gradient(120deg,#0e4a33,#0b2a22 45%,#0f1c2b);color:#fff;border:1px solid rgba(58,217,141,.5)}
+.promo-card .pmn{flex:0 0 auto;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:var(--grn);color:#04180e;font:700 15px/1.05 var(--fh);text-transform:uppercase}
+.promo-card .pmn b{display:block;font-size:40px;line-height:.9}
+.promo-card .pmtx{flex:1 1 320px}
+.promo-card h3{font:600 26px/1.15 var(--fh);margin:0 0 8px;color:#fff}
+.promo-card p{margin:0 0 6px;color:#cfe0f5;line-height:1.55}
+.promo-card .btn{flex:0 0 auto}
+.promo-off{display:none!important}
+@media (max-width:560px){.promo{align-items:flex-start;padding:12px}.promo .pmn{width:60px;height:60px}.promo .pmn b{font-size:24px}.promo-card{padding:20px}}
 </style>
 
 </head>
@@ -596,6 +619,7 @@ header.nav{top:var(--podh)}
   <div class="hero-in">
     <div class="wrap">
       <a class="lcfree" href="#livecam"><img src="assets/livecam/free-android-600.jpg" width="600" height="315" alt="Table Soccer Live Cam: free Android app"><span><span class="lck">New · Android app</span><b>Table Soccer Live Cam is free for everyone</b><span class="lct">The directing camera for table soccer: TV graphics, replays, recording and live streaming. Download it freely.</span><span class="lcgo">Discover and download →</span></span></a>
+      <a class="promo" href="#prova" data-fino="2026-10-20T23:59:59+02:00"><span class="pmn"><span><b>1</b>month</span></span><span><span class="pmk">Promotion · until 20 October</span><span class="pmt">Free one-month trial licence</span><span class="pms">From today until 20 October you can request a free full licence of Table Soccer Tournament Center valid for one month, the same way you would buy one.</span><span class="pmgo">Request it now →</span></span></a>
       <div class="eyebrow">Version 10.0.0 · Broadcast Edition</div>
       <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Table Soccer Tournament Center"><h1>Your tournament<br>becomes<em>a live show</em></h1>
       <p class="hero-claim">The most professional and complete tournament management software in the world.</p>
@@ -1367,6 +1391,19 @@ header.nav{top:var(--podh)}
     activation code arrives. Each licence is valid for a <b>single device</b> and is checked at every
     start <b>even without an Internet connection</b>.</p>
 
+    <div class="promo-card rv" id="prova" data-fino="2026-10-20T23:59:59+02:00">
+      <div class="pmn"><span><b>1</b>month</span></div>
+      <div class="pmtx">
+        <div class="eyebrow" style="margin-bottom:6px">Promotion · from today until 20 October</div>
+        <h3>Free one-month trial</h3>
+        <p>Until <b>20 October</b> you can request a <b>free full licence valid for one month</b>, the same way
+        you would buy one: write to <b>onyxsubbuteo@gmail.com</b> with your <b>alphanumeric code</b>
+        (🔑 Licence panel) and the <b>name</b> for the licence. No payment: the activation code arrives in reply to
+        your email.</p>
+      </div>
+      <a class="btn pri" href="mailto:onyxsubbuteo@gmail.com?subject=Free%20one-month%20trial%20licence%20request%20-%20Table%20Soccer%20Tournament%20Center&body=Hello%2C%0A%0AI%20would%20like%20to%20request%20the%20free%20one-month%20trial%20licence%20of%20Table%20Soccer%20Tournament%20Center%20%28promotion%20valid%20until%2020%20October%29.%0A%0AMy%20device%20code%3A%20STC-....-....-....-....%0AName%20for%20the%20licence%3A%20%0A%0AThank%20you.">Request the free trial</a>
+    </div>
+
     <div class="steps rv">
       <div class="step">
         <h4>Install and open</h4>
@@ -1440,7 +1477,7 @@ header.nav{top:var(--podh)}
           <button class="copy" id="cp" type="button">Copy</button>
         </div>
         <a class="btn pri" style="font-size:14.5px;padding:14px 22px"
-           href="mailto:onyxsubbuteo@gmail.com?subject=Subbuteo%20Tournament%20Center%207.6%20licence%20request&body=Hello%2C%0A%0AI%20would%20like%20to%20purchase%20a%20Subbuteo%20Tournament%20Center%20licence.%0A%0ASelected%20term%20%281%20year%20%E2%82%AC20%20%2F%202%20years%20%E2%82%AC30%20%2F%20lifetime%20%E2%82%AC40%29%3A%20%0AMy%20device%20code%3A%20STC-....-....-....-....%0AName%20for%20the%20licence%3A%20%0A%0AI%20will%20send%20the%20payment%20by%20PayPal.%0A%0AThank%20you.">
+           href="mailto:onyxsubbuteo@gmail.com?subject=Table%20Soccer%20Tournament%20Center%20licence%20request&body=Hello%2C%0A%0AI%20would%20like%20to%20purchase%20a%20Table%20Soccer%20Tournament%20Center%20licence.%0A%0ASelected%20term%20%281%20year%20%E2%82%AC20%20%2F%202%20years%20%E2%82%AC30%20%2F%20lifetime%20%E2%82%AC40%29%3A%20%0AMy%20device%20code%3A%20STC-....-....-....-....%0AName%20for%20the%20licence%3A%20%0A%0AI%20will%20send%20the%20payment%20by%20PayPal.%0A%0AThank%20you.">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/></svg>
           Write now
         </a>
@@ -1690,6 +1727,10 @@ async function hitCall(verbo,chiave){
   });
   x.addEventListener('click',function(){ a.pause(); bar.classList.add('via'); });
 })();
+</script>
+<script>
+/* la promozione della prova gratuita sparisce da sola dopo il 20 ottobre 2026 */
+(function(){var n=Date.now();document.querySelectorAll('[data-fino]').forEach(function(e){if(n>Date.parse(e.getAttribute('data-fino')))e.classList.add('promo-off')})})();
 </script>
 </body>
 </html>
