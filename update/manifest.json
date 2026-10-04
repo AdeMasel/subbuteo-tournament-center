@@ -1,7 +1,7 @@
 {
- "content": "10.1.0",
+ "content": "10.2.0",
  "minShell": "9.2.0",
- "notes": "Table Soccer Tournament Center 10.1: sezioni in gruppi con icone, Live più ordinata, spiegazioni a richiesta, menù Esporta e stampa",
+ "notes": "Table Soccer Tournament Center 10.2: Subbuteo Solo con classifica mondiale, quattro formule nuove",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -33,8 +33,8 @@
    "size": 56168
   },
   "index.html": {
-   "sha256": "e5e34aa0f94fccc66eb9eb11a78cca9f0cf0761916f72a6406a66c3c5b920f56",
-   "size": 4739983
+   "sha256": "e8130b9239f18be8560c7fad900366e7b3cba3a3e21f388c54bc73991bdddb3b",
+   "size": 4818439
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
