@@ -1,7 +1,7 @@
 {
- "content": "10.3.2",
+ "content": "10.4.0",
  "minShell": "9.2.0",
- "notes": "Table Soccer Tournament Center 10.3.2: minuti e orologio simulato, audio, collegamento telefoni",
+ "notes": "10.4: Campionati del Club con promozioni e retrocessioni, Apertura & Clausura, competizioni Solo con marcatori e tabellini, ticker del torneo per la Live Cam 1.0.5",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -33,8 +33,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "6fe4687619c8d6628ab4b0c223276a53d8e73c16aad23b32342da0fe8a5b9367",
-   "size": 6783319
+   "sha256": "fc13f8521962d1df8e4c7b257be2300581e21802f29cfacb3cdb7e96f7935734",
+   "size": 6840355
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",

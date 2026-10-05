@@ -1,7 +1,7 @@
 {
-  "versionCode": 14,
-  "versionName": "1.0.4",
-  "apk": "https://ademasel.github.io/subbuteo-tournament-center/livecam/TableSoccerLiveCam-1.0.4.apk",
-  "sha256": "035e92a9ba011e5845124eba82047e5fcb1e4b5de1b1fce10779f90e1b19316f",
-  "note": "1.0.4: cartellini giallo e rosso (tolto il verde)."
+  "versionCode": 15,
+  "versionName": "1.0.5",
+  "apk": "https://ademasel.github.io/subbuteo-tournament-center/livecam/TableSoccerLiveCam-1.0.5.apk",
+  "sha256": "d6ba260bd63536af3ce716ad13fd855fcfdf1034aa7accf3e7c305cd241509d9",
+  "note": "1.0.5: ticker del torneo in basso, semitrasparente (risultati, classifiche, prossimo turno dal Tournament Center); si accende e si spegne dal telefono."
 }

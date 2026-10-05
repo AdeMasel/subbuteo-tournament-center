@@ -1158,6 +1158,16 @@ body.no-anim #regia-fascia{transition:none}
   margin-left:10px;letter-spacing:.06em}
 #iscrizioni .adv-box{width:min(660px,94vw)}
 #fistf-exp .fx-body{padding:16px 20px 20px;overflow-y:auto}
+.club-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:14px}
+.club-serie{display:flex;flex-direction:column;gap:6px}
+.club-serie .club-gioc{width:100%;font-family:inherit;resize:vertical}
+.club-nome-serie{font-family:'Oswald',sans-serif;font-size:1.05rem;max-width:180px}
+.club-scambi{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:.9rem;color:var(--muted)}
+.club-scambi input{width:58px;padding:4px 6px}
+.club-cl tr.club-up td{color:#3ddc84}.club-cl tr.club-down td{color:#ff6b6b}
+.club-z{font-size:.8em}
+.club-st-conclusa{background:rgba(61,220,132,.16)}.club-st-corso{background:rgba(255,196,0,.16)}.club-st-perso{background:rgba(255,107,107,.18)}
+.club-mov,.club-albo{margin-top:14px}
 #fistf-exp input[type=file]{margin-top:4px}
 .iscr-testa{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 #iscr-qr{background:#fff;border-radius:12px;padding:8px;flex:0 0 auto}
@@ -3690,6 +3700,21 @@ details.menu-esp[open]>summary{border-color:var(--accent)}
 .so-intro{color:var(--muted);max-width:980px;margin:-6px 0 14px;line-height:1.55}
 .so-nome{align-items:center;gap:10px;margin-bottom:14px}.so-nome input{max-width:260px}
 .so-griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.cp-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:980px){.cp-grid{grid-template-columns:1fr}}
+.cp-turno{margin-top:10px}
+.cp-gara{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.cp-gara .cp-sq:first-child{text-align:right}
+.cp-gara.bye{display:block;color:var(--muted)}
+.cp-ris{min-width:64px;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-family:'Chakra Petch',monospace;font-weight:700;cursor:pointer}
+.cp-gara.ok .cp-ris{border-color:var(--accent)}
+.cp-tb{grid-column:1/-1;display:flex;justify-content:space-between;gap:12px;font-size:.82rem;color:var(--muted)}
+.cp-ed{margin-bottom:16px;border-color:var(--accent)}
+.cp-tab{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.cp-tab{grid-template-columns:1fr}}
+.cp-sc{font-family:'Chakra Petch',monospace;color:var(--accent)}
+.cp-gol{display:grid;grid-template-columns:62px 1fr 110px auto;gap:6px;margin:6px 0}
+.cp-nuova summary{cursor:pointer;font-weight:600;margin:4px 0}
 .so-mod{display:flex;flex-direction:column;gap:10px}
 .so-kick{font:600 .78rem/1.2 'Oswald',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 .so-tit{font-family:'Oswald',sans-serif;font-size:1.25rem;letter-spacing:.04em;margin:0}
@@ -3848,6 +3873,10 @@ body.no-anim .so-cella.bersaglio{animation:none}
               <option value="rosa">🧭 La Rosa dei Venti (formula originale · 8–12)</option>
               <option value="kingofcourt">👑 Re del Tavolo (chi vince resta)</option>
               <option value="squadre">🏟 TORNEO A SQUADRE (CdT)</option>
+              <optgroup label="🏛 STAGIONE DEL CLUB">
+                <option value="club-ac">🏛 Apertura &amp; Clausura (stile sudamericano)</option>
+                <option value="club-serie">🏛 Campionati del Club (serie, promozioni e retrocessioni)</option>
+              </optgroup>
               <optgroup label="🎮 SUBBUTEO SOLO">
                 <option value="solo">🎮 Subbuteo Solo — tu contro il sistema</option>
               </optgroup>
@@ -3875,8 +3904,9 @@ body.no-anim .so-cella.bersaglio{animation:none}
         </div>
         <div class="setup-strumenti">
           <button class="btn sec" onclick="openAdvisor()">💡 Formule consigliate</button>
-          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 10.3</button>
+          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 10.4</button>
         <button class="btn sec" onclick="openRealTorneo()">🏆 Torneo Reale</button>
+          <button class="btn sec" onclick="clubApri()" title="Serie, promozioni e retrocessioni del club, stagione dopo stagione">🏛 Campionati del Club</button>
           <button class="btn sec" onclick="openEstimate()">⏱ Stima durata</button>
           <button class="btn sec" id="seed-btn" onclick="seedDaRanking()" title="Compila le fasce in base alla classifica perpetua dell'archivio">🎖 Teste di serie dall'archivio</button>
           <button class="btn sec" onclick="openRanking()" title="Graduatorie ufficiali FISCT (Italia), FISTF (Mondiale) e WASPA (circuito amatoriale): aggiungi giocatori e ordina le teste di serie">🏅 Ranking FISCT · FISTF · WASPA</button>
@@ -5285,7 +5315,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='10.3.2';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='10.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -6324,10 +6354,12 @@ Object.assign(TR,{"📱 Codice QR di collegamento":"📱 Connection QR code",
   ", senza che il collegamento sia acceso. Perché funzionino, quel giorno il computer deve ritrovarsi lo stesso indirizzo.":", without the connection being on. For them to work, on that day the computer must have the same address again."});
 Object.assign(TR,{"Il torneo in diretta sui canali del club, direttamente dal programma: su YouTube in orizzontale, su TikTok in verticale con la Regia e la Presentazione una sopra l’altra. Per ogni account serve la chiave di trasmissione che la piattaforma rilascia al titolare: inseriscila qui prima del torneo, resta cifrata su questo computer e non viaggia mai con i dati del torneo. La diretta convive con l’App Campo, l’App Capitano e l’App Replay: se la rete rallenta, la qualità scende da sola invece di fermare i telefoni.": "The tournament live on the club's channels, straight from the program: on YouTube in landscape, on TikTok in portrait with the Control Desk and the Presentation one above the other. Each account needs the stream key the platform gives to its owner: enter it here before the tournament; it stays encrypted on this computer and never travels with the tournament data. Streaming works alongside the Table App, the Captain App and the Replay App: if the network slows down, the quality drops by itself instead of holding up the phones.", "🔴 Diretta su YouTube e TikTok": "🔴 Live on YouTube and TikTok", "La diretta funziona nell’app installata sul computer, non nella versione per browser.": "Streaming works in the app installed on the computer, not in the browser version.", "(con l’audio del programma)": "(with the program's sound)", "Account e chiave di trasmissione": "Account and stream key", "Account salvato": "Account saved", "Apri ora": "Open now", "Audio del programma non disponibile": "Program sound not available", "Audio del programma non disponibile su questo sistema": "Program sound not available on this system", "Audio della diretta": "Stream audio", "Avvia la diretta su": "Go live on", "Chiave di trasmissione": "Stream key", "Chiave salvata": "Key saved", "Codifica audio AAC": "AAC audio encoding", "Codifica video H.264": "H.264 video encoding", "Dimentica la chiave": "Forget the key", "Dimenticare la chiave di trasmissione salvata per": "Forget the stream key saved for", "Diretta in corso": "Live stream in progress", "Dove si trova": "Where to find it", "Errore nel motore della diretta": "Error in the streaming engine", "Ferma la diretta su": "Stop the stream on", "Fotogrammi al secondo": "Frames per second", "Fotogrammi scartati": "Dropped frames", "Il secondo schermo non si è aperto": "The second screen did not open", "Il torneo sta per cominciare": "The tournament is about to start", "In attesa di invio": "Waiting to send", "In onda da": "On air for", "In onda su": "Live on", "Intere (con fasce sopra e sotto)": "Whole (with bands above and below)", "La qualità nuova vale dalla prossima partenza della diretta.": "The new quality applies from the next time the stream starts.", "Le due schermate": "The two screens", "Livello dell’audio che va in onda": "Level of the audio going on air", "L’anteprima compare quando la diretta parte": "The preview appears when the stream starts", "L’audio cambia alla prossima partenza della diretta.": "The audio changes the next time the stream starts.", "Microfono": "Microphone", "Microfono dello speaker": "Announcer's microphone", "Microfono in onda": "Microphone on air", "Microfono predefinito": "Default microphone", "Mostra o nascondi": "Show or hide", "Nessuna chiave salvata": "No key saved", "PRESENTAZIONE": "PRESENTATION", "Pannello pronto": "Panel ready", "Più grandi (tagliati i lati)": "Larger (sides cropped)", "Presentazione / AUTO LIVE": "Presentation / AUTO LIVE", "Presentazione con la Regia in riquadro": "Presentation with the Control Desk in a corner box", "Presentazione sopra, Regia sotto": "Presentation on top, Control Desk below", "Prima inserisci la chiave di trasmissione di": "First enter the stream key for", "Pronta": "Ready", "Qualità": "Quality", "REGIA": "CONTROL DESK", "Regia sopra, Presentazione sotto": "Control Desk on top, Presentation below", "Riconnessioni": "Reconnections", "Salva": "Save", "Secondo schermo aperto": "Second screen open", "Secondo schermo chiuso: si apre da solo alla partenza": "Second screen closed: it opens by itself when the stream starts", "Server RTMP": "RTMP server", "Solo Presentazione": "Presentation only", "Solo Regia": "Control Desk only", "Suoni del programma (musica, inni, annunci, fischi)": "Program sound (music, anthems, announcements, whistles)", "TikTok LIVE Center o LIVE Studio → URL del server e Chiave di trasmissione. La chiave di TikTok cambia a ogni diretta: incollala nuova prima di partire.": "TikTok LIVE Center or LIVE Studio → Server URL and Stream key. The TikTok key changes with every stream: paste the new one before going live.", "Velocità di invio": "Upload speed", "YouTube Studio → Crea → Trasmetti dal vivo → Chiave stream (e URL dello stream)": "YouTube Studio → Create → Go live → Stream key (and Stream URL)", "account salvato": "account saved", "attenzione: questo sistema non offre la cifratura, il file è leggibile solo dal tuo utente": "note: this system offers no encryption; the file is readable only by your user", "chiave dimenticata": "key forgotten", "chiave pronta": "key ready", "cifrata su questo computer": "encrypted on this computer", "collegamento al server…": "connecting to the server…", "collegamento in corso": "connecting", "collegamento non riuscito": "connection failed", "connessione persa, riprovo": "connection lost, retrying", "di nuovo in onda": "back on air", "diretta chiusa": "stream closed", "errore": "error", "incolla qui la chiave": "paste the key here", "incolla qui per sostituirla": "paste here to replace it", "inquadratura cambiata in diretta": "layout changed while live", "manca la chiave": "key missing", "non partita": "did not start", "salvata": "saved", "Inquadratura": "Layout", "IN ONDA": "ON AIR", "Collegamento…": "Connecting…", "Riconnessione…": "Reconnecting…", "Errore": "Error", "Ferma": "Stopped", "Cattura della Regia attiva": "Control Desk capture on", "Cattura del secondo schermo attiva": "Second screen capture on", "Cattura della Regia interrotta": "Control Desk capture stopped", "Cattura del secondo schermo interrotta": "Second screen capture stopped", "rete lenta, qualità ridotta a": "slow network, quality reduced to", "rete di nuovo libera, qualità a": "network clear again, quality back to", "Microfono non disponibile": "Microphone not available", "Codifica video": "Video encoding", "Codifica audio": "Audio encoding", "Torneo Subbuteo": "Subbuteo Tournament"});
 // Regolamento FISTF (9.0)
-Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Women (scarto massimo 5–0)": "U12 · U16 · U20 · Women category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Women: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Women: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.4": "✨ What’s new in 9.4", "✨ Novità della 10.0": "✨ What’s new in 10.0", "✨ Novità della 10.1": "✨ What’s new in 10.1", "✨ Novità della 10.2": "✨ What’s new in 10.2", "✨ Novità della 10.3": "✨ What’s new in 10.3", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
+Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Women (scarto massimo 5–0)": "U12 · U16 · U20 · Women category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Women: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Women: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.4": "✨ What’s new in 9.4", "✨ Novità della 10.0": "✨ What’s new in 10.0", "✨ Novità della 10.1": "✨ What’s new in 10.1", "✨ Novità della 10.2": "✨ What’s new in 10.2", "✨ Novità della 10.3": "✨ What’s new in 10.3", "✨ Novità della 10.4": "✨ What’s new in 10.4", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
 
 TR['🧊 Antartide · ghiaccio polare']='🧊 Antarctica · polar ice';
 /* ranking FISCT · FISTF · WASPA */
+// 10.4: Campionati del Club
+Object.assign(TR,{"Risultati":"Results","🏛 Apertura & Clausura (stile sudamericano)": "🏛 Apertura & Clausura (South American style)", "🏛 Campionati del Club (serie, promozioni e retrocessioni)": "🏛 Club leagues (divisions, promotion and relegation)","Campionati del Club": "Club leagues", "🏛 Campionati del Club": "🏛 Club leagues", "Serie, promozioni e retrocessioni del club, stagione dopo stagione": "The club’s divisions, promotions and relegations, season after season"});
 // 10.3.2: audio, collegamento telefoni
 Object.assign(TR,{"Effetti sonori riattivati: senza, il boato del gol non si sente.": "Sound effects switched back on: without them the goal roar cannot be heard.", "Effetti sonori spenti: anche il boato del gol tace.": "Sound effects off: the goal roar is silent too.", "Effetti sonori riattivati: boato del gol, fischi e voce tornano a sentirsi.": "Sound effects switched back on: goal roar, whistles and voice can be heard again.", "Collegamento telefoni ritrovato sulla porta": "Phone link found again on port", "il server dei telefoni non risponde": "the phone server is not answering"});
 // 10.3: calendari personali, risultati per la FISTF
@@ -11619,6 +11651,8 @@ function setupFmtChanged(){
   /* «Subbuteo Solo» nel menù delle formule non è un torneo: apre la sezione Solo e
      il menù torna alla formula di prima */
   {const sel=$('#s-format');if(sel&&sel.value==='solo'){sel.value=window.__fmtPrima||'gironi-ko';tabTo('solo');return setupFmtChanged();}
+   // le stagioni del club non sono un torneo: si aprono nei Campionati del Club
+   if(sel&&(sel.value==='club-ac'||sel.value==='club-serie')){const v=sel.value;sel.value=window.__fmtPrima||'gironi-ko';setupFmtChanged();clubApri(v==='club-ac'?'ac':null);return;}
    if(sel)window.__fmtPrima=sel.value;}
   // versione dimostrativa: è disponibile la sola formula a girone unico
   if(!LIC.ok&&LIC.checked){
@@ -13382,6 +13416,7 @@ function checkChampion(){
     }
   }
   S.champion=champ||null;
+  if(champ&&S.cfg&&S.cfg.clubLega)try{clubRegistra(S);}catch(e){}
   if(champ&&!S.celebrated){S.celebrated=true;showChampion();}
 }
 
@@ -20919,13 +20954,364 @@ function arcCrest(u,n,size){
   const ini=String(n||'?').split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
   return `<span class="arc-ini" style="width:${s}px;height:${s}px;font-size:${Math.round(s*.42)}px">${esc(ini)}</span>`;
 }
+/* =========================================================
+   CAMPIONATI DEL CLUB (10.4) — la continuità dei campionati di un club, stagione
+   dopo stagione: più serie (Serie A, B, C…), ognuna giocata come «Campionato»
+   in uno spazio torneo; a campionato finito la classifica entra qui da sola, e
+   a fine stagione il programma calcola promozioni e retrocessioni fra serie
+   vicine e prepara la stagione dopo. Tutto resta salvato (localStorage) e si
+   porta via su file (.json), da riaprire su qualsiasi computer.
+   ========================================================= */
+const CLUBKEY='stc_club_v1';
+let CLUB=null,clubVista={club:null,stagione:null};
+const CT=(it,en)=>LANG==='en'?en:it;
+function clubCarica(){if(CLUB)return CLUB;try{CLUB=JSON.parse(localStorage.getItem(CLUBKEY)||'null');}catch(e){}
+  if(!CLUB||!Array.isArray(CLUB.club))CLUB={club:[]};return CLUB;}
+function clubSalva(){try{localStorage.setItem(CLUBKEY,JSON.stringify(clubCarica()));}catch(e){toast(CT('Campionati del Club troppo grandi per essere salvati: esportali su file.','Club leagues too large to save: export them to a file.'));}}
+function clubDi(id){return clubCarica().club.find(c=>c.id===id)||null;}
+function clubCorrente(){const C=clubCarica();let c=clubDi(clubVista.club);if(!c&&C.club.length){c=C.club[0];clubVista.club=c.id;}return c;}
+function clubStagione(c,i){if(!c)return null;const k=i==null?(clubVista.stagione??c.stagioni.length-1):i;return c.stagioni[Math.max(0,Math.min(c.stagioni.length-1,k))];}
+const CLUB_SERIE=['Serie A','Serie B','Serie C','Serie D','Serie E','Serie F'];
+function clubNuovo(formula){
+  formula=formula==='ac'?'ac':'serie';
+  const nome=prompt(CT('Nome del club o del circuito:','Name of the club or circuit:'),CT('Il mio club','My club'));if(!nome)return;
+  const c={id:'club_'+uid(),nome:nome.trim().slice(0,60),creato:Date.now(),ritorno:true,scambi:[2],formula,
+    stagioni:[formula==='ac'?acNuovaStagione(CT('Stagione','Season')+' 1',[]):{nome:CT('Stagione','Season')+' 1',chiusa:false,serie:[{nome:'Serie A',giocatori:[]},{nome:'Serie B',giocatori:[]}]}]};
+  clubCarica().club.push(c);clubVista={club:c.id,stagione:0};clubSalva();clubRender();
+}
+function clubElimina(){
+  const c=clubCorrente();if(!c)return;
+  askConfirm(CT(`Eliminare «${c.nome}» con tutte le sue stagioni? Esportalo prima su file, se vuoi conservarlo.`,`Delete «${c.nome}» with all its seasons? Export it to a file first if you want to keep it.`),()=>{
+    const C=clubCarica();C.club=C.club.filter(x=>x.id!==c.id);clubVista={club:null,stagione:null};clubSalva();clubRender();});
+}
+function clubEsporta(){
+  const c=clubCorrente();if(!c)return;
+  const b=new Blob([JSON.stringify({stcClub:1,club:c},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download='Campionati del Club - '+c.nome.replace(/[\\/:*?"<>|]+/g,' ').trim()+'.json';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+  toast('💾 '+CT('Campionati del Club salvati su file','Club leagues saved to file'));
+}
+function clubImporta(){
+  const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
+  i.onchange=()=>{const f=i.files&&i.files[0];if(!f)return;f.text().then(t=>{
+    let d;try{d=JSON.parse(t);}catch(e){toast(CT('Il file non si legge.','The file cannot be read.'));return;}
+    const c=d&&d.stcClub&&d.club;
+    if(!c||!c.id||!Array.isArray(c.stagioni)){toast(CT('Questo non è un file dei Campionati del Club.','This is not a Club leagues file.'));return;}
+    const C=clubCarica(),k=C.club.findIndex(x=>x.id===c.id);
+    const fatto=()=>{if(k>=0)C.club[k]=c;else C.club.push(c);clubVista={club:c.id,stagione:c.stagioni.length-1};clubSalva();clubRender();
+      toast('📂 '+CT('Riaperto','Reopened')+': '+c.nome);};
+    if(k>=0)askConfirm(CT(`«${c.nome}» c'è già: sostituirlo con la versione del file?`,`«${c.nome}» already exists: replace it with the file version?`),fatto);else fatto();
+  });};
+  i.click();
+}
+function clubSet(campo,v){
+  const c=clubCorrente();if(!c)return;
+  if(campo==='nome')c.nome=String(v).trim().slice(0,60)||c.nome;
+  if(campo==='ritorno')c.ritorno=!!v;
+  if(campo==='stagioneNome'){const s=clubStagione(c);if(s)s.nome=String(v).trim().slice(0,40)||s.nome;}
+  clubSalva();clubRender();
+}
+function clubScambio(b,v){const c=clubCorrente();if(!c)return;c.scambi[b]=Math.max(0,Math.min(10,parseInt(v)||0));clubSalva();clubRender();}
+function clubSerieNome(i,v){const c=clubCorrente(),s=clubStagione(c);if(!s||!s.serie[i])return;s.serie[i].nome=String(v).trim().slice(0,30)||s.serie[i].nome;clubSalva();}
+function clubGiocatori(i,testo){
+  const c=clubCorrente(),s=clubStagione(c);if(!s||!s.serie[i]||s.serie[i].torneo)return;
+  const vis=new Set();s.serie[i].giocatori=String(testo).split('\n').map(x=>x.trim()).filter(x=>x&&!vis.has(x.toLowerCase())&&vis.add(x.toLowerCase()));
+  clubSalva();clubRenderStato();
+}
+function clubAggiungiSerie(){
+  const c=clubCorrente(),s=clubStagione(c);if(!s||s.chiusa)return;
+  s.serie.push({nome:CLUB_SERIE[s.serie.length]||('Serie '+(s.serie.length+1)),giocatori:[]});
+  while(c.scambi.length<s.serie.length-1)c.scambi.push(2);
+  clubSalva();clubRender();
+}
+function clubTogliSerie(i){
+  const c=clubCorrente(),s=clubStagione(c);if(!s||s.chiusa||s.serie.length<=1||s.serie[i].torneo)return;
+  askConfirm(CT(`Togliere ${s.serie[i].nome} da questa stagione?`,`Remove ${s.serie[i].nome} from this season?`),()=>{s.serie.splice(i,1);c.scambi.length=Math.max(0,s.serie.length-1);clubSalva();clubRender();});
+}
+/* --- dal torneo all'archivio del club --- */
+function clubSlotDi(c,si,di){return MT.slots.findIndex(x=>{const k=x&&x.cfg&&x.cfg.clubLega;return k&&k.id===c.id&&k.stagione===si&&(typeof di==='string'?k.fase===di:k.serie===di);});}
+function clubVaiChiave(k){const c=clubCorrente(),s=clubStagione(c),i=clubSlotDi(c,c.stagioni.indexOf(s),k);if(i<0){toast(CT('Torneo non trovato fra gli spazi torneo.','Tournament not found among the slots.'));return;}if(i!==MT.active)switchTournament(i);else tabTo(S.cfg.format==='ko'?'finale':'gironi');}
+function clubAvvia(di){
+  const c=clubCorrente();if(!c)return;const si=c.stagioni.indexOf(clubStagione(c)),s=c.stagioni[si],se=s.serie[di];
+  if(s.chiusa||se.torneo)return;
+  if(se.giocatori.length<2){toast(CT('Servono almeno due giocatori in questa serie.','This division needs at least two players.'));return;}
+  clubAvviaTorneo({c,si,lega:{id:c.id,stagione:si,serie:di},nome:`${c.nome} — ${se.nome} · ${s.nome}`,nomi:se.giocatori,formato:'campionato',ar:!!c.ritorno,
+    segna:()=>{se.torneo={avviato:Date.now(),slot:MT.active};}});
+}
+function clubAvviaTorneo(o){
+  MT.slots[MT.active]=S;
+  let slot=S.started?MT.slots.findIndex(x=>!x):MT.active;
+  if(slot<0){toast(CT('I quattro spazi torneo sono tutti occupati: elimina o archivia un torneo in Opzioni, poi riprova.','All four tournament slots are in use: delete or archive one in Options, then try again.'));return;}
+  if(slot!==MT.active)switchTournament(slot);
+  tabTo('setup');
+  $('#s-name').value=o.nome;
+  $('#s-format').value=o.formato;setupFmtChanged();
+  $('#s-nteams').value=o.nomi.length;renderTeamInputs();
+  [...$('#team-inputs').querySelectorAll('input.tmain')].forEach((x,k)=>{x.value=o.nomi[k]||'';});
+  if(o.formato==='ko'){
+    ['#s-doppio','#s-doppiof'].forEach(q=>{const e=$(q);if(e)e.checked=!!o.ar;});
+    ['#s-third','#s-repechage','#s-consb','#s-shuffle'].forEach(q=>{const e=$(q);if(e)e.checked=false;});
+  }else{
+    if($('#s-ritorno'))$('#s-ritorno').checked=!!o.ar;
+    if($('#s-terzo'))$('#s-terzo').checked=false;
+  }
+  setupFmtChanged();setupError('');startTournament();
+  if(!S.started){toast(CT('Il torneo non è partito: controlla il Setup.','The tournament did not start: check the Setup.'));return;}
+  S.cfg.clubLega=o.lega;o.segna();
+  persist();clubSalva();renderMtUI();
+  toast('🏛 '+o.nome+' — '+CT('a torneo finito il risultato entra nei Campionati del Club da solo','when the tournament ends, the result goes into the Club leagues by itself'));
+}
+function clubClassificaDa(st){
+  const g=st&&st.groups&&st.groups[0];if(!g)return null;
+  if(!g.matches.length||!g.matches.every(m=>m.done))return null;
+  const sv=S;let r;try{S=st;r=rankTeams(g.teams,g.matches);}finally{S=sv;}
+  return r.order.map(n=>{const x=r.stats[n];return {n,pts:x.pts,pl:x.pl,w:x.w,d:x.d,l:x.l,gf:x.gf,ga:x.ga};});
+}
+function clubRegistra(st,silenzio){
+  const k=st&&st.cfg&&st.cfg.clubLega;if(!k)return false;
+  const c=clubDi(k.id);if(!c)return false;const s=c.stagioni[k.stagione];if(!s||s.chiusa)return false;
+  if(k.fase==='finalissima'){
+    const f=acFase(s,'finalissima'),ko=st.ko;const ch=ko&&ko.champion;if(!f||!ch||ch===BYE)return false;
+    if(f.campione===ch)return true;
+    const m=ko.rounds[ko.rounds.length-1].matches[0],[x,y]=koTotali(m);
+    f.campione=ch;f.risultato=`${x}–${y}`+(m.doppio?' '+CT('(andata e ritorno)','(two legs)'):'')+(m.p1!=null&&m.p2!=null&&(m.p1||m.p2)?` · ${CT('rigori','penalties')} ${m.p1}–${m.p2}`:'');f.conclusa=Date.now();
+    clubSalva();if(!silenzio)toast('🏆 '+ch+' — '+CT('Campione di Club','Club Champion')+' · '+s.nome);
+    return true;
+  }
+  const se=k.fase?acFase(s,k.fase):s.serie&&s.serie[k.serie];if(!se)return false;
+  const cl=clubClassificaDa(st);if(!cl)return false;
+  const nuova=JSON.stringify(se.classifica||null)!==JSON.stringify(cl);
+  if(!nuova)return true;
+  se.classifica=cl;se.campione=cl[0].n;se.conclusa=Date.now();
+  clubSalva();
+  if(!silenzio)toast('🏛 '+CT('Classifica di','Standings of')+' '+(se.nome||acNomeFase(k.fase))+' '+CT('registrata nei Campionati del Club','saved in the Club leagues'));
+  return true;
+}
+function clubRegistraManuale(di){
+  const c=clubCorrente(),s=clubStagione(c),si=c.stagioni.indexOf(s);MT.slots[MT.active]=S;
+  const k=clubSlotDi(c,si,di);
+  if(k<0){toast(CT('Il torneo di questa serie non c’è più fra gli spazi torneo.','This division’s tournament is no longer among the slots.'));return;}
+  if(!clubRegistra(MT.slots[k]))toast(CT('Il campionato non è ancora concluso: mancano dei risultati.','The league is not finished yet: some results are missing.'));
+  clubRender();
+}
+function clubVai(di){const c=clubCorrente(),s=clubStagione(c),k=clubSlotDi(c,c.stagioni.indexOf(s),di);if(k<0){toast(CT('Torneo non trovato fra gli spazi torneo.','Tournament not found among the slots.'));return;}if(k!==MT.active)switchTournament(k);else tabTo('gironi');}
+function clubRiapri(di){
+  const c=clubCorrente(),s=clubStagione(c),se=s&&s.serie[di];if(!se||s.chiusa)return;
+  askConfirm(CT(`Riaprire ${se.nome}? La classifica registrata si cancella e la serie torna da avviare (il torneo resta dov’è).`,`Reopen ${se.nome}? The saved standings are cleared and the division goes back to «to start» (the tournament stays where it is).`),
+    ()=>{delete se.torneo;delete se.classifica;delete se.campione;delete se.conclusa;clubSalva();clubRender();});
+}
+/* --- promozioni e retrocessioni --- */
+function clubMovimenti(c,s){
+  const mov=[];
+  for(let b=0;b<s.serie.length-1;b++){
+    const k=c.scambi[b]||0,su=s.serie[b],giu=s.serie[b+1];
+    if(!k||!su.classifica||!giu.classifica)continue;
+    const kk=Math.min(k,Math.floor(su.classifica.length/2),Math.floor(giu.classifica.length/2));
+    mov.push({b,k:kk,retrocessi:su.classifica.slice(-kk).map(x=>x.n),promossi:giu.classifica.slice(0,kk).map(x=>x.n)});
+  }
+  return mov;
+}
+function clubProssima(){
+  const c=clubCorrente(),s=c&&c.stagioni[c.stagioni.length-1];if(!s||s.chiusa)return;
+  const manca=s.serie.filter(x=>!x.classifica);
+  if(manca.length){toast(CT('Prima vanno conclusi tutti i campionati: ','First every league must be finished: ')+manca.map(x=>x.nome).join(', '));return;}
+  const mov=clubMovimenti(c,s);
+  const testo=mov.map(m=>`${s.serie[m.b+1].nome} → ${s.serie[m.b].nome}: ${m.promossi.join(', ')}\n${s.serie[m.b].nome} → ${s.serie[m.b+1].nome}: ${m.retrocessi.join(', ')}`).join('\n');
+  askConfirm(CT('Chiudere la stagione e preparare la prossima?\n\n','Close the season and prepare the next one?\n\n')+(testo||CT('Nessuna promozione o retrocessione.','No promotions or relegations.')),()=>{
+    const nuove=s.serie.map(se=>({nome:se.nome,giocatori:[]}));
+    s.serie.forEach((se,i)=>{
+      const giu=mov.find(m=>m.b===i-1),su=mov.find(m=>m.b===i);   // chi scende dalla serie sopra, chi sale da quella sotto
+      const via=new Set([...(su?su.retrocessi:[]),...(giu?giu.promossi:[])]);
+      nuove[i].giocatori=[...(giu?giu.retrocessi:[]),...se.classifica.map(x=>x.n).filter(n=>!via.has(n)),...(su?su.promossi:[])];
+    });
+    s.chiusa=Date.now();s.movimenti=mov;
+    const n=c.stagioni.length+1;
+    c.stagioni.push({nome:CT('Stagione','Season')+' '+n,chiusa:false,serie:nuove});
+    clubVista.stagione=c.stagioni.length-1;clubSalva();clubRender();
+    toast('➡ '+CT('Nuova stagione pronta: aggiungi o togli giocatori, poi avvia le serie','New season ready: add or remove players, then start the divisions'));
+  });
+}
+/* --- interfaccia (scheda dell'Archivio) --- */
+function clubTabellaHTML(cl,o){
+  return `<table class="standings club-cl"><thead><tr><th>#</th><th class="l">${o.squadre?CT('Squadra','Team'):CT('Giocatore','Player')}</th><th>Pt</th><th>G</th><th>V</th><th>N</th><th>P</th><th>DR</th></tr></thead><tbody>
+    ${cl.map((x,i)=>`<tr><td>${i+1}</td><td class="l">${o.campione&&i===0?'🏆 ':''}${esc(x.n)}</td><td class="pts">${x.pts}</td><td>${x.pl}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf-x.ga>0?'+':''}${x.gf-x.ga}</td></tr>`).join('')}</tbody></table>`;
+}
+function clubStatoSerie(c,s,si,se,di){
+  if(se.classifica)return 'conclusa';
+  if(se.torneo)return clubSlotDi(c,si,di)>=0?'corso':'perso';
+  return 'avviare';
+}
+function clubSerieHTML(c,s,si,se,di){
+  const st=clubStatoSerie(c,s,si,se,di);
+  const k=c.scambi[di]||0,ksopra=di>0?(c.scambi[di-1]||0):0,ult=di===s.serie.length-1;
+  let h=`<div class="club-serie card"><div class="row spread" style="gap:8px;align-items:center">
+    ${s.chiusa||se.torneo?`<h4 class="subt" style="margin:0">${esc(se.nome)}</h4>`:`<input type="text" class="club-nome-serie" value="${esc(se.nome)}" onchange="clubSerieNome(${di},this.value)" aria-label="${CT('Nome della serie','Division name')}">`}
+    <span class="chip club-st-${st}">${{conclusa:'✔ '+CT('conclusa','finished'),corso:'⚽ '+CT('in corso','in progress'),perso:'⚠ '+CT('torneo non trovato','tournament not found'),avviare:CT('da avviare','to start')}[st]}</span></div>`;
+  if(st==='conclusa'){
+    const n=se.classifica.length;
+    h+=`<table class="standings club-cl"><thead><tr><th>#</th><th class="l">${CT('Giocatore','Player')}</th><th>Pt</th><th>G</th><th>V</th><th>N</th><th>P</th><th>DR</th></tr></thead><tbody>
+      ${se.classifica.map((x,i)=>{const su=di>0&&i<ksopra,giu=!ult&&i>=n-k;
+        return `<tr class="${su?'club-up':giu?'club-down':''}"><td>${i+1}${su?' <span class="club-z" title="'+CT('promosso','promoted')+'">▲</span>':''}${giu?' <span class="club-z" title="'+CT('retrocesso','relegated')+'">▼</span>':''}</td><td class="l">${i===0?'🏆 ':''}${esc(x.n)}</td><td class="pts">${x.pts}</td><td>${x.pl}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf-x.ga>0?'+':''}${x.gf-x.ga}</td></tr>`;}).join('')}</tbody></table>`;
+    if(!s.chiusa)h+=`<div class="row" style="gap:6px;margin-top:8px"><button class="btn sec mini" onclick="clubRiapri(${di})">↺ ${CT('Riapri','Reopen')}</button></div>`;
+  }else if(st==='avviare'&&!s.chiusa){
+    h+=`<label class="f">${CT('Giocatori (uno per riga)','Players (one per line)')} · <span id="club-n-${di}">${se.giocatori.length}</span></label>
+      <textarea class="club-gioc" rows="${Math.max(4,Math.min(12,se.giocatori.length+1))}" oninput="clubGiocatori(${di},this.value)">${esc(se.giocatori.join('\n'))}</textarea>
+      <div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn mini" onclick="clubAvvia(${di})">▶ ${CT('Avvia il campionato','Start the league')}</button>
+      ${s.serie.length>1?`<button class="btn sec mini" onclick="clubTogliSerie(${di})">✕ ${CT('Togli la serie','Remove division')}</button>`:''}</div>`;
+  }else if(st==='corso'||st==='perso'){
+    h+=`<p class="small muted" style="margin:6px 0">${se.giocatori.map(esc).join(' · ')}</p>
+      <div class="row" style="gap:6px;flex-wrap:wrap">${st==='corso'?`<button class="btn mini" onclick="clubVai(${di})">↪ ${CT('Vai al torneo','Go to the tournament')}</button><button class="btn sec mini" onclick="clubRegistraManuale(${di})">📥 ${CT('Registra la classifica','Save the standings')}</button>`:''}
+      <button class="btn sec mini" onclick="clubRiapri(${di})">↺ ${CT('Riapri','Reopen')}</button></div>`;
+  }
+  return h+'</div>';
+}
+function clubHTML(){
+  clubRaccogli();
+  const C=clubCarica(),c=clubCorrente();
+  let h=`<div class="club-box"><div class="row spread" style="gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+    <div class="row" style="gap:8px;align-items:center;flex-wrap:wrap">${C.club.length?`<select id="club-sel" onchange="clubVista={club:this.value,stagione:null};clubRender()">${C.club.map(x=>`<option value="${x.id}"${c&&x.id===c.id?' selected':''}>${esc(x.nome)}</option>`).join('')}</select>`:''}
+      <button class="btn mini" onclick="clubNuovo('serie')">➕ ${CT('Serie con promozioni e retrocessioni','Divisions with promotion and relegation')}</button>
+      <button class="btn mini" onclick="clubNuovo('ac')">➕ ${CT('Apertura & Clausura','Apertura & Clausura')}</button></div>
+    <div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn sec mini" onclick="clubImporta()">📂 ${CT('Apri da file','Open from file')}</button>
+      ${c?`<button class="btn sec mini" onclick="clubEsporta()">💾 ${CT('Salva su file','Save to file')}</button><button class="btn sec mini" onclick="clubElimina()">🗑 ${CT('Elimina','Delete')}</button>`:''}</div></div>`;
+  if(!c)return h+`<div class="arc-empty"><div class="big">🏛</div><p>${CT('Un club che gioca tutto l’anno ha più serie: chi vince sale, chi chiude in fondo scende. Crea il campionato del tuo club: serie, giocatori e regole di promozione e retrocessione; poi ogni stagione si gioca, si chiude e riparte da sola, con lo storico sempre a portata di mano.','A club that plays all year round has several divisions: the winners go up, the bottom ones go down. Create your club league: divisions, players and promotion and relegation rules; every season is then played, closed and restarted by itself, with the history always at hand.')}</p>
+  <p>${CT('Oppure <b>Apertura & Clausura</b>, alla sudamericana: due tornei a girone unico (ottobre–gennaio e febbraio–maggio), una pausa di mercato per i nuovi soci, e la Finalissima fra i due vincitori per il titolo di Campione di Club.','Or <b>Apertura & Clausura</b>, South American style: two round-robin tournaments (October–January and February–May), a transfer window for new members, and a Grand Final between the two winners for the Club Champion title.')}</p></div></div>`;
+  const s=clubStagione(c),si=c.stagioni.indexOf(s),ultima=si===c.stagioni.length-1;
+  h+=`<div class="card club-testa"><div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-end">
+      <div><label class="f">${CT('Club','Club')}</label><input type="text" value="${esc(c.nome)}" onchange="clubSet('nome',this.value)"></div>
+      <div><label class="f">${CT('Stagione','Season')}</label><select onchange="clubVista.stagione=+this.value;clubRender()">${c.stagioni.map((x,i)=>`<option value="${i}"${i===si?' selected':''}>${esc(x.nome)}${x.chiusa?' ✔':''}</option>`).join('')}</select></div>
+      ${!s.chiusa?`<div><label class="f">${CT('Nome della stagione','Season name')}</label><input type="text" value="${esc(s.nome)}" onchange="clubSet('stagioneNome',this.value)" style="width:150px"></div>`:''}
+      <label class="ck" style="padding-bottom:8px"><input type="checkbox" ${c.ritorno?'checked':''} onchange="clubSet('ritorno',this.checked)"> ${CT('Andata e ritorno','Home and away')}</label></div>
+    ${c.formula!=='ac'&&s.serie.length>1?`<div class="club-scambi">${s.serie.slice(0,-1).map((x,b)=>`<span>${esc(x.nome)} ↔ ${esc(s.serie[b+1].nome)}: <input type="number" min="0" max="10" value="${c.scambi[b]||0}" onchange="clubScambio(${b},this.value)" ${s.chiusa?'disabled':''}> ${CT('promossi e retrocessi','promoted and relegated')}</span>`).join('')}</div>`:''}
+  </div>`;
+  if(c.formula==='ac')return h+acHTML(c,s,si)+'</div>';
+  h+=`<div class="club-grid">${s.serie.map((se,di)=>clubSerieHTML(c,s,si,se,di)).join('')}</div>`;
+  if(!s.chiusa&&ultima){
+    const pronte=s.serie.every(x=>x.classifica);
+    h+=`<div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn sec" onclick="clubAggiungiSerie()">➕ ${CT('Aggiungi una serie','Add a division')}</button>
+      <button class="btn" ${pronte?'':'disabled'} onclick="clubProssima()" title="${CT('Si attiva quando tutte le serie hanno la classifica finale','Enabled when every division has its final standings')}">➡ ${CT('Chiudi la stagione e prepara la prossima','Close the season and prepare the next')}</button></div>`;
+  }
+  if(s.movimenti&&s.movimenti.length)h+=`<div class="card club-mov"><h4 class="subt">${CT('Promozioni e retrocessioni','Promotions and relegations')}</h4>${s.movimenti.map(m=>`<p class="small">▲ ${esc(s.serie[m.b+1].nome)} → ${esc(s.serie[m.b].nome)}: <b>${m.promossi.map(esc).join(', ')}</b><br>▼ ${esc(s.serie[m.b].nome)} → ${esc(s.serie[m.b+1].nome)}: <b>${m.retrocessi.map(esc).join(', ')}</b></p>`).join('')}</div>`;
+  // albo d'oro del club
+  const albo=c.stagioni.filter(x=>x.serie.some(y=>y.campione));
+  if(albo.length)h+=`<div class="card club-albo"><h4 class="subt">🏆 ${CT('Albo d’oro del club','Club roll of honour')}</h4><table class="standings"><thead><tr><th class="l">${CT('Stagione','Season')}</th>${(c.stagioni[0].serie||[]).map((x,i)=>`<th class="l">${esc(albo[albo.length-1].serie[i]?albo[albo.length-1].serie[i].nome:x.nome)}</th>`).join('')}</tr></thead><tbody>
+    ${albo.map(x=>`<tr><td class="l">${esc(x.nome)}</td>${x.serie.map(y=>`<td class="l">${y.campione?esc(y.campione):'—'}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return h+'</div>';
+}
+// le classifiche dei campionati finiti si raccolgono anche dagli spazi torneo
+function clubRaccogli(){try{MT.slots[MT.active]=S;MT.slots.forEach(x=>{if(x&&x.cfg&&x.cfg.clubLega)clubRegistra(x,true);});}catch(e){}}
+function clubRender(){
+  const box=$('#arc-body');if(!box)return;
+  if(arcState().cfg.vista==='club')renderArchivio();
+}
+function clubRenderStato(){const c=clubCorrente(),s=clubStagione(c);if(!s)return;s.serie.forEach((x,i)=>{const e=$('#club-n-'+i);if(e)e.textContent=x.giocatori.length;});}
+function clubApri(formula){
+  tabTo('archivio');arcVista('club');
+  if(formula==='ac'){const c=clubCarica().club.find(x=>x.formula==='ac');if(c){clubVista={club:c.id,stagione:null};clubRender();}else clubNuovo('ac');}
+}
+/* --- APERTURA & CLAUSURA (stile sudamericano) ---
+   La stagione del club in due tornei a girone unico: Apertura (ottobre–gennaio,
+   primo titolo), una pausa di mercato in cui entrano i nuovi soci, Clausura
+   (febbraio–maggio, si riparte da zero) e la Finalissima fra i due vincitori
+   per il titolo di Campione di Club. Se lo stesso giocatore vince entrambi, lo
+   sfida il migliore della classifica complessiva (Apertura + Clausura). */
+const AC_FASI=['apertura','clausura','finalissima'];
+function acNuovaStagione(nome,soci){return {nome,chiusa:false,ac:{apertura:{giocatori:soci||[]},clausura:{giocatori:[]},finalissima:{ar:false}}};}
+function acFase(s,k){return s&&s.ac&&s.ac[k];}
+function acNomeFase(k){return {apertura:CT('Torneo di Apertura','Apertura tournament'),clausura:CT('Torneo di Clausura','Clausura tournament'),finalissima:CT('Finalissima','Grand final')}[k];}
+/* classifica complessiva: somma di Apertura e Clausura */
+function acComplessiva(s){
+  const t={};
+  ['apertura','clausura'].forEach(k=>(acFase(s,k).classifica||[]).forEach(x=>{
+    const y=t[x.n]||(t[x.n]={n:x.n,pts:0,pl:0,w:0,d:0,l:0,gf:0,ga:0});
+    ['pts','pl','w','d','l','gf','ga'].forEach(c=>y[c]+=x[c]||0);
+  }));
+  return Object.values(t).sort((a,b)=>(b.pts-a.pts)||((b.gf-b.ga)-(a.gf-a.ga))||(b.gf-a.gf)||a.n.localeCompare(b.n,'it'));
+}
+function acFinalisti(s){
+  const a=acFase(s,'apertura').campione,c=acFase(s,'clausura').campione;
+  if(!a||!c)return null;
+  if(a!==c)return {a,b:c,doppio:false};
+  const altro=acComplessiva(s).find(x=>x.n!==a);
+  return altro?{a,b:altro.n,doppio:true}:null;
+}
+function acGiocatori(k,testo){
+  const c=clubCorrente(),s=clubStagione(c),f=acFase(s,k);if(!f||f.torneo||s.chiusa)return;
+  const vis=new Set();f.giocatori=String(testo).split('\n').map(x=>x.trim()).filter(x=>x&&!vis.has(x.toLowerCase())&&vis.add(x.toLowerCase()));
+  clubSalva();const e=$('#ac-n-'+k);if(e)e.textContent=f.giocatori.length;
+}
+function acSetAR(v){const c=clubCorrente(),s=clubStagione(c),f=acFase(s,'finalissima');if(!f||f.torneo)return;f.ar=!!v;clubSalva();}
+function acAvvia(k){
+  const c=clubCorrente();if(!c)return;const si=c.stagioni.indexOf(clubStagione(c)),s=c.stagioni[si],f=acFase(s,k);
+  if(!f||s.chiusa||f.torneo)return;
+  let nomi=f.giocatori;
+  if(k==='finalissima'){const fin=acFinalisti(s);if(!fin){toast(CT('Prima servono i vincitori di Apertura e Clausura.','The Apertura and Clausura winners come first.'));return;}nomi=[fin.a,fin.b];f.a=fin.a;f.b=fin.b;f.doppio=fin.doppio;}
+  if(nomi.length<2){toast(CT('Servono almeno due giocatori.','At least two players are needed.'));return;}
+  clubAvviaTorneo({c,si,lega:{id:c.id,stagione:si,fase:k},nome:`${c.nome} — ${acNomeFase(k)} · ${s.nome}`,nomi,
+    formato:k==='finalissima'?'ko':'campionato',ar:k==='finalissima'?!!f.ar:!!c.ritorno,segna:()=>{f.torneo={avviato:Date.now()};}});
+}
+function acFaseHTML(c,s,si,k){
+  const f=acFase(s,k),slot=clubSlotDi(c,si,k),st=f.classifica||f.campione&&k==='finalissima'?'conclusa':f.torneo?(slot>=0?'corso':'perso'):'avviare';
+  const chip={conclusa:'✔ '+CT('concluso','finished'),corso:'⚽ '+CT('in corso','in progress'),perso:'⚠ '+CT('torneo non trovato','tournament not found'),avviare:CT('da avviare','to start')}[st];
+  let h=`<div class="club-serie card ac-${k}"><div class="row spread" style="gap:8px;align-items:center"><h4 class="subt" style="margin:0">${{apertura:'🍂',clausura:'🌸',finalissima:'🏆'}[k]} ${acNomeFase(k)}</h4><span class="chip club-st-${st}">${chip}</span></div>`;
+  if(k==='finalissima'){
+    const fin=acFinalisti(s);
+    if(f.campione)h+=`<p style="margin:6px 0 2px;font-size:1.05rem">🏆 <b>${esc(f.campione)}</b> — ${CT('Campione di Club','Club Champion')}</p><p class="small muted">${esc(f.a)} – ${esc(f.b)}${f.risultato?' · '+esc(f.risultato):''}</p>`;
+    else if(!fin)h+=`<p class="small muted">${CT('Si gioca fra il vincitore dell’Apertura e quello della Clausura. Se vince lo stesso giocatore, lo sfida il migliore della classifica complessiva.','Played between the Apertura and the Clausura winners. If the same player wins both, the best of the overall table challenges them.')}</p>`;
+    else{
+      h+=`<p style="margin:6px 0"><b>${esc(fin.a)}</b> – <b>${esc(fin.b)}</b></p>${fin.doppio?`<p class="small muted">${CT('Stesso vincitore in Apertura e Clausura: lo sfida il migliore della classifica complessiva.','Same winner in Apertura and Clausura: the best of the overall table challenges them.')}</p>`:''}`;
+      if(st==='avviare')h+=`<label class="ck"><input type="checkbox" ${f.ar?'checked':''} onchange="acSetAR(this.checked)"> ${CT('Andata e ritorno (altrimenti gara secca)','Home and away (otherwise a single match)')}</label>
+        <div class="row" style="gap:6px;margin-top:8px"><button class="btn mini" onclick="acAvvia('finalissima')">▶ ${CT('Avvia la Finalissima','Start the grand final')}</button></div>`;
+    }
+  }else if(st==='conclusa'){
+    h+=clubTabellaHTML(f.classifica,{campione:true});
+  }else if(st==='avviare'&&!s.chiusa){
+    const pausa=k==='clausura';
+    if(pausa)h+=`<p class="small muted" style="margin:4px 0">${CT('Pausa e calciomercato: tornei lampo a squadre, cura dei materiali, ingresso dei nuovi soci. Aggiorna l’elenco, poi si riparte da zero punti.','Break and transfer window: quick team tournaments, kit care, new members joining. Update the list, then everyone starts again from zero points.')}</p>`;
+    h+=`<label class="f">${CT('Giocatori (uno per riga)','Players (one per line)')} · <span id="ac-n-${k}">${f.giocatori.length}</span></label>
+      <textarea class="club-gioc" rows="${Math.max(4,Math.min(12,f.giocatori.length+1))}" oninput="acGiocatori('${k}',this.value)">${esc(f.giocatori.join('\n'))}</textarea>
+      <div class="row" style="gap:6px;margin-top:8px"><button class="btn mini" onclick="acAvvia('${k}')">▶ ${CT('Avvia','Start')} ${k==='apertura'?CT('l’Apertura','the Apertura'):CT('la Clausura','the Clausura')}</button></div>`;
+  }else if(st==='corso'||st==='perso'){
+    h+=`<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:6px">${st==='corso'?`<button class="btn mini" onclick="clubVaiChiave('${k}')">↪ ${CT('Vai al torneo','Go to the tournament')}</button>`:''}<button class="btn sec mini" onclick="acRiapri('${k}')">↺ ${CT('Riapri','Reopen')}</button></div>`;
+  }
+  return h+'</div>';
+}
+function acRiapri(k){
+  const c=clubCorrente(),s=clubStagione(c),f=acFase(s,k);if(!f||s.chiusa)return;
+  askConfirm(CT('Riaprire questa fase? Il risultato registrato si cancella (il torneo resta dov’è).','Reopen this stage? The saved result is cleared (the tournament stays where it is).'),()=>{
+    ['torneo','classifica','campione','risultato','conclusa'].forEach(x=>delete f[x]);clubSalva();clubRender();});
+}
+function acHTML(c,s,si){
+  const ap=acFase(s,'apertura');
+  // pausa di mercato: la Clausura parte dai soci dell'Apertura
+  if(ap.classifica&&!acFase(s,'clausura').giocatori.length&&!acFase(s,'clausura').torneo){acFase(s,'clausura').giocatori=ap.giocatori.slice();clubSalva();}
+  let h=`<div class="club-grid">${AC_FASI.map(k=>acFaseHTML(c,s,si,k)).join('')}</div>`;
+  const tot=acComplessiva(s);
+  if(tot.length)h+=`<div class="card club-albo"><h4 class="subt">📊 ${CT('Classifica complessiva (Apertura + Clausura)','Overall table (Apertura + Clausura)')}</h4>${clubTabellaHTML(tot,{})}</div>`;
+  if(!s.chiusa&&si===c.stagioni.length-1)h+=`<div class="row" style="gap:8px;margin-top:12px"><button class="btn" ${acFase(s,'finalissima').campione?'':'disabled'} onclick="acProssima()" title="${CT('Si attiva quando c’è il Campione di Club','Enabled once there is a Club Champion')}">➡ ${CT('Chiudi la stagione e prepara la prossima','Close the season and prepare the next')}</button></div>`;
+  const albo=c.stagioni.filter(x=>x.ac&&(x.ac.apertura.campione||x.ac.clausura.campione));
+  if(albo.length)h+=`<div class="card club-albo"><h4 class="subt">🏆 ${CT('Albo d’oro del club','Club roll of honour')}</h4><table class="standings"><thead><tr><th class="l">${CT('Stagione','Season')}</th><th class="l">🍂 Apertura</th><th class="l">🌸 Clausura</th><th class="l">🏆 ${CT('Campione di Club','Club Champion')}</th></tr></thead><tbody>
+    ${albo.map(x=>`<tr><td class="l">${esc(x.nome)}</td><td class="l">${esc(x.ac.apertura.campione||'—')}</td><td class="l">${esc(x.ac.clausura.campione||'—')}</td><td class="l"><b>${esc(x.ac.finalissima.campione||'—')}</b></td></tr>`).join('')}</tbody></table></div>`;
+  return h;
+}
+function acProssima(){
+  const c=clubCorrente(),s=c&&c.stagioni[c.stagioni.length-1];if(!s||s.chiusa||!acFase(s,'finalissima').campione)return;
+  askConfirm(CT('Chiudere la stagione? La prossima Apertura parte con i soci della Clausura.','Close the season? The next Apertura starts with the Clausura members.'),()=>{
+    s.chiusa=Date.now();const soci=acFase(s,'clausura').giocatori.slice();
+    c.stagioni.push(acNuovaStagione(CT('Stagione','Season')+' '+(c.stagioni.length+1),soci));
+    clubVista.stagione=c.stagioni.length-1;clubSalva();clubRender();
+  });
+}
+
 function renderArchivio(){
   const box=$('#arc-body');if(!box)return;
   const A=arcState(),C=A.cfg,en=LANG==='en';
   const nav=[['albo','🏆 '+L('Albo d’oro')],['rank','📈 '+L('Classifica perpetua')],
-             ['gioc','👤 '+L('Giocatori')],['h2h','⚔️ '+L('Testa a testa')],['cfg','⚙ '+L('Regole e dati')]];
+             ['gioc','👤 '+L('Giocatori')],['h2h','⚔️ '+L('Testa a testa')],['club','🏛 '+L('Campionati del Club')],['cfg','⚙ '+L('Regole e dati')]];
   const heading=(nav.find(x=>x[0]===C.vista)||nav[0])[1];
   let h=`<div class="arc-scenery"><small>${en?'Subbuteo · Historical archive':'Subbuteo · Archivio storico'}</small><h3>${heading}</h3></div><div class="arc-nav">${nav.map(([k,t])=>`<button class="btn sec mini${C.vista===k?' on':''}" onclick="arcVista('${k}')">${t}</button>`).join('')}</div>`;
+  if(C.vista==='club'){box.innerHTML=h+clubHTML();return;}
   if(!A.tornei.length&&C.vista!=='cfg'){
     box.innerHTML=h+`<div class="arc-empty"><div class="big">📚</div>
       <p>${L('L’archivio è vuoto. Al termine di un torneo premi «Archivia il torneo» qui sopra: da lì nascono l’albo d’oro, la classifica perpetua e i testa a testa.')}</p>
@@ -22110,6 +22496,7 @@ function syncSnapshot(){
        ricalcolarle sul telefono darebbe spareggi diversi */
     pl:(!sq&&S.players&&Object.keys(S.players).length)?S.players:undefined,
     std:syncStd(),q:S.cfg.format==='gironi-ko'?(S.cfg.qualify||0):0,
+    tk:tickerLiveCam(),
     /* le foto NON viaggiano nello snapshot (lo strozzerebbero): passa solo
        l'elenco di quali esistono, che sta in poche decine di byte */
     foto:!!(SYNC.lan&&SYNC.lan.foto&&S.cfg.fotoConsenso!==false),
@@ -22130,6 +22517,36 @@ function syncSnapshot(){
   };
 }
 
+/* TICKER PER LA LIVE CAM (10.4) — il programma «presta» il suo rullo alla
+   telecamera di regia: risultati, classifiche dei gironi, prossimo turno e
+   avvisi, in testo semplice (l'app li disegna in una fascia semitrasparente in
+   basso, che scorre). Poche centinaia di byte nello stato pubblicato. */
+function tickerLiveCam(){
+  if(!S.started)return undefined;
+  const testo=h=>{const d=document.createElement('div');d.innerHTML=String(h);return d.textContent.replace(/\s+/g,' ').trim();};
+  const out=[];
+  try{
+    const a=annCfg();if(a.rulloOn&&String(a.rulloTxt||'').trim())out.push({e:L('Avviso'),v:[String(a.rulloTxt).trim().slice(0,200)]});
+  }catch(e){}
+  try{
+    const it=currentRoundItems();
+    const v=it.length?it.map(x=>`${x.a} ${x.sa}–${x.sb} ${x.b}${x.live?' · LIVE':''}`):(S.results||[]).slice(-10).map(testo);
+    if(v.length)out.push({e:L(it.some(x=>x.live)?'Live':'Risultati'),v:v.slice(0,16)});
+  }catch(e){}
+  try{
+    const v=allGroups().filter(g=>g.matches.some(m=>m.done)).slice(0,12).map(g=>{
+      const{order,stats}=rankTeams(g.teams,g.matches);
+      const nome=g.swiss||S.cfg.format==='campionato'?'':L('Girone ')+g.name+': ';
+      return nome+order.slice(0,4).map((n,i)=>`${i+1}. ${n} ${stats[n].pts}`).join(' · ');
+    });
+    if(v.length)out.push({e:L('Classifica'),v});
+  }catch(e){}
+  try{
+    const w=nextWaveByField()||[];
+    if(w.length)out.push({e:L('Prossimo turno'),v:w.slice(0,16).map(x=>`${fieldLabel(x.field)}: ${x.home} – ${x.away}`)});
+  }catch(e){}
+  return out.length?out:undefined;
+}
 /* classifiche compatte per l'App Giocatore: [nome, pt, g, v, n, p, gf, gs] */
 function syncStd(){
   const gs=allGroups();if(!gs.length)return undefined;
@@ -23898,28 +24315,28 @@ window.addEventListener('beforeunload',()=>{try{for(const p of Object.keys(DIR.o
    versione principale (9.0, 9.1…), poi resta a portata di un pulsante.
    Non compare sulla seconda finestra del proiettore.
    ========================================================= */
-const NOVITA_VER='10.3', NOVITA_KEY='stc_novita_vista';
+const NOVITA_VER='10.4', NOVITA_KEY='stc_novita_vista';
 const NOVITA={
-  it:{tit:'Table Soccer Tournament Center 10.3: FISTF fino in fondo',
-    intro:'Il torneo FISTF si chiude senza Excel: il programma prepara il <b>file dei risultati per la FISTF</b>, gestisce andata e ritorno, l’auto-arbitraggio e arbitri neutrali. E poi i <b>calendari personali</b>, gli spareggi <b>Buchholz</b> e tre <b>temi fotografici</b> nuovi.',
+  it:{tit:'Table Soccer Tournament Center 10.4: la stagione del club',
+    intro:'Il programma accompagna un club per tutto l’anno: <b>serie con promozioni e retrocessioni</b>, la formula <b>Apertura & Clausura</b>, stagioni salvate e riaperte. Nel Solo arrivano le <b>competizioni su misura</b> con marcatori e tabellini, e la Live Cam riceve il <b>ticker del torneo</b>.',
     card:[
-      {big:1,t:'🌐 Formule FISTF — dal modello GMFT',p:'Quello che serve a un torneo internazionale, dentro il programma:',li:['<b>Risultati per la FISTF</b>: dalle Classifiche, «Esporta e stampa» crea il file Excel per il ranking mondiale — compila il modello ufficiale o ne crea uno con le stesse colonne','<b>Andata e ritorno</b> nei gironi da 3, 4 o 5, con il ritorno a campi invertiti','<b>Gironi da 6 con auto-arbitraggio</b>: 8 turni da due gare, arbitrano i due che riposano','<b>Arbitri neutrali</b>: mai dello stesso club o della stessa nazione dei giocatori, con ⚠️ se non si può evitare','Nei tornei a squadre le <b>statistiche individuali</b> di ogni giocatore; la categoria «Women» al posto di «Ladies»']},
-      {t:'🗓 Calendari personali',li:['Per ogni partecipante, turno per turno: quando gioca, contro chi e su che campo, quando arbitra, quando riposa','In stampa dalle Classifiche e sul telefono, nell’App Giocatore']},
-      {t:'⚖️ Buchholz e Sonneborn-Berger',li:['A pari punti conta la forza degli avversari affrontati: Buchholz, Buchholz tagliato e Sonneborn-Berger','Nello Svizzero, nel McMahon e nella Champions vengono subito dopo i punti; colonna «Bh» in classifica']},
-      {t:'🎨 Tre temi fotografici nuovi',li:['🏟️ Stadium, 🏟️ Partenio · Pomeriggio e 🌍 Pianeta Terra, con luci e nuvole in movimento: i temi diventano 24']},
-      {wide:1,t:'🎮 Dalla 10.2 — Subbuteo Solo',li:['Tu contro il sistema: sfide del giorno e della settimana, scenari storici, carriera con coppe e la classifica mondiale, ora anche in diretta sul sito']}
+      {big:1,t:'🏛 Campionati del Club',p:'Archivio → «Campionati del Club», o dal menù delle formule:',li:['<b>Serie</b> A, B, C…: ogni serie è un campionato; a fine stagione il programma calcola chi sale e chi scende e prepara la stagione dopo','<b>Apertura & Clausura</b>, alla sudamericana: due tornei a girone unico, la pausa di mercato per i nuovi soci e la <b>Finalissima</b> per il titolo di Campione di Club','Le classifiche finali entrano da sole; albo d’oro del club stagione per stagione','Tutto salvato nel programma e su file, da riaprire anche su un altro computer']},
+      {t:'📒 Solo: competizioni su misura',li:['Campionato o coppa con le tue squadre e le tue rose','Per ogni gara i marcatori, con minuto, rigore e autogol','Classifica, classifica marcatori, tabellini e stampa in PDF; ogni gara si può anche giocare contro il sistema']},
+      {t:'📹 Live Cam: il ticker del torneo',li:['Con la Live Cam 1.0.5 collegata, in basso scorre una fascia semitrasparente con risultati, classifiche e prossimo turno','Si accende e si spegne dal telefono']},
+      {t:'📘 Guide aggiornate',li:['Nel manuale e nella guida della Live Cam le fasi di una diretta, dal canale alla chiusura']},
+      {wide:1,t:'🔧 Dalla 10.3',li:['Risultati per la FISTF, calendari personali, Buchholz, tre temi fotografici; minuti e orologio simulato sempre applicati, audio e collegamento telefoni più robusti']}
     ],
-    prova:'🎮 Prova il Solo',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 10.3» nel Setup.'},
-  en:{tit:'Table Soccer Tournament Center 10.3: FISTF all the way',
-    intro:'A FISTF tournament now closes without Excel: the program prepares the <b>results file for the FISTF</b>, handles home and away, self-refereeing and neutral referees. Plus <b>personal schedules</b>, <b>Buchholz</b> tie-breaks and three new <b>photographic themes</b>.',
+    prova:'🏛 Apri i Campionati del Club',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 10.4» nel Setup.'},
+  en:{tit:'Table Soccer Tournament Center 10.4: the club season',
+    intro:'The program follows a club all year round: <b>divisions with promotion and relegation</b>, the <b>Apertura & Clausura</b> format, seasons saved and reopened. Solo gets <b>custom competitions</b> with scorers and match reports, and Live Cam receives the <b>tournament ticker</b>.',
     card:[
-      {big:1,t:'🌐 FISTF formats — from the GMFT model',p:'What an international tournament needs, inside the program:',li:['<b>Results for the FISTF</b>: from Standings, «Export & print» creates the Excel file for the world ranking — it fills in the official template or creates one with the same columns','<b>Home and away</b> in groups of 3, 4 or 5, the second leg with home and away swapped','<b>Groups of 6 with self-refereeing</b>: 8 rounds of two matches, the two players resting referee','<b>Neutral referees</b>: never from the same club or nation as the players, with ⚠️ when it cannot be avoided','In team tournaments, <b>individual statistics</b> for every player; the «Women» category instead of «Ladies»']},
-      {t:'🗓 Personal schedules',li:['For every participant, round by round: when they play, against whom and on which table, when they referee, when they rest','Printed from Standings and on the phone, in the Player app']},
-      {t:'⚖️ Buchholz and Sonneborn-Berger',li:['On equal points the strength of the opponents faced counts: Buchholz, cut Buchholz and Sonneborn-Berger','In Swiss, McMahon and Champions they come right after the points; a «Bh» column in the standings']},
-      {t:'🎨 Three new photographic themes',li:['🏟️ Stadium, 🏟️ Partenio · Afternoon and 🌍 Planet Earth, with moving lights and clouds: 24 themes in all']},
-      {wide:1,t:'🎮 Since 10.2 — Subbuteo Solo',li:['You against the system: daily and weekly challenges, historic scenarios, a career with cups and the world ranking, now live on the website too']}
+      {big:1,t:'🏛 Club leagues',p:'Archive → «Club leagues», or from the formats menu:',li:['<b>Divisions</b> A, B, C…: each one is a league; at the end of the season the program works out who goes up and who goes down and prepares the next season','<b>Apertura & Clausura</b>, South American style: two round-robin tournaments, a transfer window for new members and the <b>Grand Final</b> for the Club Champion title','Final standings come in by themselves; the club’s roll of honour season by season','Everything saved in the program and to a file, to reopen on another computer too']},
+      {t:'📒 Solo: custom competitions',li:['League or cup with your teams and your squads','For every match the scorers, with minute, penalty and own goal','Table, top scorers, match reports and PDF print; every match can also be played against the system']},
+      {t:'📹 Live Cam: the tournament ticker',li:['With Live Cam 1.0.5 linked, a semi-transparent band scrolls at the bottom with results, standings and the next round','Switched on and off from the phone']},
+      {t:'📘 Updated guides',li:['In the manual and the Live Cam guide, the stages of a live stream, from the channel to the close']},
+      {wide:1,t:'🔧 Since 10.3',li:['Results for the FISTF, personal schedules, Buchholz, three photographic themes; minutes and simulated clock always applied, sturdier audio and phone link']}
     ],
-    prova:'🎮 Try Solo',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 10.3» button in the Setup.'}
+    prova:'🏛 Open the Club leagues',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 10.4» button in the Setup.'}
 };
 function novitaApri(){
   const t=NOVITA[LANG==='en'?'en':'it'];
@@ -23937,8 +24354,8 @@ function novitaChiudi(){
 }
 function novitaProva(){
   novitaChiudi();
-  // la novità da provare subito nella 10.2: Subbuteo Solo
-  tabTo('solo');
+  // la novità da provare subito nella 10.4: i Campionati del Club
+  clubApri();
 }
 function novitaAllAvvio(){
   if(typeof isSchermoTabellone==='function'&&isSchermoTabellone())return;
@@ -24191,6 +24608,7 @@ function soloFine(abbandono,rigori){
   m.esito=ris;SOLO.risultati.unshift(ris);SOLO.risultati=SOLO.risultati.slice(0,300);
   if(rigori)ris.rigori=rigori;
   if(m.carriera&&!abbandono)soloCarrieraRegistra(ris.finale,rigori);
+  if(m.compGara&&!abbandono){compDaPartita(m);SOLO.vista='comp';}
   soloSalva();soloRender();
 }
 
@@ -24319,12 +24737,242 @@ function soloCampoSVG(m){
 }
 
 /* ---------- viste ---------- */
+/* ---------- COMPETIZIONI SU MISURA (10.4) ----------
+   Il Subbuteo in solitario come si è sempre giocato: un campionato o una coppa
+   inventati da te, con le squadre e le rose che vuoi, e ogni partita giocata sul
+   panno (da solo con entrambe le squadre, oppure contro il sistema). Per ogni
+   gara si scrivono i marcatori: ne nascono classifica, classifica marcatori e
+   tabellini, da consultare e stampare. Tutto nel salvataggio del Solo, e su
+   file per portarlo altrove. */
+function compTutte(){const S0=soloStato();S0.comps=S0.comps||[];return S0.comps;}
+function compAttiva(){const S0=soloStato();return compTutte().find(c=>c.id===S0.compAtt)||null;}
+function compParseSquadre(testo){
+  const out=[],vis=new Set();
+  String(testo||'').split('\n').forEach(r=>{
+    const i=r.indexOf(':'),n=(i>=0?r.slice(0,i):r).trim();if(!n||vis.has(n.toLowerCase()))return;vis.add(n.toLowerCase());
+    const rosa=i>=0?r.slice(i+1).split(/[,;]/).map(x=>x.trim()).filter(Boolean).slice(0,40):[];
+    out.push({n:n.slice(0,40),rosa});
+  });
+  return out;
+}
+function compCrea(){
+  const nome=($('#cp-nome').value||'').trim()||T('Il mio campionato','My league'),formula=$('#cp-form').value,ritorno=$('#cp-rit').checked;
+  const sq=compParseSquadre($('#cp-sq').value);
+  if(sq.length<2){toast(T('Servono almeno due squadre.','At least two teams are needed.'));return;}
+  const c={id:'cp_'+uid(),nome:nome.slice(0,60),formula,ritorno:formula==='campionato'&&ritorno,squadre:sq,gare:[],creato:Date.now()};
+  if(formula==='campionato'){
+    const giri=rrSchedule(sq.map(x=>x.n));
+    const tutti=c.ritorno?giri.concat(giri.map(rd=>rd.map(m=>({home:m.away,away:m.home})))):giri;
+    tutti.forEach((rd,i)=>rd.forEach(m=>c.gare.push({id:uid(),t:i+1,h:m.home,a:m.away,mar:[],ok:false})));
+  }else{
+    const nomi=shuffle(sq.map(x=>x.n));let K=1;while(K<nomi.length)K*=2;
+    const posti=nomi.concat(Array(K-nomi.length).fill(null));
+    // i «bye» vanno distribuiti: chi non ha avversario passa il turno da solo
+    for(let i=0;i<K/2;i++){const h=posti[i],a=posti[K-1-i];
+      c.gare.push({id:uid(),t:1,h:h||a,a:h&&a?a:null,mar:[],ok:!(h&&a),bye:!(h&&a)});}
+    compCoppaAvanza(c);
+  }
+  compTutte().push(c);soloStato().compAtt=c.id;soloStato().vista='comp';soloSalva();soloRender();
+}
+function compGol(c,g){const v=[0,0];(g.mar||[]).forEach(x=>{v[x.s===2?1:0]++;});return v;}
+function compVincitore(c,g){
+  if(g.bye)return g.h;if(!g.ok)return null;const[x,y]=compGol(c,g);
+  if(x>y)return g.h;if(y>x)return g.a;if(g.rig&&g.rig[0]!==g.rig[1])return g.rig[0]>g.rig[1]?g.h:g.a;return null;
+}
+function compTurnoNome(c,t){
+  if(c.formula==='campionato')return T('Giornata','Matchday')+' '+t;
+  const n=c.gare.filter(g=>g.t===t).length;
+  return n===1?T('Finale','Final'):n===2?T('Semifinali','Semi-finals'):n===4?T('Quarti di finale','Quarter-finals'):T('Turno','Round')+' '+t;
+}
+function compCoppaAvanza(c){
+  for(;;){
+    const t=Math.max(...c.gare.map(g=>g.t)),rd=c.gare.filter(g=>g.t===t);
+    if(rd.length<2||!rd.every(g=>compVincitore(c,g)))return;
+    for(let i=0;i<rd.length;i+=2)c.gare.push({id:uid(),t:t+1,h:compVincitore(c,rd[i]),a:compVincitore(c,rd[i+1]),mar:[],ok:false});
+  }
+}
+function compCampione(c){
+  if(c.formula==='campionato'){if(!c.gare.length||!c.gare.every(g=>g.ok))return null;return compClassifica(c)[0].n;}
+  const t=Math.max(...c.gare.map(g=>g.t)),fin=c.gare.filter(g=>g.t===t);return fin.length===1?compVincitore(c,fin[0]):null;
+}
+function compClassifica(c){
+  const st={};c.squadre.forEach(x=>st[x.n]={n:x.n,pts:0,pl:0,w:0,d:0,l:0,gf:0,ga:0});
+  c.gare.filter(g=>g.ok&&!g.bye).forEach(g=>{const[x,y]=compGol(c,g),H=st[g.h],A=st[g.a];if(!H||!A)return;
+    H.pl++;A.pl++;H.gf+=x;H.ga+=y;A.gf+=y;A.ga+=x;
+    if(x>y){H.w++;A.l++;H.pts+=3;}else if(y>x){A.w++;H.l++;A.pts+=3;}else{H.d++;A.d++;H.pts++;A.pts++;}});
+  return Object.values(st).sort((a,b)=>(b.pts-a.pts)||((b.gf-b.ga)-(a.gf-a.ga))||(b.gf-a.gf)||a.n.localeCompare(b.n,'it'));
+}
+function compMarcatori(c){
+  const m={};
+  c.gare.filter(g=>g.ok).forEach(g=>(g.mar||[]).forEach(x=>{
+    if(x.tipo==='a'||!x.p)return;const sq=x.s===2?g.a:g.h,k=sq+'¦'+x.p;
+    const y=m[k]||(m[k]={p:x.p,sq,g:0,rig:0});y.g++;if(x.tipo==='r')y.rig++;}));
+  return Object.values(m).sort((a,b)=>(b.g-a.g)||(a.rig-b.rig)||a.p.localeCompare(b.p,'it'));
+}
+function compRiga(x,g){
+  const nome=x.p||T('marcatore non indicato','scorer not recorded');
+  return `${x.min?x.min+'′ ':''}${esc(nome)}${x.tipo==='r'?' ('+T('rig.','pen.')+')':''}${x.tipo==='a'?' ('+T('aut.','o.g.')+')':''}`;
+}
+function compTabellino(c,g){
+  const[x,y]=compGol(c,g),ord=(g.mar||[]).slice().sort((p,q)=>(p.min||999)-(q.min||999));
+  const lato=s=>ord.filter(m=>m.s===s).map(m=>compRiga(m,g)).join(', ');
+  return {ris:`${x}–${y}`+(g.rig?` (${T('rig.','pen.')} ${g.rig[0]}–${g.rig[1]})`:''),h:lato(1),a:lato(2)};
+}
+/* --- l'editor della gara: marcatori, minuto, rigore o autogol --- */
+let compEd=null;
+function compApriGara(id){
+  const c=compAttiva(),g=c&&c.gare.find(x=>x.id===id);if(!g||g.bye)return;
+  compEd={id,mar:JSON.parse(JSON.stringify(g.mar||[])),rig:g.rig?g.rig.slice():null};soloRender();
+  const e=$('#cp-ed');if(e)e.scrollIntoView({block:'center',behavior:'smooth'});
+}
+function compEdLeggi(){
+  if(!compEd)return;
+  // ogni riga sa qual è il suo gol (data-i): le righe sono divise per squadra, i gol no
+  document.querySelectorAll('#cp-ed .cp-gol').forEach(r=>{const x=compEd.mar[+r.dataset.i];if(!x)return;
+    x.p=r.querySelector('.cp-p').value.trim().slice(0,40);
+    x.min=Math.max(0,Math.min(150,parseInt(r.querySelector('.cp-min').value)||0))||null;x.tipo=r.querySelector('.cp-tipo').value;});
+  const r1=$('#cp-r1'),r2=$('#cp-r2');compEd.rig=r1&&r2&&(r1.value!==''||r2.value!=='')?[parseInt(r1.value)||0,parseInt(r2.value)||0]:null;
+}
+function compEdGol(s){compEdLeggi();compEd.mar.push({s,p:'',min:null,tipo:'g'});soloRender();
+  const r=document.querySelector('#cp-ed .cp-gol[data-i="'+(compEd.mar.length-1)+'"]');if(r)r.querySelector('.cp-p').focus();}
+function compEdTogli(i){compEdLeggi();compEd.mar.splice(i,1);soloRender();}
+function compEdSalva(){
+  compEdLeggi();const c=compAttiva(),g=c&&c.gare.find(x=>x.id===compEd.id);if(!g)return;
+  g.mar=compEd.mar;const[x,y]=compGol(c,g);
+  if(c.formula==='coppa'&&x===y&&(!compEd.rig||compEd.rig[0]===compEd.rig[1])){toast(T('In coppa il pareggio si decide ai rigori: scrivi il risultato dei rigori.','In the cup a draw is decided on penalties: enter the shoot-out score.'));return;}
+  g.rig=c.formula==='coppa'&&x===y?compEd.rig:null;g.ok=true;compEd=null;
+  if(c.formula==='coppa')compCoppaAvanza(c);
+  soloSalva();soloRender();
+  const ch=compCampione(c);if(ch&&!c.festeggiato){c.festeggiato=true;soloSalva();toast('🏆 '+ch+' — '+T('vince','wins')+' '+c.nome);}
+}
+function compEdAnnulla(){compEd=null;soloRender();}
+function compEdAzzera(){
+  const c=compAttiva(),g=c&&c.gare.find(x=>x.id===compEd.id);if(!g)return;
+  if(c.formula==='coppa'&&c.gare.some(x=>x.t>g.t)){toast(T('Il turno dopo è già cominciato: non si può più cambiare questa gara.','The next round has already started: this match can no longer be changed.'));return;}
+  g.mar=[];g.ok=false;g.rig=null;c.festeggiato=false;compEd=null;soloSalva();soloRender();
+}
+/* giocare la gara contro il sistema: il risultato torna qui, poi si scrivono i marcatori */
+function compControSistema(id){
+  const c=compAttiva(),g=c&&c.gare.find(x=>x.id===id);if(!g)return;
+  soloNuovaPartita({modo:'competizione',tu:g.h,sistema:g.a,titolo:c.nome+' · '+compTurnoNome(c,g.t),min:soloStato().durata||20});
+  SOLO.partita.compGara={comp:c.id,gara:g.id};soloSalva();
+}
+function compDaPartita(m){
+  const k=m&&m.compGara;if(!k)return;
+  const c=compTutte().find(x=>x.id===k.comp),g=c&&c.gare.find(x=>x.id===k.gara);if(!g||g.ok)return;
+  const fin=[m.iniz[0]+m.gf,m.iniz[1]+m.gs];
+  soloStato().compAtt=c.id;
+  compEd={id:g.id,mar:[...Array(fin[0]).fill(0).map(()=>({s:1,p:'',min:null,tipo:'g'})),...Array(fin[1]).fill(0).map(()=>({s:2,p:'',min:null,tipo:'g'}))],rig:null};
+}
+function compEsporta(){
+  const c=compAttiva();if(!c)return;
+  const b=new Blob([JSON.stringify({stcSoloComp:1,comp:c},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Solo - '+c.nome.replace(/[\\/:*?"<>|]+/g,' ').trim()+'.json';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+}
+function compImporta(){
+  const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
+  i.onchange=()=>{const f=i.files&&i.files[0];if(!f)return;f.text().then(t=>{let d;try{d=JSON.parse(t);}catch(e){}
+    const c=d&&d.stcSoloComp&&d.comp;if(!c||!Array.isArray(c.gare)){toast(T('Questo non è un file di una competizione Solo.','This is not a Solo competition file.'));return;}
+    const L0=compTutte(),k=L0.findIndex(x=>x.id===c.id);if(k>=0)L0[k]=c;else L0.push(c);
+    soloStato().compAtt=c.id;soloStato().vista='comp';soloSalva();soloRender();});};
+  i.click();
+}
+function compElimina(){
+  const c=compAttiva();if(!c)return;
+  askConfirm(T(`Eliminare «${c.nome}» con tutti i risultati e i marcatori?`,`Delete «${c.nome}» with all results and scorers?`),()=>{
+    const S0=soloStato();S0.comps=compTutte().filter(x=>x.id!==c.id);S0.compAtt=null;S0.vista='home';soloSalva();soloRender();});
+}
+function compScheda(){
+  const L0=compTutte();
+  return `<div class="card so-mod">
+    <div class="so-kick">📒 ${T('Competizioni su misura','Custom competitions')}</div>
+    <h3 class="so-tit">${T('Campionato o coppa, con marcatori e tabellini','League or cup, with scorers and match reports')}</h3>
+    <p class="so-nota">${T('Il solitario classico: scegli squadre e rose, gioca ogni partita sul panno (anche contro il sistema) e scrivi chi ha segnato. Il programma tiene classifica, classifica marcatori e tabellini.','Classic solitaire: choose teams and squads, play every match on the cloth (against the system too) and note who scored. The program keeps the table, the top scorers and the match reports.')}</p>
+    ${L0.length?`<div class="row" style="gap:6px;flex-wrap:wrap">${L0.map(c=>`<button class="btn sec mini" onclick="soloStato().compAtt='${c.id}';soloVai('comp')">${c.formula==='coppa'?'🏆':'📋'} ${esc(c.nome)}</button>`).join('')}</div>`:''}
+    <details class="cp-nuova"${L0.length?'':' open'}><summary>➕ ${T('Nuova competizione','New competition')}</summary>
+      <div class="so-form">
+        <label class="f">${T('Nome','Name')}<input type="text" id="cp-nome" placeholder="${esc(T('Es. Serie A 1982/83','E.g. Serie A 1982/83'))}"></label>
+        <label class="f">${T('Formula','Format')}<select id="cp-form"><option value="campionato">${T('Campionato (girone unico)','League (round robin)')}</option><option value="coppa">${T('Coppa (eliminazione diretta)','Cup (knockout)')}</option></select></label>
+      </div>
+      <label class="ck"><input type="checkbox" id="cp-rit" checked> ${T('Andata e ritorno (campionato)','Home and away (league)')}</label>
+      <label class="f">${T('Squadre: una per riga; la rosa, se vuoi, dopo i due punti','Teams: one per line; the squad, if you like, after a colon')}</label>
+      <textarea id="cp-sq" rows="6" placeholder="${esc(T('Juventus: Zoff, Gentile, Cabrini, Platini, Rossi\nRoma: Tancredi, Nela, Falcão, Conti, Pruzzo\nInter\nFiorentina','Juventus: Zoff, Gentile, Cabrini, Platini, Rossi\nRoma: Tancredi, Nela, Falcão, Conti, Pruzzo\nInter\nFiorentina'))}"></textarea>
+      <div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn" onclick="compCrea()">▶ ${T('Crea la competizione','Create the competition')}</button>
+      <button class="btn sec mini" onclick="compImporta()">📂 ${T('Apri da file','Open from file')}</button></div>
+    </details>
+  </div>`;
+}
+function compVista(){
+  const c=compAttiva();if(!c){soloStato().vista='home';return soloVistaHome();}
+  const camp=compCampione(c),cl=compClassifica(c),mar=compMarcatori(c);
+  const turni=[...new Set(c.gare.map(g=>g.t))].sort((a,b)=>a-b);
+  let h=`<div class="row spread" style="gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+    <div><button class="btn sec mini" onclick="compEd=null;soloVai('home')">← ${T('Solo','Solo')}</button>
+    <b style="font-family:'Oswald',sans-serif;font-size:1.3rem;margin-left:8px">${c.formula==='coppa'?'🏆':'📋'} ${esc(c.nome)}</b>
+    ${camp?`<span class="chip" style="margin-left:8px">🏆 ${esc(camp)}</span>`:''}</div>
+    <div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn sec mini" onclick="compStampa()">📄 ${T('Stampa (PDF)','Print (PDF)')}</button>
+      <button class="btn sec mini" onclick="compEsporta()">💾 ${T('Salva su file','Save to file')}</button>
+      <button class="btn sec mini" onclick="compElimina()">🗑 ${T('Elimina','Delete')}</button></div></div>`;
+  if(compEd){
+    const g=c.gare.find(x=>x.id===compEd.id),sq=s=>c.squadre.find(x=>x.n===(s===1?g.h:g.a));
+    const lista=s=>{const r=sq(s);return r&&r.rosa.length?r.rosa:[];};
+    const conta=[0,0];compEd.mar.forEach(x=>conta[x.s===2?1:0]++);
+    const riga=(x,i)=>{const own=x.tipo==='a',ros=lista(own?(x.s===1?2:1):x.s);
+      return `<div class="cp-gol" data-s="${x.s}" data-i="${i}"><input class="cp-min" type="number" min="0" max="150" placeholder="′" value="${x.min||''}">
+        <input class="cp-p" type="text" list="cp-dl-${x.s}-${own?'a':'g'}" placeholder="${esc(T('Marcatore','Scorer'))}" value="${esc(x.p||'')}">
+        <select class="cp-tipo" onchange="compEdLeggi();soloRender()"><option value="g"${x.tipo==='g'?' selected':''}>⚽</option><option value="r"${x.tipo==='r'?' selected':''}>${T('rigore','penalty')}</option><option value="a"${own?' selected':''}>${T('autogol','own goal')}</option></select>
+        <button class="btn sec mini" onclick="compEdTogli(${i})" title="${esc(T('Togli','Remove'))}">✕</button>
+        <datalist id="cp-dl-${x.s}-${own?'a':'g'}">${ros.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></div>`;};
+    h+=`<div class="card cp-ed" id="cp-ed"><div class="so-kick">${esc(compTurnoNome(c,g.t))}</div>
+      <div class="cp-tab"><div><h3 class="so-tit">${esc(g.h)} <span class="cp-sc">${conta[0]}</span></h3>${compEd.mar.map((x,i)=>x.s===1?riga(x,i):'').join('')}
+        <button class="btn mini" onclick="compEdGol(1)">⚽ ${T('Gol','Goal')} ${esc(g.h)}</button></div>
+      <div><h3 class="so-tit"><span class="cp-sc">${conta[1]}</span> ${esc(g.a)}</h3>${compEd.mar.map((x,i)=>x.s===2?riga(x,i):'').join('')}
+        <button class="btn mini" onclick="compEdGol(2)">⚽ ${T('Gol','Goal')} ${esc(g.a)}</button></div></div>
+      ${c.formula==='coppa'?`<div class="row" style="gap:8px;align-items:center;margin-top:8px"><span class="small muted">${T('Rigori, se finisce pari','Penalties, if it ends level')}</span>
+        <input id="cp-r1" type="number" min="0" max="30" style="width:64px" value="${compEd.rig?compEd.rig[0]:''}"> – <input id="cp-r2" type="number" min="0" max="30" style="width:64px" value="${compEd.rig?compEd.rig[1]:''}"></div>`:''}
+      <p class="so-nota">${T('Ogni gol è una riga: minuto (facoltativo), marcatore, tipo. L’autogol va nella squadra che ne beneficia, con il nome di chi l’ha segnato.','Each goal is a line: minute (optional), scorer, type. An own goal goes to the team that benefits, with the name of the player who scored it.')}</p>
+      <div class="row" style="gap:6px;flex-wrap:wrap"><button class="btn" onclick="compEdSalva()">✔ ${T('Salva il risultato','Save the result')}</button>
+        <button class="btn sec" onclick="compEdAnnulla()">${T('Annulla','Cancel')}</button>
+        ${g.ok?`<button class="btn sec" onclick="compEdAzzera()">↺ ${T('Da giocare','Not played')}</button>`:''}</div></div>`;
+  }
+  h+=`<div class="cp-grid"><div class="card"><h3 class="so-tit">${c.formula==='coppa'?T('Tabellone','Bracket'):T('Calendario e risultati','Fixtures and results')}</h3>
+    ${turni.map(t=>`<div class="cp-turno"><div class="so-kick">${esc(compTurnoNome(c,t))}</div>${c.gare.filter(g=>g.t===t).map(g=>{
+      if(g.bye)return `<div class="cp-gara bye">${esc(g.h)} <span class="muted">— ${T('passa il turno','bye')}</span></div>`;
+      const tb=g.ok?compTabellino(c,g):null;
+      return `<div class="cp-gara${g.ok?' ok':''}"><span class="cp-sq">${esc(g.h)}</span><button class="cp-ris" onclick="compApriGara('${g.id}')" title="${esc(T('Risultato e marcatori','Result and scorers'))}">${tb?tb.ris:'–'}</button><span class="cp-sq">${esc(g.a)}</span>
+        ${!g.ok?`<button class="btn sec mini" onclick="compControSistema('${g.id}')" title="${esc(T('Gioca questa partita contro il sistema: il risultato torna qui','Play this match against the system: the result comes back here'))}">🤖</button>`:''}
+        ${tb&&(tb.h||tb.a)?`<div class="cp-tb">${tb.h?`<span>${tb.h}</span>`:''}${tb.a?`<span>${tb.a}</span>`:''}</div>`:''}</div>`;}).join('')}</div>`).join('')}</div>
+    <div>${c.formula==='campionato'?`<div class="card"><h3 class="so-tit">${T('Classifica','Table')}</h3>${clubTabellaHTML(cl,{campione:!!camp,squadre:true})}</div>`:''}
+    <div class="card" style="margin-top:${c.formula==='campionato'?'14px':'0'}"><h3 class="so-tit">⚽ ${T('Classifica marcatori','Top scorers')}</h3>
+      ${mar.length?`<table class="standings"><thead><tr><th>#</th><th class="l">${T('Giocatore','Player')}</th><th class="l">${T('Squadra','Team')}</th><th>${T('Gol','Goals')}</th><th>${T('rig.','pen.')}</th></tr></thead><tbody>
+      ${mar.map((x,i)=>`<tr><td>${i+1}</td><td class="l">${esc(x.p)}</td><td class="l">${esc(x.sq)}</td><td class="pts">${x.g}</td><td>${x.rig||''}</td></tr>`).join('')}</tbody></table>`:`<p class="so-nota">${T('Ancora nessun marcatore.','No scorers yet.')}</p>`}</div></div></div>`;
+  return h;
+}
+function compStampa(){
+  const c=compAttiva();if(!c)return;const camp=compCampione(c),mar=compMarcatori(c);
+  let h=`<div class="rhead"><div><h1>${esc(c.nome)}</h1><p>${c.formula==='coppa'?T('Coppa a eliminazione diretta','Knockout cup'):T('Campionato','League')+(c.ritorno?' · '+T('andata e ritorno','home and away'):'')} · ${c.squadre.length} ${T('squadre','teams')}${camp?' · 🏆 '+esc(camp):''}</p></div></div>`;
+  if(c.formula==='campionato'){const cl=compClassifica(c);
+    h+=`<h2>${T('Classifica','Table')}</h2><table class="rstand"><thead><tr><th>#</th><th class="l">${T('Squadra','Team')}</th><th>Pt</th><th>G</th><th>V</th><th>N</th><th>P</th><th>GF</th><th>GS</th></tr></thead><tbody>
+    ${cl.map((x,i)=>`<tr><td>${i+1}</td><td class="l" style="display:table-cell">${esc(x.n)}</td><td><b>${x.pts}</b></td><td>${x.pl}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td></tr>`).join('')}</tbody></table>`;}
+  h+=`<h2>${T('Classifica marcatori','Top scorers')}</h2>`+(mar.length?`<table class="rstand"><thead><tr><th>#</th><th class="l">${T('Giocatore','Player')}</th><th class="l">${T('Squadra','Team')}</th><th>${T('Gol','Goals')}</th></tr></thead><tbody>
+    ${mar.map((x,i)=>`<tr><td>${i+1}</td><td class="l" style="display:table-cell">${esc(x.p)}</td><td class="l" style="display:table-cell">${esc(x.sq)}</td><td><b>${x.g}</b>${x.rig?` <small>(${x.rig} ${T('rig.','pen.')})</small>`:''}</td></tr>`).join('')}</tbody></table>`:`<p class="rnone">${T('Nessun marcatore.','No scorers.')}</p>`);
+  h+=`<h2>${T('Tabellini','Match reports')}</h2>`;
+  [...new Set(c.gare.map(g=>g.t))].sort((a,b)=>a-b).forEach(t=>{
+    const gg=c.gare.filter(g=>g.t===t&&g.ok&&!g.bye);if(!gg.length)return;
+    h+=`<div class="rsub">${esc(compTurnoNome(c,t))}</div>`+gg.map(g=>{const tb=compTabellino(c,g);
+      return `<div class="rmatch"><span class="rt rt-h">${esc(g.h)}</span><span class="rsc">${tb.ris}</span><span class="rt">${esc(g.a)}</span>${tb.h||tb.a?`<div class="rev">${tb.h}${tb.h&&tb.a?' · ':''}${tb.a}</div>`:''}</div>`;}).join('');
+  });
+  h+=`<div class="rfoot">${T('Generato il','Generated on')} ${new Date().toLocaleDateString(LANG==='en'?'en-GB':'it-IT')} · Table Soccer Tournament Center · Subbuteo Solo</div>`;
+  openPdfPreview(h,c.nome);
+}
 function soloRender(){
   const root=$('#solo-root');if(!root)return;
   const S0=soloStato();
   if(S0.vista==='partita'&&S0.partita)root.innerHTML=soloVistaPartita(S0.partita);
   else if(S0.vista==='carriera'&&S0.carriera)root.innerHTML=soloVistaCarriera(S0.carriera);
   else if(S0.vista==='classifica')root.innerHTML=soloVistaClassifica();
+  else if(S0.vista==='comp'&&compAttiva())root.innerHTML=compVista();
   else{S0.vista='home';root.innerHTML=soloVistaHome();}
 }
 function soloVai(v){soloStato().vista=v;soloSalva();soloRender();}
@@ -24391,6 +25039,7 @@ function soloVistaHome(){
           <label class="f">${T('La tua squadra','Your team')}<select id="so-csq">${SOLO_LEGHE.ita.sq.map(n=>`<option>${esc(n)}</option>`).join('')}</select></label></div>
           <button class="btn" onclick="soloCarrieraInizia()">▶ ${T('Inizia la carriera','Start the career')}</button>`}
       </div>
+      ${compScheda()}
       <div class="card so-mod">
         <div class="so-kick">🏅 ${T('Classifica Solo','Solo ranking')}</div>
         <h3 class="so-tit">${S0.risultati.filter(x=>x.punti!=null).length} ${T('sfide giocate','challenges played')}</h3>
