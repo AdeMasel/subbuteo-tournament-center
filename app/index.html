@@ -5315,7 +5315,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='10.4.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='10.4.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -16314,19 +16314,21 @@ function boardResetClock(i){
    (fino alla 10.3.1) a tabellone avviato si cambiava solo il numero scritto:
    il cronometro restava sulla durata vecchia e, accorciandola, il tempo
    residuo superava quello del tempo nuovo — così l'orologio simulato restava
-   fermo a 0′ finché il cronometro non scendeva sotto la nuova durata. Ora si
-   conserva il tempo già giocato e si ricalcola quello che resta. */
+   fermo a 0′ finché il cronometro non scendeva sotto la nuova durata.
+   10.4.1: i minuti scritti sono i minuti DA GIOCARE. Nella 10.3.2 si toglieva
+   il tempo già giocato (dopo 2′ di gioco, scrivendo 10 il cronometro segnava
+   8:00 — «ne assegna 2 in meno»). Ora, se cambia la durata del tempo in
+   corso, il cronometro riparte esattamente dai minuti scritti; se cambia
+   altro (supplementari, tempo unico) e la durata del tempo in corso resta
+   uguale, il cronometro non si tocca. */
 function boardRidura(b,cambia){
   const prima=boardPhases(b)[b.phaseIdx],totPrima=(prima?.min??b.halfMin)*60;
-  const giocato=Math.max(0,Math.min(totPrima,totPrima-(b.remaining??totPrima)));
   cambia();
   const ph=boardPhases(b);
   if(b.phaseIdx>=ph.length)b.phaseIdx=ph.length-1;
   const tot=(ph[b.phaseIdx]?.min??b.halfMin)*60;
-  b.remaining=b.started?Math.max(0,tot-giocato):tot;
-  // a gioco in corso, se il nuovo tempo è già passato chiude il cronometro al
-  // prossimo scatto, con il fischio di fine tempo come sempre
-  if(b.running){b.lastTs=Date.now();if(b.remaining<=0)b.remaining=0.01;}
+  if(!b.started||tot!==totPrima||b.remaining==null)b.remaining=tot;
+  if(b.running)b.lastTs=Date.now();
 }
 function boardCfg(i,key,val){
   const b=S.boards[i];if(!b)return;
