@@ -3992,7 +3992,7 @@ body.no-anim .so-cella.bersaglio{animation:none}
             <label class="ck"><input type="checkbox" id="s-noantic"> Non anticipare gare del turno successivo per riempire i campi (si completa una giornata alla volta)</label>
           </div>
           <div style="display:flex;align-items:flex-end;padding-bottom:6px">
-            <label class="ck"><input type="checkbox" id="s-goalroar" checked onchange="S.soundGoal=this.checked;persist()"> Boato del pubblico al gol</label>
+            <label class="ck"><input type="checkbox" id="s-goalroar" checked onchange="soundGoalSet(this.checked)"> Boato del pubblico al gol</label>
           </div>
         </div>
         <div class="row">
@@ -4741,7 +4741,7 @@ body.no-anim .so-cella.bersaglio{animation:none}
     <div class="card">
       <h3 class="subt">🔊 Effetti e Segnali di Gara</h3>
       <div class="row">
-        <label class="ck"><input type="checkbox" id="o-sound" checked onchange="S.sound=this.checked;persist()"> Effetti sonori (generale: click, boato, arbitraggio)</label>
+        <label class="ck"><input type="checkbox" id="o-sound" checked onchange="soundSet(this.checked)"> Effetti sonori (generale: click, boato, arbitraggio)</label>
       </div>
       <div class="row" style="margin-top:14px;align-items:center;gap:14px">
         <span class="row" style="gap:8px;align-items:center">
@@ -4753,7 +4753,7 @@ body.no-anim .so-cella.bersaglio{animation:none}
           </select>
           <button class="btn sec mini" onclick="refWhistle()">▶ Prova</button>
         </span>
-        <label class="ck"><input type="checkbox" id="o-goalroar" checked onchange="S.soundGoal=this.checked;persist()"> Boato del pubblico al gol</label>
+        <label class="ck"><input type="checkbox" id="o-goalroar" checked onchange="soundGoalSet(this.checked)"> Boato del pubblico al gol</label>
         <label class="ck"><input type="checkbox" id="o-dingdong" checked onchange="setDingDong(this.checked)"> 🔔 Ding dong prima degli annunci</label>
         <span class="small muted" style="display:block;margin-top:6px;max-width:60ch">Le due note da aeroporto che precedono la voce: in una palestra rumorosa fanno alzare la testa, e la frase che segue si sente dall’inizio. Non suona per le conferme della dettatura, che sono risposte a te al banco e non annunci al pubblico.</span>
       </div>
@@ -5285,7 +5285,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='10.3.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='10.3.2';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -6328,6 +6328,8 @@ Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF —
 
 TR['🧊 Antartide · ghiaccio polare']='🧊 Antarctica · polar ice';
 /* ranking FISCT · FISTF · WASPA */
+// 10.3.2: audio, collegamento telefoni
+Object.assign(TR,{"Effetti sonori riattivati: senza, il boato del gol non si sente.": "Sound effects switched back on: without them the goal roar cannot be heard.", "Effetti sonori spenti: anche il boato del gol tace.": "Sound effects off: the goal roar is silent too.", "Effetti sonori riattivati: boato del gol, fischi e voce tornano a sentirsi.": "Sound effects switched back on: goal roar, whistles and voice can be heard again.", "Collegamento telefoni ritrovato sulla porta": "Phone link found again on port", "il server dei telefoni non risponde": "the phone server is not answering"});
 // 10.3: calendari personali, risultati per la FISTF
 Object.assign(TR,{"contro": "vs", "Arbitra": "Referee", "Calendari personali": "Personal schedules", "quando si gioca, quando si arbitra, quando si riposa": "when you play, when you referee, when you rest", "partita": "match", "arbitraggio": "refereeing", "arbitraggi": "refereeing duties", "Impegno": "Duty", "Partita": "Match", "Risultato": "Result", "Nessun impegno in programma.": "Nothing scheduled.", "🗓 Calendari personali (PDF)": "🗓 Personal schedules (PDF)", "🌐 Risultati per la FISTF (Excel)": "🌐 Results for the FISTF (Excel)", "Risultati per la FISTF": "Results for the FISTF", "Il file Excel dei risultati da mandare alla FISTF per il ranking mondiale: tutte le gare con arbitri e tiri piazzati, le classifiche dei gironi e l’elenco degli iscritti, nelle posizioni del modello ufficiale.": "The Excel results file to send to the FISTF for the world ranking: every game with referees and shoot-outs, the group standings and the list of entrants, in the positions of the official template.", "Categoria": "Category", "Modello ufficiale FISTF (facoltativo)": "Official FISTF template (optional)", "Con il modello «FISTF-Event-Report-Template…xlsx» il programma lo compila; senza, crea un file con gli stessi fogli e le stesse colonne da copiare nel modello.": "With the «FISTF-Event-Report-Template…xlsx» template the program fills it in; without it, it creates a file with the same sheets and columns to copy into the template.", "Crea il file Excel": "Create the Excel file", "Modello caricato": "Template loaded", "Nessuna gara con il risultato: niente da esportare.": "No game with a result: nothing to export.", "File FISTF creato": "FISTF file created", "Questo non sembra il modello FISTF: mancano i fogli": "This does not look like the FISTF template: these sheets are missing", "Il foglio": "The sheet", "non ha l’intestazione del modello FISTF alla riga": "does not have the FISTF template heading on row"});
 // Buchholz (10.2.x)
@@ -6607,6 +6609,23 @@ function setArbSound(v){S.arbSound=v;persist();if(v!=='none')arbSnd();}
 function refWhistle(){arbSnd();}
 function tripleWhistle(){const k=S.arbSound||'whistle';if(k==='none')return;playSnd(k);setTimeout(()=>playSnd(k),650);setTimeout(()=>playSnd(k),1300);}
 function crowdRoar(){if(S.soundGoal===false)return;playSnd('crowd',.9);}
+/* Il boato del gol passa dagli «Effetti sonori» generali: con quelli spenti,
+   spuntare «Boato del pubblico al gol» non faceva sentire niente, senza
+   spiegazioni. Ora chi accende il boato accende anche gli effetti, e chi
+   spegne gli effetti lo vede scritto. */
+function soundGoalSet(on){
+  S.soundGoal=!!on;
+  if(on&&S.sound===false){S.sound=true;toast('🔊 '+L('Effetti sonori riattivati: senza, il boato del gol non si sente.'));}
+  ['#s-goalroar','#o-goalroar'].forEach(q=>{const e=$(q);if(e)e.checked=!!on;});
+  const o=$('#o-sound');if(o)o.checked=S.sound!==false;
+  if(on)try{ac();playSnd('crowd',.6);}catch(e){}
+  persist();
+}
+function soundSet(on){
+  S.sound=!!on;
+  if(!on&&S.soundGoal!==false)toast('🔇 '+L('Effetti sonori spenti: anche il boato del gol tace.'));
+  persist();
+}
 function clickTick(){beep(1850,.05,'square',.35);}
 
 /* =========================================================
@@ -16161,11 +16180,8 @@ function setCdSecs(v){
 function setAllHalfMin(){
   const v=Math.max(1,Math.min(60,parseInt($('#all-halfmin').value)||15));
   $('#all-halfmin').value=v;
-  S.boards.forEach(b=>{
-    b.halfMin=v;
-    if(!b.running&&!b.started){const ph=boardPhases(b);b.remaining=(ph[b.phaseIdx]?.min??v)*60;}
-  });
-  renderBoards();persist();
+  S.boards.forEach(b=>boardRidura(b,()=>{b.halfMin=v;}));
+  renderBoards();if(tvBoard!=null)tvSyncClock();persist();
   toast(`Durata dei tempi impostata a ${v}′ su tutti i campi del turno.`);
 }
 function pauseAllBoards(){
@@ -16259,14 +16275,33 @@ function boardResetClock(i){
   b.remaining=(ph[b.phaseIdx]?.min??b.halfMin)*60;b.running=false;
   renderBoards();persist();
 }
+/* Cambiare i minuti deve valere SEMPRE, anche dopo START o in pausa. Prima
+   (fino alla 10.3.1) a tabellone avviato si cambiava solo il numero scritto:
+   il cronometro restava sulla durata vecchia e, accorciandola, il tempo
+   residuo superava quello del tempo nuovo — così l'orologio simulato restava
+   fermo a 0′ finché il cronometro non scendeva sotto la nuova durata. Ora si
+   conserva il tempo già giocato e si ricalcola quello che resta. */
+function boardRidura(b,cambia){
+  const prima=boardPhases(b)[b.phaseIdx],totPrima=(prima?.min??b.halfMin)*60;
+  const giocato=Math.max(0,Math.min(totPrima,totPrima-(b.remaining??totPrima)));
+  cambia();
+  const ph=boardPhases(b);
+  if(b.phaseIdx>=ph.length)b.phaseIdx=ph.length-1;
+  const tot=(ph[b.phaseIdx]?.min??b.halfMin)*60;
+  b.remaining=b.started?Math.max(0,tot-giocato):tot;
+  // a gioco in corso, se il nuovo tempo è già passato chiude il cronometro al
+  // prossimo scatto, con il fischio di fine tempo come sempre
+  if(b.running){b.lastTs=Date.now();if(b.remaining<=0)b.remaining=0.01;}
+}
 function boardCfg(i,key,val){
-  const b=S.boards[i];
-  if(key==='halfMin')b.halfMin=Math.max(1,Math.min(60,parseInt(val)||15));
-  if(key==='etMin')b.etMin=Math.max(1,Math.min(30,parseInt(val)||5));
-  if(key==='etOn')b.etOn=!!val;
-  if(key==='oneHalf'){b.oneHalf=!!val;if(!b.started)b.phaseIdx=0;}
-  if(!b.running){const ph=boardPhases(b);if(b.phaseIdx>=ph.length)b.phaseIdx=ph.length-1;if(!b.started)b.remaining=(ph[b.phaseIdx]?.min??b.halfMin)*60;}
-  renderBoards();persist();
+  const b=S.boards[i];if(!b)return;
+  boardRidura(b,()=>{
+    if(key==='halfMin')b.halfMin=Math.max(1,Math.min(60,parseInt(val)||15));
+    if(key==='etMin')b.etMin=Math.max(1,Math.min(30,parseInt(val)||5));
+    if(key==='etOn')b.etOn=!!val;
+    if(key==='oneHalf'){b.oneHalf=!!val;if(!b.started)b.phaseIdx=0;}
+  });
+  renderBoards();if(tvBoard===i)tvSyncClock();persist();
 }
 function boardFinish(i){
   const b=S.boards[i];if(!b.matchId)return;
@@ -21768,6 +21803,16 @@ function renderThemeButtons(){
 }
 function toggleAnim(v){S.anim=v;document.body.classList.toggle('no-anim',!v);persist();}
 function applyPrefs(){
+  /* 10.3.2 — «audio muto»: effetti generali spenti ma boato del gol acceso è
+     una combinazione che nessuno sceglie (il boato non si sentirebbe mai). La
+     lasciavano i collaudi finiti per errore nei dati veri il 3 ottobre, e
+     spegneva tutto: boato, fischi, segnali e voce. Si corregge una volta sola,
+     dicendolo; chi poi spegne gli effetti di proposito li ritrova spenti. */
+  if(S&&S.sound===false&&S.soundGoal!==false&&!S.audioRipristino1032){
+    S.sound=true;S.audioRipristino1032=true;
+    setTimeout(()=>{try{toast('🔊 '+L('Effetti sonori riattivati: boato del gol, fischi e voce tornano a sentirsi.'));}catch(e){}},1500);
+    try{persist();}catch(e){}
+  }
   applyThemeVars();
   document.body.classList.toggle('no-anim',!S.anim);
   renderThemeButtons();
@@ -21923,6 +21968,36 @@ function qrDraw(canvas,text,px){
 function genSyncKey(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint8Array(16));return [...r].map(v=>A[v%32]).join('');}
 let SYNC={on:false,url:'http://127.0.0.1:8765',key:'',lastEv:0,lastSnapJson:'',okAt:0,timer:null,lan:null,addr:''};
 try{Object.assign(SYNC,JSON.parse(localStorage.getItem('subbuteo_sync_v1')||'{}'),{timer:null,lastSnapJson:'',okAt:0,lan:null});}catch(e){}
+/* 10.3.2 — un indirizzo NON locale ricordato da una sessione precedente (un
+   tunnel che a ogni avvio cambia nome, un IP di un'altra rete) non può più
+   funzionare: la chiave di Regia per un server remoto non viene salvata. La
+   Regia restava a bussare lì ogni due secondi, con l'avviso «Pubblicazione del
+   torneo non riuscita: Failed to fetch». Si riparte dal server del computer. */
+function syncLocale(u){try{return ['127.0.0.1','localhost'].includes(new URL(u).hostname);}catch(e){return false;}}
+if(SYNC.url&&!syncLocale(SYNC.url)){try{console.warn('[sync] indirizzo remoto dimenticato:',SYNC.url);}catch(e){}SYNC.url='http://127.0.0.1:8765';}
+let syncFalliti=0,syncCercaPorta=null;
+/* Il server del programma prende la prima porta libera fra 8765 e 8770: se
+   all'avvio la 8765 era occupata, la Regia scriveva a una porta sbagliata.
+   Qui si cerca quella giusta — è l'unica che accetta lo stato del torneo,
+   perché solo a lei il programma aggiunge la chiave di Regia. */
+async function syncTrovaPorta(){
+  if(syncCercaPorta)return syncCercaPorta;
+  syncCercaPorta=(async()=>{
+    const host=(()=>{try{return new URL(syncBase()).hostname;}catch(e){return '127.0.0.1';}})();
+    for(let port=8765;port<=8770;port++){
+      const base='http://'+host+':'+port;
+      if(base===syncBase())continue;
+      try{
+        const r=await fetch(base+'/api/state',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({key:SYNC.key,snap:syncSnapshot()})});
+        if(r.ok){SYNC.url=base;SYNC.lastSnapJson='';syncPersist();const i=$('#sy-url');if(i)i.value=base;
+          toast('🔌 '+L('Collegamento telefoni ritrovato sulla porta')+' '+port);syncFetchInfo();return true;}
+      }catch(e){}
+    }
+    return false;
+  })();
+  try{return await syncCercaPorta;}finally{syncCercaPorta=null;}
+}
 if(!SYNC.key)SYNC.key=genSyncKey();
 function syncPersist(){try{localStorage.setItem('subbuteo_sync_v1',JSON.stringify({on:SYNC.on,url:SYNC.url,key:SYNC.key,lastEv:SYNC.lastEv,addr:SYNC.addr}));}catch(e){}}
 let syncRemoteAdmin='';
@@ -21935,6 +22010,13 @@ function syncRequest(url,options){
   return fetch(url,opts);
 }
 function syncBase(){return String(SYNC.url||'').replace(/\/+$/,'');}
+// «Failed to fetch» non dice niente a nessuno: si spiega che cosa vuol dire
+function syncSpiega(e){
+  const m=String(e&&e.message||e||'');
+  if(e instanceof TypeError||/failed to fetch|networkerror|load failed/i.test(m))
+    return L('il server dei telefoni non risponde')+' ('+syncBase()+')';
+  return m;
+}
 
 function syncSubOf(m){
   if(!Array.isArray(m.sub)||m.sub.length!==4)return undefined;
@@ -22095,10 +22177,12 @@ function syncApply(ev){
       const d=D(ev.delta),side=ev.side===2?2:1;if(!d)break;
       if(bi>=0)boardGoal(bi,side,d);
       else if(f.kind==='group'||f.kind==='free'){
+        if(d>0)crowdRoar();   // anche senza tabellone, il gol si sente
         if(side===1)f.m.hs=Math.max(0,(f.m.hs??0)+d);else f.m.as=Math.max(0,(f.m.as??0)+d);
         if(f.kind==='group'){const done=f.m.hs!=null&&f.m.as!=null;f.m.done=done;refreshStandingsEverywhere();}
         renderAll();persist();
       }else{
+        if(d>0)crowdRoar();
         if(side===1)f.m.s1=Math.max(0,(f.m.s1??0)+d);else f.m.s2=Math.max(0,(f.m.s2??0)+d);
         recomputeKO(f.ko);checkChampion();renderAll();persist();
       }
@@ -22300,7 +22384,13 @@ async function syncTick(){
       const pk=ack.playerKey||null;if(pk!==SYNC.playerKey){SYNC.playerKey=pk;}
       renderSyncQR();
     }
-  }catch(e){ guai.push(L('Pubblicazione del torneo non riuscita')+': '+(e&&e.message||e)); }
+  }catch(e){
+    // nessuna risposta (o rifiuto) dal server locale: forse è su un'altra porta
+    if(syncLocale(syncBase())&&(e instanceof TypeError||/\((401|403)\)/.test(String(e&&e.message)))){
+      try{ if(await syncTrovaPorta()){ syncBusy=false; return; } }catch(x){}
+    }
+    guai.push(L('Pubblicazione del torneo non riuscita')+': '+syncSpiega(e));
+  }
 
   // --- fase 2: raccogliere gli eventi dal campo, sempre ---
   let eventiOk=false;
@@ -22318,11 +22408,14 @@ async function syncTick(){
                                   (ev&&ev.type||'?')+' — '+(e&&e.message||e)); }
     });
     syncPersist();
-  }catch(e){ guai.push(L('Eventi dal campo non raccolti')+': '+(e&&e.message||e)); }
+  }catch(e){ guai.push(L('Eventi dal campo non raccolti')+': '+syncSpiega(e)); }
 
   SYNC.okAt=eventiOk?Date.now():0;
   SYNC.motivo=guai.join(' · ');
-  if(guai.length)replayDiagnostica(guai[0]);
+  // un intoppo isolato (rete che va e viene) non merita un avviso: si avvisa
+  // solo se il problema dura almeno tre giri di fila (circa sei secondi)
+  syncFalliti=guai.length?syncFalliti+1:0;
+  if(guai.length&&syncFalliti>=3)replayDiagnostica(guai[0]);
   syncBusy=false;
   syncStatusUI();
 }

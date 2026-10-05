@@ -1,7 +1,7 @@
 {
- "content": "10.3.1",
+ "content": "10.3.2",
  "minShell": "9.2.0",
- "notes": "Table Soccer Tournament Center 10.3.1: temi fotografici e chiari senza velatura",
+ "notes": "Table Soccer Tournament Center 10.3.2: minuti e orologio simulato, audio, collegamento telefoni",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -33,8 +33,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "d40150ad4a9df6a2c675f8e8c556af96da5a56c5fad73659b869bc7bbbc81163",
-   "size": 6777561
+   "sha256": "6fe4687619c8d6628ab4b0c223276a53d8e73c16aad23b32342da0fe8a5b9367",
+   "size": 6783319
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
