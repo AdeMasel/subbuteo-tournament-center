@@ -63,9 +63,9 @@ mondiale e dominio personalizzato se un giorno ne vorrai uno.
 
 * **Indirizzo email** — cerca `onyxsubbuteo@gmail.com` in `index.html` (compare quattro
   volte: casella da copiare, `mailto:`, FAQ, piè di pagina).
-* **Prezzo** — la licenza costa **20 €**. Cerca `20 €` in `index.html` per cambiarlo (compare
-  nella tabella prezzo, nell'intro licenza, nei passaggi, nel pulsante hero, nella descrizione
-  meta e nel testo del `mailto`).
+* **Prezzi** — licenza di 1 anno **15 €**, di 2 anni **20 €**, a vita **30 €** (dal 05/10/2026).
+  Compaiono in `index.html` e `index-en.html`: annuncio regalo, pulsante hero, descrizione meta,
+  intro licenza, riquadro dei prezzi, passaggi e riquadro PayPal. Cerca `€`.
 * **Contatore e sondaggio** — nel `<script>` in fondo: `HIT_BASE=100` è il valore di partenza del
   contatore; `POLL_LAB`/`POLL_EM` sono le fasce del sondaggio sul prezzo. Il servizio è Abacus
   (namespace `stc-demasellis`); i numeri veri partono da zero (contatore mostrato = 100 + reali).
