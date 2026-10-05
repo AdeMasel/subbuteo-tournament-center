@@ -46,13 +46,13 @@ const EN={
  'Prova l’avviso':'Test the alert','Cambia giocatore':'Change player','Esci':'Log out',
  'Tieni l’app aperta con lo schermo acceso: il browser non può suonare da una pagina chiusa.':'Keep the app open with the screen on: the browser cannot ring from a closed page.',
  'Su iPhone la vibrazione non è disponibile e il tasto silenzioso spegne i suoni.':'On iPhone vibration is not available and the silent switch mutes the sounds.',
- 'Girone':'Group','Giornata':'Round','Amichevole':'Friendly','Fase finale':'Knockout stage',
+ 'Girone':'Group','Giornata':'Round','Turno':'Round','Amichevole':'Friendly','Fase finale':'Knockout stage',
  'Giocate':'Played','Vinte':'Won','Pari':'Drawn','Perse':'Lost','Gol fatti':'Goals for','Gol subiti':'Goals against',
  'Partite giocate':'Matches played','Nessuna partita giocata finora.':'No matches played so far.',
  'Arbitraggi':'Refereeing','Tornei precedenti':'Previous tournaments','I tuoi tavoli':'Your tables',
  'Pt':'Pts','G':'P','V':'W','N':'D','P':'L','GF':'GF','GS':'GA','DR':'GD',
  'Nessuna classifica disponibile.':'No standings available.','zona qualificazione':'qualifying zone',
- 'Adesso':'Right now','Prossimi incontri':'Upcoming matches','Prossimi arbitraggi':'Upcoming refereeing',
+ 'Adesso':'Right now','Il mio torneo, turno per turno':'My tournament, round by round','contro':'vs','Riposo':'Rest','Campo':'Table','Prossimi incontri':'Upcoming matches','Prossimi arbitraggi':'Upcoming refereeing',
  'Nessun impegno in programma.':'Nothing scheduled.','Gli accoppiamenti dei turni successivi si decidono man mano.':'Later pairings are decided round by round.',
  'in corso':'in progress','ti aspettano ora':'waiting for you now','visto':'seen',
  'Server non raggiungibile o chiave errata.':'Server unreachable or wrong key.','Chiave o indirizzo mancanti.':'Key or address missing.',
@@ -139,6 +139,7 @@ label.f{display:block;font-size:.7rem;letter-spacing:.14em;text-transform:upperc
 .sw:disabled{opacity:.35}
 /* liste */
 .riga{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:8px}
+.riga.fatto{opacity:.6}
 .riga .es{flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem}
 .es.V{background:rgba(63,224,143,.2);color:var(--green)}.es.N{background:rgba(245,197,66,.18);color:var(--gold)}.es.P{background:rgba(255,93,115,.18);color:var(--red)}.es.A{background:rgba(111,182,255,.18);color:var(--sky)}.es.X{background:rgba(255,255,255,.08);color:var(--muted)}
 .riga .tx{flex:1;min-width:0}
@@ -680,7 +681,31 @@ function htmlCalendario(){
     ${(snap.groups||[]).some(g=>g.swiss)?`<p class="sm mu" style="margin-top:8px">${T('Gli accoppiamenti dei turni successivi si decidono man mano.')}</p>`:''}</div>`;
   const pa=partite().filter(m=>!m.done&&arbIdx(m)>=0&&!ora.has(m.id)).sort((a,b)=>a.ord-b.ord);
   if(pa.length)h+=`<div class="card"><div class="sect">🧑‍⚖️ ${T('Prossimi arbitraggi')}</div>${pa.map(m=>`<div class="riga"><span class="es A">🧑‍⚖️</span><div class="tx"><b>${esc(m.h)} – ${esc(m.a)}</b><small>${esc(m.ctx)}</small></div><small class="mu">${T('da programmare')}</small></div>`).join('')}</div>`;
+  const tl=turnoPerTurno();
+  if(tl.length)h+=`<div class="card"><div class="sect">🗓 ${T('Il mio torneo, turno per turno')}</div>${tl.map(x=>`<div class="riga${x.done?' fatto':''}"><span class="es ${x.tipo==='arbitra'?'A':''}">${x.tipo==='gioca'?'⚽':x.tipo==='arbitra'?'🧑‍⚖️':'💤'}</span><div class="tx"><b>${esc(x.testo)}</b><small>${esc(x.fase)}${x.f?' · '+T('Campo')+' '+esc(x.f):''}</small></div>${x.ris?`<small class="mu">${esc(x.ris)}</small>`:''}</div>`).join('')}</div>`;
   return h;
+}
+/* turno per turno (10.3): quando gioco, quando arbitro, quando riposo */
+function turnoPerTurno(){
+  const x=io();if(!x||!snap)return [];
+  const chi=snap.sq?x.team:x.ent,out=[];
+  const gr=(snap.groups||[]),mio=gr.find(g=>(g.matches||[]).some(m=>m.h===chi||m.a===chi));
+  const turni=[...new Set(gr.flatMap(g=>(g.matches||[]).map(m=>m.r||1)))].sort((a,b)=>a-b);
+  const nome=g=>(g&&g.swiss?T('Turno'):T('Giornata'));
+  turni.forEach(r=>{
+    let c=0;
+    gr.forEach(g=>(g.matches||[]).filter(m=>(m.r||1)===r).forEach(m=>{
+      const p=Object.assign({},m,{kind:'group'});
+      if(chi&&(m.h===chi||m.a===chi)){c++;const casa=m.h===chi;out.push({tipo:'gioca',fase:nome(g)+' '+r,f:m.f,testo:T('contro')+' '+(casa?m.a:m.h),ris:m.hs==null||m.as==null?'':(casa?m.hs+'–'+m.as:m.as+'–'+m.hs),done:!!m.done});}
+      else if(arbIdx(p)>=0){c++;out.push({tipo:'arbitra',fase:nome(g)+' '+r,f:m.f,testo:m.h+' – '+m.a,ris:'',done:!!m.done});}
+    }));
+    if(!c&&mio&&(mio.matches||[]).some(m=>(m.r||1)===r))out.push({tipo:'riposo',fase:nome(mio)+' '+r,testo:T('Riposo'),ris:''});
+  });
+  partite().filter(m=>m.kind==='ko').forEach(m=>{
+    if(mia(m)){const[a,b]=gol(m);out.push({tipo:'gioca',fase:m.ctx,f:m.f,testo:T('contro')+' '+avversario(m),ris:a==null&&b==null?'':punteggio(m),done:!!m.done});}
+    else if(arbIdx(m)>=0)out.push({tipo:'arbitra',fase:m.ctx,f:m.f,testo:m.h+' – '+m.a,ris:'',done:!!m.done});
+  });
+  return out;
 }
 
 /* ---------------- la foto per la figurina ----------------

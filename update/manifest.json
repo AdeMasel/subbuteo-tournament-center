@@ -1,7 +1,7 @@
 {
- "content": "10.2.0",
+ "content": "10.3.0",
  "minShell": "9.2.0",
- "notes": "Table Soccer Tournament Center 10.2: Subbuteo Solo con classifica mondiale, quattro formule nuove",
+ "notes": "Table Soccer Tournament Center 10.3: risultati per la FISTF, calendari personali, Buchholz, tre temi nuovi",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -29,12 +29,12 @@
    "size": 424
   },
   "giocatore.js": {
-   "sha256": "abe1cf7a7eb95b1c5eabf6f884e19a100942679ce7a221a364442050b63107bc",
-   "size": 56168
+   "sha256": "fa208070e5031228da3f580d4faf1639007079fa187e63b852bd82a3c7edb29b",
+   "size": 58247
   },
   "index.html": {
-   "sha256": "e8130b9239f18be8560c7fad900366e7b3cba3a3e21f388c54bc73991bdddb3b",
-   "size": 4818439
+   "sha256": "91dc2bcd309fdd3706dadb9bf9e81207327f32c469d102f43521f9641c95a179",
+   "size": 6775929
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
