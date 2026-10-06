@@ -30,7 +30,7 @@ body{
   margin:0;background:var(--bg);color:var(--txt);font-family:var(--fb);
   font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 a{color:inherit}
 h1,h2,h3,h4{font-family:var(--fh);font-weight:600;letter-spacing:.012em;line-height:1.12;margin:0}
 p{margin:0 0 1em}
@@ -181,6 +181,8 @@ section{position:relative}
 .gal figure img{width:100%;height:100%;object-fit:cover;object-position:top center;
   transition:transform .5s,filter .5s;filter:saturate(.92)}
 .gal figure:hover img{transform:scale(1.05);filter:saturate(1.05)}
+.gal figure img.intera{object-fit:contain;object-position:center;background:#0b1220}
+.gal figure:hover img.intera{transform:none}
 .gal figcaption{position:absolute;inset:auto 0 0 0;padding:22px 13px 10px;font-size:12.5px;
   background:linear-gradient(transparent,rgba(4,8,13,.94));color:#dae6f2;
   font-family:var(--fn);letter-spacing:.06em;text-transform:uppercase}
@@ -1344,18 +1346,18 @@ header.nav{top:var(--podh)}
 <figure data-full="assets/shots-en/n104_novita.webp"><img src="assets/shots-en/n104_novita.webp" alt="The What’s new in version 10.4 screen" loading="lazy"><figcaption>What’s new in 10.4</figcaption></figure>
 <figure data-full="assets/shots-en/n103_novita.webp"><img src="assets/shots-en/n103_novita.webp" alt="The What’s new in version 10.3 screen" loading="lazy"><figcaption>What’s new in 10.3</figcaption></figure>
 <figure data-full="assets/shots-en/ranking.webp"><img src="assets/shots-en/ranking.webp" alt="The FISCT, FISTF and WASPA rankings in the Setup" loading="lazy"><figcaption>Official rankings</figcaption></figure>
-<figure data-full="assets/shots-en/qr_livecam.webp"><img src="assets/shots-en/qr_livecam.webp" alt="The «📹 Live Cam — Field 1» QR in the Control Desk" loading="lazy"><figcaption>QR for Live Cam</figcaption></figure>
+<figure data-full="assets/shots-en/qr_livecam.webp"><img class="intera" src="assets/shots-en/qr_livecam.webp" alt="The «📹 Live Cam — Field 1» QR in the Control Desk" loading="lazy"><figcaption>QR for Live Cam</figcaption></figure>
 <figure data-full="assets/shots-en/68_novita_94.webp"><img src="assets/shots-en/68_novita_94.webp" alt="The What's new in version 9.4 screen" loading="lazy"><figcaption>What's new in 9.4</figcaption></figure>
-<figure data-full="assets/shots-en/69_fasce_barrage.webp"><img src="assets/shots-en/69_fasce_barrage.webp" alt="Bands with Barrage: the barrages between bands at the end of a cycle" loading="lazy"><figcaption>Bands with barrage</figcaption></figure>
-<figure data-full="assets/shots-en/70_live_guida.webp"><img src="assets/shots-en/70_live_guida.webp" alt="The backlit LIVE buttons: the next step blinks" loading="lazy"><figcaption>LIVE buttons</figcaption></figure>
+<figure data-full="assets/shots-en/69_fasce_barrage.webp"><img class="intera" src="assets/shots-en/69_fasce_barrage.webp" alt="Bands with Barrage: the barrages between bands at the end of a cycle" loading="lazy"><figcaption>Bands with barrage</figcaption></figure>
+<figure data-full="assets/shots-en/70_live_guida.webp"><img class="intera" src="assets/shots-en/70_live_guida.webp" alt="The backlit LIVE buttons: the next step blinks" loading="lazy"><figcaption>LIVE buttons</figcaption></figure>
 <figure data-full="assets/shots-en/65_novita_93.webp"><img src="assets/shots-en/65_novita_93.webp" alt="The What's new in version 9.3 screen" loading="lazy"><figcaption>What's new in 9.3</figcaption></figure>
 <figure data-full="assets/shots-en/64_giocatore.webp"><img src="assets/shots-en/64_giocatore.webp" alt="The Player app calls the player and the referee to the table" loading="lazy"><figcaption>Player app: the call</figcaption></figure>
 <figure data-full="assets/shots-en/66_giocatore_diario.webp"><img src="assets/shots-en/66_giocatore_diario.webp" alt="The player's diary and the standings of their group" loading="lazy"><figcaption>Diary and standings</figcaption></figure>
-<figure data-full="assets/shots-en/63_novita_92.webp"><img src="assets/shots-en/63_novita_92.webp" alt="The What's new in version 9.2 screen" loading="lazy"><figcaption>What's new in 9.2</figcaption></figure>
+<figure data-full="assets/shots-en/63_novita_92.webp"><img class="intera" src="assets/shots-en/63_novita_92.webp" alt="The What's new in version 9.2 screen" loading="lazy"><figcaption>What's new in 9.2</figcaption></figure>
 <figure data-full="assets/shots-en/62_diretta_regia.webp"><img src="assets/shots-en/62_diretta_regia.webp" alt="Live on YouTube and TikTok in the Control Desk, with previews and monitoring" loading="lazy"><figcaption>Live from the Control Desk</figcaption></figure>
-<figure data-full="assets/shots-en/61_diretta_tiktok.webp"><img src="assets/shots-en/61_diretta_tiktok.webp" alt="The TikTok stream in portrait" loading="lazy"><figcaption>TikTok stream</figcaption></figure>
+<figure data-full="assets/shots-en/61_diretta_tiktok.webp"><img class="intera" src="assets/shots-en/61_diretta_tiktok.webp" alt="The TikTok stream in portrait" loading="lazy"><figcaption>TikTok stream</figcaption></figure>
 <figure data-full="assets/shots-en/57_fistf_tabellone.webp"><img src="assets/shots-en/57_fistf_tabellone.webp" alt="The official FISTF bracket with barrages and direct entries" loading="lazy"><figcaption>FISTF bracket</figcaption></figure>
-<figure data-full="assets/shots-en/59_fistf_shootout.webp"><img src="assets/shots-en/59_fistf_shootout.webp" alt="A complete tie in a FISTF group: the shoot-out" loading="lazy"><figcaption>FISTF shoot-out</figcaption></figure>
+<figure data-full="assets/shots-en/59_fistf_shootout.webp"><img class="intera" src="assets/shots-en/59_fistf_shootout.webp" alt="A complete tie in a FISTF group: the shoot-out" loading="lazy"><figcaption>FISTF shoot-out</figcaption></figure>
 <figure data-full="assets/shots-en/47_dark.webp"><img src="assets/shots-en/47_dark.webp" alt="Stadium theme" loading="lazy"><figcaption>Stadium theme</figcaption></figure>
 <figure data-full="assets/shots-en/48_light.webp"><img src="assets/shots-en/48_light.webp" alt="Atelier theme" loading="lazy"><figcaption>Atelier theme</figcaption></figure>
 <figure data-full="assets/shots-en/49_griglie.webp"><img src="assets/shots-en/49_griglie.webp" alt="Group grids" loading="lazy"><figcaption>Group grids</figcaption></figure>

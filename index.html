@@ -30,7 +30,7 @@ body{
   margin:0;background:var(--bg);color:var(--txt);font-family:var(--fb);
   font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 a{color:inherit}
 h1,h2,h3,h4{font-family:var(--fh);font-weight:600;letter-spacing:.012em;line-height:1.12;margin:0}
 p{margin:0 0 1em}
@@ -181,6 +181,8 @@ section{position:relative}
 .gal figure img{width:100%;height:100%;object-fit:cover;object-position:top center;
   transition:transform .5s,filter .5s;filter:saturate(.92)}
 .gal figure:hover img{transform:scale(1.05);filter:saturate(1.05)}
+.gal figure img.intera{object-fit:contain;object-position:center;background:#0b1220}
+.gal figure:hover img.intera{transform:none}
 .gal figcaption{position:absolute;inset:auto 0 0 0;padding:22px 13px 10px;font-size:12.5px;
   background:linear-gradient(transparent,rgba(4,8,13,.94));color:#dae6f2;
   font-family:var(--fn);letter-spacing:.06em;text-transform:uppercase}
@@ -1460,18 +1462,18 @@ header.nav{top:var(--podh)}
 <figure data-full="assets/shots/n104_novita.webp"><img src="assets/shots/n104_novita.webp" alt="La schermata delle novità della versione 10.4" loading="lazy"><figcaption>Novità della 10.4</figcaption></figure>
 <figure data-full="assets/shots/n103_novita.webp"><img src="assets/shots/n103_novita.webp" alt="La schermata delle novità della versione 10.3" loading="lazy"><figcaption>Novità della 10.3</figcaption></figure>
 <figure data-full="assets/shots/ranking.webp"><img src="assets/shots/ranking.webp" alt="I ranking FISCT, FISTF e WASPA nel Setup" loading="lazy"><figcaption>Ranking ufficiali</figcaption></figure>
-<figure data-full="assets/shots/qr_livecam.webp"><img src="assets/shots/qr_livecam.webp" alt="Il QR «📹 Live Cam — Campo 1» in Regia" loading="lazy"><figcaption>QR per Live Cam</figcaption></figure>
+<figure data-full="assets/shots/qr_livecam.webp"><img class="intera" src="assets/shots/qr_livecam.webp" alt="Il QR «📹 Live Cam — Campo 1» in Regia" loading="lazy"><figcaption>QR per Live Cam</figcaption></figure>
 <figure data-full="assets/shots/68_novita_94.webp"><img src="assets/shots/68_novita_94.webp" alt="La schermata delle novità della versione 9.4" loading="lazy"><figcaption>Novità della 9.4</figcaption></figure>
-<figure data-full="assets/shots/69_fasce_barrage.webp"><img src="assets/shots/69_fasce_barrage.webp" alt="Fasce con Barrage: i barrage fra le fasce a fine ciclo" loading="lazy"><figcaption>Fasce con barrage</figcaption></figure>
-<figure data-full="assets/shots/70_live_guida.webp"><img src="assets/shots/70_live_guida.webp" alt="I pulsanti LIVE retroilluminati: lampeggia il passo successivo" loading="lazy"><figcaption>Pulsanti LIVE</figcaption></figure>
+<figure data-full="assets/shots/69_fasce_barrage.webp"><img class="intera" src="assets/shots/69_fasce_barrage.webp" alt="Fasce con Barrage: i barrage fra le fasce a fine ciclo" loading="lazy"><figcaption>Fasce con barrage</figcaption></figure>
+<figure data-full="assets/shots/70_live_guida.webp"><img class="intera" src="assets/shots/70_live_guida.webp" alt="I pulsanti LIVE retroilluminati: lampeggia il passo successivo" loading="lazy"><figcaption>Pulsanti LIVE</figcaption></figure>
 <figure data-full="assets/shots/65_novita_93.webp"><img src="assets/shots/65_novita_93.webp" alt="La schermata delle novità della versione 9.3" loading="lazy"><figcaption>Novità della 9.3</figcaption></figure>
 <figure data-full="assets/shots/64_giocatore.webp"><img src="assets/shots/64_giocatore.webp" alt="L'App Giocatore chiama il giocatore e l'arbitro al campo" loading="lazy"><figcaption>App Giocatore: la chiamata</figcaption></figure>
 <figure data-full="assets/shots/66_giocatore_diario.webp"><img src="assets/shots/66_giocatore_diario.webp" alt="Il diario del giocatore e la classifica del suo girone" loading="lazy"><figcaption>Diario e classifica</figcaption></figure>
-<figure data-full="assets/shots/63_novita_92.webp"><img src="assets/shots/63_novita_92.webp" alt="La schermata delle novità della versione 9.2" loading="lazy"><figcaption>Novità della 9.2</figcaption></figure>
+<figure data-full="assets/shots/63_novita_92.webp"><img class="intera" src="assets/shots/63_novita_92.webp" alt="La schermata delle novità della versione 9.2" loading="lazy"><figcaption>Novità della 9.2</figcaption></figure>
 <figure data-full="assets/shots/62_diretta_regia.webp"><img src="assets/shots/62_diretta_regia.webp" alt="La diretta su YouTube e TikTok in Regia, con anteprime e monitoraggio" loading="lazy"><figcaption>Diretta in Regia</figcaption></figure>
-<figure data-full="assets/shots/61_diretta_tiktok.webp"><img src="assets/shots/61_diretta_tiktok.webp" alt="La diretta TikTok in verticale" loading="lazy"><figcaption>Diretta TikTok</figcaption></figure>
+<figure data-full="assets/shots/61_diretta_tiktok.webp"><img class="intera" src="assets/shots/61_diretta_tiktok.webp" alt="La diretta TikTok in verticale" loading="lazy"><figcaption>Diretta TikTok</figcaption></figure>
 <figure data-full="assets/shots/57_fistf_tabellone.webp"><img src="assets/shots/57_fistf_tabellone.webp" alt="Il tabellone ufficiale FISTF con spareggi e accessi diretti" loading="lazy"><figcaption>Tabellone FISTF</figcaption></figure>
-<figure data-full="assets/shots/59_fistf_shootout.webp"><img src="assets/shots/59_fistf_shootout.webp" alt="Pari merito assoluto in un girone FISTF: lo shoot-out" loading="lazy"><figcaption>Shoot-out FISTF</figcaption></figure>
+<figure data-full="assets/shots/59_fistf_shootout.webp"><img class="intera" src="assets/shots/59_fistf_shootout.webp" alt="Pari merito assoluto in un girone FISTF: lo shoot-out" loading="lazy"><figcaption>Shoot-out FISTF</figcaption></figure>
 <figure data-full="assets/shots/47_dark.webp"><img src="assets/shots/47_dark.webp" alt="Tema Stadium" loading="lazy"><figcaption>Tema Stadium</figcaption></figure>
 <figure data-full="assets/shots/48_light.webp"><img src="assets/shots/48_light.webp" alt="Tema Atelier" loading="lazy"><figcaption>Tema Atelier</figcaption></figure>
 <figure data-full="assets/shots/49_griglie.webp"><img src="assets/shots/49_griglie.webp" alt="Griglie dei gironi" loading="lazy"><figcaption>Griglie dei gironi</figcaption></figure>
