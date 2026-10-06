@@ -302,19 +302,51 @@ function pianoDissolvenze(durate,secondi=.6){
   });
   return p;
 }
+/* durata e misure di una clip chieste al lettore video (anche per MP4 frammentati) */
+function misuraVideo(buf){
+  return new Promise((ok,ko)=>{
+    const v=document.createElement('video'),url=URL.createObjectURL(new Blob([buf],{type:'video/mp4'}));
+    v.muted=true;v.preload='metadata';
+    const fine=r=>{clearTimeout(t);v.removeAttribute('src');v.load();URL.revokeObjectURL(url);r();};
+    const t=setTimeout(()=>fine(()=>ko(new Error('Clip non decodificabile'))),15000);
+    const pronto=()=>{if(isFinite(v.duration)&&v.duration>0){const m={d:v.duration,w:v.videoWidth||1280,h:v.videoHeight||720};fine(()=>ok(m));}};
+    v.addEventListener('loadedmetadata',()=>{if(isFinite(v.duration))pronto();else v.currentTime=1e7;});
+    v.addEventListener('durationchange',pronto);v.addEventListener('seeked',pronto);
+    v.addEventListener('error',()=>fine(()=>ko(new Error('Clip non decodificabile'))));
+    v.src=url;
+  });
+}
+const MAX_MONTAGGIO=10.5*1024*1024;
 async function montaDissolvenze(buffers){
   if(!disponibile)throw new Error('WebCodecs non disponibile per le dissolvenze');
   if(!buffers.length)throw new Error('Nessuna clip');
-  const parsed=buffers.map(leggiMp4);
-  const plan=pianoDissolvenze(parsed.map(p=>p.campioni.reduce((n,c)=>n+c.durata,0)/p.timescale));
-  const scale=Math.min(1,1280/parsed[0].larghezza,720/parsed[0].altezza);
+  /* Le clip dell'anello hanno tabelle classiche; quelle girate con la
+     fotocamera del telefono (10.5.1, MediaRecorder) sono MP4 frammentati, senza
+     campioni in moov: durata e misure si chiedono allora al lettore video. */
+  const parsed=[];
+  for(const buf of buffers){
+    let p=null;try{p=leggiMp4(buf);}catch(e){}
+    let d=p&&p.timescale?p.campioni.reduce((n,c)=>n+c.durata,0)/p.timescale:0;
+    if(!p||!(d>0)||!p.larghezza){const m=await misuraVideo(buf);p={campioni:[],timescale:1,larghezza:m.w,altezza:m.h};d=m.d;}
+    p.secondi=d;parsed.push(p);
+  }
+  const plan=pianoDissolvenze(parsed.map(p=>p.secondi));
+  /* Il filmato va poi salvato sul server della Regia, che accetta circa 11 MB
+     (14 MB di file, ma viaggia in base64 dentro 15 MB di richiesta): a 4 Mbit/s
+     bastavano 25 secondi di azioni per superarli e il montaggio falliva. La
+     qualità ora segue la durata: piena per pochi secondi, poi il bitrate scende
+     e, oltre i due minuti e mezzo, anche la risoluzione. */
+  const totale=plan[plan.length-1].end;
+  const bitrate=Math.round(Math.max(500000,Math.min(4000000,MAX_MONTAGGIO*8*0.85/Math.max(1,totale))));
+  const lato=totale>150?[854,480]:[1280,720];
+  const scale=Math.min(1,lato[0]/parsed[0].larghezza,lato[1]/parsed[0].altezza);
   const width=Math.max(2,Math.round(parsed[0].larghezza*scale/2)*2);
   const height=Math.max(2,Math.round(parsed[0].altezza*scale/2)*2);
   const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
   const ctx=canvas.getContext('2d');
   const layer=document.createElement('canvas');layer.width=width;layer.height=height;const lc=layer.getContext('2d');
   const fps=25,step=40000,samples=[],active=new Map();let avcc=null,error=null;
-  const config={codec:'avc1.42E01F',width,height,bitrate:4000000,framerate:fps,avc:{format:'avc'},latencyMode:'realtime'};
+  const config={codec:'avc1.42E01F',width,height,bitrate,framerate:fps,avc:{format:'avc'},latencyMode:'realtime'};
   if(!(await glob.VideoEncoder.isConfigSupported(config)).supported)throw new Error('Encoder H.264 non disponibile');
   const encoder=new glob.VideoEncoder({output(chunk,meta){
     if(meta&&meta.decoderConfig&&meta.decoderConfig.description)avcc=new Uint8Array(meta.decoderConfig.description);

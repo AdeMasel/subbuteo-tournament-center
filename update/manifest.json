@@ -1,7 +1,7 @@
 {
- "content": "10.5.0",
+ "content": "10.5.1",
  "minShell": "9.2.0",
- "notes": "10.5: Riffa 1–90 con tombolone e voce neurale; i pulsanti dei Campionati del Club creano il club (prima non facevano nulla); minuti da giocare in LIVE per intero",
+ "notes": "10.5.1: App Replay con «Filma con la fotocamera del telefono», che funziona in Wi-Fi senza tunnel; filmato di fine partita sempre entro il limite del server; messaggio chiaro se il montaggio è troppo lungo",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -33,8 +33,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "15bb0dace14783014a41cc7a795a670e5063f5b84e5fdaaede8f1918b430c4d9",
-   "size": 7876872
+   "sha256": "d2bbf76354072c39ad4c5ae93bcde55cf80a3b52d104c38d264240168b9a4fab",
+   "size": 7877126
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -49,8 +49,8 @@
    "size": 3028
   },
   "mp4enc.js": {
-   "sha256": "eb2af863effc1334dcfc1b954bc0f8ec264d203b80824f63e69b49fd306ec414",
-   "size": 17549
+   "sha256": "dbead7ecfecb5ecb19b4dca15ba84766d6b8e6ff4bd092840dbe9dcef1e04685",
+   "size": 19566
   },
   "musiche.js": {
    "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
@@ -73,8 +73,8 @@
    "size": 390562
   },
   "replay.html": {
-   "sha256": "252cee193e6d361daa06680861969fa2ff7df9c4cd77b0f4d5c4f023840def29",
-   "size": 34906
+   "sha256": "27400fff0b51051b3dd9ed3d5278a681fcf1a520bc1d58ba1d858c3cc5bd92ab",
+   "size": 41741
   },
   "sorteggio_studio.js": {
    "sha256": "286a487eacdb57f3983e6930eeb963587a7bd1f7c64addbce5a4d81bb372b396",

@@ -159,6 +159,10 @@ footer{margin-top:16px;text-align:center;font-size:.62rem;color:var(--muted);let
     <button class="recbtn hidden" id="cam-rec" onclick="camRec()">⏺ RECORD<small data-i>salva gli ultimi 8 secondi</small></button>
     <button class="btn sec hidden" id="cam-stop" onclick="camFerma()" data-i>■ Ferma la telecamera</button>
     <div id="cam-avviso" class="avviso hidden"></div>
+    <!-- 10.5.1: ripresa con la fotocamera del telefono, che funziona anche in Wi‑Fi senza tunnel -->
+    <button class="btn sec" id="filma-btn" onclick="filmaApri()" data-i>📱 Filma con la fotocamera del telefono</button>
+    <input type="file" id="filma-file" accept="video/*" capture="environment" style="display:none" onchange="filmaScelto(this)">
+    <p class="small muted" id="filma-nota" style="margin-top:8px" data-i>Funziona anche in Wi‑Fi senza tunnel: si apre la fotocamera del telefono, filmi l’azione appena vista e la confermi. Della ripresa si tengono gli ultimi 12 secondi.</p>
   </div>
 
   <h2 class="sect"><span data-i>Azioni salvate</span> <span id="cl-n" class="muted"></span></h2>
@@ -218,6 +222,12 @@ const I18N={
  "Il server risponde ma rifiuta la chiave: controlla la chiave privata mostrata dal gestionale.":"The server answers but rejects the key: check the private key shown by the manager app.",
  "Il server non risponde. Controlla che il gestionale sia aperto, che il telefono sia sulla stessa Wi-Fi (oppure che il tunnel sia acceso) e che il firewall lasci passare il programma.":"The server does not answer. Check that the manager app is open, that the phone is on the same Wi-Fi (or that the tunnel is on) and that the firewall lets the program through.",
  "Serve un collegamento sicuro":"A secure connection is required",
+ "📱 Filma con la fotocamera del telefono":"📱 Film with the phone camera",
+ "Funziona anche in Wi‑Fi senza tunnel: si apre la fotocamera del telefono, filmi l’azione appena vista e la confermi. Della ripresa si tengono gli ultimi 12 secondi.":"Works on Wi‑Fi without the tunnel too: the phone camera opens, you film the action you just saw and confirm it. The last 12 seconds of the recording are kept.",
+ "Oppure, senza tunnel: «📱 Filma con la fotocamera del telefono» più sotto. Si filma dopo aver premuto il tasto, non gli 8 secondi già passati.":"Or, without the tunnel: «📱 Film with the phone camera» below. You film after pressing the button, not the 8 seconds already gone.",
+ "Riduco la ripresa…":"Shrinking the recording…",
+ "Ripresa troppo lunga o pesante: filma al massimo 10 secondi (meglio in 720p) e riprova.":"Recording too long or heavy: film 10 seconds at most (720p is best) and try again.",
+ "Video non leggibile: riprova con la fotocamera del telefono.":"Video not readable: try again with the phone camera.",
  "Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, nella sezione <b>Regia</b>, accendi il <b>tunnel Internet (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona. A tunnel acceso la spia accanto all'orologio della Regia diventa verde.":"Browsers only open the camera over <b>https</b>. In the manager app, in the <b>Control Desk</b> section, switch on the <b>Internet tunnel (Cloudflare)</b> and scan that QR: the address becomes https and filming works. With the tunnel on, the light next to the Control Desk clock turns green."
 };
 let LANG=localStorage.getItem('campo_lang')||'it';
@@ -267,11 +277,13 @@ function api(path){if(/^\/api\/(photo|clip)(\?|$)/.test(path))path+=(path.includ
 /* la telecamera pretende https: se manca, lo si dice subito e chiaro */
 function sicuro(){return window.isSecureContext===true;}
 function avvisoSicurezza(){
-  const testo=`<b>${T('Serve un collegamento sicuro')}.</b><br>${T("Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, nella sezione <b>Regia</b>, accendi il <b>tunnel Internet (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona. A tunnel acceso la spia accanto all'orologio della Regia diventa verde.")}`;
+  const testo=`<b>${T('Serve un collegamento sicuro')}.</b><br>${T("Il browser apre la telecamera solo su <b>https</b>. Nel gestionale, nella sezione <b>Regia</b>, accendi il <b>tunnel Internet (Cloudflare)</b> e inquadra quel QR: l'indirizzo diventa https e la ripresa funziona. A tunnel acceso la spia accanto all'orologio della Regia diventa verde.")}<br><br>${T('Oppure, senza tunnel: «📱 Filma con la fotocamera del telefono» più sotto. Si filma dopo aver premuto il tasto, non gli 8 secondi già passati.')}`;
   ['#c-avviso','#cam-avviso'].forEach(s=>{
     const el=$(s);if(!el)return;
     el.innerHTML=testo;el.classList.toggle('hidden',sicuro());
   });
+  // senza https la fotocamera del telefono è la strada principale
+  const fb=$('#filma-btn');if(fb)fb.classList.toggle('sec',sicuro());
 }
 
 /* Un collegamento che non parte è la cosa più frustrante a bordo campo:
@@ -499,6 +511,7 @@ function aggiornaBuf(){
   $('#cam-buflab').textContent=sec.toFixed(1)+' '+T('secondi in memoria');
   $('#cam-fps').textContent=(reg&&reg.pronto)?T('pronto'):'';
   const r=$('#cam-rec');if(r)r.disabled=occupato||!reg||sec<2;
+  const fb=$('#filma-btn');if(fb)fb.disabled=occupato;
 }
 
 /* ---------- REC: gli 8 secondi appena visti diventano un MP4 ---------- */
@@ -560,10 +573,97 @@ function renderClips(){
   g.innerHTML=mie.map((c,i)=>{
     const n=mie.length-i;
     const st=c.stato==='ok'?''
-      :`<div class="st${c.stato==='err'?' err':''}">${c.stato==='video'?T('Preparo il video…'):c.stato==='invio'?T('invio')+'…':T('errore')}</div>`;
+      :`<div class="st${c.stato==='err'?' err':''}">${c.stato==='video'?(c.pct!=null?T('Riduco la ripresa…')+' '+Math.round(c.pct*100)+'%':T('Preparo il video…')):c.stato==='invio'?T('invio')+'…':T('errore')}</div>`;
     const im=c.f?`<video src="${api('/api/clip?f='+encodeURIComponent(c.f))}" muted playsinline preload="metadata"></video>`:'';
     return `<div class="clipcard">${im}<span class="n">${n}</span>${st}</div>`;
   }).join('');
+}
+
+/* ================= RIPRESA CON LA FOTOCAMERA DEL TELEFONO =================
+   In Wi‑Fi la pagina è in http e il browser non dà la telecamera dentro la
+   pagina (né l'encoder WebCodecs): serve il tunnel. Il campo file con
+   «capture» invece apre la fotocamera del telefono anche in http — è la
+   stessa strada delle foto dell'App Campo. Si filma DOPO aver premuto il
+   tasto (non gli 8 secondi già passati), poi la ripresa si riduce qui: si
+   ridisegna su un canvas a 720p e la si ricodifica con MediaRecorder, che
+   funziona anche senza https. Ne restano gli ultimi 12 secondi in H.264,
+   pochi MB, come le clip dell'anello. Se il browser non sa ricodificare in
+   MP4 si manda il file così com'è, purché stia nel limite del server. */
+const FILMA_SEC=12, FILMA_MAX=10*1024*1024;
+function filmaApri(){
+  if(occupato||!curMid)return;
+  const f=$('#filma-file');f.value='';f.click();
+}
+function filmaMime(){
+  if(!window.MediaRecorder||!MediaRecorder.isTypeSupported||!HTMLCanvasElement.prototype.captureStream)return '';
+  return ['video/mp4;codecs=avc1.42E01F','video/mp4;codecs=avc1','video/mp4'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+}
+function filmaEvento(v,nome,ms){
+  return new Promise((ok,ko)=>{
+    const t=setTimeout(()=>{fine();ko(new Error(nome));},ms||15000);
+    const fine=()=>{clearTimeout(t);v.removeEventListener(nome,si);v.removeEventListener('error',no);};
+    const si=()=>{fine();ok();},no=()=>{fine();ko(new Error('video'));};
+    v.addEventListener(nome,si);v.addEventListener('error',no);
+  });
+}
+async function filmaRicomprimi(file,avanza){
+  const mime=filmaMime();if(!mime)return null;
+  const url=URL.createObjectURL(file);
+  const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';
+  try{
+    const meta=filmaEvento(v,'loadedmetadata');v.src=url;await meta;
+    let dur=v.duration;
+    if(!isFinite(dur)){const s=filmaEvento(v,'seeked');v.currentTime=1e7;await s;dur=v.duration;}
+    if(!(dur>0)||!v.videoWidth)throw new Error('video');
+    const da=Math.max(0,dur-FILMA_SEC);
+    const k=Math.min(1,CW/v.videoWidth,CH/v.videoHeight);
+    const w=Math.max(2,Math.round(v.videoWidth*k/2)*2),h=Math.max(2,Math.round(v.videoHeight*k/2)*2);
+    const cv=document.createElement('canvas');cv.width=w;cv.height=h;const cx=cv.getContext('2d');
+    if(Math.abs(v.currentTime-da)>.05){const s=filmaEvento(v,'seeked');v.currentTime=da;await s;}
+    cx.drawImage(v,0,0,w,h);
+    const flusso=cv.captureStream(30),pezzi=[];
+    const rec=new MediaRecorder(flusso,{mimeType:mime,videoBitsPerSecond:2500000});
+    rec.ondataavailable=e=>{if(e.data&&e.data.size)pezzi.push(e.data);};
+    const fermo=new Promise(ok=>{rec.onstop=ok;});
+    rec.start(500);
+    let finito=false;
+    const disegna=()=>{
+      if(finito)return;
+      cx.drawImage(v,0,0,w,h);
+      avanza&&avanza(Math.min(1,(v.currentTime-da)/Math.max(.1,dur-da)));
+      requestAnimationFrame(disegna);
+    };
+    const chiudi=()=>{if(finito)return;finito=true;cx.drawImage(v,0,0,w,h);setTimeout(()=>{try{rec.stop();}catch(e){}},150);};
+    v.addEventListener('ended',chiudi);
+    const scadenza=setTimeout(chiudi,(dur-da+8)*1000);
+    await v.play();requestAnimationFrame(disegna);
+    await fermo;clearTimeout(scadenza);
+    flusso.getTracks().forEach(t=>t.stop());
+    const blob=new Blob(pezzi,{type:'video/mp4'});
+    return blob.size>1000?blob:null;
+  }finally{v.pause();v.removeAttribute('src');v.load();URL.revokeObjectURL(url);}
+}
+async function filmaScelto(inp){
+  const file=inp.files&&inp.files[0];
+  if(!file||!curMid||occupato)return;
+  occupato=true;aggiornaBuf();
+  const ts=Date.now(),mid=curMid;
+  const c={mid,ts,f:null,stato:'video',pct:0};clips.unshift(c);renderClips();
+  const errore=msg=>{c.stato='err';c.pct=null;toast(msg);occupato=false;aggiornaBuf();renderClips();};
+  let blob=null;
+  try{blob=await filmaRicomprimi(file,p=>{c.pct=p;renderClips();});}catch(e){blob=null;}
+  c.pct=null;
+  if(!blob){
+    // il browser non sa ricodificare: il file così com'è, se sta nel limite del server
+    if(file.size<=FILMA_MAX&&(!file.type||/mp4|quicktime|3gpp/i.test(file.type)))blob=new Blob([file],{type:'video/mp4'});
+    else return errore(file.size>FILMA_MAX?T('Ripresa troppo lunga o pesante: filma al massimo 10 secondi (meglio in 720p) e riprova.'):T('Video non leggibile: riprova con la fotocamera del telefono.'));
+  }
+  if(blob.size>MAXCLIP)return errore(T('Ripresa troppo lunga o pesante: filma al massimo 10 secondi (meglio in 720p) e riprova.'));
+  c.stato='invio';renderClips();
+  const rd=new FileReader();
+  rd.onload=()=>invia(mid,ts,rd.result);
+  rd.onerror=()=>errore(T('Video non leggibile: riprova con la fotocamera del telefono.'));
+  rd.readAsDataURL(blob);
 }
 
 /* ---------- fine partita: la Regia monta il filmato ---------- */
