@@ -1,7 +1,7 @@
 {
- "content": "10.5.1",
+ "content": "10.6.0",
  "minShell": "9.2.0",
- "notes": "10.5.1: App Replay con «Filma con la fotocamera del telefono», che funziona in Wi-Fi senza tunnel; filmato di fine partita sempre entro il limite del server; messaggio chiaro se il montaggio è troppo lungo",
+ "notes": "10.6.0: Torneo Reale con 41 competizioni divise per continente; nuove formule Tabellone a Bussola e Gironi a doppia eliminazione (GSL), playoff a scaletta; regole FISCT (scarto 5-0, forfait, spareggio tecnico); Stemmario storico con filtro per Paese; finale per il 3° posto corretta nella classifica finale; montaggio dei filmati più affidabile",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -15,6 +15,14 @@
   "capitano.html": {
    "sha256": "c578c1becd6c5a9968fac8e5c4acab4f7a136391d08c3d0de234f0d58e9a51bd",
    "size": 28924
+  },
+  "club_meta.js": {
+   "sha256": "25ca11c984ae22d6cc75dac743cfbde57b816c30fb48704c4ab9991ecf3804ed",
+   "size": 1061442
+  },
+  "club_storia.js": {
+   "sha256": "c8591f5153958323ce1723459a76384217868ac062eb0125b4e5fe98a1b5b897",
+   "size": 1994491
   },
   "figurine_motore.js": {
    "sha256": "e1480bf5b02cbca7ebba9011f260b5a8c01df3d669aadc331ffabae46c056a40",
@@ -33,8 +41,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "d2bbf76354072c39ad4c5ae93bcde55cf80a3b52d104c38d264240168b9a4fab",
-   "size": 7877126
+   "sha256": "be51c158e9f0e8772c17c58ca7dff52e0ae0a01af3e87defd15d7d9901b53596",
+   "size": 7896963
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -49,8 +57,8 @@
    "size": 3028
   },
   "mp4enc.js": {
-   "sha256": "dbead7ecfecb5ecb19b4dca15ba84766d6b8e6ff4bd092840dbe9dcef1e04685",
-   "size": 19566
+   "sha256": "0b85eacb420f8eff1f89b99b71348c102d15c21aff0065404a3ebdad1a8dade5",
+   "size": 23743
   },
   "musiche.js": {
    "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
@@ -89,8 +97,8 @@
    "size": 8620577
   },
   "tornei_reali.js": {
-   "sha256": "02bee0959d6a540cb56a4bdd0466d8ca80975c2d0339ac99ece8b40aee92ec5a",
-   "size": 216403
+   "sha256": "fd8d1a3e9baac8f22696dc4eecb7076b96989c6b4276609f65531be415d1f4bf",
+   "size": 523095
   }
  }
 }

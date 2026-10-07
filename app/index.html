@@ -2248,6 +2248,7 @@ body.solo-tabellone #present .pclose,body.solo-tabellone #present-modes{display:
 .est-tab td{padding:6px 8px;border-bottom:1px solid color-mix(in srgb,var(--line) 50%,transparent)}
 .est-tab td:last-child{text-align:right;font-family:'Chakra Petch',monospace;color:var(--text)}
 #real-list{overflow-y:auto;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+#real-list .real-area{grid-column:1/-1;margin:6px 0 -4px;font-family:'Oswald',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-size:.95rem}
 .real-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:7px;transition:transform .18s ease,box-shadow .18s ease}
 .real-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
 .real-hd{display:flex;align-items:center;gap:12px}
@@ -3976,6 +3977,7 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
               <option value="ascensore">Fasce con Barrage (promozioni e retrocessioni)</option>
               <option value="multifase">Gironi + Seconda Fase a Gironi (tornei grandi)</option>
               <option value="duecomp">Due Competizioni + Finali Incrociate</option>
+              <option value="gsl">Gironi a Doppia Eliminazione (stile GSL) + Eliminazione Diretta</option>
               <option value="campionato">Campionato (girone unico)</option>
               <option value="contate">Girone a partite contate (anche con numero dispari)</option>
               <option value="ko">Eliminazione Diretta</option>
@@ -3985,6 +3987,7 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
               <option value="poule">Campionato con poule scudetto e salvezza</option>
               <option value="champions">Formula Champions (campionato svizzero + KO)</option>
               <option value="doppiaelim">Doppia Eliminazione (vincenti + perdenti)</option>
+              <option value="bussola">Tabellone a Bussola (tutti giocano ogni turno, classifica completa)</option>
               <option value="planisfero">🌍 Coppa Planisfero (13–24)</option>
               <option value="rosa">🧭 La Rosa dei Venti (formula originale · 8–12)</option>
               <option value="kingofcourt">👑 Re del Tavolo (chi vince resta)</option>
@@ -4020,7 +4023,7 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
         </div>
         <div class="setup-strumenti">
           <button class="btn sec" onclick="openAdvisor()">💡 Formule consigliate</button>
-          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 10.5</button>
+          <button class="btn sec" onclick="novitaApri()" title="Le novità di questa versione">✨ Novità della 10.6</button>
         <button class="btn sec" onclick="openRealTorneo()">🏆 Torneo Reale</button>
           <button class="btn sec" onclick="clubApri()" title="Serie, promozioni e retrocessioni del club, stagione dopo stagione">🏛 Campionati del Club</button>
           <button class="btn sec" onclick="openEstimate()">⏱ Stima durata</button>
@@ -4103,6 +4106,7 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
             <select id="s-pofffmt">
               <option value="ko">Tabellone classico</option>
               <option value="page">Formula Page (con 4 squadre)</option>
+              <option value="scaletta">Scaletta (dalla più bassa fino alla prima)</option>
             </select>
           </div>
         </div>
@@ -4203,6 +4207,7 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
         <div><label class="f">Punti Pareggio</label><input type="number" id="s-ptsd" value="1" min="0" max="10"></div>
         <div><label class="f">Punti Sconfitta</label><input type="number" id="s-ptsl" value="0" min="0" max="10"></div>
       </div>
+      <label class="ck" style="margin:-6px 0 14px" title="Regolamento tornei FISCT 2.4: nelle classifiche dei gironi una vittoria vale al massimo 5–0, sia nella differenza reti sia nei gol fatti e subiti (8–0 conta 5–0, 7–3 resta 7–3). Sui referti restano i risultati veri."><input type="checkbox" id="s-tetto5"> Scarto massimo 5–0 nelle classifiche (FISCT)</label>
       <label class="f">Criteri di spareggio (in ordine di priorità, dopo i punti)</label>
       <div class="tb-list" id="tb-editor"></div>
       <p class="small muted" style="margin-top:8px">Gli scontri diretti considerano punti, differenza reti e gol fatti nelle sole gare fra le squadre a pari punti (funziona anche con 3+ squadre). Ultimo criterio: ordine alfabetico.</p>
@@ -5169,7 +5174,9 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
   <div class="st-bar">
     <input type="text" id="st-q" placeholder="Cerca squadra, campionato o nazione…" oninput="stemmiRender()">
     <select id="st-cont" onchange="stemmiCountryOptions();stemmiRender()"></select>
-    <select id="st-paese" onchange="stemmiRender()"></select>
+    <select id="st-paese" onchange="stemmiLeagueOptions();stemmiRender()"></select>
+    <select id="st-anno" onchange="stemmiLeagueOptions();stemmiRender()" aria-label="Stagione storica"><option value="">Tutte le stagioni</option></select>
+    <select id="st-lega" onchange="stemmiRender()" aria-label="Campionato storico"><option value="">Tutti i campionati</option></select>
     <select id="st-tipo" onchange="stemmiRender()">
       <option value="">Squadre di club</option>
       <option value="flag">🏴 Bandiere nazionali</option>
@@ -5421,7 +5428,7 @@ body.no-anim .so-campo .so-cella.bersaglio{animation:none}
    ========================================================= */
 const BYE='__BYE__', LSKEY='subbuteo_tc_state_v1';
 const TB_LABELS={h2h:'Scontri diretti',dr:'Differenza reti',gf:'Gol fatti',gs:'Gol subiti (meno = meglio)',v:'Numero vittorie',bh:'Buchholz (punti degli avversari affrontati)',bhc:'Buchholz tagliato (senza l’avversario più debole)',sb:'Sonneborn-Berger (punti degli avversari battuti)'};
-const FMT_LABELS={'gironi-ko':'Gironi + Eliminazione Diretta',fasce:'Gironi + Fasce',speculare:'Formula Speculare',avulsa:'Gironi + Classifica Avulsa',barrage:'Gironi + Barrage',ascensore:'Fasce con Barrage',multifase:'Gironi + Seconda Fase a Gironi',duecomp:'Due Competizioni + Finali Incrociate',campionato:'Campionato',ko:'Eliminazione Diretta',svizzero:'Sistema Svizzero',playoff:'Campionato + Playoff',champions:'Formula Champions',doppiaelim:'Doppia Eliminazione',planisfero:'Coppa Planisfero',rosa:'La Rosa dei Venti',kingofcourt:'Re del Tavolo',squadre:'Torneo a Squadre (CdT)'};
+const FMT_LABELS={'gironi-ko':'Gironi + Eliminazione Diretta',fasce:'Gironi + Fasce',speculare:'Formula Speculare',avulsa:'Gironi + Classifica Avulsa',barrage:'Gironi + Barrage',ascensore:'Fasce con Barrage',multifase:'Gironi + Seconda Fase a Gironi',duecomp:'Due Competizioni + Finali Incrociate',campionato:'Campionato',ko:'Eliminazione Diretta',svizzero:'Sistema Svizzero',playoff:'Campionato + Playoff',champions:'Formula Champions',doppiaelim:'Doppia Eliminazione',bussola:'Tabellone a Bussola',gsl:'Gironi a Doppia Eliminazione (GSL)',planisfero:'Coppa Planisfero',rosa:'La Rosa dei Venti',kingofcourt:'Re del Tavolo',squadre:'Torneo a Squadre (CdT)'};
 
 let S=defaultState();
 
@@ -5432,7 +5439,7 @@ function defaultState(){return{
   
        ritorno:false,terzo:false,variante:null,contN:4,sortFonte:'naz:*',third:true,swissRounds:5,brFasce:'',ascSize:4,ascCicli:3,ascPosti:1,penShots:5,compose:'auto',nGroups:2,nPots:2,ptsW:3,ptsD:1,ptsL:0,shuffle:true,refs:false,
        refSource:'players',refPool:[],showPlayers:false,showRefBoard:true,fotoConsenso:true,
-       poffN:4,poutN:0,poffFmt:'ko',pouleDote:'tutti',chQ:8,kohTarget:5,consB:false,oneHalf:false,noAnticipo:false,
+       poffN:4,poutN:0,poffFmt:'ko',pouleDote:'tutti',chQ:8,kohTarget:5,consB:false,tetto5:false,oneHalf:false,noAnticipo:false,
        cdSecs:5,logo:null,
        tb:['h2h','dr','gf','v','gs','bh','bhc','sb'],
        tiers:[{name:'Tabellone Gold',ranks:'1,2',fmt:'ko'},{name:'Tabellone Silver',ranks:'3,4',fmt:'ko'}]},
@@ -5443,7 +5450,7 @@ function defaultState(){return{
 };}
 
 const $=s=>document.querySelector(s);
-const APP_VERSION='10.5.1';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
+const APP_VERSION='10.6.0';   // bump: patch=fix, minor=nuove funzioni, major=grandi implementazioni
 /* Il catalogo Miniature HW è sospeso: la sezione non viene mostrata a nessuno,
    nemmeno con la licenza attiva. Per riattivarlo basta rimettere true qui,
    rimettere miniature_hw.js accanto all'app e reinserirlo nello script `sync`. */
@@ -5490,7 +5497,7 @@ const TR={
   "Codice di attivazione":"Activation code","Incolla qui il codice ricevuto":"Paste the code you received","Attiva la licenza":"Activate the licence",
   "Che cosa include la versione completa":"What the full version includes","Identificativo copiato.":"Identifier copied.","Copia":"Copy",
   "Salvataggio, richiamo ed esportazione dei tornei":"Saving, reloading and exporting tournaments",
-  "Tutte le 25 formule di gioco, Torneo Reale e Consigliere":"All 25 formats, Real Tournament and the Adviser",
+  "Tutte le 27 formule di gioco, Torneo Reale e Consigliere":"All 27 formats, Real Tournament and the Adviser",
   "Gestione arbitrale e assegnazione automatica dei campi":"Referee management and automatic field assignment",
   "Cerimonia di sorteggio e composizione dei gironi":"Draw ceremony and group composition",
   "Regia e La Legge":"Control Desk and The Law",
@@ -6128,6 +6135,7 @@ const TR={
   "Avvia prima un torneo.":"Start a tournament first.",
   "Montaggio non riuscito":"Editing failed",
   "filmato troppo lungo per il server: monta meno azioni per volta.":"film too long for the server: edit fewer highlights at a time.",
+  "il codificatore video del computer non risponde. Chiudi e riapri il programma (se non basta, riavvia il computer) e riprova.":"the computer’s video encoder is not responding. Close and reopen the program (if that is not enough, restart the computer) and try again.",
   "(maglia non assegnata)":"(no kit assigned)",
   "2 per riga, più grandi":"2 per row, larger",
   "Una per blocco, grande":"One per block, large",
@@ -6483,12 +6491,17 @@ Object.assign(TR,{"📱 Codice QR di collegamento":"📱 Connection QR code",
   ", senza che il collegamento sia acceso. Perché funzionino, quel giorno il computer deve ritrovarsi lo stesso indirizzo.":", without the connection being on. For them to work, on that day the computer must have the same address again."});
 Object.assign(TR,{"Il torneo in diretta sui canali del club, direttamente dal programma: su YouTube in orizzontale, su TikTok in verticale con la Regia e la Presentazione una sopra l’altra. Per ogni account serve la chiave di trasmissione che la piattaforma rilascia al titolare: inseriscila qui prima del torneo, resta cifrata su questo computer e non viaggia mai con i dati del torneo. La diretta convive con l’App Campo, l’App Capitano e l’App Replay: se la rete rallenta, la qualità scende da sola invece di fermare i telefoni.": "The tournament live on the club's channels, straight from the program: on YouTube in landscape, on TikTok in portrait with the Control Desk and the Presentation one above the other. Each account needs the stream key the platform gives to its owner: enter it here before the tournament; it stays encrypted on this computer and never travels with the tournament data. Streaming works alongside the Table App, the Captain App and the Replay App: if the network slows down, the quality drops by itself instead of holding up the phones.", "🔴 Diretta su YouTube e TikTok": "🔴 Live on YouTube and TikTok", "La diretta funziona nell’app installata sul computer, non nella versione per browser.": "Streaming works in the app installed on the computer, not in the browser version.", "(con l’audio del programma)": "(with the program's sound)", "Account e chiave di trasmissione": "Account and stream key", "Account salvato": "Account saved", "Apri ora": "Open now", "Audio del programma non disponibile": "Program sound not available", "Audio del programma non disponibile su questo sistema": "Program sound not available on this system", "Audio della diretta": "Stream audio", "Avvia la diretta su": "Go live on", "Chiave di trasmissione": "Stream key", "Chiave salvata": "Key saved", "Codifica audio AAC": "AAC audio encoding", "Codifica video H.264": "H.264 video encoding", "Dimentica la chiave": "Forget the key", "Dimenticare la chiave di trasmissione salvata per": "Forget the stream key saved for", "Diretta in corso": "Live stream in progress", "Dove si trova": "Where to find it", "Errore nel motore della diretta": "Error in the streaming engine", "Ferma la diretta su": "Stop the stream on", "Fotogrammi al secondo": "Frames per second", "Fotogrammi scartati": "Dropped frames", "Il secondo schermo non si è aperto": "The second screen did not open", "Il torneo sta per cominciare": "The tournament is about to start", "In attesa di invio": "Waiting to send", "In onda da": "On air for", "In onda su": "Live on", "Intere (con fasce sopra e sotto)": "Whole (with bands above and below)", "La qualità nuova vale dalla prossima partenza della diretta.": "The new quality applies from the next time the stream starts.", "Le due schermate": "The two screens", "Livello dell’audio che va in onda": "Level of the audio going on air", "L’anteprima compare quando la diretta parte": "The preview appears when the stream starts", "L’audio cambia alla prossima partenza della diretta.": "The audio changes the next time the stream starts.", "Microfono": "Microphone", "Microfono dello speaker": "Announcer's microphone", "Microfono in onda": "Microphone on air", "Microfono predefinito": "Default microphone", "Mostra o nascondi": "Show or hide", "Nessuna chiave salvata": "No key saved", "PRESENTAZIONE": "PRESENTATION", "Pannello pronto": "Panel ready", "Più grandi (tagliati i lati)": "Larger (sides cropped)", "Presentazione / AUTO LIVE": "Presentation / AUTO LIVE", "Presentazione con la Regia in riquadro": "Presentation with the Control Desk in a corner box", "Presentazione sopra, Regia sotto": "Presentation on top, Control Desk below", "Prima inserisci la chiave di trasmissione di": "First enter the stream key for", "Pronta": "Ready", "Qualità": "Quality", "REGIA": "CONTROL DESK", "Regia sopra, Presentazione sotto": "Control Desk on top, Presentation below", "Riconnessioni": "Reconnections", "Salva": "Save", "Secondo schermo aperto": "Second screen open", "Secondo schermo chiuso: si apre da solo alla partenza": "Second screen closed: it opens by itself when the stream starts", "Server RTMP": "RTMP server", "Solo Presentazione": "Presentation only", "Solo Regia": "Control Desk only", "Suoni del programma (musica, inni, annunci, fischi)": "Program sound (music, anthems, announcements, whistles)", "TikTok LIVE Center o LIVE Studio → URL del server e Chiave di trasmissione. La chiave di TikTok cambia a ogni diretta: incollala nuova prima di partire.": "TikTok LIVE Center or LIVE Studio → Server URL and Stream key. The TikTok key changes with every stream: paste the new one before going live.", "Velocità di invio": "Upload speed", "YouTube Studio → Crea → Trasmetti dal vivo → Chiave stream (e URL dello stream)": "YouTube Studio → Create → Go live → Stream key (and Stream URL)", "account salvato": "account saved", "attenzione: questo sistema non offre la cifratura, il file è leggibile solo dal tuo utente": "note: this system offers no encryption; the file is readable only by your user", "chiave dimenticata": "key forgotten", "chiave pronta": "key ready", "cifrata su questo computer": "encrypted on this computer", "collegamento al server…": "connecting to the server…", "collegamento in corso": "connecting", "collegamento non riuscito": "connection failed", "connessione persa, riprovo": "connection lost, retrying", "di nuovo in onda": "back on air", "diretta chiusa": "stream closed", "errore": "error", "incolla qui la chiave": "paste the key here", "incolla qui per sostituirla": "paste here to replace it", "inquadratura cambiata in diretta": "layout changed while live", "manca la chiave": "key missing", "non partita": "did not start", "salvata": "saved", "Inquadratura": "Layout", "IN ONDA": "ON AIR", "Collegamento…": "Connecting…", "Riconnessione…": "Reconnecting…", "Errore": "Error", "Ferma": "Stopped", "Cattura della Regia attiva": "Control Desk capture on", "Cattura del secondo schermo attiva": "Second screen capture on", "Cattura della Regia interrotta": "Control Desk capture stopped", "Cattura del secondo schermo interrotta": "Second screen capture stopped", "rete lenta, qualità ridotta a": "slow network, quality reduced to", "rete di nuovo libera, qualità a": "network clear again, quality back to", "Microfono non disponibile": "Microphone not available", "Codifica video": "Video encoding", "Codifica audio": "Audio encoding", "Torneo Subbuteo": "Subbuteo Tournament"});
 // Regolamento FISTF (9.0)
-Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Women (scarto massimo 5–0)": "U12 · U16 · U20 · Women category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Women: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Women: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.4": "✨ What’s new in 9.4", "✨ Novità della 10.0": "✨ What’s new in 10.0", "✨ Novità della 10.1": "✨ What’s new in 10.1", "✨ Novità della 10.2": "✨ What’s new in 10.2", "✨ Novità della 10.3": "✨ What’s new in 10.3", "✨ Novità della 10.4": "✨ What’s new in 10.4", "✨ Novità della 10.5": "✨ What’s new in 10.5", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
+Object.assign(TR,{"🌐 FISTF — Gironi + tabellone ufficiale": "🌐 FISTF — Groups + official bracket", "🌐 FISTF — Sistema svizzero + fase finale": "🌐 FISTF — Swiss system + final stage", "🌐 FISTF — Torneo a squadre": "🌐 FISTF — Team tournament", "FISTF — Gironi + tabellone ufficiale": "FISTF — Groups + official bracket", "FISTF — Sistema svizzero + fase finale": "FISTF — Swiss system + final stage", "FISTF — Torneo a squadre": "FISTF — Team tournament", "Regolamento FISTF": "FISTF regulations", "Numero di gironi": "Number of groups", "Automatico": "Automatic", "Tabellone a 16": "16-player bracket", "Tabellone a 8": "8-player bracket", "Categoria U12 · U16 · U20 · Women (scarto massimo 5–0)": "U12 · U16 · U20 · Women category (maximum margin 5–0)", "Ranking mondiale (ordine di iscrizione)": "World ranking (entry order)", "Scontri diretti: reti delle partite individuali": "Head-to-head: goals in the individual games", "Differenza reti delle partite individuali": "Goal difference in the individual games", "Reti fatte nelle partite individuali": "Goals scored in the individual games", "Scontri diretti (punti, differenza e numero di vittorie individuali)": "Head-to-head (points, individual wins difference and individual wins)", "Differenza vittorie individuali": "Individual wins difference", "Vittorie individuali": "Individual wins", "FISTF U12/U16/U20/Women: in classifica lo scarto massimo è 5–0": "FISTF U12/U16/U20/Women: in the standings the maximum margin is 5–0", "Parità assoluta": "Complete tie", "dal": "from", "posto": "place", "Decide lo shoot-out (regolamento FISTF).": "A shoot-out decides (FISTF regulations).", "Esito dello shoot-out": "Shoot-out result", "rifai": "redo", "Vince": "Winner:", "Turno dei 64": "Last 64", "FISTF, sistema svizzero: per il tabellone a": "FISTF, Swiss system: the bracket of", "servono almeno": "needs at least", "partecipanti.": "participants.", "FISTF: con": "FISTF: with", "partecipanti non si formano gironi regolamentari (da 3 a 10 per girone, da 2 a 32 gironi).": "participants no regulation groups can be formed (3 to 10 per group, 2 to 32 groups).", "FISTF: i gironi devono essere da 2 a 32, quanti ne prevedono le tabelle ufficiali.": "FISTF: there must be 2 to 32 groups, as covered by the official tables.", "FISTF: ogni girone deve avere da 3 a 10 partecipanti.": "FISTF: each group must have 3 to 10 participants.", "FISTF: non esiste un tabellone ufficiale per": "FISTF: there is no official bracket for", "gironi.": "groups.", "Spareggi": "Barrages", "Fase a Eliminazione Diretta": "Knockout Stage", "Prima serve lo shoot-out per i pari merito assoluti": "First a shoot-out is needed for the complete ties", "Per il tabellone a": "The bracket of", "partecipanti in classifica.": "participants in the standings.", "riposo": "bye", "Primo turno a sorteggio; poi 1° contro 2°, 3° contro 4°… senza mai ripetere un incontro. Classifica: punti, differenza reti, gol fatti, ranking mondiale (= ordine di iscrizione). Con un numero dispari chi resta senza avversario vince 3–0, una sola volta a testa.": "First round by blind draw; then 1st v 2nd, 3rd v 4th… never repeating a match. Standings: points, goal difference, goals scored, world ranking (= entry order). With an odd number, whoever is left without an opponent wins 3–0, once per player at most.", "Poi tabellone a 16: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.": "Then a 16-player bracket: 1–16, 8–9, 4–13, 5–12, 3–14, 6–11, 7–10, 2–15.", "Poi tabellone a 8: 1–8, 2–7, 3–6, 4–5; semifinali 1–8/4–5 e 2–7/3–6.": "Then an 8-player bracket: 1–8, 2–7, 3–6, 4–5; semi-finals 1–8/4–5 and 2–7/3–6.", "Servono almeno": "At least", "Con questo numero di iscritti non si formano gironi FISTF: da 3 a 10 per girone, da 2 a 32 gironi.": "With this number of entries no FISTF groups can be formed: 3 to 10 per group, 2 to 32 groups.", "passano i primi due": "the top two qualify", "qualificati": "qualifiers", "spareggi": "barrages", "L’ordine di iscrizione è il ranking mondiale: le prime teste di serie formano la prima fascia, e così via; ogni fascia dà un giocatore a ogni girone, estratto a sorte se «Sorteggio casuale» è attivo. Compagni di club o di nazione finiscono in gironi diversi quando è possibile.": "The entry order is the world ranking: the top seeds form the first pot, and so on; each pot gives one player to every group, drawn at random if «Random draw» is on. Club-mates or compatriots go into different groups whenever possible.", "Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati": "FISTF rule: 0–4 in all group ties (0–3 in each individual game), including those already played", "Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti": "FISTF rule: 0–3 in the remaining games, and no more pairings", "Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate": "FISTF rule: 0–3 in all group games, including those already played", "La squadra": "The team", "ha meno di 3 giocatori (FISTF: almeno 3, fino a 6 in distinta).": "has fewer than 3 players (FISTF: at least 3, up to 6 on the team sheet).", "Ordine delle gare della tabella FISTF": "Match order from the FISTF table", "Ordine FISTF · compagni di club": "FISTF order · club-mates", "Ordine FISTF": "FISTF order", "Accesso diretto": "Direct entry", "Shoot-out": "Shoot-out", "Criteri fissati dal regolamento FISTF.": "Criteria set by the FISTF regulations.", "Squadra di tre giocatori: inizia d’ufficio la procedura (FISTF)": "Three-player team: it starts the procedure by rule (FISTF)", "Servono prima le distinte: almeno 3 giocatori per squadra (FISTF).": "Team sheets first: at least 3 players per team (FISTF).", "ha vinto il sorteggio: dichiara per prima": "won the toss: declares first", "ha perso il sorteggio: risponde": "lost the toss: replies", "una per squadra (FISTF)": "one per team (FISTF)", "FISTF: una sola sostituzione per squadra.": "FISTF: only one substitution per team.", "Il formato dei tornei internazionali FISTF: ordine delle gare, criteri di classifica e incroci del regolamento ufficiale.": "The format of FISTF international tournaments: match order, ranking criteria and bracket of the official regulations.", "Quattro turni svizzeri senza eliminazioni, poi il tabellone con gli incroci ufficiali.": "Four Swiss rounds with no elimination, then the bracket with the official pairings.", "Tabellone a": "Bracket of", "⚔️ Compagni di club nello stesso girone: il loro scontro diretto alla prima giornata": "⚔️ Club-mates in the same group: their head-to-head on the first matchday", "✨ Novità della 9.0": "✨ What’s new in 9.0", "✨ Novità della 9.4": "✨ What’s new in 9.4", "✨ Novità della 10.0": "✨ What’s new in 10.0", "✨ Novità della 10.1": "✨ What’s new in 10.1", "✨ Novità della 10.2": "✨ What’s new in 10.2", "✨ Novità della 10.3": "✨ What’s new in 10.3", "✨ Novità della 10.4": "✨ What’s new in 10.4", "✨ Novità della 10.5": "✨ What’s new in 10.5", "✨ Novità della 10.6": "✨ What’s new in 10.6", "Per la diretta serve il pacchetto completo della versione 9.2 o successiva: scarica l’installer dal sito.": "Streaming needs the full package of version 9.2 or later: download the installer from the site.", "➜ Genera la Fase a Eliminazione": "➜ Generate the Knockout Stage"});
 
 TR['🧊 Antartide · ghiaccio polare']='🧊 Antarctica · polar ice';
 /* ranking FISCT · FISTF · WASPA */
 // 10.4: Campionati del Club
+// 10.6: formule e regole dal confronto con le fonti
+Object.assign(TR,{"Europa":"Europe","Sud America":"South America","Asia e Oceania":"Asia and Oceania","Mondo":"World"});
+Object.assign(TR,{"Tabellone a Bussola (tutti giocano ogni turno, classifica completa)": "Compass Draw (everyone plays every round, full placings)", "Gironi a Doppia Eliminazione (stile GSL) + Eliminazione Diretta": "Double-Elimination Groups (GSL style) + Knockout", "Tabellone a Bussola": "Compass Draw", "Gironi a Doppia Eliminazione (GSL)": "Double-Elimination Groups (GSL)", "Scaletta (dalla più bassa fino alla prima)": "Stepladder (from the lowest up to the top seed)", "Scarto massimo 5–0 nelle classifiche (FISCT)": "Maximum margin 5–0 in the standings (FISCT)", "In classifica lo scarto massimo è 5–0 (regolamento FISCT)": "In the standings the maximum margin is 5–0 (FISCT rules)", "Regola FISCT: con metà gare giocate restano, le altre 0–5 e ultimo posto; con meno della metà tutte 0–5": "FISCT rule: with half the matches played they stand, the rest 0–5 and last place; with fewer than half, all 0–5", "Vincenti: chi vince è 1°": "Winners: the winner is 1st", "Perdenti: chi perde è 4°": "Losers: the loser is 4th", "Decisiva: chi vince è 2°": "Decider: the winner is 2nd", "Primo turno": "First round", "Vincenti · Perdenti": "Winners · Losers", "Partita decisiva": "Decider match", "Gradino": "Step", "Nessuno esce: chi perde gioca con gli sconfitti dello stesso turno, fino all’ultimo posto.": "Nobody goes home: losers play the other losers of the same round, down to the last place.", "turni per tutti": "rounds for everyone", "Ogni posizione si decide sul campo": "Every position is decided on the table", "Gironi da 4 in 5 partite, tutte decisive: i primi due di ogni girone al tabellone.": "Groups of 4 in 5 matches, all decisive: the top two of each group go to the bracket.", "gironi a doppia eliminazione": "double-elimination groups", "Il tabellone a bussola richiede almeno 4 giocatori.": "The compass draw needs at least 4 players.", "I gironi a doppia eliminazione richiedono da 6 a 64 giocatori.": "Double-elimination groups need 6 to 64 players."});
 Object.assign(TR,{"Risultati":"Results","🏛 Apertura & Clausura (stile sudamericano)": "🏛 Apertura & Clausura (South American style)", "🏛 Campionati del Club (serie, promozioni e retrocessioni)": "🏛 Club leagues (divisions, promotion and relegation)","Campionati del Club": "Club leagues", "🏛 Campionati del Club": "🏛 Club leagues", "Serie, promozioni e retrocessioni del club, stagione dopo stagione": "The club’s divisions, promotions and relegations, season after season"});
+// 10.6: titoli dei gironi a doppia eliminazione (GSL), generati per lettera
+'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c=>{TR['Girone '+c+' — doppia eliminazione']='Group '+c+' — double elimination';});
 // 10.3.2: audio, collegamento telefoni
 Object.assign(TR,{"Effetti sonori riattivati: senza, il boato del gol non si sente.": "Sound effects switched back on: without them the goal roar cannot be heard.", "Effetti sonori spenti: anche il boato del gol tace.": "Sound effects off: the goal roar is silent too.", "Effetti sonori riattivati: boato del gol, fischi e voce tornano a sentirsi.": "Sound effects switched back on: goal roar, whistles and voice can be heard again.", "Collegamento telefoni ritrovato sulla porta": "Phone link found again on port", "il server dei telefoni non risponde": "the phone server is not answering"});
 // 10.3: calendari personali, risultati per la FISTF
@@ -7881,6 +7894,9 @@ function rankTeams(names,matches){
     let j=i;while(j<arr.length&&st[arr[j]].pts===st[arr[i]].pts)j++;
     order.push(...resolveTie(arr.slice(i,j),matches,st));i=j;
   }
+  // FISCT 3.4: chi si ritira dopo metà delle gare finisce ultimo, qualunque sia il suo punteggio
+  const ult=(typeof S!=='undefined'&&S&&S.fisctUltimi)||[];
+  if(ult.length&&order.some(x=>ult.includes(x))){const a=order.filter(x=>!ult.includes(x)),b=order.filter(x=>ult.includes(x));order.length=0;order.push(...a,...b);}
   return{order,stats:st};
 }
 
@@ -8160,7 +8176,7 @@ function renderLicense(){
       <div class="lic-th">${L('Che cosa include la versione completa')}</div>
       <ul>
         <li>${L('Salvataggio, richiamo ed esportazione dei tornei')}</li>
-        <li>${L('Tutte le 25 formule di gioco, Torneo Reale e Consigliere')}</li>
+        <li>${L('Tutte le 27 formule di gioco, Torneo Reale e Consigliere')}</li>
         <li>${L('Gestione arbitrale e assegnazione automatica dei campi')}</li>
         <li>${L('Cerimonia di sorteggio e composizione dei gironi')}</li>
         <li>${L('Regia e La Legge')}</li>
@@ -8225,6 +8241,11 @@ function estStructure(){
     const R=rrRounds(n)*giri;
     for(let i=0;i<R;i++)sizes.push(Math.floor(n/2));
     note=LANG==='en'?'single league':'girone unico';
+  }else if(f==='bussola'){
+    const P=nextPow2(n);for(let i=0;i<Math.log2(P);i++)sizes.push(Math.floor(n/2));
+  }else if(f==='gsl'){
+    const G=Math.max(2,Math.ceil(n/4));sizes.push(2*G,2*G,G);
+    sizes=sizes.concat(koSizes(nextPow2(2*G)));
   }else if(f==='ko'||f==='doppiaelim'){
     sizes=koSizes(nextPow2(n));
     if(f==='doppiaelim')sizes=sizes.concat(koSizes(nextPow2(n)).map(x=>Math.max(1,Math.round(x/2)))).concat([1]);
@@ -8408,6 +8429,7 @@ function renderRitiro(){
     <label class="est-f" style="margin-top:12px"><span>${L('Che fine fanno le partite che restano')}</span>
       <select id="rit-modo">
         ${S.cfg.fistf?`<option value="fistf" selected>${L(S.cfg.fistf==='squadre'?'Regola FISTF: 0–4 in tutti gli incontri del girone (0–3 ogni partita individuale), anche già giocati':S.cfg.fistf==='svizzero'?'Regola FISTF: 0–3 nelle gare che restano, e niente più abbinamenti':'Regola FISTF: 0–3 in tutte le gare del girone, anche già giocate')}</option>`:''}
+        <option value="fisct">${L('Regola FISCT: con metà gare giocate restano, le altre 0–5 e ultimo posto; con meno della metà tutte 0–5')}</option>
         <option value="tavolino">${L('Vittoria a tavolino all’avversario (3–0)')}</option>
         <option value="annulla">${L('Gare non disputate (non contano in classifica)')}</option>
         <option value="zero">${L('0–0 a tavolino (un punto a testa)')}</option>
@@ -8425,12 +8447,23 @@ function applicaRitiro(){
   const segna=(m,home)=>{                       // home = il ritirato gioca in casa
     if(modo==='annulla'){m.annullata=true;m.hs=null;m.as=null;m.done=true;m.live=false;}
     else if(modo==='fistf')fistfForfait(m,home);
+    else if(modo==='fisct'){m.hs=home?0:5;m.as=home?5:0;m.done=true;m.live=false;m.annullata=false;}
     else if(modo==='zero'){m.hs=0;m.as=0;m.done=true;m.live=false;m.annullata=false;}
     else{m.hs=home?0:3;m.as=home?3:0;m.done=true;m.live=false;m.annullata=false;}
     tocc++;
   };
   // FISTF: chi lascia il torneo durante i gironi perde 0-3 anche le gare già giocate
-  const tuttoGirone=modo==='fistf'&&S.cfg.fistf!=='svizzero'&&S.phase==='groups';
+  let tuttoGirone=modo==='fistf'&&S.cfg.fistf!=='svizzero'&&S.phase==='groups';
+  /* FISCT 3.4: chi ha giocato almeno metà delle gare del suo girone conserva
+     i risultati, perde 0-5 quelle che restano e finisce ultimo; con meno della
+     metà, tutte le sue gare (anche quelle già giocate) diventano 0-5. */
+  let fisctTutte=false;
+  if(modo==='fisct'){
+    const sue=allGroups().flatMap(g=>g.matches.filter(m=>m.home===chi||m.away===chi));
+    const giocate=sue.filter(m=>m.done&&!m.annullata).length;
+    fisctTutte=giocate*2<sue.length;tuttoGirone=fisctTutte;
+    if(!fisctTutte)S.fisctUltimi=[...new Set([...(S.fisctUltimi||[]),chi])];
+  }
   allGroups().forEach(g=>g.matches.forEach(m=>{
     if(!tuttoGirone&&(m.done||m.live))return;
     if(m.home===chi)segna(m,true); else if(m.away===chi)segna(m,false);
@@ -8631,6 +8664,18 @@ function adviseFormats(n){
     tag:L('Serve perdere due volte per uscire: Gran Finale fra i due tabelloni.'),
     phases:[`${L('Tabellone Vincenti a')} ${nextPow2(n)}`,L('Tabellone Perdenti con incroci anti-rematch'),L('Gran Finale')],
     tot:2*n-1, a:{format:'doppiaelim'}});
+  /* --- tabellone a bussola --- */
+  if(n>=8&&n<=32)P.push({fmt:'bussola',
+    title:L('Tabellone a Bussola (tutti giocano ogni turno, classifica completa)'),
+    tag:L('Nessuno esce: chi perde gioca con gli sconfitti dello stesso turno, fino all’ultimo posto.'),
+    phases:[`${Math.round(Math.log2(nextPow2(n)))} ${L('turni per tutti')}`,L('Ogni posizione si decide sul campo')],
+    tot:Math.floor(n/2)*Math.round(Math.log2(nextPow2(n))), a:{format:'bussola'}});
+  /* --- gironi a doppia eliminazione (GSL) --- */
+  if(n>=8&&n<=64){const G=Math.ceil(n/4),K=nextPow2(2*G);
+   P.push({fmt:'gsl',title:L('Gironi a Doppia Eliminazione (stile GSL) + Eliminazione Diretta'),
+    tag:L('Gironi da 4 in 5 partite, tutte decisive: i primi due di ogni girone al tabellone.'),
+    phases:[`${L('Fase')} 1 — ${G} ${L('gironi a doppia eliminazione')}: ${5*G} ${L('partite')}`,`${L('Fase')} 2 — ${L('eliminazione diretta a')} ${K}`],
+    tot:5*G+K-1, a:{format:'gsl'}});}
   /* --- svizzero --- */
   if(n>=4){const r=Math.min(Math.max(Math.ceil(Math.log2(n))+2,4),9);
    P.push({fmt:'svizzero',title:`${L('Sistema Svizzero')} — ${r} ${L('turni')}`,
@@ -8709,10 +8754,15 @@ function renderRealList(){
   const C=window.TORNEI_REALI||[];
   $('#real-n').textContent=C.length+' '+L('competizioni');
   const zlab={up:['zu',L('Avanza')],po:['zp',L('Playoff')],pout:['zo',L('Playout')],down:['zd',L('Retrocede')]};
-  $('#real-list').innerHTML=C.map((c,i)=>{
+  // 10.6: il catalogo è diviso per continente (Europa, Sud America, Asia e Oceania, Mondo)
+  const AREE=['Europa','Sud America','Asia e Oceania','Mondo'];
+  const ordine=C.map((c,i)=>i).sort((a,b)=>(AREE.indexOf(C[a].area||'Mondo')-AREE.indexOf(C[b].area||'Mondo'))||(a-b));
+  let areaPrima=null;
+  $('#real-list').innerHTML=ordine.map(i=>{const c=C[i];
+    const testa=(c.area||'Mondo')!==areaPrima?(areaPrima=c.area||'Mondo',`<h4 class="real-area">${{'Europa':'🇪🇺','Sud America':'🌎','Asia e Oceania':'🌏','Mondo':'🌍'}[areaPrima]||''} ${esc(L(areaPrima))} · ${C.filter(x=>(x.area||'Mondo')===areaPrima).length}</h4>`):'';
     const zh=c.zones?Object.keys(zlab).filter(k=>c.zones[k]).map(k=>
       `<span class="${zlab[k][0]}">${zlab[k][1]} ${c.zones[k][0]===c.zones[k][1]?c.zones[k][0]+'ª':c.zones[k][0]+'ª–'+c.zones[k][1]+'ª'}</span>`).join(''):'';
-    return `<div class="real-card">
+    return testa+`<div class="real-card">
       <div class="real-hd">
         <span class="lg">${c.logo?`<img src="${c.logo}" alt="">`:'🏆'}</span>
         <div><div class="t">${esc(c.nome)}</div><div class="e">${esc(c.ente)} · ${esc(c.paese)}</div></div>
@@ -8738,6 +8788,15 @@ function applyReal(i){
   if(a.fistfko&&$('#s-fistf-ko')){$('#s-fistf-ko').value=String(a.fistfko);fistfSetupInfo();}
   $('#s-ritorno').checked=!!a.ritorno;
   if(a.third!=null)$('#s-third').checked=!!a.third;
+  // 10.6: playoff, poule (la «split»), doppio confronto, terzo giro
+  if($('#s-terzo'))$('#s-terzo').checked=!!a.terzo;
+  if(a.poffn!=null&&$('#s-poffn'))$('#s-poffn').value=a.poffn;
+  if($('#s-poutn'))$('#s-poutn').value=a.poutn??0;
+  if(a.pofffmt&&$('#s-pofffmt'))$('#s-pofffmt').value=a.pofffmt;
+  if(a.pouledote&&$('#s-pouledote'))$('#s-pouledote').value=a.pouledote;
+  if($('#s-doppio'))$('#s-doppio').checked=!!a.doppio;
+  if($('#s-doppiof'))$('#s-doppiof').checked=!!a.doppiof;
+  setupFmtChanged();                 // rimostra le caselle giuste dopo le scelte
   if(!$('#s-name').value.trim())$('#s-name').value=c.nome;
   S.cfg.zones=c.zones||null;                  // colora le classifiche come la competizione vera
   if(c.logo){S.cfg.logo=c.logo;applyTournLogo();}   // logo ufficiale abbinato
@@ -9952,7 +10011,10 @@ function koWinner(m){
 function recomputeKO(ko){
   if(ko&&ko.scripted){
     resolveScriptedAll();
-    if(typeof S!=='undefined'&&S&&S.started&&!scriptResolving)assignReferees();
+    if(typeof S!=='undefined'&&S&&S.started&&!scriptResolving){
+      if(S.cfg.format==='gsl'&&ko.gsl)maybeBuildGslKO();
+      assignReferees();
+    }
     return;
   }
   for(let ri=0;ri<ko.rounds.length-1;ri++){
@@ -10060,7 +10122,8 @@ function tbNome(c){
 }
 function fistfRango(n){const r=S.fistfRank||S.teams||[];const i=r.indexOf(n);return i<0?9999:i;}
 // U12, U16, U20 e Women (già «Ladies»): nei gironi lo scarto massimo è 5-0 (§2.1.2 c)
-function fistfTetto(){return !!(S.cfg&&S.cfg.fistfCap&&(S.cfg.fistf==='gironi'||S.cfg.fistf==='svizzero'));}
+// FISCT 2.4: lo stesso tetto, per tutte le categorie e formule, se l'organizzatore lo sceglie nel Setup
+function fistfTetto(){return !!(S.cfg&&(S.cfg.tetto5||(S.cfg.fistfCap&&(S.cfg.fistf==='gironi'||S.cfg.fistf==='svizzero'))));}
 function fistfScarto(hs,as){
   if(fistfTetto()&&Math.abs(hs-as)>=5)return hs>as?[5,0]:[0,5];
   return [hs,as];
@@ -10068,7 +10131,7 @@ function fistfScarto(hs,as){
 function fistfCapMark(m){
   if(!fistfTetto()||!m.done||m.hs==null||m.as==null)return '';
   const [h,a]=fistfScarto(m.hs,m.as);
-  return (h!==m.hs||a!==m.as)?`<span class="chip fistf-cap" title="${L('FISTF U12/U16/U20/Women: in classifica lo scarto massimo è 5–0')}">= ${h}–${a}</span> `:'';
+  return (h!==m.hs||a!==m.as)?`<span class="chip fistf-cap" title="${L(S.cfg.tetto5?'In classifica lo scarto massimo è 5–0 (regolamento FISCT)':'FISTF U12/U16/U20/Women: in classifica lo scarto massimo è 5–0')}">= ${h}–${a}</span> `:'';
 }
 // ordine deciso ai tiri piazzati fra chi è a pari merito assoluto
 function fistfSOcmp(a,b){
@@ -10695,6 +10758,106 @@ function makePage(title,seeds){
     {name:'Finale Preliminare',matches:[m3]},
     {name:'Finale',matches:[m4]}
   ]};
+}
+
+
+/* =========================================================
+   FORMULE DAL CONFRONTO CON LE FONTI (10.6)
+   ---------------------------------------------------------
+   TABELLONE A BUSSOLA — il «compass draw» dei tornei di tennis e bocce:
+   nessuno esce, chi perde prosegue con gli sconfitti dello stesso turno e
+   alla fine ogni posizione è assegnata sul campo. È il tabellone di
+   piazzamento integrale della formula speculare, ma senza gironi davanti.
+
+   GIRONI A DOPPIA ELIMINAZIONE (stile GSL, la «poule à barrage» delle bocce):
+   girone da 4 in cinque partite invece di sei. 1ª–4ª e 2ª–3ª; poi i due
+   vincenti (chi vince è primo e qualificato) e i due perdenti (chi perde è
+   quarto); infine la partita decisiva fra il perdente dei vincenti e il
+   vincente dei perdenti per il secondo posto. Nessuna partita senza posta.
+   Un girone da 3 ha un bye: la testa di serie passa il primo turno.
+
+   SCALETTA (stepladder) — playoff in cui le ultime qualificate si sfidano e
+   chi vince sale un gradino alla volta fino alla prima.
+   ========================================================= */
+function makeGsl(title,quattro){
+  const s=[...quattro];while(s.length<4)s.push(BYE);
+  const m1={...koBlank(),t1:s[0],t2:s[3]},m2={...koBlank(),t1:s[1],t2:s[2]};
+  const m3={...koBlank(),src1:{w:m1.id},src2:{w:m2.id},lbl:L('Vincenti: chi vince è 1°')};
+  const m4={...koBlank(),src1:{l:m1.id},src2:{l:m2.id},lbl:L('Perdenti: chi perde è 4°')};
+  const m5={...koBlank(),src1:{l:m3.id},src2:{w:m4.id},lbl:L('Decisiva: chi vince è 2°')};
+  return{id:'ko_'+uid(),title,scripted:true,gsl:true,senzaCampione:true,third:null,champion:null,rounds:[
+    {name:'Primo turno',matches:[m1,m2]},
+    {name:'Vincenti · Perdenti',matches:[m3,m4]},
+    {name:'Partita decisiva',matches:[m5]}]};
+}
+/* posizioni di un girone GSL: [1°,2°,3°,4°] (null finché non sono decise) */
+function gslPos(ko){
+  const [r1,r2,r3]=ko.rounds;const m3=r2.matches[0],m4=r2.matches[1],m5=r3.matches[0];
+  const v=x=>(x&&x!==BYE)?x:null;
+  return [v(koWinner(m3)),v(koWinner(m5)),v(loserOf(m5)),v(loserOf(m4))];
+}
+let gslBuilding=false;
+function maybeBuildGslKO(){
+  if(gslBuilding||S.ko||S.cfg.format!=='gsl')return;
+  const gr=(S.tiersPhases||[]).filter(x=>x.gsl);
+  if(!gr.length)return;
+  const pos=gr.map(x=>gslPos(x.ko));
+  if(pos.some(p=>!p[0]||!p[1]))return;
+  const G=gr.length,primi=pos.map(p=>p[0]),secondi=pos.map(p=>p[1]);
+  // 1° di un girone contro il 2° del girone successivo (a giro)
+  const sec=new Array(G);for(let i=1;i<=G;i++)sec[G-i]=secondi[i%G];
+  gslBuilding=true;
+  const ko=makeKO('Fase a Eliminazione Diretta',[...primi,...sec],S.cfg.third);
+  // con un numero di gironi non tondo i bye spostano gli incroci: chi viene
+  // dallo stesso girone non si affronta al primo turno (si scambia col vicino)
+  const gir=n=>pos.findIndex(p=>p.includes(n));
+  const r0=ko.rounds[0].matches;
+  for(let i=0;i<r0.length;i++){const m=r0[i];
+    if(m.t1&&m.t2&&m.t1!==BYE&&m.t2!==BYE&&gir(m.t1)===gir(m.t2)){
+      const j=r0.findIndex((o,k)=>k!==i&&o.t2&&o.t2!==BYE&&gir(o.t2)!==gir(m.t1)&&gir(o.t1)!==gir(m.t2));
+      if(j>=0){const x=m.t2;m.t2=r0[j].t2;r0[j].t2=x;}
+    }}
+  recomputeKO(ko);S.ko=ko;
+  gslBuilding=false;
+  assignReferees();updateTabs();renderFinale();
+  toast(LANG==='en'?'Groups finished: the knockout stage is ready.':'Gironi conclusi: la fase a eliminazione diretta è pronta.');
+}
+function makeScaletta(title,seeds){
+  const s=seeds.slice();const n=s.length;
+  if(n<2)return makeKO(title,s,false);
+  const rounds=[];
+  let prev={...koBlank(),t1:s[n-2],t2:s[n-1]};
+  rounds.push({name:`${n-1}ª–${n}ª`,matches:[prev]});
+  for(let k=n-3;k>=0;k--){
+    const m={...koBlank(),t1:s[k],src2:{w:prev.id}};
+    rounds.push({name:k===0?'Finale':`${L('Gradino')} ${n-k-1}`,matches:[m]});prev=m;
+  }
+  return{id:'ko_'+uid(),title,scripted:true,third:null,champion:null,rounds};
+}
+/* Classifica finale per spareggio tecnico (Regolamento tornei FISCT 2.11):
+   chi esce nello stesso turno è ordinato secondo la posizione finale di chi
+   lo ha eliminato. Si risale dall'alto: chi elimina è sempre già piazzato. */
+function koSpareggioTecnico(ko,teams,ptsDi){
+  const exit={},by={};
+  ko.rounds.forEach((rd,ri)=>rd.matches.forEach(m=>{
+    [m.t1,m.t2].forEach(x=>{if(x&&x!==BYE)exit[x]=Math.max(exit[x]||0,ri+1);});
+    const w=koWinner(m),l=loserOf(m);if(l&&l!==BYE&&w&&w!==BYE)by[l]=w;
+  }));
+  if(ko.champion)exit[ko.champion]=ko.rounds.length+1;
+  if(ko.third){
+    const w=koWinner(ko.third),l=loserOf(ko.third);
+    // dietro ai due finalisti (che sono arrivati all'ultimo turno), davanti ai semifinalisti
+    if(w&&w!==BYE)exit[w]=ko.rounds.length-0.4;     // 3º
+    if(l&&l!==BYE)exit[l]=ko.rounds.length-0.6;     // 4º
+  }
+  const rank={},out=[];
+  const livelli=[...new Set(teams.map(x=>exit[x]||0))].sort((a,b)=>b-a);
+  livelli.forEach(lv=>{
+    const gruppo=teams.filter(x=>(exit[x]||0)===lv);
+    gruppo.sort((a,b)=>((rank[by[a]]??1e9)-(rank[by[b]]??1e9))||((ptsDi[b]||0)-(ptsDi[a]||0))||a.localeCompare(b));
+    gruppo.forEach(x=>{rank[x]=out.length;out.push(x);});
+  });
+  return out;
 }
 
 /* --- ELIMINAZIONE DIRETTA + CONSOLAZIONE: gli sconfitti del 1° turno
@@ -11638,7 +11801,13 @@ function mergeFlags(){
   BANDIERE.flags.forEach(f=>STEMMI.teams.push([f[0],f[1],f[2],2,f[3]]));
 }
 function openStemmi(){
-  if(window.STEMMI){mergeFlags();stemmiShow();return;}
+  if(window.STEMMI){
+    mergeFlags();stemmiShow();
+    Promise.all([!window.CLUB_META?loadScriptOnce('club_meta.js').catch(()=>{}):null,
+      !window.CLUB_STORIA?loadScriptOnce('club_storia.js').catch(()=>{}):null])
+      .then(()=>{stemmiYearOptions();stemmiRender();});
+    return;
+  }
   if(stemmiLoading)return;
   stemmiLoading=true;
   toast('Carico il catalogo stemmi e bandiere (solo la prima volta)…');
@@ -11648,6 +11817,8 @@ function openStemmi(){
   loadScriptOnce('stemmi_club.js')
     .then(()=>loadScriptOnce('stemmi_club_2.js').catch(()=>{}))
     .then(()=>loadScriptOnce('bandiere.js').catch(()=>{}))  // le bandiere sono opzionali
+    .then(()=>loadScriptOnce('club_meta.js').catch(()=>{})) // metadati facoltativi
+    .then(()=>loadScriptOnce('club_storia.js').catch(()=>{})) // cronologia facoltativa
     .then(()=>{
       stemmiLoading=false;mergeFlags();stemmiShow();
       const nb=window.BANDIERE?BANDIERE.flags.length:0;
@@ -11657,7 +11828,7 @@ function openStemmi(){
 }
 function stemmiShow(){
   $('#stemmi').classList.add('on');
-  stemmiContOptions();stemmiCountryOptions();
+  stemmiContOptions();stemmiCountryOptions();stemmiYearOptions();
   stemmiRender();
 }
 function closeStemmi(){$('#stemmi').classList.remove('on');}
@@ -11675,24 +11846,53 @@ function stemmiCountryOptions(){
     .sort((a,b)=>a[1][0].localeCompare(b[1][0],'it'));
   sel.innerHTML='<option value="">Tutti i paesi</option>'+list.map(([k,v])=>`<option value="${k}">${esc(v[0])}</option>`).join('');
   if([...sel.options].some(o=>o.value===cur))sel.value=cur;
+  stemmiLeagueOptions();
+}
+function stemmiYearOptions(){
+  const sel=$('#st-anno');if(!sel||!window.CLUB_STORIA)return;
+  const cur=sel.value;
+  const years=[...new Set(Object.values(CLUB_STORIA.clubs||{}).flatMap(rows=>rows.map(r=>r.stagione)))].sort().reverse();
+  sel.innerHTML='<option value="">Tutte le stagioni</option>'+years.map(y=>`<option value="${esc(y)}">${esc(y)}</option>`).join('');
+  sel.value=years.includes(cur)?cur:'';
+  stemmiLeagueOptions();
+}
+function stemmiLeagueOptions(){
+  const sel=$('#st-lega');if(!sel)return;
+  const year=$('#st-anno')?.value||'',paese=$('#st-paese')?.value||'',cur=sel.value;
+  /* 10.6: lo stesso nome vale per più paesi (Bundesliga tedesca e austriaca,
+     Premier League inglese, russa ed egiziana…): il campionato è «paese|nome» */
+  const leagues=new Map();
+  if(year&&window.CLUB_STORIA)Object.entries(CLUB_STORIA.clubs||{}).forEach(([key,rows])=>{
+    if(paese&&!key.startsWith(paese+'|'))return;
+    const row=rows.find(r=>r.stagione===year);if(!row)return;
+    const iso=key.split('|')[0];
+    leagues.set(iso+'|'+row.categoria,row.categoria+(paese?'':' · '+(STEMMI.countries[iso]?.[0]||iso)));
+  });
+  sel.innerHTML='<option value="">Tutti i campionati</option>'+[...leagues].sort((a,b)=>a[1].localeCompare(b[1],'it')).map(([v,n])=>`<option value="${esc(v)}">${esc(n)}</option>`).join('');
+  sel.value=leagues.has(cur)?cur:'';
+  sel.disabled=!year;
 }
 function stemmiFiltered(){
   const q=$('#st-q').value.trim().toLowerCase();
   const cont=$('#st-cont').value,paese=$('#st-paese').value,tipo=$('#st-tipo').value;
+  const year=$('#st-anno').value,league=$('#st-lega').value;
   const out=[];
   STEMMI.teams.forEach((t,i)=>{
     const[n,c,l,fed]=t;
-    const isFlag=fed===2;
+    const isFlag=Number(fed)===2;
     // le bandiere si mostrano SOLO col filtro dedicato
     if(tipo==='flag'){if(!isFlag)return;}
     else{
       if(isFlag)return;
-      if(fed===1)return;   // le federazioni non sono partecipanti: si usano come logo del torneo
+      if(Number(fed)===1)return;   // le federazioni non sono partecipanti: si usano come logo del torneo
       if(paese&&c!==paese)return;
     }
+    const historic=year&&window.CLUB_STORIA?.clubs?.[c+'|'+n]?.find(r=>r.stagione===year);
+    if(year&&!historic)return;
+    if(league&&(historic?.categoria!==league.slice(league.indexOf('|')+1)||c!==league.split('|')[0]))return;
     const contv=isFlag?l:(STEMMI.countries[c]?.[1]); // per le bandiere il continente è in l
     if(cont&&contv!==cont)return;
-    if(q&&!(n.toLowerCase().includes(q)||(!isFlag&&l&&l.toLowerCase().includes(q))))return;
+    if(q&&!(n.toLowerCase().includes(q)||(!isFlag&&l&&l.toLowerCase().includes(q))||historic?.categoria?.toLowerCase().includes(q)))return;
     out.push(i);
   });
   return out;
@@ -11700,21 +11900,29 @@ function stemmiFiltered(){
 const ST_MAX=240;
 function stCard(i){
   const[n,c,l,fed,img]=STEMMI.teams[i];
-  const isFlag=fed===2;
+  const isFlag=Number(fed)===2;
   const sub=isFlag?('Nazionale · '+l):(STEMMI.countries[c]?.[0]||c);
-  const badge=isFlag?'🏴 ':(fed?'🏳 ':'');
-  return `<div class="stcard${stemmiSel.has(i)?' sel':''}${isFlag?' flagcard':''}" onclick="stemmiToggle(${i})" title="${esc(n)}${!isFlag&&l?' · '+esc(l):''} · ${esc(isFlag?l:(STEMMI.countries[c]?.[0]||c))}">
+  const badge=isFlag?'🏴 ':(Number(fed)===1?'🏳 ':'');
+  const meta=Number(fed)===0&&window.CLUB_META?.clubs?.[c+'|'+n];
+  const year=$('#st-anno')?.value||'';
+  const historic=year&&window.CLUB_STORIA?.clubs?.[c+'|'+n]?.find(r=>r.stagione===year);
+  const categoria=historic ? `${historic.categoria} · ${year}` : (meta?.categoria ? `${meta.categoria} · ${meta.stagione}` : (meta?.categoriaCatalogo ? `Catalogo: ${meta.categoriaCatalogo} · stagione da verificare` : 'Categoria da verificare'));
+  const colori=meta?.coloriSociali?.length ? meta.coloriSociali : (meta?.coloriStemma||[]);
+  const coloreNota=meta?.coloriSociali?.length ? 'Colori sociali verificati' : 'Colori estratti dallo stemma, non dalla maglia';
+  return `<div class="stcard${stemmiSel.has(i)?' sel':''}${isFlag?' flagcard':''}" onclick="stemmiToggle(${i})" title="${esc(n)} · ${esc(isFlag?l:(STEMMI.countries[c]?.[0]||c))} · ${esc(categoria)} · ${esc(coloreNota)}">
     <span class="selmark">✔</span>
     <img loading="lazy" src="data:image/webp;base64,${img}" alt="">
     <span class="n">${esc(n)}</span>
     <span class="c">${badge}${esc(sub)}</span>
+    ${meta||historic?`<span class="c" style="font-size:10px">${esc(categoria)}</span><span title="${esc(coloreNota)}">${colori.map(color=>`<i style="display:inline-block;width:13px;height:13px;border-radius:50%;margin:2px;border:1px solid #888;background:${color}"></i>`).join('')}</span>`:''}
   </div>`;
 }
 function stemmiRender(){
   if(!window.STEMMI)return;
   const idxs=stemmiFiltered();
   const nsel=stemmiSel.size;
-  $('#st-info').textContent=`${idxs.length} squadre trovate${idxs.length>ST_MAX?` — mostro le prime ${ST_MAX}: affina la ricerca (il 🎲 pesca comunque da tutte)`:''}`;
+  const storico=$('#st-anno')?.value||'';
+  $('#st-info').textContent=`${idxs.length} squadre trovate${storico?` nella stagione ${storico} · archivio incompleto: assenza di dati non significa mancata partecipazione`:''}${idxs.length>ST_MAX?` — mostro le prime ${ST_MAX}: affina la ricerca (il 🎲 pesca comunque da tutte)`:''}`;
   let h='';
   // le squadre selezionate restano SEMPRE visibili in cima, anche se non
   // corrispondono alla ricerca corrente; cliccandole si rimuovono
@@ -11998,6 +12206,7 @@ function readSetup(){
   if($('#s-chq'))S.cfg.chQ=Math.max(2,parseInt($('#s-chq').value)||8);
   if($('#s-kohtarget'))S.cfg.kohTarget=Math.max(0,parseInt($('#s-kohtarget').value)||0);
   if($('#s-consb'))S.cfg.consB=$('#s-consb').checked;
+  if($('#s-tetto5'))S.cfg.tetto5=$('#s-tetto5').checked;
   if($('#s-onehalf'))S.cfg.oneHalf=$('#s-onehalf').checked;
   if($('#s-noantic'))S.cfg.noAnticipo=$('#s-noantic').checked;
   if(S.cfg.fistf)fistfLeggiSetup();
@@ -12068,6 +12277,8 @@ function startTournament(){
   }
   if((f==='svizzero'||f==='champions')&&!S.cfg.fistf&&names.length%2!==0){setupError('Gli abbinamenti svizzeri richiedono un numero pari di giocatori.');return;}
   if(f==='doppiaelim'&&names.length<3){setupError('La doppia eliminazione richiede almeno 3 giocatori.');return;}
+  if(f==='bussola'&&names.length<4){setupError(L('Il tabellone a bussola richiede almeno 4 giocatori.'));return;}
+  if(f==='gsl'&&(names.length<6||names.length>64)){setupError(L('I gironi a doppia eliminazione richiedono da 6 a 64 giocatori.'));return;}
   if(f==='planisfero'&&(names.length<13||names.length>24)){setupError('Coppa Planisfero: da 13 a 24 partecipanti.');return;}
   if(f==='rosa'&&(names.length<8||names.length>12)){setupError('La Rosa dei Venti va da 8 a 12 iscritti.');return;}
   if(f==='playoff'&&(S.cfg.poffN||4)>names.length){setupError('Squadre ai playoff superiori al totale dei partecipanti.');return;}
@@ -12171,6 +12382,20 @@ function startTournament(){
     S.ko=deb.wb;
     S.tiersPhases=[{name:'Tabellone Perdenti',type:'ko',ko:deb.lb},{name:'Gran Finale',type:'ko',gf:true,ko:deb.gf}];
     resolveScriptedAll();
+  }else if(f==='bussola'){
+    S.phase='final';
+    S.ko=makePiazzamento('Tabellone a Bussola',names);
+  }else if(f==='gsl'){
+    S.phase='final';
+    // teste di serie col serpentone (ordine dell'elenco o sorteggio), 4 per girone
+    const G=Math.max(2,Math.ceil(names.length/4));
+    const serp=Array.from({length:G},()=>[]);
+    names.forEach((x,i)=>{const giro=Math.floor(i/G),k=i%G;serp[giro%2?G-1-k:k].push(x);});
+    separaClub(serp,(n,gi,pos)=>pos).forEach((g,i)=>{
+      const nome='Girone '+String.fromCharCode(65+i);
+      S.tiersPhases.push({name:nome,type:'ko',gsl:true,ko:makeGsl(nome+' — doppia eliminazione',g)});
+    });
+    resolveScriptedAll();
   }else if(f==='kingofcourt'){
     S.kohDone=false;
     kohStart(names);
@@ -12223,7 +12448,7 @@ function startTournament(){
   assignFields();
   updateHeader();updateTabs();
   renderAll();renderMtUI();
-  tabTo((f==='ko'||f==='doppiaelim')?'finale':'gironi');
+  tabTo((f==='ko'||f==='doppiaelim'||f==='bussola'||f==='gsl')?'finale':'gironi');
   persist();
 }
 
@@ -13469,10 +13694,10 @@ function goToFinal(){
     const N=Math.min(Math.max(2,S.cfg.poffN||4),order.length);
     const top=order.slice(0,N);
     S.tiersPhases=[];
-    const usePage=(S.cfg.poffFmt==='page'&&N===4);
+    const usePage=(S.cfg.poffFmt==='page'&&N===4),scala=S.cfg.poffFmt==='scaletta'&&N>=3;
     S.tiersPhases.push({name:'Playoff Scudetto',type:'ko',title:true,
-      ko:usePage?makePage('Playoff Scudetto — Formula Page',top):makeKO('Playoff Scudetto',top,S.cfg.third)});
-    if(usePage)resolveScriptedAll();
+      ko:usePage?makePage('Playoff Scudetto — Formula Page',top):scala?makeScaletta('Playoff Scudetto — Scaletta',top):makeKO('Playoff Scudetto',top,S.cfg.third)});
+    if(usePage||scala)resolveScriptedAll();
     const M=Math.min(Math.max(0,S.cfg.poutN||0),order.length-N);
     if(M>=2){
       const bot=order.slice(order.length-M);
@@ -13507,7 +13732,7 @@ function checkChampion(){
   const f=S.cfg.format;
   if(f==='gironi-ko'&&S.cfg.variante==='gfinale'){const t=(S.tiersPhases||[]).find(x=>x.title);
     if(t&&t.group.matches.length&&t.group.matches.every(m=>m.done))champ=rankTeams(t.group.teams,t.group.matches).order[0];}
-  else if((f==='ko'||f==='gironi-ko')&&S.ko)champ=S.ko.champion;
+  else if((f==='ko'||f==='gironi-ko'||f==='bussola'||f==='gsl')&&S.ko)champ=S.ko.champion;
   else if(f==='duecomp'&&S.tiersPhases.length){
     const fin=S.tiersPhases.find(t=>t.finale);
     champ=fin&&fin.ko?fin.ko.champion:null;
@@ -15315,6 +15540,8 @@ function swDeclare(none){
   if(r.closed){closePairing();renderBoards();toast('✔ '+L('Sostituzioni registrate a referto.'));}
   else renderSubWindow();
 }
+// «1° e 2°» del Tabellone a Bussola: in inglese «1st & 2nd»
+function piazTxt(s){if(LANG!=='en')return s;const o=n=>n+(n%100>=11&&n%100<=13?'th':['th','st','nd','rd'][n%10]||'th');return s.replace(/(\d+)°/g,(_,n)=>o(+n)).replace(' e ',' & ');}
 function koMatchHTML(ko,m,tag){
   // FISTF: chi è qualificato direttamente aspetta al turno principale — nessun
   // punteggio da inserire, nessun risultato da annullare
@@ -15363,7 +15590,7 @@ function koHTML(ko){
   </div><div class="bracket">`;
   ko.rounds.forEach(rd=>{
     h+=`<div class="kround"><h4>${esc(L(rd.name))}</h4><div class="kmatches">`;
-    rd.matches.forEach(m=>h+=koMatchHTML(ko,m,m.piaz||m.lbl||''));
+    rd.matches.forEach(m=>h+=koMatchHTML(ko,m,(m.piaz&&piazTxt(m.piaz))||m.lbl||''));
     h+='</div></div>';
   });
   if(ko.third)h+=`<div class="kround"><h4>${L('Finale 3° posto')}</h4><div class="kmatches">${koMatchHTML(ko,ko.third,'3°/4°')}</div></div>`;
@@ -19467,7 +19694,8 @@ function clipMonta(mid,auto){
     .catch(e=>{
       CLIP.lavoro=false;renderClipBox();
       toast('⚠ '+L('Montaggio non riuscito')+(e&&e.message==='gifenc'?': '+L('manca il file gifenc.js accanto all’app.')
-        :e&&/troppo grande/.test(e.message)?': '+L('filmato troppo lungo per il server: monta meno azioni per volta.'):'.'));
+        :e&&/troppo grande/.test(e.message)?': '+L('filmato troppo lungo per il server: monta meno azioni per volta.')
+        :e&&/Encoder H\.264/.test(e.message)?': '+L('il codificatore video del computer non risponde. Chiudi e riapri il programma (se non basta, riavvia il computer) e riprova.'):'.'));
     });
 }
 function matchTeamsById(mid){
@@ -20473,6 +20701,15 @@ function arcFinalOrder(){
     g.teams.forEach(t=>{pts[t]=(pts[t]||0)+(st[t]?st[t].pts:0);});
   });
   const ko=S.cfg.format==='fasce'?(S.tiersPhases[0]&&S.tiersPhases[0].ko):S.ko;
+  // tabellone a bussola: ogni posizione è stata giocata sul campo
+  if(ko&&ko.piaz){const o=piazOrdine(ko).filter(Boolean);return [...o,...teams.filter(x=>!o.includes(x))];}
+  // FISCT 2.11: chi esce nello stesso turno segue la posizione di chi lo ha eliminato
+  if(ko&&ko.rounds&&ko.rounds.length&&!ko.scripted){
+    const nelKo=new Set();ko.rounds.forEach(rd=>rd.matches.forEach(m=>[m.t1,m.t2].forEach(x=>{if(x&&x!==BYE)nelKo.add(x);})));
+    const dentro=koSpareggioTecnico(ko,teams.filter(x=>nelKo.has(x)),pts);
+    const fuori=teams.filter(x=>!nelKo.has(x)).sort((a,b)=>(pts[b]||0)-(pts[a]||0)||a.localeCompare(b));
+    return [...dentro,...fuori];
+  }
   if(ko&&ko.rounds&&ko.rounds.length){
     const exit={};                       // in quale turno si è usciti: più avanti = meglio
     ko.rounds.forEach((rd,ri)=>rd.matches.forEach(m=>{
@@ -23885,6 +24122,7 @@ function renderSetupFromState(){
   if($('#s-fistf-ko'))$('#s-fistf-ko').value=S.cfg.chQ===8?'8':'16';
   if($('#s-kohtarget'))$('#s-kohtarget').value=S.cfg.kohTarget??5;
   if($('#s-consb'))$('#s-consb').checked=!!S.cfg.consB;
+  if($('#s-tetto5'))$('#s-tetto5').checked=!!S.cfg.tetto5;
   if($('#s-onehalf'))$('#s-onehalf').checked=!!S.cfg.oneHalf;
   if($('#s-noantic'))$('#s-noantic').checked=!!S.cfg.noAnticipo;
   if($('#s-goalroar'))$('#s-goalroar').checked=S.soundGoal!==false;
@@ -24472,28 +24710,32 @@ window.addEventListener('beforeunload',()=>{try{for(const p of Object.keys(DIR.o
    versione principale (9.0, 9.1…), poi resta a portata di un pulsante.
    Non compare sulla seconda finestra del proiettore.
    ========================================================= */
-const NOVITA_VER='10.5', NOVITA_KEY='stc_novita_vista';
+const NOVITA_VER='10.6', NOVITA_KEY='stc_novita_vista';
 const NOVITA={
-  it:{tit:'Table Soccer Tournament Center 10.5: la riffa',
-    intro:'Nel Setup, accanto alla Cerimonia di sorteggio, arriva la <b>Riffa 1–90</b>: tombolone fotografico, presentatrice e pallina mostrata alla camera, con la <b>voce neurale</b> che annuncia ogni numero. E i minuti cambiati in LIVE ora valgono per intero.',
+  it:{tit:'Table Soccer Tournament Center 10.6: formule dal mondo',
+    intro:'Le formule del programma messe a confronto con il <b>regolamento tornei FISCT</b>, il manuale FISTF e le formule usate in altri sport: arrivano tre formule nuove, le regole FISCT che mancavano e un catalogo di <b>41 tornei reali</b> divisi per continente.',
     card:[
-      {big:1,t:'🎟️ Riffa 1–90',p:'Setup → riquadro «Riffa 1–90», accanto alla Cerimonia di sorteggio:',li:['Numeri da 1 a 90 <b>senza ripetizioni</b>, estratti a caso','In scena il <b>tombolone</b> con la presentatrice: la pallina arriva verso la camera e svela il numero','Il rintocco e poi la <b>voce femminile neurale</b> (Serena o Paola) annuncia «È uscito il numero…»; si può ripetere l’annuncio','<b>Tabellone 1–90</b>, ultimi estratti e contatore; ogni pesca è salvata prima dell’animazione e resta anche chiudendo il programma, fino a «Nuova riffa»']},
-      {t:'⏱ Minuti da giocare',li:['Cambiando i minuti in LIVE il cronometro riparte esattamente dai minuti scritti, anche a partita avviata']},
-      {t:'🏛 Campionati del Club',li:['I pulsanti per creare un club ora chiedono il nome in una finestra del programma (prima il clic non faceva nulla)','Corretti allo stesso modo il costo dei servizi nel Pre-torneo e l’unione dei nomi nell’Archivio']},
-      {t:'🔊 La voce della riffa',li:['Se Serena o Paola non sono ancora installate, la riffa propone l’installazione della voce neurale','Senza voce neurale l’estrazione resta ferma: niente voce di sistema al posto della presentatrice']},
-      {wide:1,t:'🔧 Dalla 10.4',li:['Campionati del Club con promozioni e retrocessioni, Apertura & Clausura, competizioni Solo con marcatori e tabellini, ticker del torneo nella Live Cam 1.0.5']}
+      {big:1,t:'🏆 Torneo Reale: 41 competizioni',p:'Setup → «🏆 Torneo Reale», ora diviso per continente:',li:['<b>Europa</b>: Championship, Scottish Premiership e le leghe con la «split» (Belgio e Austria a punti dimezzati, Svizzera, Danimarca), Süper Lig, DFB-Pokal, Coupe de France, Conference League','<b>Sud America</b>: Liga Profesional argentina, Liga BetPlay, Primera División cilena, Copa do Brasil, Copa Sudamericana; Libertadores in andata e ritorno','<b>Asia e Oceania</b>: J1 League, K League 1, Chinese Super League, Saudi Pro League, Indian Super League, A-League, AFC Champions League Elite, Coppa d’Asia']},
+      {t:'🧩 Tre formule nuove',li:['<b>Tabellone a Bussola</b>: nessuno esce, ogni posizione si gioca','<b>Gironi a doppia eliminazione</b> (stile GSL): 5 partite per girone, tutte decisive','<b>Scaletta</b> nei playoff: dalla più bassa fino alla prima']},
+      {t:'📏 Regole FISCT',li:['<b>Scarto massimo 5–0</b> nelle classifiche (opzione in Regole di Classifica)','<b>Forfait FISCT</b> nel ritiro: metà gare giocate o no','<b>Spareggio tecnico</b> per la classifica finale dei tabelloni']},
+      {t:'📚 Stemmario storico',li:['Filtri <b>Stagione storica</b> e <b>Campionato storico</b>: le squadre di quell’anno, con la categoria','Inghilterra dal 1929; Italia, Spagna, Germania, Francia e altri campionati dal 2010/11','Ogni dato ha la sua fonte']},
+      {t:'📹 Live Cam 1.0.7',li:['<b>Look video</b>: Neutro, Cinema, Stadio, Pellicola','<b>Dissolvenze dei replay</b> a scelta e <b>logo dell’emittente</b> in onda','I colori del club proposti dallo Stemmario']},
+      {t:'🔧 Correzioni',li:['La finale per il 3° posto ora assegna davvero 3° e 4° nella classifica finale e nell’Archivio','Il montaggio dei filmati non resta mai appeso; le clip del telefono si montano in pochi secondi']},
+      {t:'🔧 Dalla 10.5',li:['Riffa 1–90 con voce neurale; App Replay con la fotocamera del telefono anche senza tunnel; minuti da giocare per intero']}
     ],
-    prova:'🎟️ Apri la riffa',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 10.5» nel Setup.'},
-  en:{tit:'Table Soccer Tournament Center 10.5: the raffle',
-    intro:'In the Setup, next to the Draw ceremony, comes the <b>Raffle 1–90</b>: a photographic lottery drum, a presenter and the ball held up to the camera, with a <b>neural voice</b> announcing every number. And minutes changed in LIVE now count in full.',
+    prova:'🏆 Apri il Torneo Reale',ok:'Ho capito',nota:'Riapri questa schermata quando vuoi dal pulsante «✨ Novità della 10.6» nel Setup.'},
+  en:{tit:'Table Soccer Tournament Center 10.6: formats from around the world',
+    intro:'The program’s formats compared with the <b>FISCT tournament rules</b>, the FISTF handbook and the formats used in other sports: three new formats, the missing FISCT rules and a catalogue of <b>41 real tournaments</b> grouped by continent.',
     card:[
-      {big:1,t:'🎟️ Raffle 1–90',p:'Setup → «Raffle 1–90» panel, next to the Draw ceremony:',li:['Numbers from 1 to 90 <b>without repeats</b>, drawn at random','On stage the <b>lottery drum</b> with the presenter: the ball comes towards the camera and reveals the number','The chime, then the <b>female neural voice</b> (Serena or Paola) announces the number; the announcement can be repeated','<b>Number board 1–90</b>, latest draws and counter; every draw is saved before the animation and stays even when the program is closed, until «New raffle»']},
-      {t:'⏱ Minutes to play',li:['Changing the minutes in LIVE, the clock restarts exactly from the minutes entered, even once the match is under way']},
-      {t:'🏛 Club leagues',li:['The buttons that create a club now ask for the name in a window of the program (before, the click did nothing)','Service prices in Pre-event and merging names in the Archive fixed the same way']},
-      {t:'🔊 The raffle voice',li:['If Serena or Paola are not installed yet, the raffle offers to install the neural voice','Without a neural voice the draw waits: no system voice in place of the presenter']},
-      {wide:1,t:'🔧 Since 10.4',li:['Club leagues with promotion and relegation, Apertura & Clausura, Solo competitions with scorers and match reports, tournament ticker in Live Cam 1.0.5']}
+      {big:1,t:'🏆 Real Tournament: 41 competitions',p:'Setup → «🏆 Real Tournament», now grouped by continent:',li:['<b>Europe</b>: Championship, Scottish Premiership and the leagues with a “split” (Belgium and Austria with halved points, Switzerland, Denmark), Süper Lig, DFB-Pokal, Coupe de France, Conference League','<b>South America</b>: Argentina’s Liga Profesional, Liga BetPlay, Chile’s Primera División, Copa do Brasil, Copa Sudamericana; Libertadores home and away','<b>Asia and Oceania</b>: J1 League, K League 1, Chinese Super League, Saudi Pro League, Indian Super League, A-League, AFC Champions League Elite, Asian Cup']},
+      {t:'🧩 Three new formats',li:['<b>Compass Draw</b>: nobody goes home, every position is played','<b>Double-elimination groups</b> (GSL style): 5 matches per group, all decisive','<b>Stepladder</b> play-offs: from the lowest up to the top seed']},
+      {t:'📏 FISCT rules',li:['<b>Maximum margin 5–0</b> in the standings (option under Standings rules)','<b>FISCT forfeit</b> on withdrawal: half the matches played or not','<b>Technical tie-break</b> for the final ranking of brackets']},
+      {t:'📚 Historic crests',li:['<b>Historic season</b> and <b>Historic league</b> filters: the teams of that year, with their division','England from 1929; Italy, Spain, Germany, France and other leagues from 2010/11','Every record has its source']},
+      {t:'📹 Live Cam 1.0.7',li:['<b>Video look</b>: Neutral, Cinema, Stadium, Film','Choice of <b>replay transitions</b> and the <b>broadcaster logo</b> on air','Club colours suggested from the Crest catalogue']},
+      {t:'🔧 Fixes',li:['The third-place match now really decides 3rd and 4th in the final ranking and in the Archive','Film editing never hangs; phone clips are edited in seconds']},
+      {t:'🔧 Since 10.5',li:['Raffle 1–90 with neural voice; Replay App with the phone camera even without the tunnel; minutes to play counted in full']}
     ],
-    prova:'🎟️ Open the raffle',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 10.5» button in the Setup.'}
+    prova:'🏆 Open the Real Tournament',ok:'Got it',nota:'Reopen this screen whenever you like with the «✨ What’s new in 10.6» button in the Setup.'}
 };
 function novitaApri(){
   const t=NOVITA[LANG==='en'?'en':'it'];
@@ -24511,8 +24753,8 @@ function novitaChiudi(){
 }
 function novitaProva(){
   novitaChiudi();
-  // la novità da provare subito nella 10.5: la riffa
-  riffaApri();
+  // la novità da provare subito nella 10.6: il catalogo dei tornei reali
+  tabTo('setup');openRealTorneo();
 }
 function novitaAllAvvio(){
   if(typeof isSchermoTabellone==='function'&&isSchermoTabellone())return;

@@ -1,7 +1,7 @@
 {
-  "versionCode": 16,
-  "versionName": "1.0.6",
-  "apk": "https://ademasel.github.io/subbuteo-tournament-center/livecam/TableSoccerLiveCam-1.0.6.apk",
-  "sha256": "c9b5e78da3d113ebb430d89046474fa5feba4c414074f5b0aaf6a2e402f5fe47",
-  "note": "1.0.6: i replay arrivano al gestionale anche con una Wi-Fi senza Internet (senza tunnel); se la partita non è caricata, il replay va alla partita in corso sul campo; messaggi di collegamento più chiari."
+  "versionCode": 17,
+  "versionName": "1.0.7",
+  "apk": "https://ademasel.github.io/subbuteo-tournament-center/livecam/TableSoccerLiveCam-1.0.7.apk",
+  "sha256": "955af1fd64847a718988d0b7269a53c727a44fa80830f15959f699801069a6a2",
+  "note": "1.0.7: quattro look video (Neutro, Cinema, Stadio, Pellicola), dissolvenze dei replay a scelta e logo dell'emittente in onda; i colori del club proposti dallo Stemmario."
 }

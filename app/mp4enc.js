@@ -302,6 +302,60 @@ function pianoDissolvenze(durate,secondi=.6){
   });
   return p;
 }
+/* Se l'encoder H.264 del sistema non risponde (succede: la coda resta piena e
+   flush() non torna mai), il montaggio non deve restare appeso per sempre — e
+   con lui CLIP.lavoro, che bloccherebbe anche i montaggi successivi. */
+function flushEntro(enc,ms){
+  return Promise.race([enc.flush(),new Promise((_,ko)=>setTimeout(()=>ko(new Error('Encoder H.264 non risponde')),ms))]);
+}
+/* Una clip girata con la fotocamera del telefono (App Replay senza tunnel) è un
+   MP4 frammentato di MediaRecorder con un solo fotogramma chiave all'inizio: il
+   montaggio, che per ogni fotogramma salta nel video, lì diventa lentissimo o si
+   ferma. Qui la clip si riproduce UNA volta e si ricodifica in un MP4 classico,
+   con un fotogramma chiave al secondo: dopo si monta come tutte le altre. */
+async function normalizzaClip(buf){
+  if(!disponibile)throw new Error('WebCodecs non disponibile');
+  const v=document.createElement('video'),url=URL.createObjectURL(new Blob([buf],{type:'video/mp4'}));
+  v.muted=true;v.playsInline=true;v.preload='auto';
+  // fuori schermo ma nel documento: un video staccato può non presentare i fotogrammi
+  v.style.cssText='position:fixed;left:-4px;top:-4px;width:2px;height:2px;opacity:.01;pointer-events:none';
+  document.body.appendChild(v);
+  try{
+    await new Promise((ok,ko)=>{const t=setTimeout(()=>ko(new Error('Clip non decodificabile')),15000);
+      v.onloadeddata=()=>{clearTimeout(t);ok();};v.onerror=()=>{clearTimeout(t);ko(new Error('Clip non decodificabile'));};v.src=url;});
+    const k=Math.min(1,1280/(v.videoWidth||1280),720/(v.videoHeight||720));
+    const w=Math.max(2,Math.round((v.videoWidth||1280)*k/2)*2),h=Math.max(2,Math.round((v.videoHeight||720)*k/2)*2);
+    const cv=document.createElement('canvas');cv.width=w;cv.height=h;const cx=cv.getContext('2d');
+    const campioni=[];let avcc=null,errore=null,n=0,ultimo=-1;
+    const enc=new glob.VideoEncoder({output(chunk,meta){
+        if(meta&&meta.decoderConfig&&meta.decoderConfig.description&&!avcc)avcc=new Uint8Array(meta.decoderConfig.description);
+        const dati=new Uint8Array(chunk.byteLength);chunk.copyTo(dati);
+        campioni.push({dati,chiave:chunk.type==='key',ts:chunk.timestamp});},error(e){errore=e;}});
+    enc.configure({codec:'avc1.42E01F',width:w,height:h,bitrate:2500000,framerate:25,avc:{format:'avc'},latencyMode:'realtime'});
+    const prendi=tempo=>{
+      const us=Math.round(tempo*1e6);if(us<=ultimo)return;ultimo=us;
+      cx.drawImage(v,0,0,w,h);
+      const f=new glob.VideoFrame(cv,{timestamp:us,duration:40000});
+      try{enc.encode(f,{keyFrame:n%25===0});}finally{f.close();}n++;
+    };
+    await new Promise((ok,ko)=>{
+      const scad=setTimeout(()=>ko(new Error('Clip non decodificabile')),Math.max(20000,((isFinite(v.duration)?v.duration:30)+15)*1000));
+      const fine=()=>{clearTimeout(scad);try{prendi(v.currentTime);}catch(e){}ok();};
+      v.onended=fine;
+      if(v.requestVideoFrameCallback){const cb=(_,m)=>{try{prendi(m.mediaTime);}catch(e){ko(e);return;}if(!v.ended)v.requestVideoFrameCallback(cb);};v.requestVideoFrameCallback(cb);}
+      else{const giro=()=>{if(v.ended)return;try{prendi(v.currentTime);}catch(e){ko(e);return;}requestAnimationFrame(giro);};requestAnimationFrame(giro);}
+      const p=v.play();if(p&&p.catch)p.catch(ko);
+    });
+    await flushEntro(enc,20000);enc.close();
+    if(errore)throw errore;
+    if(!campioni.length||!avcc)throw new Error('Clip non decodificabile');
+    // durate dai tempi veri dei fotogrammi, in 90 kHz; l'ultimo prende quella media
+    const TS=90000;
+    campioni.forEach((c,i)=>{const nx=campioni[i+1];c.durata=nx?Math.max(1,Math.round((nx.ts-c.ts)*TS/1e6)):Math.round(TS/25);});
+    const blob=scriviMp4(campioni,avcc,w,h,TS);
+    return await blob.arrayBuffer();
+  }finally{v.pause();v.removeAttribute('src');v.load();v.remove();URL.revokeObjectURL(url);}
+}
 /* durata e misure di una clip chieste al lettore video (anche per MP4 frammentati) */
 function misuraVideo(buf){
   return new Promise((ok,ko)=>{
@@ -323,11 +377,15 @@ async function montaDissolvenze(buffers){
   /* Le clip dell'anello hanno tabelle classiche; quelle girate con la
      fotocamera del telefono (10.5.1, MediaRecorder) sono MP4 frammentati, senza
      campioni in moov: durata e misure si chiedono allora al lettore video. */
-  const parsed=[];
-  for(const buf of buffers){
-    let p=null;try{p=leggiMp4(buf);}catch(e){}
+  const parsed=[];buffers=buffers.slice();
+  for(let i=0;i<buffers.length;i++){
+    let p=null;try{p=leggiMp4(buffers[i]);}catch(e){}
+    // clip del telefono (MP4 frammentato, senza campioni in moov): prima si normalizza
+    if(!p||!p.campioni.length){
+      try{buffers[i]=await normalizzaClip(buffers[i]);p=leggiMp4(buffers[i]);}catch(e){p=null;}
+    }
     let d=p&&p.timescale?p.campioni.reduce((n,c)=>n+c.durata,0)/p.timescale:0;
-    if(!p||!(d>0)||!p.larghezza){const m=await misuraVideo(buf);p={campioni:[],timescale:1,larghezza:m.w,altezza:m.h};d=m.d;}
+    if(!p||!(d>0)||!p.larghezza){const m=await misuraVideo(buffers[i]);p={campioni:[],timescale:1,larghezza:m.w,altezza:m.h};d=m.d;}
     p.secondi=d;parsed.push(p);
   }
   const plan=pianoDissolvenze(parsed.map(p=>p.secondi));
@@ -390,10 +448,10 @@ async function montaDissolvenze(buffers){
       for(const k of active.keys())if(k<i-(overlap?1:0))close(k);
       const frame=new glob.VideoFrame(canvas,{timestamp:n*step,duration:step});
       try{encoder.encode(frame,{keyFrame:n%50===0});}finally{frame.close();}
-      if(encoder.encodeQueueSize>8)await encoder.flush();
+      if(encoder.encodeQueueSize>8)await flushEntro(encoder,60000);
       if(n%25===0)await new Promise(resolve=>setTimeout(resolve,0));
     }
-    await encoder.flush();if(error)throw error;if(!avcc||!samples.length)throw new Error('Montaggio vuoto');
+    await flushEntro(encoder,60000);if(error)throw error;if(!avcc||!samples.length)throw new Error('Montaggio vuoto');
     return scriviMp4(samples,avcc,width,height,1000000);
   }finally{
     if(encoder.state!=='closed')encoder.close();
@@ -401,5 +459,5 @@ async function montaDissolvenze(buffers){
   }
 }
 
-glob.MP4 = { disponibile, Registratore, montaMp4, leggiMp4, scriviMp4, montaDissolvenze, pianoDissolvenze };
+glob.MP4 = { disponibile, Registratore, montaMp4, leggiMp4, scriviMp4, montaDissolvenze, pianoDissolvenze, normalizzaClip };
 })(typeof window !== 'undefined' ? window : globalThis);
