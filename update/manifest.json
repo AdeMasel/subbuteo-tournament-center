@@ -1,7 +1,7 @@
 {
- "content": "10.6.0",
+ "content": "10.7.0",
  "minShell": "9.2.0",
- "notes": "10.6.0: Torneo Reale con 41 competizioni divise per continente; nuove formule Tabellone a Bussola e Gironi a doppia eliminazione (GSL), playoff a scaletta; regole FISCT (scarto 5-0, forfait, spareggio tecnico); Stemmario storico con filtro per Paese; finale per il 3° posto corretta nella classifica finale; montaggio dei filmati più affidabile",
+ "notes": "10.7.0: club Subbuteo nello Stemmario — 590 schede e 208 stemmi verificati, filtri per circuito, federazione e paese, scelta diretta delle squadre del torneo; versione inglese",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -41,8 +41,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "be51c158e9f0e8772c17c58ca7dff52e0ae0a01af3e87defd15d7d9901b53596",
-   "size": 7896963
+   "sha256": "d41ff47a2446555d4cef08f74c5d4e179a78692f45330f1e12c3dd160ff12a02",
+   "size": 7896781
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -95,6 +95,18 @@
   "stemmi_club_2.js": {
    "sha256": "dad704e4d7d320a8101e3baa10ed9c84a9e2df9c5df1009136e184a60b1e7539",
    "size": 8620577
+  },
+  "subbuteo_club.js": {
+   "sha256": "9cb5003ecd0ef5d5ad363b24a7ecbef4b3711505ce882aeaf886ee104b68624f",
+   "size": 13012648
+  },
+  "subbuteo_club_catalog.html": {
+   "sha256": "85a65c29aba2fc47e73a3096f6d43161bef10e703f83121f4c193f43eac800e3",
+   "size": 8385
+  },
+  "subbuteo_club_old.js": {
+   "sha256": "f50ba3e37c80e0d87ab6a87dd95fbc604e3547e4591016471ea13917b90f3a60",
+   "size": 9264216
   },
   "tornei_reali.js": {
    "sha256": "fd8d1a3e9baac8f22696dc4eecb7076b96989c6b4276609f65531be415d1f4bf",

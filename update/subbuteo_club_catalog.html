@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Club Subbuteo · Stemmario</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1420;--card:#172433;--line:#304154;--ink:#eef4fa;--dim:#a8bacb;--gold:#f3c767;--green:#62d3ac}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -30%,#23465c,#0b1420 70%);color:var(--ink);font:14px/1.45 system-ui,sans-serif}
+header{position:sticky;top:0;z-index:3;padding:14px 20px;background:#0b1420ee;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+h1{margin:0;color:var(--gold);font-size:1.35rem;letter-spacing:.03em}header p{color:var(--dim);margin:3px 0 10px}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,button{font:inherit;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);padding:8px 10px}input{min-width:200px;flex:1}button{cursor:pointer}button:hover{border-color:var(--gold)}button.primary{background:#655024;border-color:var(--gold);color:#fff}button:disabled{opacity:.5;cursor:default}
+main{padding:14px 20px 70px;max-width:1600px;margin:auto}.note{color:var(--dim);padding:7px 0 13px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:11px}
+.club{position:relative;background:linear-gradient(145deg,#1c3041,var(--card));border:1px solid var(--line);border-radius:12px;padding:12px;min-height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px}
+.club.has{cursor:pointer}.club.has:hover,.club.selected{border-color:var(--gold);box-shadow:0 0 16px #f3c76744}.club img{width:76px;height:76px;object-fit:contain;filter:drop-shadow(0 4px 8px #0008)}
+.club .missing{width:76px;height:76px;border:1px dashed #54687c;border-radius:50%;display:grid;place-items:center;color:#8094a6;font-size:24px}.club strong{font-size:12px;line-height:1.2}.club small{color:var(--dim);font-size:10px}.club a{color:var(--green);font-size:11px}.club .check{position:absolute;right:8px;top:6px;color:var(--gold);display:none}.club.selected .check{display:block}
+footer{position:fixed;bottom:0;background:#0b1420f5;border-top:1px solid var(--line);width:100%;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}.status{color:var(--dim)}
+@media(max-width:680px){header{position:static}.grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}footer{position:static;flex-wrap:wrap}main{padding-bottom:16px}}
+</style></head><body>
+<header><h1>⚽ Club Subbuteo · stemmi e federazioni</h1><p>Stemmi verificati da fonti pubbliche; le schede senza immagine sono club censiti, non stemmi ricostruiti.</p>
+<div class="controls"><input id="q" type="search" placeholder="Cerca club o codice FISTF…" aria-label="Cerca club">
+<select id="circuit" aria-label="Circuito"><option value="">Tutti i circuiti</option></select>
+<select id="fed" aria-label="Federazione"><option value="">Tutte le federazioni</option></select>
+<select id="country" aria-label="Paese"><option value="">Tutti i paesi</option></select>
+<label><input id="badges" type="checkbox" checked style="min-width:0;flex:none"> Solo con stemma</label>
+</div></header><main><div class="note" id="summary"></div><div class="grid" id="grid"></div></main>
+<footer><span class="status" id="selected">Nessun club selezionato</span><div><button id="clear">Azzera</button> <button class="primary" id="use">Usa come elenco squadre</button></div></footer>
+<script src="subbuteo_club.js"></script><script src="subbuteo_club_old.js"></script><script>
+(()=>{'use strict';
+const entries=[...(window.SUBBUTEO_CLUBS?.entries||[]),...(window.SUBBUTEO_CLUBS_OLD?.entries||[])], byId=new Map(entries.map(e=>[e.id,e])), selected=new Set();
+const standalone=new URLSearchParams(location.search).has('standalone');
+// lingua: quella scelta nel programma (stessa origine), oppure ?lang=en
+const EN=(()=>{try{return new URLSearchParams(location.search).get('lang')==='en'||localStorage.getItem('subbuteo_lang')==='en'}catch(e){return false}})();
+const TX={'Tutti i circuiti':'All circuits','Tutte le federazioni':'All federations','Tutti i paesi':'All countries','Fonte ↗':'Source ↗','Stemma non reperito':'Crest not found','Nomi copiati negli appunti':'Names copied to the clipboard','Azzera':'Clear','Usa come elenco squadre':'Use as team list','Copia i nomi':'Copy the names','Nessun club selezionato':'No club selected','Solo con stemma':'Only with crest'};
+const T=s=>EN&&TX[s]||s;
+if(EN){document.documentElement.lang='en';document.title='Subbuteo clubs · Crest catalogue';
+ document.querySelector('h1').textContent='⚽ Subbuteo clubs · crests and federations';
+ document.querySelector('header p').textContent='Crests verified from public sources; cards without an image are listed clubs, not reconstructed crests.';
+ document.getElementById('q').placeholder='Search club or FISTF code…';document.getElementById('q').setAttribute('aria-label','Search club');
+ document.getElementById('badges').nextSibling.textContent=' '+T('Solo con stemma');document.getElementById('clear').textContent=T('Azzera');document.getElementById('use').textContent=T('Usa come elenco squadre');document.getElementById('selected').textContent=T('Nessun club selezionato');}
+const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+const options=(id,values,label)=>{$(id).innerHTML=`<option value="">${label}</option>`+[...values].filter(Boolean).sort((a,b)=>a.localeCompare(b,'it')).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')};
+options('circuit',new Set(entries.map(e=>e.circuit)),T('Tutti i circuiti'));
+options('fed',new Set(entries.map(e=>e.federation)),T('Tutte le federazioni'));
+options('country',new Set(entries.map(e=>e.country)),T('Tutti i paesi'));
+function render(){
+ const q=$('q').value.trim().toLocaleLowerCase(),c=$('circuit').value,f=$('fed').value,n=$('country').value,only=$('badges').checked;
+ const rows=entries.filter(e=>(!q||(e.name+' '+e.fistfCode).toLocaleLowerCase().includes(q))&&(!c||e.circuit===c)&&(!f||e.federation===f)&&(!n||e.country===n)&&(!only||e.verifiedImage));
+ const nv=rows.filter(e=>e.verifiedImage).length;
+ $('summary').textContent=EN?`${rows.length} cards · ${nv} verified crests · FISTF data and Italian archive, not a list of current affiliations`:`${rows.length} schede · ${nv} stemmi verificati · dati FISTF e archivio italiano, non elenco delle affiliazioni attuali`;
+ $('grid').innerHTML=rows.slice(0,500).map(e=>`<article class="club ${e.verifiedImage?'has':''} ${selected.has(e.id)?'selected':''}" data-id="${esc(e.id)}" tabindex="${e.verifiedImage?'0':'-1'}"><span class="check">✔</span>${e.verifiedImage?`<img loading="lazy" src="${e.image}" alt="${EN?'Crest':'Stemma'} ${esc(e.name)}">`:`<div class="missing" title="${T('Stemma non reperito')}">?</div>`}<strong>${esc(e.name)}</strong><small>${esc(e.country)} · ${esc(e.federation)}${e.fistfCode?' · '+esc(e.fistfCode):''}</small><a href="${esc(e.source)}" target="_blank" rel="noopener noreferrer">${T('Fonte ↗')}</a></article>`).join('');
+ $('selected').textContent=selected.size?(EN?`${selected.size} clubs selected`:`${selected.size} club selezionati`):T('Nessun club selezionato');
+ $('use').disabled=!selected.size;
+}
+['q','circuit','fed','country','badges'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',render));
+$('grid').addEventListener('click',ev=>{if(ev.target.closest('a'))return;const card=ev.target.closest('.club.has');if(!card)return;const id=card.dataset.id;if(selected.has(id))selected.delete(id);else if(selected.size<128)selected.add(id);render()});
+$('grid').addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();ev.target.closest('.club.has')?.click()}});
+$('clear').onclick=()=>{selected.clear();render()};
+if(standalone)$('use').textContent=T('Copia i nomi');
+$('use').onclick=()=>{const payload=[...selected].map(id=>byId.get(id));if(window.parent!==window&&!standalone){window.parent.postMessage({type:'stc-subbuteo-clubs',clubs:payload},'*')}else{navigator.clipboard?.writeText(payload.map(e=>e.name).join('\n'));$('selected').textContent=T('Nomi copiati negli appunti')}};
+render();
+})();
+</script></body></html>
