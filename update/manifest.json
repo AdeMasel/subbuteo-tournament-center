@@ -1,7 +1,7 @@
 {
  "content": "10.8.0",
  "minShell": "9.2.0",
- "notes": "10.8.0: Torneo Reale con 48 competizioni (Nord e Centro America, Africa) e schede in inglese; club Subbuteo nel torneo a squadre, stemma dei Campionati del Club e ranking FISTF dei club; logo Tyonyx Software; montaggio di fine partita più affidabile; interfaccia inglese completa",
+ "notes": "10.8.0: installer per macOS, Windows e Linux e guide 10.8",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
