@@ -1,7 +1,7 @@
 {
- "content": "10.7.1",
+ "content": "10.8.0",
  "minShell": "9.2.0",
- "notes": "10.7.1: cambiando lingua con la schermata Novità aperta, la schermata passa tutta nell'altra lingua; il catalogo dei club Subbuteo segue subito la lingua scelta",
+ "notes": "10.8.0: Torneo Reale con 48 competizioni (Nord e Centro America, Africa) e schede in inglese; club Subbuteo nel torneo a squadre, stemma dei Campionati del Club e ranking FISTF dei club; logo Tyonyx Software; montaggio di fine partita più affidabile; interfaccia inglese completa",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -41,8 +41,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "dd4202ca5d963f6d63b3479486c59090516ab3c7785aa9ef3814b6a4c6c7a5c4",
-   "size": 7897292
+   "sha256": "3fcb0bd4238e77008db0df2ced27386c07c4e508dace0c7f4387b27386b2c62e",
+   "size": 7914443
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",
@@ -57,8 +57,8 @@
    "size": 3028
   },
   "mp4enc.js": {
-   "sha256": "0b85eacb420f8eff1f89b99b71348c102d15c21aff0065404a3ebdad1a8dade5",
-   "size": 23743
+   "sha256": "c82bc5187dba639eedfa0f68f20fd1cf2a28c8c0caf79f7beaddcd486859524f",
+   "size": 25739
   },
   "musiche.js": {
    "sha256": "e02008ba3a8056677dd0b564679ecf8d35c573df48eedab168876f5637b1372e",
@@ -101,16 +101,16 @@
    "size": 13012648
   },
   "subbuteo_club_catalog.html": {
-   "sha256": "85a65c29aba2fc47e73a3096f6d43161bef10e703f83121f4c193f43eac800e3",
-   "size": 8385
+   "sha256": "36ad6d0d3837349525f04865f1c2d57022cba3c9f4124cb6daa1fa5178f3d05e",
+   "size": 11568
   },
   "subbuteo_club_old.js": {
    "sha256": "f50ba3e37c80e0d87ab6a87dd95fbc604e3547e4591016471ea13917b90f3a60",
    "size": 9264216
   },
   "tornei_reali.js": {
-   "sha256": "fd8d1a3e9baac8f22696dc4eecb7076b96989c6b4276609f65531be415d1f4bf",
-   "size": 523095
+   "sha256": "47fa487fd8a0b00bcf9d526b6998bbda9c37d1ea85633ea9831a68eeefa63220",
+   "size": 649381
   }
  }
 }

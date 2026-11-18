@@ -331,7 +331,12 @@ async function normalizzaClip(buf){
         if(meta&&meta.decoderConfig&&meta.decoderConfig.description&&!avcc)avcc=new Uint8Array(meta.decoderConfig.description);
         const dati=new Uint8Array(chunk.byteLength);chunk.copyTo(dati);
         campioni.push({dati,chiave:chunk.type==='key',ts:chunk.timestamp});},error(e){errore=e;}});
-    enc.configure({codec:'avc1.42E01F',width:w,height:h,bitrate:2500000,framerate:25,avc:{format:'avc'},latencyMode:'realtime'});
+    /* 10.8: codificatore SOFTWARE. Nella Regia, con la clip già aperta nella Sala
+       Replay, quello hardware del Mac (VideoToolbox) dava 70 fotogrammi su 350 e
+       poi si fermava; il software regge la 720p in tempo reale senza problemi. */
+    const cfg={codec:'avc1.42E01F',width:w,height:h,bitrate:2500000,framerate:25,avc:{format:'avc'},latencyMode:'realtime'};
+    const sw={...cfg,hardwareAcceleration:'prefer-software'};
+    enc.configure((await glob.VideoEncoder.isConfigSupported(sw).catch(()=>({}))).supported?sw:cfg);
     const prendi=tempo=>{
       const us=Math.round(tempo*1e6);if(us<=ultimo)return;ultimo=us;
       cx.drawImage(v,0,0,w,h);
@@ -346,7 +351,7 @@ async function normalizzaClip(buf){
       else{const giro=()=>{if(v.ended)return;try{prendi(v.currentTime);}catch(e){ko(e);return;}requestAnimationFrame(giro);};requestAnimationFrame(giro);}
       const p=v.play();if(p&&p.catch)p.catch(ko);
     });
-    await flushEntro(enc,20000);enc.close();
+    try{await flushEntro(enc,20000);}finally{if(enc.state!=='closed')enc.close();}
     if(errore)throw errore;
     if(!campioni.length||!avcc)throw new Error('Clip non decodificabile');
     // durate dai tempi veri dei fotogrammi, in 90 kHz; l'ultimo prende quella media
@@ -371,13 +376,26 @@ function misuraVideo(buf){
   });
 }
 const MAX_MONTAGGIO=10.5*1024*1024;
+/* 10.8: se il codificatore hardware non risponde, il montaggio si rifà una volta
+   con quello software invece di fallire (e di chiedere di riavviare il programma). */
 async function montaDissolvenze(buffers){
+  // 10.8: con una sola azione il filmato È la clip: niente codificatore (che su alcuni Mac si blocca), niente attesa
+  if(buffers.length===1&&buffers[0].byteLength<=MAX_MONTAGGIO)return new Blob([buffers[0]],{type:'video/mp4'});
+  buffers=buffers.slice();   // le clip ricodificate al primo giro restano qui per i successivi
+  let software=false,blob;
+  try{blob=await montaDissolvenzeCon(buffers,false,false);}
+  catch(e){if(!(e&&/Encoder H\.264 non risponde/.test(e.message)))throw e;software=true;blob=await montaDissolvenzeCon(buffers,true,false);}
+  // rete di sicurezza: oltre il limite del server si rifà a 854×480 (il software sotto ~1 Mbit/s non scende)
+  if(blob.size>MAX_MONTAGGIO)blob=await montaDissolvenzeCon(buffers,software,true);
+  return blob;
+}
+async function montaDissolvenzeCon(buffers,software,ridotto){
   if(!disponibile)throw new Error('WebCodecs non disponibile per le dissolvenze');
   if(!buffers.length)throw new Error('Nessuna clip');
   /* Le clip dell'anello hanno tabelle classiche; quelle girate con la
      fotocamera del telefono (10.5.1, MediaRecorder) sono MP4 frammentati, senza
      campioni in moov: durata e misure si chiedono allora al lettore video. */
-  const parsed=[];buffers=buffers.slice();
+  const parsed=[];
   for(let i=0;i<buffers.length;i++){
     let p=null;try{p=leggiMp4(buffers[i]);}catch(e){}
     // clip del telefono (MP4 frammentato, senza campioni in moov): prima si normalizza
@@ -396,7 +414,8 @@ async function montaDissolvenze(buffers){
      e, oltre i due minuti e mezzo, anche la risoluzione. */
   const totale=plan[plan.length-1].end;
   const bitrate=Math.round(Math.max(500000,Math.min(4000000,MAX_MONTAGGIO*8*0.85/Math.max(1,totale))));
-  const lato=totale>150?[854,480]:[1280,720];
+  // il software a 720p non scende sotto ~1,2 Mbit/s: se ne serve meno, si parte subito da 854×480
+  const lato=(ridotto||totale>150||(software&&bitrate*0.75<1200000))?[854,480]:[1280,720];
   const scale=Math.min(1,lato[0]/parsed[0].larghezza,lato[1]/parsed[0].altezza);
   const width=Math.max(2,Math.round(parsed[0].larghezza*scale/2)*2);
   const height=Math.max(2,Math.round(parsed[0].altezza*scale/2)*2);
@@ -405,6 +424,9 @@ async function montaDissolvenze(buffers){
   const layer=document.createElement('canvas');layer.width=width;layer.height=height;const lc=layer.getContext('2d');
   const fps=25,step=40000,samples=[],active=new Map();let avcc=null,error=null;
   const config={codec:'avc1.42E01F',width,height,bitrate,framerate:fps,avc:{format:'avc'},latencyMode:'realtime'};
+  /* il software sfora il bitrate richiesto di un terzo circa: bitrate costante e margine,
+     così il filmato resta sotto il limite del server */
+  if(software)Object.assign(config,{hardwareAcceleration:'prefer-software',bitrateMode:'constant',bitrate:Math.round(bitrate*0.75)});
   if(!(await glob.VideoEncoder.isConfigSupported(config)).supported)throw new Error('Encoder H.264 non disponibile');
   const encoder=new glob.VideoEncoder({output(chunk,meta){
     if(meta&&meta.decoderConfig&&meta.decoderConfig.description)avcc=new Uint8Array(meta.decoderConfig.description);
@@ -448,10 +470,11 @@ async function montaDissolvenze(buffers){
       for(const k of active.keys())if(k<i-(overlap?1:0))close(k);
       const frame=new glob.VideoFrame(canvas,{timestamp:n*step,duration:step});
       try{encoder.encode(frame,{keyFrame:n%50===0});}finally{frame.close();}
-      if(encoder.encodeQueueSize>8)await flushEntro(encoder,60000);
+      // 8 fotogrammi si svuotano in meno di un secondo: oltre 10 s l'hardware è bloccato (si ripiega sul software)
+      if(encoder.encodeQueueSize>8)await flushEntro(encoder,software?60000:10000);
       if(n%25===0)await new Promise(resolve=>setTimeout(resolve,0));
     }
-    await flushEntro(encoder,60000);if(error)throw error;if(!avcc||!samples.length)throw new Error('Montaggio vuoto');
+    await flushEntro(encoder,software?60000:20000);if(error)throw error;if(!avcc||!samples.length)throw new Error('Montaggio vuoto');
     return scriviMp4(samples,avcc,width,height,1000000);
   }finally{
     if(encoder.state!=='closed')encoder.close();
