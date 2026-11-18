@@ -74,3 +74,8 @@ footer{background:#253d32!important;border-top-color:#c5a86655;color:#eef4ef}foo
 /* riquadri di download delle guide e dei vademecum: fondo chiaro come il resto della pagina */
 .manualdl{background:#fffdf7;border-color:#617a6b40;box-shadow:0 10px 24px -16px #2f4a3f66}
 .manualdl:hover{background:#fff6e2;border-color:var(--gold)}
+/* 10.8: sfondo vivo (assets/sfondo-vivo.js). Lo sfondo di <body> verrebbe dipinto SOPRA la tela
+   con z-index negativo: la crema va su <html> e <body> resta trasparente. */
+html{background:radial-gradient(ellipse at 8% 8%,#fffdf7 0,transparent 42%),radial-gradient(ellipse at 92% 35%,#dce9dcaa 0,transparent 38%),#f5efe2}
+body{background:transparent}
+.sec:nth-of-type(even){background:#f9f5eb4d}   /* velo più leggero: lo sfondo vivo resta visibile */
