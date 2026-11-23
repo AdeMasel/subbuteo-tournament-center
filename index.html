@@ -670,6 +670,11 @@ header.nav{top:var(--podh)}
 .promo-card p{margin:0 0 6px;color:#cfe0f5;line-height:1.55}
 .promo-card .btn{flex:0 0 auto}
 .promo-off{display:none!important}
+/* Black Friday 2026: stessa promozione, in nero e oro */
+.promo.bf,.promo-card.bf{background:radial-gradient(380px 200px at 100% 0%,#f5c45130,transparent 70%),linear-gradient(120deg,#050505,#141210 55%,#2b210a);border-color:rgba(245,196,81,.65)}
+.promo.bf .pmn,.promo-card.bf .pmn,.promo.bf .pmk{background:linear-gradient(135deg,#ffe7a3,var(--gold) 45%,var(--gold2));color:#1a1203}
+.promo.bf .pmgo{color:var(--gold)}
+.promo-card.bf .eyebrow{color:var(--gold)}
 @media (max-width:560px){.promo{align-items:flex-start;padding:12px}.promo .pmn{width:60px;height:60px}.promo .pmn b{font-size:24px}.promo-card{padding:20px}}
 </style>
 
@@ -751,7 +756,7 @@ header.nav{top:var(--podh)}
         <span><span class="sak">Novità 11 · Assistente vocale</span><span class="sat">Il torneo si prepara <em>parlando</em></span><span class="sas">Dici che torneo vuoi, l’assistente risponde a voce, chiede solo quello che manca e compila il Setup per te. Capisce senza Internet.</span><span class="sago">Scopri l’assistente →</span></span>
       </a>
       </div>
-      <a class="promo" href="#prova" data-fino="2026-10-20T23:59:59+02:00"><span class="pmn"><span><b>1</b>mese</span></span><span><span class="pmk">Promozione · fino al 20 ottobre</span><span class="pmt">Licenza di prova gratuita per un mese</span><span class="pms">Da oggi al 20 ottobre richiedi gratis una licenza completa di Table Soccer Tournament Center valida un mese, con le stesse modalità dell'acquisto.</span><span class="pmgo">Richiedila ora →</span></span></a>
+      <a class="promo bf" href="#prova" data-fino="2026-12-10T23:59:59+01:00"><span class="pmn"><span><b>30</b>giorni</span></span><span><span class="pmk">Black Friday · fino al 10 dicembre</span><span class="pmt">Licenza di prova gratuita per 30 giorni</span><span class="pms">Da oggi al 10 dicembre richiedi gratis una licenza completa di Table Soccer Tournament Center valida 30 giorni, con le stesse modalità dell'acquisto.</span><span class="pmgo">Richiedila ora →</span></span></a>
       <div class="eyebrow">Versione 11 · Broadcast Edition</div>
       <img class="hero-brand" src="assets/stc-logo-512.png" width="100" height="100" alt="Table Soccer Tournament Center"><h1>Il torneo<br>diventa<em>una diretta</em></h1>
       <p class="hero-claim">Il software di gestione tornei più professionale e completo al mondo.</p>
@@ -1895,17 +1900,17 @@ header.nav{top:var(--podh)}
     intestare la licenza</b> e la durata scelta; ricevuto il pagamento con <b>PayPal</b>, arriva il codice di attivazione. Ogni licenza vale per un <b>singolo
     dispositivo</b> ed è verificata a ogni avvio <b>anche senza collegamento a Internet</b>.</p>
 
-    <div class="promo-card rv" id="prova" data-fino="2026-10-20T23:59:59+02:00">
-      <div class="pmn"><span><b>1</b>mese</span></div>
+    <div class="promo-card bf rv" id="prova" data-fino="2026-12-10T23:59:59+01:00">
+      <div class="pmn"><span><b>30</b>giorni</span></div>
       <div class="pmtx">
-        <div class="eyebrow" style="margin-bottom:6px">Promozione · da oggi al 20 ottobre</div>
-        <h3>Prova gratuita di un mese</h3>
-        <p>Fino al <b>20 ottobre</b> puoi richiedere una <b>licenza completa gratuita valida un mese</b>, con le
+        <div class="eyebrow" style="margin-bottom:6px">Black Friday · da oggi al 10 dicembre</div>
+        <h3>Prova gratuita di 30 giorni</h3>
+        <p>Fino al <b>10 dicembre</b> puoi richiedere una <b>licenza completa gratuita valida 30 giorni</b>, con le
         stesse modalità dell'acquisto: scrivi a <b>onyxsubbuteo@gmail.com</b> indicando il tuo <b>codice
         alfanumerico</b> (pannello 🔑 Licenza) e il <b>nome</b> a cui intestarla. Nessun pagamento: ricevi il codice di
         attivazione in risposta all'email.</p>
       </div>
-      <a class="btn pri" href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20di%20prova%20gratuita%20%281%20mese%29%20-%20Table%20Soccer%20Tournament%20Center&body=Buongiorno%2C%0A%0Avorrei%20richiedere%20la%20licenza%20di%20prova%20gratuita%20di%20un%20mese%20di%20Table%20Soccer%20Tournament%20Center%20%28promozione%20valida%20fino%20al%2020%20ottobre%29.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AGrazie.">Richiedi la prova gratuita</a>
+      <a class="btn pri" href="mailto:onyxsubbuteo@gmail.com?subject=Richiesta%20licenza%20di%20prova%20gratuita%20%2830%20giorni%2C%20Black%20Friday%29%20-%20Table%20Soccer%20Tournament%20Center&body=Buongiorno%2C%0A%0Avorrei%20richiedere%20la%20licenza%20di%20prova%20gratuita%20di%2030%20giorni%20di%20Table%20Soccer%20Tournament%20Center%20%28promozione%20Black%20Friday%20valida%20fino%20al%2010%20dicembre%29.%0A%0ACodice%20alfanumerico%20del%20mio%20dispositivo%3A%20STC-....-....-....-....%0ANome%20a%20cui%20intestare%20la%20licenza%3A%20%0A%0AGrazie.">Richiedi la prova gratuita</a>
     </div>
 
     <div class="steps rv">
@@ -2276,7 +2281,7 @@ async function hitCall(verbo,chiave){
 })();
 </script>
 <script>
-/* la promozione della prova gratuita sparisce da sola dopo il 20 novembre 2026 */
+/* la promozione della prova gratuita (Black Friday) sparisce da sola dopo il 10 dicembre 2026 */
 (function(){var n=Date.now();document.querySelectorAll('[data-fino]').forEach(function(e){if(n>Date.parse(e.getAttribute('data-fino')))e.classList.add('promo-off')})})();
 </script>
 <script>
