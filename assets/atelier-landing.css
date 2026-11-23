@@ -80,3 +80,6 @@ html{background:radial-gradient(ellipse at 8% 8%,#fffdf7 0,transparent 42%),radi
 body{background:transparent}
 .sec:nth-of-type(even){background:#f9f5eb4d}   /* velo più leggero: lo sfondo vivo resta visibile */
 .hero .hero-claim2{color:#2f7d5b}
+.hero .eleven-t{color:#263a31;text-shadow:0 2px 0 #fff8}
+.hero .eleven-t em{text-shadow:none;background:linear-gradient(105deg,#1d5a3e,#2f7d5b 50%,#a2721f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .eleven-k{color:#8a6a2a}
