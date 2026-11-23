@@ -1,7 +1,7 @@
 {
- "content": "10.8.0",
+ "content": "11.0.0",
  "minShell": "9.2.0",
- "notes": "10.8.0: installer per macOS, Windows e Linux e guide 10.8",
+ "notes": "11.0.0: assistente vocale del Setup, Solo migliorato, guide 11.0",
  "base": "https://ademasel.github.io/subbuteo-tournament-center/update/",
  "files": {
   "bandiere.js": {
@@ -41,8 +41,8 @@
    "size": 58247
   },
   "index.html": {
-   "sha256": "3fcb0bd4238e77008db0df2ced27386c07c4e508dace0c7f4387b27386b2c62e",
-   "size": 7914443
+   "sha256": "5509a43ed07beb8979e161f6cbf6baaf9d0ca183f01ad06baf0a741d598ba86b",
+   "size": 7979784
   },
   "iscrizione.html": {
    "sha256": "b8cc55424746877a0c04a66286852652852f9a62b1981f08dd3075a672640fd3",

@@ -79,3 +79,4 @@ footer{background:#253d32!important;border-top-color:#c5a86655;color:#eef4ef}foo
 html{background:radial-gradient(ellipse at 8% 8%,#fffdf7 0,transparent 42%),radial-gradient(ellipse at 92% 35%,#dce9dcaa 0,transparent 38%),#f5efe2}
 body{background:transparent}
 .sec:nth-of-type(even){background:#f9f5eb4d}   /* velo più leggero: lo sfondo vivo resta visibile */
+.hero .hero-claim2{color:#2f7d5b}
